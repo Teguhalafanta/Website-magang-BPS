@@ -14,12 +14,18 @@
         <div class="row h-100">
             <div class="col-lg-5 col-12">
                 <div id="auth-left">
-                    <div class="auth-logo">
-                        <a href="index.html"><img src="{{ asset('template/assets/images/logo/logo.svg') }}"
-                                alt="Logo"></a>
+                    <div class="auth-logo d-flex align-items-center justify-content-center mb-4">
+                        <a href="index.html" class="d-flex align-items-center text-decoration-none">
+                            <img src="{{ asset('template/assets/images/logo/pngegg.png') }}" alt="Logo"
+                                style="width: 80px; height: auto; margin-right: 15px;">
+                            <span style="font-size: 20px; font-weight: bold; color: #333;">
+                                Badan Pusat Statistik Provinsi Aceh
+                            </span>
+                        </a>
                     </div>
+
                     <h1 class="auth-title">Log in.</h1>
-                    <p class="auth-subtitle mb-5">Log in with your data that you entered during registration.</p>
+                    <p class="auth-subtitle mb-5">Silakan masuk menggunakan akun yang telah didaftarkan untuk program magang BPS Provinsi Aceh.</p>
 
                     <form method="POST" action="{{ route('login.store') }}">
                         @csrf

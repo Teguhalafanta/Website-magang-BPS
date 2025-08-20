@@ -3,9 +3,11 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\dashboardController;
 use App\Http\Controllers\loginController;
+
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\RegisterDosenController;
 use App\Http\Controllers\LoginDosenController;
+
 
 // ================= Dashboard (sementara satu halaman untuk semua role) =================
 Route::get('/dashboard', [dashboardController::class, 'index'])
@@ -20,6 +22,7 @@ Route::get('/', [loginController::class, 'index'])
     ->name('login')
     ->middleware('guest');
 Route::post('/log', [loginController::class, 'login'])->name('login.store');
+
 
 // ================= Halaman Opsi Sign Up =================
 Route::get('/signup', function () {
@@ -42,3 +45,4 @@ Route::post('/login/dosen', [LoginDosenController::class, 'store'])->name('login
 
 // ================= Logout Dosen =================
 Route::post('/logout/dosen', [LoginDosenController::class, 'logout'])->name('logout.dosen');
+

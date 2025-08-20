@@ -46,3 +46,6 @@ Route::post('/login/dosen', [LoginDosenController::class, 'store'])->name('login
 // ================= Logout Dosen =================
 Route::post('/logout/dosen', [LoginDosenController::class, 'logout'])->name('logout.dosen');
 
+// ================= Mahasiswa Index =================
+Route::get('/mahasiswa', [App\Http\Controllers\MahasiswaController::class, 'index'])
+    ->name('mahasiswa.index');

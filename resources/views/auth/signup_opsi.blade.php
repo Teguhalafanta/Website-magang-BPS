@@ -15,9 +15,11 @@
             <p>Pilih jenis akun untuk mendaftar:</p>
 
             <div class="d-flex justify-content-around mt-4">
-                <a href="{{ route('register.pelajar') }}" class="btn btn-primary btn-lg">
+                <!-- Mahasiswa pakai route('register') -->
+                <a href="{{ route('register') }}" class="btn btn-primary btn-lg">
                     Mahasiswa
                 </a>
+                <!-- Dosen pakai route('register.dosen') -->
                 <a href="{{ route('register.dosen') }}" class="btn btn-success btn-lg">
                     Dosen
                 </a>

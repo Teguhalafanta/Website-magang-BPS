@@ -110,7 +110,7 @@
                     <div class="text-center mt-5 text-lg fs-4">
                         <p class="text-gray-600">
                             Sudah punya akun?
-                            <a href="{{ route('login.dosen') }}" class="font-bold">Login di sini</a>.
+                            <a href="{{ route('login.dosen') }}" class="font-bold">Log in</a>.
                         </p>
                         <p class="text-gray-600">
                             Daftar sebagai pelajar?

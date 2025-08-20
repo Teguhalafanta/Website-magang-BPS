@@ -9,9 +9,10 @@ class RegisterController extends Controller
 {
     public function index()
     {
-        return view('auth.register');
+        return view('auth.register_pelajar');
     }
 
+    // Menyimpan data mahasiswa
     public function store(Request $request)
     {
         $request->validate([

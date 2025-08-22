@@ -7,9 +7,11 @@ use App\Http\Controllers\loginController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\RegisterDosenController;
 use App\Http\Controllers\LoginDosenController;
+use App\Http\Controllers\LoginSSOController;
 
+Route::get('/login-sso', [LoginSSOController::class, 'index'])->name('login.sso');
 
-// ================= Dashboard (sementara satu halaman untuk semua role) =================
+// ================= Dashboard  =================
 Route::get('/dashboard', [dashboardController::class, 'index'])
     ->middleware(['auth:web,dosen']) // Bisa diakses mahasiswa & dosen
     ->name('dashboard');

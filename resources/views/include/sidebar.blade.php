@@ -53,9 +53,9 @@
                     </a>
                 </li>
 
-                <li class="sidebar-item">
-                    <a href="{{ route('mahasiswa.index') }}" class='sidebar-link'>
-                        <i class="bi bi-stack"></i>
+                <li class="sidebar-item {{ request()->routeIs('mahasiswa.index') ? 'active' : '' }}">
+                    <a href="{{ route('mahasiswa.index') }}" class="sidebar-link">
+                        <i class="bi bi-collection-fill"></i>
                         <span>Data Mahasiswa</span>
                     </a>
                 </li>

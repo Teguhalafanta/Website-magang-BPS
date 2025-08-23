@@ -2,46 +2,40 @@
 
 return [
 
-<<<<<<< HEAD
-=======
     'defaults' => [
         'guard' => env('AUTH_GUARD', 'web'),
         'passwords' => env('AUTH_PASSWORD_BROKER', 'users'),
     ],
 
->>>>>>> 0b7f3e833f23f0e48309edc1583573f5e92f7594
     'guards' => [
-        'web' => [ // Guard untuk mahasiswa
+        'web' => [ // Guard untuk default user
             'driver' => 'session',
             'provider' => 'users',
         ],
 
-<<<<<<< HEAD
-        'mahasiswa' => [
+        'mahasiswa' => [ // Guard untuk mahasiswa
             'driver' => 'session',
             'provider' => 'mahasiswas',
-=======
+        ],
+
         'dosen' => [ // Guard untuk dosen
             'driver' => 'session',
             'provider' => 'dosens',
->>>>>>> 0b7f3e833f23f0e48309edc1583573f5e92f7594
         ],
     ],
 
     'providers' => [
-        'users' => [ // Mahasiswa
+        'users' => [ // User default (misalnya admin)
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
         ],
 
-<<<<<<< HEAD
         'mahasiswas' => [
             'driver' => 'eloquent',
             'model' => App\Models\Mahasiswa::class,
         ],
-    ],
-=======
-        'dosens' => [ // Dosen
+
+        'dosens' => [
             'driver' => 'eloquent',
             'model' => App\Models\Dosen::class,
         ],
@@ -50,6 +44,13 @@ return [
     'passwords' => [
         'users' => [
             'provider' => 'users',
+            'table' => 'password_reset_tokens',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+
+        'mahasiswas' => [
+            'provider' => 'mahasiswas',
             'table' => 'password_reset_tokens',
             'expire' => 60,
             'throttle' => 60,
@@ -65,5 +66,4 @@ return [
 
     'password_timeout' => 10800,
 
->>>>>>> 0b7f3e833f23f0e48309edc1583573f5e92f7594
 ];

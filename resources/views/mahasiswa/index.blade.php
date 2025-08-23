@@ -1,112 +1,82 @@
-@extends('kerangka.master')
+@extends('layouts.app')
 
 @section('content')
-<section>
-    <h3>Tambah Data Mahasiswa</h3>
-    <form action="{{ route('mahasiswa.store') }}" method="POST">
-        @csrf
-        <div class="form-group mb-3">
-            <label>Nama Mahasiswa</label>
-            <input type="text" name="nama" class="form-control" required>
-        </div>
-        <div class="form-group mb-3">
-            <label>NIM</label>
-            <input type="text" name="nim" class="form-control" required>
-        </div>
-        <div class="form-group mb-3">
-            <label>No Telpon</label>
-            <input type="text" name="telpon" class="form-control">
-        </div>
-        <div class="form-group mb-3">
-            <label>Alamat</label>
-            <textarea name="alamat" class="form-control"></textarea>
-        </div>
-        <button type="submit" class="btn btn-primary mb-5">Simpan Mahasiswa</button>
-    </form>
+<div class="container">
 
-    <h3>Form Absensi</h3>
-    <form action="{{ route('absensi.store') }}" method="POST">
-        @csrf
-        <div class="form-group mb-3">
-            <label>Nama Mahasiswa</label>
-            <input type="text" name="nama" class="form-control" required>
-        </div>
-        <div class="form-group mb-3">
-            <label>NIM</label>
-            <input type="text" name="nim" class="form-control" required>
-        </div>
-        <div class="form-group mb-3">
-            <label>Status Kehadiran</label>
-            <select name="status" class="form-control" required>
-                <option value="">-- Pilih Status --</option>
-                <option value="hadir">Hadir</option>
-                <option value="izin">Izin</option>
-                <option value="sakit">Sakit</option>
-                <option value="alpha">Alpha</option>
-            </select>
-        </div>
-        <button type="submit" class="btn btn-success mb-5">Simpan Absensi</button>
-    </form>
-
-    <h3>Daftar Absensi</h3>
-    <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th>No</th>
-                <th>Nama</th>
-                <th>NIM</th>
-                <th>Status</th>
-                <th>Tanggal</th>
-            </tr>
-        </thead>
-        <tbody>
-            @forelse($absensis as $absen)
-            <tr>
-                <td>{{ $loop->iteration }}</td>
-                <td>{{ $absen->mahasiswa->nama ?? $absen->nama_mahasiswa ?? '-' }}</td>
-                <td>{{ $absen->mahasiswa->nim ?? $absen->nim ?? '-' }}</td>
-                <td>{{ ucfirst($absen->status) }}</td>
-                <td>{{ $absen->created_at->format('d-m-Y') }}</td>
-            </tr>
-            @empty
-            <tr>
-                <td colspan="5" class="text-center">Belum ada data absensi</td>
-            </tr>
-            @endforelse
-        </tbody>
-    </table>
-
-    @if (!$absenHariIni)
-    <div class="alert alert-warning">
-        Anda <b>belum absen hari ini</b>. Silakan lakukan absen terlebih dahulu.
+    {{-- Navigasi --}}
+    <div class="mb-4 text-center">
+        <a href="{{ route('mahasiswa.index') }}" class="btn btn-primary">Mahasiswa</a>
+        <a href="{{ route('absensi.index') }}" class="btn btn-success">Absensi</a>
+        <a href="{{ route('kegiatan.index') }}" class="btn btn-info">Kegiatan</a>
     </div>
-    <button class="btn btn-secondary mb-3" disabled>Tambah Kegiatan</button>
-    @else
-    <a href="{{ route('kegiatan.create') }}" class="btn btn-primary mb-3">Tambah Kegiatan</a>
+
+    <h2 class="text-center mb-4">Data Mahasiswa</h2>
+
+    {{-- Notifikasi --}}
+    @if(session('success'))
+        <div class="alert alert-success">{{ session('success') }}</div>
     @endif
 
-    <h3>Data Mahasiswa</h3>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>No</th>
-                <th>Nama Mahasiswa</th>
-                <th>NIM</th>
-                <th>No Telpon</th>
-                <th>Alamat</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($mahasiswas as $mahasiswa)
-            <tr>
-                <td>{{ $loop->iteration }}</td>
-                <td>{{ $mahasiswa->nama }}</td>
-                <td>{{ $mahasiswa->nim }}</td>
-                <td>{{ $mahasiswa->telpon }}</td>
-                <td>{{ $mahasiswa->alamat }}</td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
-</section>
+    {{-- Form Tambah --}}
+    <div class="card mb-4 shadow">
+        <div class="card-header bg-primary text-white">Tambah Mahasiswa</div>
+        <div class="card-body">
+            <form action="{{ route('mahasiswa.store') }}" method="POST">
+                @csrf
+                <div class="mb-3">
+                    <label>Nama</label>
+                    <input type="text" name="nama" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label>NIM</label>
+                    <input type="text" name="nim" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label>Telepon</label>
+                    <input type="text" name="telepon" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label>Alamat</label>
+                    <textarea name="alamat" class="form-control" required></textarea>
+                </div>
+                <button class="btn btn-success">Simpan</button>
+            </form>
+        </div>
+    </div>
+
+    {{-- Tabel --}}
+    <div class="card shadow">
+        <div class="card-header bg-success text-white">Daftar Mahasiswa</div>
+        <div class="card-body">
+            <table class="table table-striped table-bordered text-center">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Nama</th>
+                        <th>NIM</th>
+                        <th>Telepon</th>
+                        <th>Alamat</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($mahasiswas as $mhs)
+                    <tr>
+                        <td>{{ $mhs->nama }}</td>
+                        <td>{{ $mhs->nim }}</td>
+                        <td>{{ $mhs->telepon }}</td>
+                        <td>{{ $mhs->alamat }}</td>
+                        <td>
+                            <a href="{{ route('mahasiswa.edit', $mhs->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                            <form action="{{ route('mahasiswa.destroy', $mhs->id) }}" method="POST" style="display:inline;">
+                                @csrf @method('DELETE')
+                                <button type="submit" onclick="return confirm('Yakin hapus?')" class="btn btn-danger btn-sm">Hapus</button>
+                            </form>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 @endsection

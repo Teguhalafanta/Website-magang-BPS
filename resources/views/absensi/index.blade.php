@@ -1,90 +1,100 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <h3 class="mb-4 fw-bold text-primary">Daftar Absensi</h3>
+<div class="card">
+    <div class="card-header bg-success text-white">
+        Absensi Mahasiswa
+    </div>
+    <div class="card-body">
+        @if(session('success'))
+            <div class="alert alert-success">{{ session('success') }}</div>
+        @endif
 
-    {{-- Tabel Absensi --}}
-    <div class="table-responsive">
-        <table class="table table-bordered text-center align-middle">
-            <thead class="table-light">
+        <form action="{{ route('absensi.store') }}" method="POST" class="mb-4">
+            @csrf
+            <div class="row g-3 align-items-center">
+                <div class="col-md-3">
+                    <label class="form-label">Mahasiswa</label>
+                    <select name="mahasiswa_id" class="form-select">
+                        <option value="">-- Pilih Mahasiswa --</option>
+                        @foreach($mahasiswas as $mhs)
+                            <option value="{{ $mhs->id }}" {{ old('mahasiswa_id') == $mhs->id ? 'selected' : '' }}>{{ $mhs->nama }} ({{ $mhs->nim }})</option>
+                        @endforeach
+                    </select>
+                    @error('mahasiswa_id')
+                        <small class="text-danger">{{ $message }}</small>
+                    @enderror
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Tanggal</label>
+                    <input type="date" name="tanggal" class="form-control" value="{{ old('tanggal') }}">
+                    @error('tanggal')
+                        <small class="text-danger">{{ $message }}</small>
+                    @enderror
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Status</label>
+                    <select name="status" class="form-select">
+                        <option value="">-- Pilih Status --</option>
+                        @foreach(['Hadir','Izin','Sakit','Alfa'] as $status)
+                            <option value="{{ $status }}" {{ old('status') == $status ? 'selected' : '' }}>{{ $status }}</option>
+                        @endforeach
+                    </select>
+                    @error('status')
+                        <small class="text-danger">{{ $message }}</small>
+                    @enderror
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Keterangan</label>
+                    <input type="text" name="keterangan" class="form-control" value="{{ old('keterangan') }}">
+                    @error('keterangan')
+                        <small class="text-danger">{{ $message }}</small>
+                    @enderror
+                </div>
+                <div class="col-md-2 align-self-end">
+                    <button type="submit" class="btn btn-success w-100">Simpan</button>
+                </div>
+            </div>
+        </form>
+
+        <table class="table table-bordered">
+            <thead class="table-dark">
                 <tr>
-                    <th style="width: 5%;">No</th>
                     <th>Nama</th>
                     <th>NIM</th>
-                    <th>Status</th>
                     <th>Tanggal</th>
+                    <th>Status</th>
+                    <th>Keterangan</th>
+                    <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>
-                @forelse($absensis as $index => $absensi)
-                    <tr>
-                        <td>{{ $index + 1 }}</td>
-                        <td>{{ $absensi->mahasiswa->nama ?? '-' }}</td>
-                        <td>{{ $absensi->mahasiswa->nim ?? '-' }}</td>
-                        <td>
-                            <span class="badge bg-{{ match(strtolower($absensi->status)) {
-                                'hadir' => 'success',
-                                'izin' => 'info',
-                                'sakit' => 'warning',
-                                'alpa', 'alpha' => 'danger',
-                                default => 'secondary'
-                            } }}">
-                                {{ ucfirst($absensi->status) }}
-                            </span>
-                        </td>
-                        <td>{{ \Carbon\Carbon::parse($absensi->tanggal)->translatedFormat('d F Y') }}</td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="5">Belum ada data absensi</td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
-    </div>
-
-    {{-- Notifikasi belum absen --}}
-    @if($belumAbsen)
-        <div class="alert alert-warning mt-4">
-            Anda <strong>belum absen hari ini.</strong> Silakan lakukan absen terlebih dahulu.
-        </div>
-    @endif
-
-    {{-- Tombol Tambah Absen --}}
-    <a href="{{ route('absensi.create') }}" class="btn btn-primary mt-2">
-        Tambah Absen
-    </a>
-
-    {{-- Data Mahasiswa --}}
-    <h4 class="mt-5 fw-bold text-primary">Data Mahasiswa</h4>
-    <div class="table-responsive">
-        <table class="table table-hover text-center align-middle">
-            <thead class="table-light">
+                @foreach($absensis as $absen)
                 <tr>
-                    <th>No</th>
-                    <th>Nama Mahasiswa</th>
-                    <th>NIM</th>
-                    <th>No Telpon</th>
-                    <th>Alamat</th>
+                    <td>{{ $absen->mahasiswa->nama }}</td>
+                    <td>{{ $absen->mahasiswa->nim }}</td>
+                    <td>{{ $absen->tanggal }}</td>
+                    <td>{{ $absen->status }}</td>
+                    <td>{{ $absen->keterangan }}</td>
+                    <td>
+                        <a href="{{ route('absensi.edit', $absen->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                        <form action="{{ route('absensi.destroy', $absen->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Hapus data absensi ini?')">
+                            @csrf
+                            @method('DELETE')
+                            <button class="btn btn-danger btn-sm">Hapus</button>
+                        </form>
+                    </td>
                 </tr>
-            </thead>
-            <tbody>
-                @forelse($mahasiswas as $index => $mhs)
-                    <tr>
-                        <td>{{ $index + 1 }}</td>
-                        <td>{{ $mhs->nama }}</td>
-                        <td>{{ $mhs->nim }}</td>
-                        <td>{{ $mhs->no_telp }}</td>
-                        <td>{{ $mhs->alamat }}</td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="5">Belum ada data mahasiswa</td>
-                    </tr>
-                @endforelse
+                @endforeach
+                @if($absensis->count() == 0)
+                <tr>
+                    <td colspan="6" class="text-center">Data absensi belum ada.</td>
+                </tr>
+                @endif
             </tbody>
         </table>
+
+        {{ $absensis->links() }}
     </div>
 </div>
 @endsection

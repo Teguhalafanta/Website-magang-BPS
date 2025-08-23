@@ -1,31 +1,27 @@
 <?php
+namespace App\Models;
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Eloquent\Model;
 
-return new class extends Migration
+class Mahasiswa extends Model
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
+    // Jangan set $table kalau kamu pakai default Laravel
+    protected $fillable = ['nama', 'nim', 'telepon', 'alamat', 'email', 'tanggal_lahir'];
+
+    // relasi tetap
+    public function absensis()
     {
-        Schema::create('mahasiswas', function (Blueprint $table) {
-            $table->id();
-            $table->string('nama');
-            $table->string('nim');
-            $table->string('telpon');
-            $table->string('alamat');
-            $table->timestamps();
-        });
+        return $this->hasMany(Absensi::class);
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function kegiatans()
     {
-        Schema::dropIfExists('mahasiswas');
+        return $this->hasMany(Kegiatan::class);
     }
-};
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'nim', 'nim');
+    }
+}
+

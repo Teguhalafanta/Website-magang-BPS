@@ -1,0 +1,42 @@
+@extends('layouts.app')
+
+@section('content')
+<div class="card">
+    <div class="card-header bg-warning text-dark">
+        Edit Kegiatan
+    </div>
+    <div class="card-body">
+        <form action="{{ route('kegiatan.update', $kegiatan->id) }}" method="POST">
+            @csrf
+            @method('PUT')
+
+            <div class="mb-3">
+                <label>Nama Kegiatan</label>
+                <input type="text" name="nama_kegiatan" class="form-control" value="{{ $kegiatan->nama_kegiatan }}">
+                @error('nama_kegiatan')
+                    <small class="text-danger">{{ $message }}</small>
+                @enderror
+            </div>
+
+            <div class="mb-3">
+                <label>Tanggal</label>
+                <input type="date" name="tanggal" class="form-control" value="{{ $kegiatan->tanggal }}">
+                @error('tanggal')
+                    <small class="text-danger">{{ $message }}</small>
+                @enderror
+            </div>
+
+            <div class="mb-3">
+                <label>Deskripsi</label>
+                <input type="text" name="deskripsi" class="form-control" value="{{ $kegiatan->deskripsi }}">
+                @error('deskripsi')
+                    <small class="text-danger">{{ $message }}</small>
+                @enderror
+            </div>
+
+            <button class="btn btn-primary">Update</button>
+            <a href="{{ route('kegiatan.index') }}" class="btn btn-secondary">Batal</a>
+        </form>
+    </div>
+</div>
+@endsection

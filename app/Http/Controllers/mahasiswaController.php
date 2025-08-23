@@ -1,158 +1,47 @@
 <?php
-
+// app/Http/Controllers/MahasiswaController.php
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use App\Models\Mahasiswa;
-use App\Models\Absensi;
-use App\Models\Kegiatan;
+use Illuminate\Http\Request;
 
-class MahasiswaController extends Controller
-{
-    /**
-     * Tampilkan halaman utama mahasiswa + absensi.
-     */
-    public function index()
-    {
-        $mahasiswaId = Auth::id();
-        $today = now()->toDateString();
-
-        $kegiatan = Kegiatan::with('mahasiswa')
-            ->where('mahasiswa_id', $mahasiswaId)
-            ->orderByDesc('tanggal')
-            ->get();
-
-        $absensis = Absensi::with('mahasiswa')
-            ->where('mahasiswa_id', $mahasiswaId)
-            ->orderByDesc('created_at')
-            ->get();
-
-        $absenHariIni = Absensi::where('mahasiswa_id', $mahasiswaId)
-            ->where('tanggal', $today)
-            ->exists();
-
-        // Tambahkan data semua mahasiswa
+class MahasiswaController extends Controller {
+    public function index() {
         $mahasiswas = Mahasiswa::all();
-
-        return view('mahasiswa.index', compact('kegiatan', 'absensis', 'absenHariIni', 'mahasiswas'));
+        return view('mahasiswa.index', compact('mahasiswas'));
     }
 
-    /**
-     * Simpan data mahasiswa baru (dan absensi jika ada).
-     */
-    public function store(Request $request)
-    {
+    public function store(Request $request) {
         $request->validate([
-            'nama'   => 'required|string|max:255',
-            'nim'    => 'required|string|max:20|unique:mahasiswas,nim',
-            'telpon' => 'nullable|string|max:15',
-            'alamat' => 'nullable|string|max:500',
-            'status' => 'nullable|in:hadir,tidak_hadir,izin,sakit',
+            'nama'=>'required',
+            'nim'=>'required|unique:mahasiswas',
+            'telepon'=>'required',
+            'alamat'=>'required'
         ]);
-
-        $mahasiswa = Mahasiswa::create([
-            'nama'   => $request->nama,
-            'nim'    => $request->nim,
-            'telpon' => $request->telpon,
-            'alamat' => $request->alamat,
-        ]);
-
-        if ($request->filled('status')) {
-            Absensi::create([
-                'mahasiswa_id'    => $mahasiswa->id,
-                'status'          => $request->status,
-                'nama_mahasiswa'  => $mahasiswa->nama,
-                'tanggal'         => now()->format('Y-m-d'),
-                'waktu'           => now()->format('H:i:s'),
-            ]);
-        }
-
-        return redirect()->route('mahasiswa.index')->with('success', 'Data mahasiswa berhasil ditambahkan.');
+        Mahasiswa::create($request->all());
+        return redirect()->back()->with('success','Data mahasiswa berhasil ditambahkan');
     }
 
-    /**
-     * Tampilkan detail mahasiswa.
-     */
-    public function show(string $id)
-    {
-        $mahasiswa = Mahasiswa::findOrFail($id);
-        return view('mahasiswa.show', compact('mahasiswa'));
-    }
-
-    /**
-     * Tampilkan form edit mahasiswa.
-     */
-    public function edit(string $id)
-    {
-        $mahasiswa = Mahasiswa::findOrFail($id);
+    // 🆕 Tambahan: Form edit mahasiswa
+    public function edit(Mahasiswa $mahasiswa) {
         return view('mahasiswa.edit', compact('mahasiswa'));
     }
 
-    /**
-     * Update data mahasiswa.
-     */
-    public function update(Request $request, string $id)
-    {
-        $mahasiswa = Mahasiswa::findOrFail($id);
-
+    // 🆕 Tambahan: Update data mahasiswa
+    public function update(Request $request, Mahasiswa $mahasiswa) {
         $request->validate([
-            'nama'   => 'required|string|max:255',
-            'nim'    => 'required|string|max:20|unique:mahasiswas,nim,' . $id,
-            'telpon' => 'nullable|string|max:15',
-            'alamat' => 'nullable|string|max:500',
+            'nama'=>'required',
+            'nim'=>'required|unique:mahasiswas,nim,'.$mahasiswa->id,
+            'telepon'=>'required',
+            'alamat'=>'required'
         ]);
-
-        $mahasiswa->update([
-            'nama'   => $request->nama,
-            'nim'    => $request->nim,
-            'telpon' => $request->telpon,
-            'alamat' => $request->alamat,
-        ]);
-
-        return redirect()->route('mahasiswa.index')->with('success', 'Data mahasiswa berhasil diperbarui.');
+        $mahasiswa->update($request->all());
+        return redirect()->route('mahasiswa.index')->with('success','Data mahasiswa berhasil diperbarui');
     }
 
-    /**
-     * Hapus mahasiswa dan absensi terkait.
-     */
-    public function destroy(string $id)
-    {
-        $mahasiswa = Mahasiswa::findOrFail($id);
-
-        Absensi::where('mahasiswa_id', $id)->delete();
+    // 🆕 Tambahan: Hapus mahasiswa
+    public function destroy(Mahasiswa $mahasiswa) {
         $mahasiswa->delete();
-
-        return redirect()->route('mahasiswa.index')->with('success', 'Data mahasiswa berhasil dihapus.');
-    }
-
-    /**
-     * Ambil data mahasiswa (untuk kebutuhan AJAX).
-     */
-    public function getMahasiswaData()
-    {
-        $mahasiswas = Mahasiswa::with('absensi')->get();
-
-        return response()->json([
-            'status' => 'success',
-            'data' => $mahasiswas
-        ]);
-    }
-
-    /**
-     * Cari mahasiswa berdasarkan nama atau NIM.
-     */
-    public function search(Request $request)
-    {
-        $query = $request->get('q');
-
-        $mahasiswas = Mahasiswa::where('nama', 'LIKE', "%{$query}%")
-            ->orWhere('nim', 'LIKE', "%{$query}%")
-            ->get();
-
-        return response()->json([
-            'status' => 'success',
-            'data' => $mahasiswas
-        ]);
+        return redirect()->route('mahasiswa.index')->with('success','Data mahasiswa berhasil dihapus');
     }
 }

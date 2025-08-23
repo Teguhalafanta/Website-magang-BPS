@@ -10,4 +10,10 @@ class dashboardController extends Controller
     {
         return view('dashboard.dashboard');
     }
+
+    /** profile user */
+    public function userProfile()
+    {
+        return view('dashboard.profile');
+    }
 }

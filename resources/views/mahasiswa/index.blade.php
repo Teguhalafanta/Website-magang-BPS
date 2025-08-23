@@ -6,8 +6,20 @@
             <div class="col-12 col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="card-title">Table Mahasiswa</h4>
+                        <h4 class="card-title text-center">Table Mahasiswa</h4>
+                        <a class="btn btn-primary" href="{{ route('mahasiswa.create') }}">Tambah Mahasiswa</a>
                     </div>
+                    @if (session()->has('success'))
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            {{ session('success') }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    @elseif (session()->has('failed'))
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            {{ session('failed') }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    @endif
                     <div class="card-content">
                         <div class="card-body">
                             <!-- Table with outer spacing -->

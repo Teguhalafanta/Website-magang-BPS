@@ -60,6 +60,13 @@
                     </a>
                 </li>
 
+                <li class="sidebar-item">
+                    <a href="{{ route('mahasiswa.index') }}" class='sidebar-link'>
+                        <i class="bi bi-stack"></i>
+                        <span>Absensi</span>
+                    </a>
+                </li>
+
                 <li class="sidebar-item  has-sub">
                     <a href="#" class='sidebar-link'>
                         <i class="bi bi-collection-fill"></i>

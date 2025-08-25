@@ -4,40 +4,22 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
 {
-    // Halaman profil
+    // Menampilkan profil user yang sedang login
     public function profile()
     {
-        // Ambil data user yang sedang login
-        $profile = Auth::user();
-
+        $profile = Auth::user(); // ambil user yang login
         return view('mahasiswa.profile', compact('profile'));
     }
 
-    // Halaman edit profil
-    public function edit()
-    {
-        $profile = Auth::user();
-        return view('mahasiswa.edit-profile', compact('profile'));
-    }
-
-    // Proses update profil
+    // Update profil user
     public function update(Request $request)
     {
         $profile = Auth::user();
 
-        $request->validate([
-            'name'  => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $profile->id,
-        ]);
-
-        $profile->update([
-            'name'  => $request->name,
-            'email' => $request->email,
-        ]);
-
-        return redirect()->route('profile')->with('success', 'Profil berhasil diperbarui!');
+        dd(get_class($profile)); // cek class instance sebenarnya
     }
 }

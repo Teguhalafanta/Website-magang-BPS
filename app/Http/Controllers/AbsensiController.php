@@ -8,48 +8,66 @@ use App\Models\Mahasiswa;
 
 class AbsensiController extends Controller
 {
+    /**
+     * Tampilkan daftar absensi dengan relasi ke mahasiswa
+     */
     public function index()
     {
         $absensis = Absensi::with('mahasiswa')->paginate(10);
         $mahasiswas = Mahasiswa::all();
+
         return view('absensi.index', compact('absensis', 'mahasiswas'));
     }
 
+    /**
+     * Simpan data absensi baru
+     */
     public function store(Request $request)
     {
-        $request->validate([
-            'mahasiswa_id' => 'required|exists:mahasiswa,id',
-            'tanggal' => 'required|date',
-            'status' => 'required|in:Hadir,Izin,Sakit,Alfa',
+        $validated = $request->validate([
+            'mahasiswa_id' => 'required|exists:mahasiswas,id',
+            'tanggal'      => 'required|date',
+            'status'       => 'required|in:Hadir,Izin,Sakit,Alfa',
+            'keterangan'   => 'nullable|string|max:255',
         ]);
 
-        Absensi::create($request->all());
+        Absensi::create($validated);
 
         return redirect()->route('absensi.index')->with('success', 'Data absensi berhasil ditambahkan');
     }
 
+    /**
+     * Tampilkan form edit absensi
+     */
     public function edit($id)
     {
         $absen = Absensi::findOrFail($id);
         $mahasiswas = Mahasiswa::all();
+
         return view('absensi.edit', compact('absen', 'mahasiswas'));
     }
 
+    /**
+     * Update data absensi
+     */
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'mahasiswa_id' => 'required|exists:mahasiswas,id', // perbaikan di sini juga
-            'tanggal' => 'required|date',
-            'status' => 'required|in:Hadir,Izin,Sakit,Alfa',
-            'keterangan' => 'nullable|string|max:255',
+        $validated = $request->validate([
+            'mahasiswa_id' => 'required|exists:mahasiswas,id',
+            'tanggal'      => 'required|date',
+            'status'       => 'required|in:Hadir,Izin,Sakit,Alfa',
+            'keterangan'   => 'nullable|string|max:255',
         ]);
 
         $absen = Absensi::findOrFail($id);
-        $absen->update($request->all());
+        $absen->update($validated);
 
-        return redirect()->route('absensi.index')->with('success', 'Data absensi berhasil diupdate');
+        return redirect()->route('absensi.index')->with('success', 'Data absensi berhasil diperbarui');
     }
 
+    /**
+     * Hapus data absensi
+     */
     public function destroy($id)
     {
         $absen = Absensi::findOrFail($id);

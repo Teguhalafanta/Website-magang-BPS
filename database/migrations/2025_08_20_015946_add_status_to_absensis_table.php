@@ -6,20 +6,22 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up()
     {
         Schema::table('absensis', function (Blueprint $table) {
-            $table->string('status')->after('mahasiswa_id');
+            if (!Schema::hasColumn('absensis', 'status')) {
+                $table->string('status')->nullable()->after('mahasiswa_id');
+            }
+            // jangan tambahkan keterangan karena sudah ada
         });
     }
 
     public function down()
     {
         Schema::table('absensis', function (Blueprint $table) {
-            $table->dropColumn('status');
+            $table->dropColumn('keterangan');
+            // Kalau kamu menambahkan kolom status di migrasi ini, bisa drop juga
+            // $table->dropColumn('status');
         });
     }
 };

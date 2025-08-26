@@ -1,42 +1,42 @@
 @extends('layouts.app')
 
+@section('title', 'Edit Kegiatan')
+
 @section('content')
-<div class="card">
-    <div class="card-header bg-warning text-dark">
-        Edit Kegiatan
-    </div>
-    <div class="card-body">
-        <form action="{{ route('kegiatan.update', $kegiatan->id) }}" method="POST">
-            @csrf
-            @method('PUT')
+<div class="container">
+    <h3>Edit Kegiatan</h3>
 
-            <div class="mb-3">
-                <label>Nama Kegiatan</label>
-                <input type="text" name="nama_kegiatan" class="form-control" value="{{ $kegiatan->nama_kegiatan }}">
-                @error('nama_kegiatan')
-                    <small class="text-danger">{{ $message }}</small>
-                @enderror
-            </div>
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul class="mb-0">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 
-            <div class="mb-3">
-                <label>Tanggal</label>
-                <input type="date" name="tanggal" class="form-control" value="{{ $kegiatan->tanggal }}">
-                @error('tanggal')
-                    <small class="text-danger">{{ $message }}</small>
-                @enderror
-            </div>
+    <form action="{{ route('kegiatan.update', $kegiatan->id) }}" method="POST">
+        @csrf
+        @method('PUT')
 
-            <div class="mb-3">
-                <label>Deskripsi</label>
-                <input type="text" name="deskripsi" class="form-control" value="{{ $kegiatan->deskripsi }}">
-                @error('deskripsi')
-                    <small class="text-danger">{{ $message }}</small>
-                @enderror
-            </div>
+        <div class="mb-3">
+            <label for="nama_kegiatan" class="form-label">Nama Kegiatan</label>
+            <input type="text" name="nama_kegiatan" id="nama_kegiatan" class="form-control" value="{{ old('nama_kegiatan', $kegiatan->nama_kegiatan) }}">
+        </div>
 
-            <button class="btn btn-primary">Update</button>
-            <a href="{{ route('kegiatan.index') }}" class="btn btn-secondary">Batal</a>
-        </form>
-    </div>
+        <div class="mb-3">
+            <label for="tanggal" class="form-label">Tanggal</label>
+            <input type="date" name="tanggal" id="tanggal" class="form-control" value="{{ old('tanggal', $kegiatan->tanggal) }}">
+        </div>
+
+        <div class="mb-3">
+            <label for="deskripsi" class="form-label">Deskripsi</label>
+            <textarea name="deskripsi" id="deskripsi" class="form-control" rows="3">{{ old('deskripsi', $kegiatan->deskripsi) }}</textarea>
+        </div>
+
+        <button type="submit" class="btn btn-success">Update</button>
+        <a href="{{ route('kegiatan.index') }}" class="btn btn-secondary">Kembali</a>
+    </form>
 </div>
 @endsection

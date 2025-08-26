@@ -6,10 +6,12 @@
         Absensi Mahasiswa
     </div>
     <div class="card-body">
+        {{-- Tampilkan pesan sukses --}}
         @if(session('success'))
             <div class="alert alert-success">{{ session('success') }}</div>
         @endif
 
+        {{-- Form tambah absensi --}}
         <form action="{{ route('absensi.store') }}" method="POST" class="mb-4">
             @csrf
             <div class="row g-3 align-items-center">
@@ -18,13 +20,16 @@
                     <select name="mahasiswa_id" class="form-select">
                         <option value="">-- Pilih Mahasiswa --</option>
                         @foreach($mahasiswas as $mhs)
-                            <option value="{{ $mhs->id }}" {{ old('mahasiswa_id') == $mhs->id ? 'selected' : '' }}>{{ $mhs->nama }} ({{ $mhs->nim }})</option>
+                            <option value="{{ $mhs->id }}" {{ old('mahasiswa_id') == $mhs->id ? 'selected' : '' }}>
+                                {{ $mhs->nama }} ({{ $mhs->nim }})
+                            </option>
                         @endforeach
                     </select>
                     @error('mahasiswa_id')
                         <small class="text-danger">{{ $message }}</small>
                     @enderror
                 </div>
+
                 <div class="col-md-2">
                     <label class="form-label">Tanggal</label>
                     <input type="date" name="tanggal" class="form-control" value="{{ old('tanggal') }}">
@@ -32,18 +37,22 @@
                         <small class="text-danger">{{ $message }}</small>
                     @enderror
                 </div>
+
                 <div class="col-md-2">
                     <label class="form-label">Status</label>
                     <select name="status" class="form-select">
                         <option value="">-- Pilih Status --</option>
                         @foreach(['Hadir','Izin','Sakit','Alfa'] as $status)
-                            <option value="{{ $status }}" {{ old('status') == $status ? 'selected' : '' }}>{{ $status }}</option>
+                            <option value="{{ $status }}" {{ old('status') == $status ? 'selected' : '' }}>
+                                {{ $status }}
+                            </option>
                         @endforeach
                     </select>
                     @error('status')
                         <small class="text-danger">{{ $message }}</small>
                     @enderror
                 </div>
+
                 <div class="col-md-3">
                     <label class="form-label">Keterangan</label>
                     <input type="text" name="keterangan" class="form-control" value="{{ old('keterangan') }}">
@@ -51,12 +60,14 @@
                         <small class="text-danger">{{ $message }}</small>
                     @enderror
                 </div>
+
                 <div class="col-md-2 align-self-end">
                     <button type="submit" class="btn btn-success w-100">Simpan</button>
                 </div>
             </div>
         </form>
 
+        {{-- Tabel daftar absensi --}}
         <table class="table table-bordered">
             <thead class="table-dark">
                 <tr>
@@ -69,7 +80,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach($absensis as $absen)
+                @forelse($absensis as $absen)
                 <tr>
                     <td>{{ $absen->mahasiswa->nama }}</td>
                     <td>{{ $absen->mahasiswa->nim }}</td>
@@ -78,6 +89,7 @@
                     <td>{{ $absen->keterangan }}</td>
                     <td>
                         <a href="{{ route('absensi.edit', $absen->id) }}" class="btn btn-warning btn-sm">Edit</a>
+
                         <form action="{{ route('absensi.destroy', $absen->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Hapus data absensi ini?')">
                             @csrf
                             @method('DELETE')
@@ -85,15 +97,15 @@
                         </form>
                     </td>
                 </tr>
-                @endforeach
-                @if($absensis->count() == 0)
+                @empty
                 <tr>
                     <td colspan="6" class="text-center">Data absensi belum ada.</td>
                 </tr>
-                @endif
+                @endforelse
             </tbody>
         </table>
 
+        {{-- Pagination --}}
         {{ $absensis->links() }}
     </div>
 </div>

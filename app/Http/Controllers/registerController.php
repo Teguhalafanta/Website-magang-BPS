@@ -26,8 +26,13 @@ class RegisterController extends Controller
         $user = User::create([
             'username' => $request->username,
             'email'    => $request->email,
+            'nama' => $request->nama,
             'password' => bcrypt($request->password),
             'nim'      => $request->nim,
+            'asal_univ'      => $request->asal_univ,
+            'jurusan'      => $request->jurusan,
+            'prodi'      => $request->prodi,
+            'telepon'      => $request->telepon,
         ]);
 
         Mahasiswa::create([

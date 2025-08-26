@@ -21,7 +21,7 @@ class KegiatanController extends Controller
      */
     public function create()
     {
-        return view('kegiatan.create');
+        return redirect()->route('kegiatan.index');
     }
 
     /**

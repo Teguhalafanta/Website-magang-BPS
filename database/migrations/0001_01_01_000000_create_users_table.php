@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->string('nim')->primary(); // primary key
-            $table->string('username')->nullable(); // tidak unique
+            $table->string('username')->unique()->nullable();
             $table->string('nama');
             $table->string('asal_univ');
             $table->string('jurusan');
@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->enum('role', ['admin', 'mahasiswa', 'dosen'])->default('mahasiswa'); // kolom role
             $table->rememberToken();
             $table->timestamps();
         });

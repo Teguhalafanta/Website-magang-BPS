@@ -12,7 +12,7 @@ class DashboardController extends Controller
 {
     public function index(Request $request)
     {
-        $versi = $request->query('versi', 'baru'); // default ke 'baru'
+        $versi = $request->query('versi', 'baru'); // Default ke 'baru'
 
         // Ambil data statistik
         $jumlahMahasiswa = Mahasiswa::count();
@@ -21,21 +21,21 @@ class DashboardController extends Controller
 
         // Gunakan tampilan berbeda berdasarkan versi
         if ($versi === 'lama') {
-            return view('dashboard', [
-                'jumlahMahasiswa' => $jumlahMahasiswa,
-                'jumlahKegiatan' => $jumlahKegiatan,
-                'jumlahAbsensiHariIni' => $jumlahAbsensiHariIni,
-            ]);
-        } else {
-            return view('dashboard.index', [
-                'jumlahMahasiswa' => $jumlahMahasiswa,
-                'jumlahKegiatan' => $jumlahKegiatan,
-                'jumlahAbsensiHariIni' => $jumlahAbsensiHariIni,
-            ]);
+            return view('dashboard', compact(
+                'jumlahMahasiswa',
+                'jumlahKegiatan',
+                'jumlahAbsensiHariIni'
+            ));
         }
+
+        return view('dashboard.index', compact(
+            'jumlahMahasiswa',
+            'jumlahKegiatan',
+            'jumlahAbsensiHariIni'
+        ));
     }
 
-    /** profile user */
+    /** Profile user */
     public function userProfile()
     {
         return view('dashboard.profile');

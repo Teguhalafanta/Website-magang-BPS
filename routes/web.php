@@ -60,6 +60,14 @@ Route::middleware('auth')->group(function () {
     // Profile
     Route::get('/profile', [ProfileController::class, 'profile'])->name('profile');
     Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+    // Route untuk daftar mahasiswa
+    Route::get('/mahasiswa', [MahasiswaController::class, 'index'])->name('mahasiswa.index');
+
+    // Route untuk daftar kegiatan
+    Route::get('/kegiatan', [KegiatanController::class, 'index'])->name('kegiatan.index');
+
+    // Route untuk absensi hari ini
+    Route::get('/absensi/hari-ini', [AbsensiController::class, 'hariIni'])->name('absensi.hariIni');
 
     /*
     |--------------------------------------------------------------------------

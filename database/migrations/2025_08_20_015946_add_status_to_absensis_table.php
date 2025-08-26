@@ -12,7 +12,6 @@ return new class extends Migration
             if (!Schema::hasColumn('absensis', 'status')) {
                 $table->string('status')->nullable()->after('mahasiswa_id');
             }
-            // jangan tambahkan keterangan karena sudah ada
         });
     }
 
@@ -20,8 +19,6 @@ return new class extends Migration
     {
         Schema::table('absensis', function (Blueprint $table) {
             $table->dropColumn('keterangan');
-            // Kalau kamu menambahkan kolom status di migrasi ini, bisa drop juga
-            // $table->dropColumn('status');
         });
     }
 };

@@ -78,9 +78,13 @@ Route::middleware('auth')->group(function () {
     | Absensi
     |--------------------------------------------------------------------------
     */
-    Route::get('/absensi', [AbsensiController::class, 'index'])->name('absensi.index');
-    Route::post('/absensi', [AbsensiController::class, 'store'])->name('absensi.store');
-    Route::delete('/absensi/{id}', [AbsensiController::class, 'destroy'])->name('absensi.destroy');
+    Route::middleware(['auth'])->group(function () {
+        Route::get('/absensi', [AbsensiController::class, 'index'])->name('absensi.index');
+        Route::get('/absensi/{id}/edit', [AbsensiController::class, 'edit'])->name('absensi.edit');
+        Route::put('/absensi/{id}', [AbsensiController::class, 'update'])->name('absensi.update');
+        Route::post('/absensi', [AbsensiController::class, 'store'])->name('absensi.store');
+        Route::delete('/absensi/{id}', [AbsensiController::class, 'destroy'])->name('absensi.destroy'); // opsional
+    });
 
     // API & Utility Routes untuk Absensi
     Route::prefix('absensi')->name('absensi.')->group(function () {
@@ -107,6 +111,7 @@ Route::middleware('auth')->group(function () {
     */
     Route::get('/kegiatan', [KegiatanController::class, 'index'])->name('kegiatan.index');
     Route::post('/kegiatan', [KegiatanController::class, 'store'])->name('kegiatan.store');
+    Route::resource('kegiatan', KegiatanController::class)->middleware('auth');
     Route::get('/kegiatan/{kegiatan}/edit', [KegiatanController::class, 'edit'])->name('kegiatan.edit');
     Route::put('/kegiatan/{kegiatan}', [KegiatanController::class, 'update'])->name('kegiatan.update');
     Route::delete('/kegiatan/{kegiatan}', [KegiatanController::class, 'destroy'])->name('kegiatan.destroy');

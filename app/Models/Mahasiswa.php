@@ -5,20 +5,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Absensi;
+use App\Models\Kegiatan;
 
 class Mahasiswa extends Model
 {
-    use HasFactory;
-
-    // pastikan sesuai dengan nama tabel di database
-    protected $table = 'mahasiswas';
-
-    protected $fillable = [
-        'nama',
-        'nim',
-        'telepon',  // konsisten: di migration juga harus 'telepon', bukan 'telpon'
-        'alamat',
-    ];
+    protected $fillable = ['nama', 'nim', 'telepon', 'alamat'];
 
     public function absensis()
     {
@@ -28,10 +20,5 @@ class Mahasiswa extends Model
     public function kegiatans()
     {
         return $this->hasMany(Kegiatan::class);
-    }
-
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'nim', 'nim');
     }
 }

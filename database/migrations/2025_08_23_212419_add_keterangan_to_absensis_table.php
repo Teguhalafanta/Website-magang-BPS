@@ -4,15 +4,12 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class AddKeteranganToAbsensisTable extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up()
     {
         Schema::table('absensis', function (Blueprint $table) {
-            $table->string('keterangan')->nullable()->after('status');
+            $table->string('keterangan')->nullable();
         });
     }
 
@@ -22,4 +19,5 @@ return new class extends Migration
             $table->dropColumn('keterangan');
         });
     }
-};
+}
+

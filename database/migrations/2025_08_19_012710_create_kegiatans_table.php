@@ -8,7 +8,8 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('kegiatan', function (Blueprint $table) {
+        // Gunakan nama tabel jamak 'kegiatans'
+        Schema::create('kegiatans', function (Blueprint $table) {
             $table->id();
             $table->string('nama_kegiatan');
             $table->date('tanggal');
@@ -17,9 +18,9 @@ return new class extends Migration
         });
     }
 
-
     public function down(): void
     {
+        // Drop tabel dengan nama yang sama
         Schema::dropIfExists('kegiatans');
     }
 };

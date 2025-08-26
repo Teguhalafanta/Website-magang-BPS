@@ -2,89 +2,78 @@
 
 @section('content')
 <div class="container">
-    <h3 class="mb-4 fw-bold text-primary">Daftar Absensi</h3>
+    <h2 class="mb-4">Absensi Mahasiswa</h2>
+
+    {{-- Form Absensi --}}
+    <div class="card mb-4 shadow">
+        <div class="card-header bg-success text-white">Form Absensi</div>
+        <div class="card-body">
+            <form action="{{ route('absensi.store') }}" method="POST">
+                @csrf
+                <div class="mb-3">
+                    <label>Nama Mahasiswa</label>
+                    <input type="text" name="nama" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label>NIM</label>
+                    <input type="text" name="nim" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label>Status Kehadiran</label>
+                    <select name="status" class="form-control" required>
+                        <option value="">-- Pilih Status --</option>
+                        <option value="hadir">Hadir</option>
+                        <option value="izin">Izin</option>
+                        <option value="sakit">Sakit</option>
+                        <option value="alpha">Alpha</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-success">Simpan Absensi</button>
+            </form>
+        </div>
+    </div>
 
     {{-- Tabel Absensi --}}
-    <div class="table-responsive">
-        <table class="table table-bordered text-center align-middle">
-            <thead class="table-light">
-                <tr>
-                    <th style="width: 5%;">No</th>
-                    <th>Nama</th>
-                    <th>NIM</th>
-                    <th>Status</th>
-                    <th>Tanggal</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($absensis as $index => $absensi)
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">Daftar Absensi</div>
+        <div class="card-body">
+            <table class="table table-bordered text-center">
+                <thead class="table-dark">
                     <tr>
-                        <td>{{ $index + 1 }}</td>
-                        <td>{{ $absensi->mahasiswa->nama ?? '-' }}</td>
-                        <td>{{ $absensi->mahasiswa->nim ?? '-' }}</td>
-                        <td>
-                            <span class="badge bg-{{ match(strtolower($absensi->status)) {
-                                'hadir' => 'success',
-                                'izin' => 'info',
-                                'sakit' => 'warning',
-                                'alpa', 'alpha' => 'danger',
-                                default => 'secondary'
-                            } }}">
-                                {{ ucfirst($absensi->status) }}
-                            </span>
-                        </td>
-                        <td>{{ \Carbon\Carbon::parse($absensi->tanggal)->translatedFormat('d F Y') }}</td>
+                        <th>No</th>
+                        <th>Nama</th>
+                        <th>NIM</th>
+                        <th>Status</th>
+                        <th>Tanggal</th>
                     </tr>
-                @empty
-                    <tr>
-                        <td colspan="5">Belum ada data absensi</td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
-    </div>
-
-    {{-- Notifikasi belum absen --}}
-    @if($belumAbsen)
-        <div class="alert alert-warning mt-4">
-            Anda <strong>belum absen hari ini.</strong> Silakan lakukan absen terlebih dahulu.
+                </thead>
+                <tbody>
+                    @forelse($absensis as $absen)
+                        <tr>
+                            <td>{{ $loop->iteration }}</td>
+                            <td>{{ $absen->mahasiswa->nama ?? '-' }}</td>
+                            <td>{{ $absen->mahasiswa->nim ?? '-' }}</td>
+                            <td>{{ ucfirst($absen->status) }}</td>
+                            <td>{{ $absen->created_at->format('d-m-Y') }}</td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="5" class="text-center">Belum ada data absensi</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
-    @endif
-
-    {{-- Tombol Tambah Absen --}}
-    <a href="{{ route('absensi.create') }}" class="btn btn-primary mt-2">
-        Tambah Absen
-    </a>
-
-    {{-- Data Mahasiswa --}}
-    <h4 class="mt-5 fw-bold text-primary">Data Mahasiswa</h4>
-    <div class="table-responsive">
-        <table class="table table-hover text-center align-middle">
-            <thead class="table-light">
-                <tr>
-                    <th>No</th>
-                    <th>Nama Mahasiswa</th>
-                    <th>NIM</th>
-                    <th>No Telpon</th>
-                    <th>Alamat</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($mahasiswas as $index => $mhs)
-                    <tr>
-                        <td>{{ $index + 1 }}</td>
-                        <td>{{ $mhs->nama }}</td>
-                        <td>{{ $mhs->nim }}</td>
-                        <td>{{ $mhs->no_telp }}</td>
-                        <td>{{ $mhs->alamat }}</td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td colspan="5">Belum ada data mahasiswa</td>
-                    </tr>
-                @endforelse
-            </tbody>
-        </table>
     </div>
+
+    {{-- Cek absen hari ini --}}
+    @if (!$absenHariIni)
+        <div class="alert alert-warning mt-3">
+            Anda <b>belum absen hari ini</b>. Silakan lakukan absen terlebih dahulu.
+        </div>
+        <button class="btn btn-secondary mb-3" disabled>Tambah Kegiatan</button>
+    @else
+        <a href="{{ route('kegiatan.create') }}" class="btn btn-primary mt-3">Tambah Kegiatan</a>
+    @endif
 </div>
 @endsection

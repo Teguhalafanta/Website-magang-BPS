@@ -5,66 +5,56 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Absensi;
 use App\Models\Mahasiswa;
-use Illuminate\Support\Facades\Auth;
 
 class AbsensiController extends Controller
 {
-    /**
-     * Tampilkan halaman absensi dengan daftar absensi
-     */
-    public function index(Request $request)
+    public function index()
     {
-        $user = Auth::user(); // pastikan user sudah login
-
-        if (!$user) {
-            return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu.');
-        }
-
-        $today = now()->toDateString();
-
-        // Cek apakah user belum absen hari ini
-        $belumAbsen = !Absensi::where('mahasiswa_id', $user->id)
-            ->whereDate('tanggal', $today)
-            ->exists();
-
-        // Ambil semua data absensi dan mahasiswa
-        $absensis = Absensi::with('mahasiswa')->orderByDesc('created_at')->get();
+        $absensis = Absensi::with('mahasiswa')->paginate(10);
         $mahasiswas = Mahasiswa::all();
-
-        return view('absensi.index', compact('absensis', 'mahasiswas', 'belumAbsen'));
+        return view('absensi.index', compact('absensis', 'mahasiswas'));
     }
 
-    /**
-     * Simpan data absensi
-     */
     public function store(Request $request)
     {
         $request->validate([
-            'status' => 'required|in:hadir,izin,sakit,alpha',
+            'mahasiswa_id' => 'required|exists:mahasiswa,id',
+            'tanggal' => 'required|date',
+            'status' => 'required|in:Hadir,Izin,Sakit,Alfa',
         ]);
 
-        $user = Auth::user();
+        Absensi::create($request->all());
 
-        if (!$user) {
-            return redirect()->route('login')->with('error', 'Silakan login terlebih dahulu.');
-        }
+        return redirect()->route('absensi.index')->with('success', 'Data absensi berhasil ditambahkan');
+    }
 
-        // Ambil data mahasiswa dari user
-        $mahasiswa = Mahasiswa::where('nim', $user->nim)->first();
+    public function edit($id)
+    {
+        $absen = Absensi::findOrFail($id);
+        $mahasiswas = Mahasiswa::all();
+        return view('absensi.edit', compact('absen', 'mahasiswas'));
+    }
 
-        if (!$mahasiswa) {
-            return back()->withErrors(['nim' => 'Data mahasiswa tidak ditemukan.']);
-        }
-
-        // Simpan data absensi
-        Absensi::create([
-            'mahasiswa_id'   => $mahasiswa->id,
-            'nama_mahasiswa' => $mahasiswa->nama,
-            'nim'            => $mahasiswa->nim,
-            'status'         => $request->status,
-            'tanggal'        => now()->toDateString(),
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'mahasiswa_id' => 'required|exists:mahasiswas,id', // perbaikan di sini juga
+            'tanggal' => 'required|date',
+            'status' => 'required|in:Hadir,Izin,Sakit,Alfa',
+            'keterangan' => 'nullable|string|max:255',
         ]);
 
-        return redirect()->route('absensi.index')->with('success', 'Absensi berhasil disimpan.');
+        $absen = Absensi::findOrFail($id);
+        $absen->update($request->all());
+
+        return redirect()->route('absensi.index')->with('success', 'Data absensi berhasil diupdate');
+    }
+
+    public function destroy($id)
+    {
+        $absen = Absensi::findOrFail($id);
+        $absen->delete();
+
+        return redirect()->route('absensi.index')->with('success', 'Data absensi berhasil dihapus');
     }
 }

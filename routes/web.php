@@ -19,40 +19,70 @@ use App\Http\Controllers\LoginSSOController;
 |--------------------------------------------------------------------------
 */
 
-// Halaman login (default)
+// Login Mahasiswa (default)
 Route::get('/', [LoginController::class, 'index'])->name('login')->middleware('guest');
 Route::post('/log', [LoginController::class, 'login'])->name('login.store');
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-// Halaman register
+// Login Dosen
+Route::get('/login/dosen', [LoginDosenController::class, 'index'])->name('login.dosen')->middleware('guest');
+Route::post('/login/dosen', [LoginDosenController::class, 'store'])->name('login.dosen.store');
+Route::post('/logout/dosen', [LoginDosenController::class, 'logout'])->name('logout.dosen');
+
+// Login SSO
+Route::get('/login-sso', [LoginSSOController::class, 'index'])->name('login.sso');
+
+// Halaman register mahasiswa
 Route::get('/register', [RegisterController::class, 'index'])->name('register');
 Route::post('/regist', [RegisterController::class, 'store'])->name('register.store');
+
+// Halaman register dosen
+Route::get('/register/dosen', [RegisterDosenController::class, 'index'])->name('register.dosen');
+Route::post('/register/dosen', [RegisterDosenController::class, 'store'])->name('register.dosen.store');
+
+// Halaman opsi signup
+Route::get('/signup', function () {
+    return view('auth.signup_opsi');
+})->name('signup');
 
 /*
 |--------------------------------------------------------------------------
 | Protected Routes (Require Authentication)
 |--------------------------------------------------------------------------
 */
-
 Route::middleware('auth')->group(function () {
 
     // Dashboard
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])
+        ->middleware(['auth:web,dosen']) // Bisa diakses mahasiswa & dosen
+        ->name('dashboard');
 
     // Profile
-    Route::get('/profile', [DashboardController::class, 'profile'])->name('profile');
-    Route::post('/profile/update', [DashboardController::class, 'updateProfile'])->name('profile.update');
+    Route::get('/profile', [ProfileController::class, 'profile'])->name('profile');
+    Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 
-    // Data Mahasiswa
+    /*
+    |--------------------------------------------------------------------------
+    | Mahasiswa
+    |--------------------------------------------------------------------------
+    */
     Route::get('/mahasiswa', [MahasiswaController::class, 'index'])->name('mahasiswa.index');
     Route::post('/mahasiswa', [MahasiswaController::class, 'store'])->name('mahasiswa.store');
+    Route::resource('mahasiswa', MahasiswaController::class);
+    Route::get('/mahasiswa/{mahasiswa}/edit', [MahasiswaController::class, 'edit'])->name('mahasiswa.edit');
+    Route::put('/mahasiswa/{mahasiswa}', [MahasiswaController::class, 'update'])->name('mahasiswa.update');
+    Route::delete('/mahasiswa/{mahasiswa}', [MahasiswaController::class, 'destroy'])->name('mahasiswa.destroy');
 
-    // Absensi Routes
+    /*
+    |--------------------------------------------------------------------------
+    | Absensi
+    |--------------------------------------------------------------------------
+    */
     Route::get('/absensi', [AbsensiController::class, 'index'])->name('absensi.index');
     Route::post('/absensi', [AbsensiController::class, 'store'])->name('absensi.store');
-    Route::resource('absensi', AbsensiController::class)->except(['index', 'store']);
+    Route::delete('/absensi/{id}', [AbsensiController::class, 'destroy'])->name('absensi.destroy');
 
-    // AJAX Routes untuk Absensi
+    // API & Utility Routes untuk Absensi
     Route::prefix('absensi')->name('absensi.')->group(function () {
         Route::get('/get-data', [AbsensiController::class, 'getAbsensiData'])->name('get-data');
         Route::get('/today-data', [AbsensiController::class, 'getTodayData'])->name('today-data');
@@ -61,16 +91,7 @@ Route::middleware('auth')->group(function () {
         Route::delete('/reset-all', [AbsensiController::class, 'reset'])->name('reset-all');
     });
 
-    // Kegiatan Routes
-    Route::get('/kegiatan', [KegiatanController::class, 'index'])->name('kegiatan.index');
-    Route::get('/kegiatan/create', [KegiatanController::class, 'create'])->name('kegiatan.create');
-    Route::post('/kegiatan', [KegiatanController::class, 'store'])->name('kegiatan.store');
-    Route::resource('kegiatan', KegiatanController::class)->middleware('auth');
-    Route::get('/kegiatan/{kegiatan}/edit', [KegiatanController::class, 'edit'])->name('kegiatan.edit');
-    Route::put('/kegiatan/{kegiatan}', [KegiatanController::class, 'update'])->name('kegiatan.update');
-    Route::delete('/kegiatan/{kegiatan}', [KegiatanController::class, 'destroy'])->name('kegiatan.destroy');
-
-    // API Routes untuk Absensi
+    // API khusus (jangan bentrok dengan route utama Absensi)
     Route::prefix('api/absensi')->name('api.absensi.')->group(function () {
         Route::get('/stats', [AbsensiController::class, 'getStatsApi'])->name('stats');
         Route::get('/today', [AbsensiController::class, 'getTodayApi'])->name('today');
@@ -78,32 +99,27 @@ Route::middleware('auth')->group(function () {
         Route::get('/weekly-stats', [AbsensiController::class, 'getWeeklyStatsApi'])->name('weekly-stats');
         Route::get('/monthly-stats', [AbsensiController::class, 'getMonthlyStatsApi'])->name('monthly-stats');
     });
+
+    /*
+    |--------------------------------------------------------------------------
+    | Kegiatan
+    |--------------------------------------------------------------------------
+    */
+    Route::get('/kegiatan', [KegiatanController::class, 'index'])->name('kegiatan.index');
+    Route::post('/kegiatan', [KegiatanController::class, 'store'])->name('kegiatan.store');
+    Route::get('/kegiatan/{kegiatan}/edit', [KegiatanController::class, 'edit'])->name('kegiatan.edit');
+    Route::put('/kegiatan/{kegiatan}', [KegiatanController::class, 'update'])->name('kegiatan.update');
+    Route::delete('/kegiatan/{kegiatan}', [KegiatanController::class, 'destroy'])->name('kegiatan.destroy');
 });
 
+/*
+|--------------------------------------------------------------------------
+| Fallback Route
+|--------------------------------------------------------------------------
+*/
 Route::fallback(function () {
     if (app('auth')->check()) {
         return redirect()->route('dashboard')->with('error', 'Halaman tidak ditemukan.');
     }
-
     return redirect()->route('login')->with('error', 'Halaman tidak ditemukan.');
 });
-
-
-
-
-Route::get('/dashboard', [dashboardController::class, 'index'])->middleware('auth');
-Route::get('/login-sso', [LoginSSOController::class, 'index'])->name('login.sso');
-
-// ================= Dashboard  =================
-Route::get('/dashboard', [dashboardController::class, 'index'])
-    ->middleware(['auth:web,dosen']) // Bisa diakses mahasiswa & dosen
-    ->name('dashboard');
-
-// ================= Logout Mahasiswa =================
-Route::post('/logout', [loginController::class, 'logout'])->name('logout');
-
-// ================= Login Mahasiswa =================
-Route::get('/', [loginController::class, 'index'])
-    ->name('login')
-    ->middleware('guest');
-Route::post('/log', [loginController::class, 'login'])->name('login.store');

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -12,6 +13,7 @@
             min-height: 100vh;
             margin: 0;
         }
+
         .sidebar {
             min-width: 220px;
             background-color: #343a40;
@@ -20,12 +22,14 @@
             height: 100vh;
             position: fixed;
         }
+
         .sidebar .brand {
             font-weight: 700;
             font-size: 1.5rem;
             margin-bottom: 2rem;
             text-align: center;
         }
+
         .sidebar a {
             display: block;
             color: white;
@@ -34,9 +38,12 @@
             border-radius: 4px;
             margin-bottom: 0.5rem;
         }
-        .sidebar a:hover, .sidebar a.active {
+
+        .sidebar a:hover,
+        .sidebar a.active {
             background-color: #0d6efd;
         }
+
         .content {
             margin-left: 220px;
             padding: 2rem;
@@ -46,22 +53,53 @@
         }
     </style>
 </head>
+
 <body>
 
     <nav class="sidebar">
         <div class="brand">Magang BPS</div>
         <a href="{{ route('dashboard') }}" class="{{ request()->routeIs('dashboard') ? 'active' : '' }}">Dashboard</a>
-        <a href="{{ route('mahasiswa.index') }}" class="{{ request()->routeIs('mahasiswa.*') ? 'active' : '' }}">Mahasiswa</a>
+        <a href="{{ route('mahasiswa.index') }}"
+            class="{{ request()->routeIs('mahasiswa.*') ? 'active' : '' }}">Mahasiswa</a>
         <a href="{{ route('absensi.index') }}" class="{{ request()->routeIs('absensi.*') ? 'active' : '' }}">Absensi</a>
-        <a href="{{ route('kegiatan.index') }}" class="{{ request()->routeIs('kegiatan.*') ? 'active' : '' }}">Kegiatan</a>
+        <a href="{{ route('kegiatan.index') }}"
+            class="{{ request()->routeIs('kegiatan.*') ? 'active' : '' }}">Kegiatan</a>
         <!-- Tambah menu lain jika perlu -->
     </nav>
 
     <main class="content">
+        <!-- Topbar -->
+        <div class="d-flex justify-content-end mb-3">
+            <div class="dropdown">
+                <button class="btn btn-light position-relative" type="button" id="notifDropdown"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                    🔔
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                        {{ $notifications->where('is_read', false)->count() ?? 0 }}
+                    </span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notifDropdown">
+                    @forelse($notifications as $notif)
+                        <li>
+                            <a class="dropdown-item {{ $notif->is_read ? '' : 'fw-bold' }}"
+                                href="{{ route('notifications.read', $notif->id) }}">
+                                <strong>{{ $notif->title }}</strong><br>
+                                <small>{{ $notif->message }}</small>
+                            </a>
+                        </li>
+                    @empty
+                        <li><span class="dropdown-item text-muted">Tidak ada notifikasi</span></li>
+                    @endforelse
+                </ul>
+            </div>
+        </div>
+
+        <!-- Konten utama -->
         @yield('content')
     </main>
 
     <!-- Bootstrap JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

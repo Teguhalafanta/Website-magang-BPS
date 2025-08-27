@@ -12,6 +12,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegisterDosenController;
 use App\Http\Controllers\LoginDosenController;
 use App\Http\Controllers\LoginSSOController;
+use App\Http\Controllers\NotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -60,6 +61,7 @@ Route::middleware('auth')->group(function () {
     // Profile
     Route::get('/profile', [ProfileController::class, 'profile'])->name('profile');
     Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+    
     // Route untuk daftar mahasiswa
     Route::get('/mahasiswa', [MahasiswaController::class, 'index'])->name('mahasiswa.index');
 
@@ -123,6 +125,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/kegiatan/{kegiatan}/edit', [KegiatanController::class, 'edit'])->name('kegiatan.edit');
     Route::put('/kegiatan/{kegiatan}', [KegiatanController::class, 'update'])->name('kegiatan.update');
     Route::delete('/kegiatan/{kegiatan}', [KegiatanController::class, 'destroy'])->name('kegiatan.destroy');
+
+    /*
+    |-------------------------------------------------------------------
+    | Notifications
+    |-------------------------------------------------------------------
+    */
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.read');
 });
 
 /*

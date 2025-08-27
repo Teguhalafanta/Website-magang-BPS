@@ -17,7 +17,7 @@
                 <div class="card bg-warning text-white shadow">
                     <div class="card-body">
                         <h5>Absensi Hari Ini</h5>
-                        <h2>{{ $totalAbsensiHariIni }}</h2>
+                        <h2>{{ $jumlahAbsensiHariIni }}</h2>
                     </div>
                 </div>
             </a>

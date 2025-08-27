@@ -12,7 +12,7 @@ class ProfileController extends Controller
     public function profile()
     {
         $profile = Auth::user(); // ambil user yang login
-        return view('mahasiswa.profile', compact('profile'));
+        return view('dashboard.profile', compact('profile'));
     }
 
     // Update profil user

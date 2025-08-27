@@ -10,6 +10,7 @@ class CreateAbsensisTable extends Migration
         Schema::create('absensis', function (Blueprint $table) { // 'absensis' sesuai dengan nama tabel yang kamu gunakan di project
             $table->id();
             $table->foreignId('mahasiswa_id')->constrained('mahasiswas')->onDelete('cascade'); // tabel mahasiswa harus sesuai nama di DB
+            $table->string('nama_mahasiswa')->nullable()->after('mahasiswa_id');
             $table->date('tanggal');
             $table->enum('status', ['Hadir', 'Izin', 'Sakit', 'Alfa']);
             $table->string('keterangan')->nullable();

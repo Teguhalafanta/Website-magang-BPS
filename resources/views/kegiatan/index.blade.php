@@ -1,89 +1,163 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="container mt-4">
-        <div class="card">
-            <div class="card-header bg-success text-white">
-                <strong>Daftar Kegiatan</strong>
-            </div>
-            <div class="card-body">
-                {{-- Notifikasi sukses --}}
-                @if (session('success'))
-                    <div class="alert alert-success">{{ session('success') }}</div>
-                @endif
+    <div class="card">
+        <div class="card-header bg-success text-white">
+            Absensi Mahasiswa
+        </div>
+        <div class="card-body">
+            {{-- Tampilkan pesan sukses --}}
+            @if (session('success'))
+                <div class="alert alert-success">{{ session('success') }}</div>
+            @endif
 
-                {{-- Form Tambah Kegiatan --}}
-                <form action="{{ route('kegiatan.store') }}" method="POST" class="mb-4">
-                    @csrf
-                    <div class="row g-3">
-                        <div class="col-md-4">
-                            <label class="form-label">Nama Kegiatan</label>
-                            <input type="text" name="nama_kegiatan" class="form-control"
-                                value="{{ old('nama_kegiatan') }}">
-                            @error('nama_kegiatan')
-                                <small class="text-danger">{{ $message }}</small>
-                            @enderror
-                        </div>
-                        <div class="col-md-3">
-                            <label class="form-label">Tanggal</label>
-                            <input type="date" name="tanggal" class="form-control" value="{{ old('tanggal') }}">
-                            @error('tanggal')
-                                <small class="text-danger">{{ $message }}</small>
-                            @enderror
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Deskripsi</label>
-                            <input type="text" name="deskripsi" class="form-control" value="{{ old('deskripsi') }}">
-                            @error('deskripsi')
-                                <small class="text-danger">{{ $message }}</small>
-                            @enderror
-                        </div>
-                        <div class="col-md-1 align-self-end">
-                            <button type="submit" class="btn btn-success w-100">Simpan</button>
-                        </div>
+            <h3>
+                {{ request()->has('today') ? 'Absensi Hari Ini' : 'Semua Data Absensi' }}
+            </h3>
+
+            {{-- Form tambah absensi --}}
+            <form action="{{ route('absensi.store') }}" method="POST" class="mb-4">
+                @csrf
+                <div class="row g-3 align-items-center">
+                    <div class="col-md-3">
+                        <label class="form-label">Mahasiswa</label>
+                        <select name="mahasiswa_id" class="form-select" required>
+                            <option value="">-- Pilih Mahasiswa --</option>
+                            @foreach ($mahasiswas as $mhs)
+                                <option value="{{ $mhs->id }}" {{ old('mahasiswa_id') == $mhs->id ? 'selected' : '' }}>
+                                    {{ $mhs->nama }} ({{ $mhs->nim }})
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('mahasiswa_id')
+                            <small class="text-danger">{{ $message }}</small>
+                        @enderror
                     </div>
-                </form>
 
-                {{-- Tabel Daftar Kegiatan --}}
-                <table class="table table-bordered table-hover mt-4">
-                    <thead class="table-dark text-center">
+                    <div class="col-md-2">
+                        <label class="form-label">Tanggal</label>
+                        <input type="date" name="tanggal" class="form-control" value="{{ old('tanggal', date('Y-m-d')) }}" required>
+                        @error('tanggal')
+                            <small class="text-danger">{{ $message }}</small>
+                        @enderror
+                    </div>
+
+                    <div class="col-md-2">
+                        <label class="form-label">Status</label>
+                        <select name="status" class="form-select" required>
+                            <option value="">-- Pilih Status --</option>
+                            @foreach (['Hadir', 'Izin', 'Sakit', 'Alfa'] as $status)
+                                <option value="{{ $status }}" {{ old('status') == $status ? 'selected' : '' }}>
+                                    {{ $status }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('status')
+                            <small class="text-danger">{{ $message }}</small>
+                        @enderror
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label">Keterangan</label>
+                        <input type="text" name="keterangan" class="form-control" value="{{ old('keterangan') }}">
+                        @error('keterangan')
+                            <small class="text-danger">{{ $message }}</small>
+                        @enderror
+                    </div>
+
+                    <div class="col-md-2 align-self-end">
+                        <button type="submit" class="btn btn-success w-100">Simpan</button>
+                    </div>
+                </div>
+            </form>
+
+            {{-- Tabel daftar absensi --}}
+            <table class="table table-bordered">
+                <thead class="table-dark text-center">
+                    <tr>
+                        <th>Nama</th>
+                        <th>NIM</th>
+                        <th>Tanggal</th>
+                        <th>Status</th>
+                        <th>Keterangan</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($absensis as $absen)
                         <tr>
-                            <th>Nama Kegiatan</th>
+                            <td>{{ $absen->mahasiswa->nama ?? '-' }}</td>
+                            <td>{{ $absen->mahasiswa->nim ?? '-' }}</td>
+                            <td>{{ \Carbon\Carbon::parse($absen->tanggal)->format('d-m-Y') }}</td>
+                            <td>{{ ucfirst($absen->status) }}</td>
+                            <td>{{ $absen->keterangan ?? '-' }}</td>
+                            <td class="text-center">
+                                <a href="{{ route('absensi.edit', $absen->id) }}" class="btn btn-warning btn-sm">Edit</a>
+
+                                <form action="{{ route('absensi.destroy', $absen->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Hapus data absensi ini?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="btn btn-danger btn-sm">Hapus</button>
+                                </form>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="6" class="text-center">Data absensi belum ada.</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+
+            {{-- Pagination --}}
+            <div class="d-flex justify-content-center">
+                {{ $absensis->links() }}
+            </div>
+        </div>
+
+        {{-- Tabel ringkasan absensi --}}
+        <div class="card shadow mt-4">
+            <div class="card-header bg-primary text-white">Daftar Absensi</div>
+            <div class="card-body p-0">
+                <table class="table table-bordered text-center mb-0">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>No</th>
+                            <th>Nama</th>
+                            <th>NIM</th>
+                            <th>Status</th>
                             <th>Tanggal</th>
-                            <th>Deskripsi</th>
-                            <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse($kegiatans as $kegiatan)
+                        @forelse($absensis as $absen)
                             <tr>
-                                <td>{{ $kegiatan->nama_kegiatan }}</td>
-                                <td>{{ \Carbon\Carbon::parse($kegiatan->tanggal)->format('d M Y') }}</td>
-                                <td>{{ $kegiatan->deskripsi }}</td>
-                                <td class="text-center">
-                                    <a href="{{ route('kegiatan.edit', $kegiatan->id) }}"
-                                        class="btn btn-sm btn-warning mb-1">Edit</a>
-                                    <form action="{{ route('kegiatan.destroy', $kegiatan->id) }}" method="POST"
-                                        class="d-inline" onsubmit="return confirm('Yakin ingin menghapus?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button class="btn btn-sm btn-danger">Hapus</button>
-                                    </form>
-                                </td>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $absen->mahasiswa->nama ?? '-' }}</td>
+                                <td>{{ $absen->mahasiswa->nim ?? '-' }}</td>
+                                <td>{{ ucfirst($absen->status) }}</td>
+                                <td>{{ $absen->created_at->format('d-m-Y') }}</td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="4" class="text-center">Data kegiatan belum ada.</td>
+                                <td colspan="5" class="text-center">Belum ada data absensi</td>
                             </tr>
                         @endforelse
                     </tbody>
                 </table>
-
-                {{-- Pagination --}}
-                <div class="mt-3">
-                    {{ $kegiatans->links() }}
-                </div>
             </div>
+        </div>
+
+        {{-- Cek absen hari ini --}}
+        <div class="mt-3">
+            @if (!$absenHariIni)
+                <div class="alert alert-warning">
+                    Anda <strong>belum absen hari ini</strong>. Silakan lakukan absen terlebih dahulu.
+                </div>
+                <button class="btn btn-secondary mb-3" disabled>Tambah Kegiatan</button>
+            @else
+                <a href="{{ route('kegiatan.create') }}" class="btn btn-primary mb-3">Tambah Kegiatan</a>
+            @endif
         </div>
     </div>
 @endsection

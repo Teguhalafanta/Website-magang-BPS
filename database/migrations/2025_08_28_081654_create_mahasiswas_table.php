@@ -4,17 +4,15 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
-    public function up(): void
-    {
+return new class extends Migration {
+    public function up(): void {
         Schema::create('mahasiswas', function (Blueprint $table) {
-            $table->id(); // Id User (auto-increment primary key)
+            $table->bigIncrements('id_pelajar'); // primary key auto increment
             $table->string('nama');
             $table->string('nim_nisn')->unique();
             $table->enum('jenis_kelamin', ['Laki-laki', 'Perempuan']);
-            $table->string('instansi'); // Universitas / Instansi / Sekolah
-            $table->string('jurusan'); // Fakultas / Jurusan (SMA/SMK)
+            $table->string('instansi');
+            $table->string('jurusan');
             $table->string('prodi');
             $table->date('tanggal_mulai');
             $table->date('tanggal_selesai');
@@ -22,14 +20,13 @@ return new class extends Migration
             $table->year('tahun_magang');
             $table->string('bulan_mulai');
             $table->string('bulan_selesai');
-            $table->text('link_laporan');
-            $table->text('link_sertifikat');
+            $table->text('link_laporan')->nullable();
+            $table->text('link_sertifikat')->nullable();
             $table->timestamps();
         });
     }
 
-    public function down(): void
-    {
+    public function down(): void {
         Schema::dropIfExists('mahasiswas');
     }
 };

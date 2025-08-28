@@ -143,10 +143,6 @@
                             Already have an account?
                             <a href="{{ route('login') }}" class="font-bold">Log in</a>.
                         </p>
-                        <p class="text-gray-600">
-                            Daftar sebagai dosen?
-                            <a href="{{ route('register.dosen') }}" class="font-bold">Register Dosen</a>.
-                        </p>
                     </div>
                 </div>
             </div>

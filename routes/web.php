@@ -4,9 +4,17 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\dashboardController;
 use App\Http\Controllers\loginController;
 use App\Http\Controllers\RegisterController;
-use App\Http\Controllers\RegisterDosenController;
-use App\Http\Controllers\LoginDosenController;
 use App\Http\Controllers\LoginSSOController;
+use App\Http\Controllers\AbsensiController;
+use App\Http\Controllers\KegiatanController;
+use App\Http\Controllers\MahasiswaController;
+
+Route::resource('mahasiswa', MahasiswaController::class);
+
+Route::resource('kegiatan', KegiatanController::class);
+
+Route::resource('absensi', AbsensiController::class);
+
 
 Route::get('/login-sso', [LoginSSOController::class, 'index'])->name('login.sso');
 
@@ -24,29 +32,13 @@ Route::get('/', [loginController::class, 'index'])
     ->middleware('guest');
 Route::post('/log', [loginController::class, 'login'])->name('login.store');
 
-
-// ================= Halaman Opsi Sign Up =================
-Route::get('/signup', function () {
-    return view('auth.signup_opsi');
-})->name('signup');
-
 // ================= Register Mahasiswa =================
 Route::get('/register', [RegisterController::class, 'index'])->name('register');
 Route::post('/register', [RegisterController::class, 'store'])->name('register.store');
 
-// ================= Register Dosen =================
-Route::get('/register/dosen', [RegisterDosenController::class, 'index'])->name('register.dosen');
-Route::post('/register/dosen', [RegisterDosenController::class, 'store'])->name('register.dosen.store');
-
-// ================= Login Dosen =================
-Route::get('/login/dosen', [LoginDosenController::class, 'index'])
-    ->name('login.dosen')
-    ->middleware('guest');
-Route::post('/login/dosen', [LoginDosenController::class, 'store'])->name('login.dosen.store');
-
-// ================= Logout Dosen =================
-Route::post('/logout/dosen', [LoginDosenController::class, 'logout'])->name('logout.dosen');
 
 // ================= Mahasiswa Index =================
 Route::get('/mahasiswa', [App\Http\Controllers\MahasiswaController::class, 'index'])
     ->name('mahasiswa.index');
+
+    

@@ -29,13 +29,6 @@
 
                     <form method="POST" action="{{ route('login.store') }}">
                         @csrf
-                        @if (session()->has('loginError'))
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                {{ session('loginError') }}
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                    aria-label="Close"></button>
-                            </div>
-                        @endif
                         <div class="form-group position-relative has-icon-left mb-4">
                             <input type="text" id="email" name="email"
                                 class="form-control @error('email') is invalid
@@ -77,8 +70,9 @@
 
                     </form>
                     <div class="text-center mt-5 text-lg fs-4">
-                        <p class="text-gray-600">Don't have an account? <a href="{{ route('signup') }}"
-                                class="font-bold">Sign up</a>.</p>
+                        <p class="text-gray-600">Don't have an account?
+                            <a href="{{ route('register') }}" class="font-bold">Sign up</a>.
+                        </p>
                         <p><a class="font-bold" href="auth-forgot-password.html">Forgot password?</a>.</p>
                     </div>
                 </div>

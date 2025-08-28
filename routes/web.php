@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\dashboardController;
 use App\Http\Controllers\loginController;
-
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\RegisterDosenController;
 use App\Http\Controllers\LoginDosenController;
@@ -13,7 +12,7 @@ Route::get('/login-sso', [LoginSSOController::class, 'index'])->name('login.sso'
 
 // ================= Dashboard  =================
 Route::get('/dashboard', [dashboardController::class, 'index'])
-    ->middleware(['auth:web,dosen']) // Bisa diakses mahasiswa & dosen
+    ->middleware(['auth:web,dosen'])
     ->name('dashboard');
 
 // ================= Logout Mahasiswa =================

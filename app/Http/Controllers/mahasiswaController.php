@@ -3,14 +3,75 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
 use App\Models\Mahasiswa;
 
-class mahasiswaController extends Controller
+class MahasiswaController extends Controller
 {
-    public function index() 
+    /**
+     * Tampilkan semua data mahasiswa
+     */
+    public function index()
     {
-        $mahasiswas = Mahasiswa::all();
+        $mahasiswas = Mahasiswa::paginate(10);
         return view('mahasiswa.index', compact('mahasiswas'));
+    }
+
+    /**
+     * Simpan data mahasiswa baru
+     */
+    public function store(Request $request)
+    {
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            'nim' => 'required|string|max:20|unique:mahasiswas,nim',
+            'telepon' => 'required|string|max:15',
+            'alamat' => 'required|string|max:255',
+        ]);
+
+        Mahasiswa::create([
+            'nama' => $request->nama,
+            'nim' => $request->nim,
+            'telepon' => $request->telepon,
+            'alamat' => $request->alamat,
+        ]);
+
+        return redirect()->route('mahasiswa.index')->with('success', 'Data mahasiswa berhasil ditambahkan');
+    }
+
+    /**
+     * Tampilkan form edit mahasiswa
+     */
+    public function edit($id)
+    {
+        $mahasiswa = Mahasiswa::findOrFail($id);
+        return view('mahasiswa.edit', compact('mahasiswa'));
+    }
+
+    /**
+     * Update data mahasiswa
+     */
+    public function update(Request $request, $id)
+    {
+        $mahasiswa = Mahasiswa::findOrFail($id);
+
+        $validated = $request->validate([
+            'nama' => 'required|string|max:255',
+            'nim'  => 'required|string|max:50|unique:mahasiswas,nim,' . $mahasiswa->id,
+        ]);
+
+        $mahasiswa->update($validated);
+
+        return redirect()->route('mahasiswa.index')->with('success', 'Data mahasiswa berhasil diperbarui');
+    }
+
+    /**
+     * Hapus data mahasiswa
+     */
+    public function destroy($id)
+    {
+        $mahasiswa = Mahasiswa::findOrFail($id);
+        $mahasiswa->delete();
+
+        return redirect()->route('mahasiswa.index')->with('success', 'Data mahasiswa berhasil dihapus');
     }
 }

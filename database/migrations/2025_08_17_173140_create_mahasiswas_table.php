@@ -6,24 +6,28 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('mahasiswas', function (Blueprint $table) {
-            $table->id();
+            $table->id(); // Id User (auto-increment primary key)
             $table->string('nama');
-            $table->string('nim');
-            $table->string('telpon');
-            $table->string('alamat');
+            $table->string('nim_nisn')->unique();
+            $table->enum('jenis_kelamin', ['Laki-laki', 'Perempuan']);
+            $table->string('instansi'); // Universitas / Instansi / Sekolah
+            $table->string('jurusan'); // Fakultas / Jurusan (SMA/SMK)
+            $table->string('prodi');
+            $table->date('tanggal_mulai');
+            $table->date('tanggal_selesai');
+            $table->integer('durasi_magang');
+            $table->year('tahun_magang');
+            $table->string('bulan_mulai');
+            $table->string('bulan_selesai');
+            $table->text('link_laporan');
+            $table->text('link_sertifikat');
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('mahasiswas');

@@ -8,9 +8,14 @@ return [
     ],
 
     'guards' => [
-        'web' => [ // Guard untuk mahasiswa
+        'web' => [ // Guard untuk default user
             'driver' => 'session',
             'provider' => 'users',
+        ],
+
+        'mahasiswa' => [ // Guard untuk mahasiswa
+            'driver' => 'session',
+            'provider' => 'mahasiswas',
         ],
 
         'dosen' => [ // Guard untuk dosen
@@ -20,12 +25,17 @@ return [
     ],
 
     'providers' => [
-        'users' => [ // Mahasiswa
+        'users' => [ // User default (misalnya admin)
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
         ],
 
-        'dosens' => [ // Dosen
+        'mahasiswas' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Mahasiswa::class,
+        ],
+
+        'dosens' => [
             'driver' => 'eloquent',
             'model' => App\Models\Dosen::class,
         ],
@@ -34,6 +44,13 @@ return [
     'passwords' => [
         'users' => [
             'provider' => 'users',
+            'table' => 'password_reset_tokens',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+
+        'mahasiswas' => [
+            'provider' => 'mahasiswas',
             'table' => 'password_reset_tokens',
             'expire' => 60,
             'throttle' => 60,

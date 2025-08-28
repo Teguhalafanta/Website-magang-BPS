@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Mahasiswa;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller; // Tambahkan ini jika belum ada
 
 class RegisterController extends Controller
 {
@@ -12,31 +14,36 @@ class RegisterController extends Controller
         return view('auth.register_pelajar');
     }
 
-    // Menyimpan data mahasiswa
     public function store(Request $request)
     {
         $request->validate([
-            'nim' => 'required|string|unique:users,nim',
-            'nama' => 'required|string|max:255',
-            'username' => 'nullable|string|max:255',
-            'asal_univ' => 'required|string|max:255',
-            'jurusan' => 'required|string|max:255',
-            'prodi' => 'required|string|max:255',
-            'email' => 'required|string|email:dns|unique:users,email',
-            'password' => 'required|string|min:5'
+            'username' => 'required|string|max:255|unique:users,username',
+            'email'    => 'required|string|email|max:255|unique:users,email',
+            'password' => 'required|string|min:5',
+            'nim'      => 'required|string|unique:mahasiswas,nim',
         ]);
 
-        User::create([
-            'nim' => $request->nim,
-            'nama' => $request->nama,
+        $user = User::create([
             'username' => $request->username,
-            'asal_univ' => $request->asal_univ,
-            'jurusan' => $request->jurusan,
-            'prodi' => $request->prodi,
-            'email' => $request->email,
+            'email'    => $request->email,
+            'nama' => $request->nama,
             'password' => bcrypt($request->password),
+            'nim'      => $request->nim,
+            'asal_univ'      => $request->asal_univ,
+            'jurusan'      => $request->jurusan,
+            'prodi'      => $request->prodi,
+            'telepon'      => $request->telepon,
         ]);
 
-        return to_route('login');
+        Mahasiswa::create([
+            'nama'      => $request->nama,
+            'nim'       => $request->nim,
+            'asal_univ' => $request->asal_univ,
+            'jurusan'   => $request->jurusan,
+            'prodi'     => $request->prodi,
+            'user_id'   => $user->id,
+        ]);
+
+        return redirect()->route('login')->with('success', 'Registrasi berhasil, silakan login.');
     }
 }

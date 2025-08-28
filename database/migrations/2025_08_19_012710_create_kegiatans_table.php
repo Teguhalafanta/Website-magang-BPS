@@ -6,22 +6,21 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
+    public function up()
     {
+        // Gunakan nama tabel jamak 'kegiatans'
         Schema::create('kegiatans', function (Blueprint $table) {
             $table->id();
+            $table->string('nama_kegiatan');
+            $table->date('tanggal');
+            $table->text('deskripsi')->nullable();
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
+        // Drop tabel dengan nama yang sama
         Schema::dropIfExists('kegiatans');
     }
 };

@@ -20,7 +20,7 @@ class RegisterController extends Controller
             'username' => 'required|string|max:255|unique:users,username',
             'email'    => 'required|string|email|max:255|unique:users,email',
             'password' => 'required|string|min:5',
-            'nim'      => 'required|string|unique:mahasiswas,nim',
+            'nim'      => 'required|string|unique:mahasiswas,nim_nisn',
         ]);
 
         $user = User::create([
@@ -37,7 +37,7 @@ class RegisterController extends Controller
 
         Mahasiswa::create([
             'nama'      => $request->nama,
-            'nim'       => $request->nim,
+            'nim_nisn'    => $request->nim,
             'asal_univ' => $request->asal_univ,
             'jurusan'   => $request->jurusan,
             'prodi'     => $request->prodi,

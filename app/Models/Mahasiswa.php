@@ -1,5 +1,4 @@
 <?php
-// app/Models/Mahasiswa.php
 
 namespace App\Models;
 
@@ -10,7 +9,21 @@ use App\Models\Kegiatan;
 
 class Mahasiswa extends Model
 {
-    protected $fillable = ['nama', 'nim', 'telepon', 'alamat'];
+    use HasFactory;
+
+    protected $primaryKey = 'id_pelajar';
+    public $incrementing = true;
+    protected $keyType = 'int';
+
+    protected $fillable = [
+        'nama',
+        'nim', 
+        'asal_univ',
+        'jurusan',
+        'prodi',
+        'email',
+        'password'
+    ];
 
     public function absensis()
     {

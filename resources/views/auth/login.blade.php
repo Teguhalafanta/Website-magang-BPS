@@ -10,7 +10,6 @@
 
 <body>
     <div id="auth">
-
         <div class="row h-100">
             <div class="col-lg-5 col-12">
                 <div id="auth-left">
@@ -66,7 +65,7 @@
 
                         <a href="{{ route('login.sso') }}"
                             class="btn btn-outline-primary btn-block btn-lg shadow-lg mt-3">
-                            Login SSO
+                            Log in SSO
                         </a>
 
                     </form>

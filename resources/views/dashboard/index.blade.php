@@ -5,6 +5,7 @@
         <h2 class="mb-4">Dashboard BPS</h2>
 
         <div class="row">
+            {{-- Total Mahasiswa --}}
             <div class="col-md-4 mb-3">
                 <div class="card text-white bg-primary shadow">
                     <div class="card-body">
@@ -13,28 +14,25 @@
                     </div>
                 </div>
             </div>
-            <a href="{{ route('absensi.index', ['today' => true]) }}" class="text-decoration-none">
-                <div class="card bg-warning text-white shadow">
-                    <div class="card-body">
-                        <h5>Absensi Hari Ini</h5>
-                        <h2>{{ $jumlahAbsensiHariIni }}</h2>
+            
+            {{-- Absensi Hari Ini (klik menuju absensi) --}}
+            <div class="col-md-4 mb-3">
+                <a href="{{ route('absensi.index', ['today' => true]) }}" class="text-decoration-none">
+                    <div class="card bg-warning text-white shadow">
+                        <div class="card-body">
+                            <h5>Absensi Hari Ini</h5>
+                            <h3>{{ $jumlahAbsensiHariIni }}</h3>
+                        </div>
                     </div>
-                </div>
-            </a>
+                </a>
+            </div>
 
+            {{-- Total Kegiatan --}}
             <div class="col-md-4 mb-3">
                 <div class="card text-white bg-success shadow">
                     <div class="card-body">
                         <h5>Total Kegiatan</h5>
                         <h3>{{ $jumlahKegiatan }}</h3>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 mb-3">
-                <div class="card text-white bg-warning shadow">
-                    <div class="card-body">
-                        <h5>Absensi Hari Ini</h5>
-                        <h3>{{ $jumlahAbsensiHariIni }}</h3>
                     </div>
                 </div>
             </div>

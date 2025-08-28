@@ -22,7 +22,10 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         View::composer('*', function ($view) {
-            $view->with('notifications', Notification::latest()->take(5)->get());
+            $notifications = Notification::latest()->take(5)->get();
+            $unreadCount = Notification::where('is_read', false)->count();
+
+            $view->with(compact('notifications', 'unreadCount'));
         });
     }
 }

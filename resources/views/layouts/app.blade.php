@@ -7,6 +7,7 @@
     <title>@yield('title', 'Aplikasi Magang')</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <style>
         body {
             display: flex;
@@ -70,29 +71,9 @@
     <main class="content">
         <!-- Topbar -->
         <div class="d-flex justify-content-end mb-3">
-            <div class="dropdown">
-                <button class="btn btn-light position-relative" type="button" id="notifDropdown"
-                    data-bs-toggle="dropdown" aria-expanded="false">
-                    🔔
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                        {{ $notifications->where('is_read', false)->count() ?? 0 }}
-                    </span>
-                </button>
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notifDropdown">
-                    @forelse($notifications as $notif)
-                        <li>
-                            <a class="dropdown-item {{ $notif->is_read ? '' : 'fw-bold' }}"
-                                href="{{ route('notifications.read', $notif->id) }}">
-                                <strong>{{ $notif->title }}</strong><br>
-                                <small>{{ $notif->message }}</small>
-                            </a>
-                        </li>
-                    @empty
-                        <li><span class="dropdown-item text-muted">Tidak ada notifikasi</span></li>
-                    @endforelse
-                </ul>
-            </div>
+            <x-notification-dropdown :notifications="$notifications" :unreadCount="$unreadCount" />
         </div>
+
 
         <!-- Konten utama -->
         @yield('content')

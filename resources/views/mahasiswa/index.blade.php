@@ -74,14 +74,14 @@
                             </td>
                         </tr>
                     @empty
-                    <a href="{{ route('mahasiswa.index') }}" class="text-decoration-none">
-    <div class="card bg-primary text-white shadow">
-        <div class="card-body">
-            <h5>Total Mahasiswa</h5>
-            <h2>{{ $totalMahasiswa }}</h2>
-        </div>
-    </div>
-</a>
+                        <a href="{{ route('mahasiswa.index') }}" class="text-decoration-none">
+                            <div class="card bg-primary text-white shadow">
+                                <div class="card-body">
+                                    <h5>Total Mahasiswa</h5>
+                                    <h2>{{ $totalMahasiswa }}</h2>
+                                </div>
+                            </div>
+                        </a>
                         <tr>
                             <td colspan="5">Tidak ada data mahasiswa.</td>
                         </tr>

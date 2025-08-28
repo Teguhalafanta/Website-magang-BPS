@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Kegiatan;
+use App\Models\Absensi;
+use App\Models\Mahasiswa;
 use Illuminate\Http\Request;
 
 class KegiatanController extends Controller
@@ -12,9 +14,17 @@ class KegiatanController extends Controller
      */
     public function index()
     {
-        $kegiatans = Kegiatan::orderBy('created_at', 'desc')->paginate(10);
-        return view('kegiatan.index', compact('kegiatans'));
+        $kegiatans  = Kegiatan::orderBy('created_at', 'desc')->paginate(10);
+        $mahasiswas = Mahasiswa::orderBy('nama', 'asc')->get();
+        $absensis   = Absensi::with('mahasiswa')->orderBy('tanggal', 'desc')->paginate(10);
+
+        $absenHariIni = Absensi::where('nim', auth('mahasiswa')->user()->nim)
+            ->whereDate('tanggal', now()->toDateString())
+            ->first();
+
+        return view('kegiatan.index', compact('kegiatans', 'mahasiswas', 'absensis', 'absenHariIni'));
     }
+
 
     /**
      * Tampilkan form buat kegiatan (opsional, tidak dipakai kalau langsung di index).

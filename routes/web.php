@@ -8,14 +8,33 @@ use App\Http\Controllers\LoginSSOController;
 use App\Http\Controllers\AbsensiController;
 use App\Http\Controllers\KegiatanController;
 use App\Http\Controllers\MahasiswaController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\PelajarController;
+
+// ================= Pengajuan =================
+Route::get('/daftar-pengajuan', [PelajarController::class, 'index'])->name('pengajuan.index');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/pengajuan-magang', [PelajarController::class, 'create'])->name('pelajars.create');
+    Route::post('/pengajuan-magang', [PelajarController::class, 'store'])->name('pelajars.store');
+});
+
 
 Route::resource('mahasiswa', MahasiswaController::class);
-
 Route::resource('kegiatan', KegiatanController::class);
-
 Route::resource('absensi', AbsensiController::class);
 
+// ================= Notifications =================
+Route::get('/notifications', [NotificationController::class, 'index'])
+    ->name('notifications.index');
 
+Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])
+    ->name('notifications.readAll');
+
+Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])
+    ->name('notifications.markAsRead');
+
+// ================= Login  =================
 Route::get('/login-sso', [LoginSSOController::class, 'index'])->name('login.sso');
 
 // ================= Dashboard  =================
@@ -36,9 +55,6 @@ Route::post('/log', [loginController::class, 'login'])->name('login.store');
 Route::get('/register', [RegisterController::class, 'index'])->name('register');
 Route::post('/register', [RegisterController::class, 'store'])->name('register.store');
 
-
 // ================= Mahasiswa Index =================
-Route::get('/mahasiswa', [App\Http\Controllers\MahasiswaController::class, 'index'])
+Route::get('/mahasiswa', [MahasiswaController::class, 'index'])
     ->name('mahasiswa.index');
-
-    

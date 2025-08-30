@@ -37,7 +37,7 @@
         </div>
 
         <div class="mt-3">
-            {{ $notifications->links() }} {{-- kalau pakai paginate() --}}
+            {{ $notifications->links() }} 
         </div>
     </div>
 @endsection

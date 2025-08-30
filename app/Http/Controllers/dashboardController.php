@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Mahasiswa;
+use App\Models\Pelajar;
 use App\Models\Kegiatan;
 use App\Models\Absensi;
 use Carbon\Carbon;
@@ -15,21 +15,20 @@ class DashboardController extends Controller
         $versi = $request->query('versi', 'baru'); // Default ke 'baru'
 
         // Ambil data statistik
-        $jumlahMahasiswa = Mahasiswa::count();
+        $jumlahPelajar = Pelajar::count();
         $jumlahKegiatan = Kegiatan::count();
         $jumlahAbsensiHariIni = Absensi::whereDate('created_at', Carbon::today())->count();
 
-        // Gunakan tampilan berbeda berdasarkan versi
         if ($versi === 'lama') {
             return view('dashboard', compact(
-                'jumlahMahasiswa',
+                'jumlahPelajar',
                 'jumlahKegiatan',
                 'jumlahAbsensiHariIni'
             ));
         }
 
         return view('dashboard.index', compact(
-            'jumlahMahasiswa',
+            'jumlahPelajar',
             'jumlahKegiatan',
             'jumlahAbsensiHariIni'
         ));

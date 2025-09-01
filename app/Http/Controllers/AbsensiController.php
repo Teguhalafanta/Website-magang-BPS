@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Absensi;
-use App\Models\Mahasiswa;
 use App\Models\Kegiatan;
+use App\Models\Pelajar;
 use Carbon\Carbon;
 
 class AbsensiController extends Controller
@@ -18,36 +18,36 @@ class AbsensiController extends Controller
     {
         // Ambil data absensi (semua atau hanya hari ini)
         if ($request->has('today')) {
-            $absensis = Absensi::with('mahasiswa')
+            $absensis = Absensi::with('pelajar')
                 ->whereDate('tanggal', now()->toDateString())
                 ->get();
         } else {
-            $absensis = Absensi::with('mahasiswa')->paginate(10);
+            $absensis = Absensi::with('pelajar')->paginate(10);
         }
 
         // Data tambahan untuk tampilan dashboard
-        $jumlahMahasiswa = Mahasiswa::count();
+        $jumlahPelajar = Pelajar::count();
         $jumlahKegiatan = Kegiatan::count();
         $jumlahAbsensiHariIni = Absensi::whereDate('created_at', Carbon::today())->count();
 
-        // Ambil semua mahasiswa untuk form tambah absensi
-        $mahasiswas = Mahasiswa::all();
+        // Ambil semua pelajar untuk form tambah absensi
+        $pelajars = Pelajar::all();
 
-        // Cek apakah mahasiswa yang login sudah absen hari ini
+        // Cek apakah pelajar yang login sudah absen hari ini
         $user = Auth::user();
         $absenHariIni = false;
 
         if ($user) {
-            $absenHariIni = Absensi::whereHas('mahasiswa', function ($query) use ($user) {
+            $absenHariIni = Absensi::whereHas('pelajar', function ($query) use ($user) {
                 $query->where('id_pelajar', $user->id_user);
             })->whereDate('tanggal', now()->toDateString())->exists();
         }
 
         return view('absensi.index', compact(
             'absensis',
-            'mahasiswas',
+            'pelajars',
             'absenHariIni',
-            'jumlahMahasiswa',
+            'jumlahPelajar',
             'jumlahKegiatan',
             'jumlahAbsensiHariIni'
         ));
@@ -59,7 +59,7 @@ class AbsensiController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'mahasiswa_id' => 'required|exists:mahasiswas,id',
+            'pelajar_id' => 'required|exists:pelajars,id',
             'tanggal'      => 'required|date',
             'status'       => 'required|in:Hadir,Izin,Sakit,Alfa',
             'keterangan'   => 'nullable|string|max:255',
@@ -76,9 +76,9 @@ class AbsensiController extends Controller
     public function edit($id)
     {
         $absen = Absensi::findOrFail($id);
-        $mahasiswas = Mahasiswa::all();
+        $pelajars = Pelajar::all();
 
-        return view('absensi.edit', compact('absen', 'mahasiswas'));
+        return view('absensi.edit', compact('absen', 'pelajars'));
     }
 
     /**
@@ -87,7 +87,7 @@ class AbsensiController extends Controller
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
-            'mahasiswa_id' => 'required|exists:mahasiswas,id',
+            'pelajar_id' => 'required|exists:pelajars,id',
             'tanggal'      => 'required|date',
             'status'       => 'required|in:Hadir,Izin,Sakit,Alfa',
             'keterangan'   => 'nullable|string|max:255',

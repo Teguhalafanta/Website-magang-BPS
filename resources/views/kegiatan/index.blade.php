@@ -3,7 +3,7 @@
 @section('content')
     <div class="card">
         <div class="card-header bg-success text-white">
-            Absensi Mahasiswa
+            Absensi Pelajar
         </div>
         <div class="card-body">
             {{-- Tampilkan pesan sukses --}}
@@ -20,16 +20,16 @@
                 @csrf
                 <div class="row g-3 align-items-center">
                     <div class="col-md-3">
-                        <label class="form-label">Mahasiswa</label>
-                        <select name="mahasiswa_id" class="form-select" required>
-                            <option value="">-- Pilih Mahasiswa --</option>
-                            @foreach ($mahasiswas as $mhs)
-                                <option value="{{ $mhs->id }}" {{ old('mahasiswa_id') == $mhs->id ? 'selected' : '' }}>
+                        <label class="form-label">Pelajar</label>
+                        <select name="pelajar_id" class="form-select" required>
+                            <option value="">-- Pilih Pelajar --</option>
+                            @foreach ($pelajars as $mhs)
+                                <option value="{{ $mhs->id }}" {{ old('pelajar_id') == $mhs->id ? 'selected' : '' }}>
                                     {{ $mhs->nama }} ({{ $mhs->nim }})
                                 </option>
                             @endforeach
                         </select>
-                        @error('mahasiswa_id')
+                        @error('pelajar_id')
                             <small class="text-danger">{{ $message }}</small>
                         @enderror
                     </div>
@@ -86,8 +86,8 @@
                 <tbody>
                     @forelse($absensis as $absen)
                         <tr>
-                            <td>{{ $absen->mahasiswa->nama ?? '-' }}</td>
-                            <td>{{ $absen->mahasiswa->nim ?? '-' }}</td>
+                            <td>{{ $absen->pelajar->nama ?? '-' }}</td>
+                            <td>{{ $absen->pelajar->nim ?? '-' }}</td>
                             <td>{{ \Carbon\Carbon::parse($absen->tanggal)->format('d-m-Y') }}</td>
                             <td>{{ ucfirst($absen->status) }}</td>
                             <td>{{ $absen->keterangan ?? '-' }}</td>
@@ -133,8 +133,8 @@
                         @forelse($absensis as $absen)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
-                                <td>{{ $absen->mahasiswa->nama ?? '-' }}</td>
-                                <td>{{ $absen->mahasiswa->nim ?? '-' }}</td>
+                                <td>{{ $absen->pelajar->nama ?? '-' }}</td>
+                                <td>{{ $absen->pelajar->nim ?? '-' }}</td>
                                 <td>{{ ucfirst($absen->status) }}</td>
                                 <td>{{ $absen->created_at->format('d-m-Y') }}</td>
                             </tr>

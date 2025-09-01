@@ -10,12 +10,12 @@
         </h3>
 
         <div class="row">
-            {{-- Total Mahasiswa --}}
+            {{-- Total Pelajar --}}
             <div class="col-md-4 mb-3">
                 <div class="card text-white bg-primary shadow h-100">
                     <div class="card-body">
-                        <h5>Total Mahasiswa</h5>
-                        <h3>{{ $jumlahMahasiswa }}</h3>
+                        <h5>Total Pelajar</h5>
+                        <h3>{{ $jumlahPelajar }}</h3>
                     </div>
                 </div>
             </div>

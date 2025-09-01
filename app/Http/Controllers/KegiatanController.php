@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use App\Models\Kegiatan;
 use App\Models\Absensi;
-use App\Models\Mahasiswa;
+use App\Models\Pelajar;
 use Illuminate\Http\Request;
 
 class KegiatanController extends Controller
@@ -15,17 +16,17 @@ class KegiatanController extends Controller
     public function index()
     {
         $kegiatans  = Kegiatan::orderBy('created_at', 'desc')->paginate(10);
-        $mahasiswa = null;
+        $pelajar = null;
         $absenHariIni = null;
 
-        if (auth()->check() && auth()->user()->mahasiswa) {
-            $mahasiswa = auth()->user()->mahasiswa;
-            $absenHariIni = Absensi::where('id_pelajar', $mahasiswa->id_pelajar)
+        if (Auth::check() && Auth::user()->pelajar) {
+            $pelajar = Auth::user()->pelajar;
+            $absenHariIni = Absensi::where('id_pelajar', $pelajar->id_pelajar)
                 ->whereDate('tanggal', now()->toDateString())
                 ->first();
         }
 
-        return view('kegiatan.index', compact('kegiatans', 'mahasiswa', 'absenHariIni'));
+        return view('kegiatan.index', compact('kegiatans', 'pelajar', 'absenHariIni'));
     }
 
 

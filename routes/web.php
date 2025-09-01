@@ -6,7 +6,6 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LoginSSOController;
 use App\Http\Controllers\RegisterController;
-use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\AbsensiController;
 use App\Http\Controllers\KegiatanController;
 use App\Http\Controllers\NotificationController;
@@ -16,7 +15,7 @@ use App\Http\Controllers\PelajarController;
 Public Routes (tanpa login)
 */
 
-// Login Mahasiswa
+// Login Pelajar
 Route::get('/', [LoginController::class, 'index'])
     ->name('login')
     ->middleware('guest');
@@ -27,7 +26,7 @@ Route::post('/log', [LoginController::class, 'login'])
 Route::get('/login-sso', [LoginSSOController::class, 'index'])
     ->name('login.sso');
 
-// Register Mahasiswa
+// Register Pelajar
 Route::get('/register', [RegisterController::class, 'index'])
     ->name('register')
     ->middleware('guest');
@@ -65,7 +64,7 @@ Route::middleware('auth')->group(function () {
     });
 
     // Resource Controllers
-    Route::resource('mahasiswa', MahasiswaController::class);
+    Route::resource('pelajar', PelajarController::class);
     Route::resource('kegiatan', KegiatanController::class);
     Route::resource('absensi', AbsensiController::class);
 });

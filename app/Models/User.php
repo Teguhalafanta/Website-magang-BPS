@@ -24,8 +24,8 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    public function mahasiswa()
+    public function pelajar()
     {
-        return $this->hasOne(Mahasiswa::class, 'id_user', 'id_user');
+        return $this->hasOne(Pelajar::class, 'id_user', 'id_user');
     }
 }

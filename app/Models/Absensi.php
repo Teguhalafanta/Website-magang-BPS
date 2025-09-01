@@ -7,10 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Absensi extends Model
 {
-    protected $fillable = ['mahasiswa_id', 'tanggal', 'status', 'keterangan'];
+    protected $fillable = ['pelajar_id', 'tanggal', 'status', 'keterangan'];
 
-    public function mahasiswa()
+    public function pelajar()
     {
-        return $this->belongsTo(Mahasiswa::class, 'mahasiswa_id', 'id_pelajar');
+        return $this->belongsTo(pelajar::class, 'pelajar_id', 'id_pelajar');
     }
 }

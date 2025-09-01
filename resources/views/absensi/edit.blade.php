@@ -11,15 +11,15 @@
             @method('PUT')
 
             <div class="mb-3">
-                <label>Mahasiswa</label>
-                <select name="mahasiswa_id" class="form-select">
-                    @foreach($mahasiswas as $mhs)
-                        <option value="{{ $mhs->id }}" {{ $absen->mahasiswa_id == $mhs->id ? 'selected' : '' }}>
+                <label>Pelajar</label>
+                <select name="pelajar_id" class="form-select">
+                    @foreach($pelajars as $mhs)
+                        <option value="{{ $mhs->id }}" {{ $absen->pelajar_id == $mhs->id ? 'selected' : '' }}>
                             {{ $mhs->nama }} ({{ $mhs->nim }})
                         </option>
                     @endforeach
                 </select>
-                @error('mahasiswa_id')
+                @error('pelajar_id')
                     <small class="text-danger">{{ $message }}</small>
                 @enderror
             </div>

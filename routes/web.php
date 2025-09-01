@@ -11,6 +11,16 @@ use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PelajarController;
 
+// login
+// register
+// dashboard (auth)
+// notifikasi
+// mahasiswa
+// kegiatan
+// pengajuan
+
+
+
 // ================= Pengajuan =================
 Route::get('/daftar-pengajuan', [PelajarController::class, 'index'])->name('pengajuan.index');
 

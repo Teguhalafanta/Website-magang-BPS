@@ -34,9 +34,6 @@ Route::post('/register', [RegisterController::class, 'store'])
     ->name('register.store')
     ->middleware('guest');
 
-// Logout
-Route::post('/logout', [LoginController::class, 'logout'])
-    ->name('logout');
 
 /*
 | Protected Routes (wajib login)
@@ -67,4 +64,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('pelajar', PelajarController::class);
     Route::resource('kegiatan', KegiatanController::class);
     Route::resource('absensi', AbsensiController::class);
+
+    // Logout
+    Route::post('/logout', [LoginController::class, 'logout'])
+        ->name('logout');
 });

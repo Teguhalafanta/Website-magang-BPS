@@ -28,4 +28,9 @@ class User extends Authenticatable
     {
         return $this->hasOne(Pelajar::class, 'id_user', 'id_user');
     }
+
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class, 'id_user', 'id');
+    }
 }

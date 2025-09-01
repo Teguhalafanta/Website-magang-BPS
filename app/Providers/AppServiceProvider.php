@@ -24,12 +24,12 @@ class AppServiceProvider extends ServiceProvider
     {
         View::composer('*', function ($view) {
             if (Auth::check()) {
-                $sharedNotifications = Notification::where('user_id', Auth::id())
+                $sharedNotifications = Notification::where('id_user', Auth::id())
                     ->latest()
                     ->take(5)
                     ->get();
 
-                $sharedUnreadCount = Notification::where('user_id', Auth::id())
+                $sharedUnreadCount = Notification::where('id_user', Auth::id())
                     ->where('is_read', false)
                     ->count();
             } else {

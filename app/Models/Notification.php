@@ -12,7 +12,7 @@ class Notification extends Model
     protected $table = 'notifications';
 
     protected $fillable = [
-        'user_id',
+        'id_user',
         'title',
         'message',
         'is_read',
@@ -20,6 +20,6 @@ class Notification extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'id_user', 'id');
     }
 }

@@ -12,10 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('notifications', function (Blueprint $table) {
-            $table->id();
-            $table->string('title'); // Judul notifikasi
-            $table->text('message'); // Isi notifikasi
-            $table->boolean('is_read')->default(false); // Status sudah dibaca/belum
+            $table->uuid('id')->primary();
+            $table->string('type');
+            $table->morphs('notifiable');
+            $table->text('data');
+            $table->timestamp('read_at')->nullable();
             $table->timestamps();
         });
     }

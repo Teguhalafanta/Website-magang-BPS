@@ -1,4 +1,3 @@
-{{-- resources/views/notifications/index.blade.php --}}
 @extends('kerangka.master')
 
 @section('title', 'Daftar Notifikasi')
@@ -38,6 +37,7 @@
 
         <div class="mt-3">
             {{ $notifications->links() }} {{-- kalau pakai paginate() --}}
+            {{ get_class($notifications) }}
         </div>
     </div>
 @endsection

@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use App\Models\Notification;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Auth;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -22,10 +23,24 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         View::composer('*', function ($view) {
-            $notifications = Notification::latest()->take(5)->get();
-            $unreadCount = Notification::where('is_read', false)->count();
+            if (Auth::check()) {
+                $sharedNotifications = Notification::where('user_id', Auth::id())
+                    ->latest()
+                    ->take(5)
+                    ->get();
 
-            $view->with(compact('notifications', 'unreadCount'));
+                $sharedUnreadCount = Notification::where('user_id', Auth::id())
+                    ->where('is_read', false)
+                    ->count();
+            } else {
+                $sharedNotifications = collect();
+                $sharedUnreadCount   = 0;
+            }
+
+            $view->with([
+                'sharedNotifications' => $sharedNotifications,
+                'sharedUnreadCount'   => $sharedUnreadCount,
+            ]);
         });
     }
 }

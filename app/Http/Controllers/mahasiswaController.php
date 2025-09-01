@@ -25,14 +25,14 @@ class MahasiswaController extends Controller
     {
         $request->validate([
             'nama' => 'required|string|max:255',
-            'nim' => 'required|string|max:20|unique:mahasiswas,nim',
+            'nim_nisn' => 'required|string|max:20|unique:mahasiswas,nim_nisn',
             'telepon' => 'required|string|max:15',
             'alamat' => 'required|string|max:255',
         ]);
 
         Mahasiswa::create([
             'nama' => $request->nama,
-            'nim' => $request->nim,
+            'nim_nisn' => $request->nim_nisn,
             'telepon' => $request->telepon,
             'alamat' => $request->alamat,
         ]);
@@ -58,7 +58,7 @@ class MahasiswaController extends Controller
 
         $validated = $request->validate([
             'nama' => 'required|string|max:255',
-            'nim'  => 'required|string|max:50|unique:mahasiswas,nim,' . $mahasiswa->id,
+            'nim_nisn'  => 'required|string|max:50|unique:mahasiswas,nim_nisn,' . $mahasiswa->id_pelajar,
         ]);
 
         $mahasiswa->update($validated);

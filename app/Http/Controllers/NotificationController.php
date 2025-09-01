@@ -9,7 +9,7 @@ class NotificationController extends Controller
 {
     public function index()
     {
-        $notifications = Notification::latest()->take(5)->get();
+        $notifications = Notification::orderBy('created_at', 'desc')->paginate(10);
         $unreadCount   = Notification::where('is_read', false)->count();
 
         return view('notifications.index', compact('notifications', 'unreadCount'));
@@ -20,12 +20,19 @@ class NotificationController extends Controller
     {
         $notification = Notification::findOrFail($id);
         $notification->update(['is_read' => true]);
-        
-        // Kalau notifikasi punya link, bisa arahkan ke sana
+
         if ($notification->url) {
             return redirect($notification->url);
         }
 
         return redirect()->back();
+    }
+
+    public function markAllAsRead()
+    {
+        Notification::where('is_read', false)->update(['is_read' => true]);
+
+        return redirect()->route('notifications.index')
+            ->with('success', 'Semua notifikasi ditandai sudah dibaca.');
     }
 }

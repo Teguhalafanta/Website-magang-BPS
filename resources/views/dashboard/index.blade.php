@@ -1,22 +1,24 @@
-@extends('layouts.app') {{-- atau layouts.bps jika sudah kamu ganti --}}
+@extends('kerangka.master')
 
 @section('content')
     <div class="container">
         <h2 class="mb-4">Dashboard BPS</h2>
 
         <div class="row">
-            {{-- Total Mahasiswa --}}
-            <div class="col-md-4 mb-3">
-                <div class="card text-white bg-primary shadow">
-                    <div class="card-body">
-                        <h5>Total Mahasiswa</h5>
-                        <h3>{{ $jumlahMahasiswa }}</h3>
+            {{-- Total Pelajar --}}
+            <div class="col-md-3 mb-3">
+                <a href="{{ route('pengajuan.index') }}" class="text-decoration-none">
+                    <div class="card text-white bg-primary shadow">
+                        <div class="card-body">
+                            <h5>Total Pelajar</h5>
+                            <h3>{{ $jumlahPelajar }}</h3>
+                        </div>
                     </div>
-                </div>
+                </a>
             </div>
             
             {{-- Absensi Hari Ini (klik menuju absensi) --}}
-            <div class="col-md-4 mb-3">
+            <div class="col-md-3 mb-3">
                 <a href="{{ route('absensi.index', ['today' => true]) }}" class="text-decoration-none">
                     <div class="card bg-warning text-white shadow">
                         <div class="card-body">
@@ -28,13 +30,25 @@
             </div>
 
             {{-- Total Kegiatan --}}
-            <div class="col-md-4 mb-3">
+            <div class="col-md-3 mb-3">
                 <div class="card text-white bg-success shadow">
                     <div class="card-body">
                         <h5>Total Kegiatan</h5>
                         <h3>{{ $jumlahKegiatan }}</h3>
                     </div>
                 </div>
+            </div>
+
+            {{-- Ajukan Magang --}}
+            <div class="col-md-3 mb-3">
+                <a href="{{ route('pelajars.create') }}" class="text-decoration-none">
+                    <div class="card text-white bg-info shadow">
+                        <div class="card-body text-center">
+                            <h5>Ajukan Magang</h5>
+                            <i class="fas fa-file-alt fa-2x mt-2"></i>
+                        </div>
+                    </div>
+                </a>
             </div>
         </div>
 

@@ -2,28 +2,21 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use App\Models\Mahasiswa; // ⬅️ Tambahkan ini
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use Notifiable;
 
-    protected $primaryKey = 'nim';
-    public $incrementing = false;
-    protected $keyType = 'string';
+    protected $table = 'users';
+    protected $primaryKey = 'id_user';
 
     protected $fillable = [
-        'nim',
         'username',
-        'nama',
-        'asal_univ',
-        'jurusan',
-        'prodi',
         'email',
         'password',
+        'role',
     ];
 
     protected $hidden = [
@@ -31,9 +24,8 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    // ✅ Tambahkan method relasi ini
     public function mahasiswa()
     {
-        return $this->hasOne(Mahasiswa::class, 'nim', 'nim');
+        return $this->hasOne(Mahasiswa::class, 'id_user', 'id_user');
     }
 }

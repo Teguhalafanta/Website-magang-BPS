@@ -15,14 +15,17 @@ class KegiatanController extends Controller
     public function index()
     {
         $kegiatans  = Kegiatan::orderBy('created_at', 'desc')->paginate(10);
-        $mahasiswas = Mahasiswa::orderBy('nama', 'asc')->get();
-        $absensis   = Absensi::with('mahasiswa')->orderBy('tanggal', 'desc')->paginate(10);
+        $mahasiswa = null;
+        $absenHariIni = null;
 
-        $absenHariIni = Absensi::where('nim', auth('mahasiswa')->user()->nim)
-            ->whereDate('tanggal', now()->toDateString())
-            ->first();
+        if (auth()->check() && auth()->user()->mahasiswa) {
+            $mahasiswa = auth()->user()->mahasiswa;
+            $absenHariIni = Absensi::where('id_pelajar', $mahasiswa->id_pelajar)
+                ->whereDate('tanggal', now()->toDateString())
+                ->first();
+        }
 
-        return view('kegiatan.index', compact('kegiatans', 'mahasiswas', 'absensis', 'absenHariIni'));
+        return view('kegiatan.index', compact('kegiatans', 'mahasiswa', 'absenHariIni'));
     }
 
 

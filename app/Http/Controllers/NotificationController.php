@@ -9,12 +9,16 @@ class NotificationController extends Controller
 {
     public function index()
     {
+        // Ambil data pakai paginate agar links() bisa dipakai di blade
         $notifications = Notification::orderBy('created_at', 'desc')->paginate(10);
         $unreadCount   = Notification::where('is_read', false)->count();
 
-        return view('notifications.index', compact('notifications', 'unreadCount'));
+        // Pastikan view diarahkan ke daftarNotif, bukan index
+        return view('notifications.daftarNotif', [
+            'notifications' => $notifications,
+            'unreadCount'   => $unreadCount,
+        ]);
     }
-
 
     public function markAsRead($id)
     {
@@ -31,8 +35,6 @@ class NotificationController extends Controller
     public function markAllAsRead()
     {
         Notification::where('is_read', false)->update(['is_read' => true]);
-
-        return redirect()->route('notifications.index')
-            ->with('success', 'Semua notifikasi ditandai sudah dibaca.');
+        return redirect()->back();
     }
 }

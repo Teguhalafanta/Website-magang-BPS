@@ -39,7 +39,7 @@ class AbsensiController extends Controller
 
         if ($user) {
             $absenHariIni = Absensi::whereHas('mahasiswa', function ($query) use ($user) {
-                $query->where('nim', $user->nim);
+                $query->where('id_pelajar', $user->id_user);
             })->whereDate('tanggal', now()->toDateString())->exists();
         }
 

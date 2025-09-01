@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\LoginSSOController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\AbsensiController;

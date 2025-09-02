@@ -17,7 +17,7 @@ class DashboardController extends Controller
         // Ambil data statistik
         $jumlahPelajar = Pelajar::count();
         $jumlahKegiatan = Kegiatan::count();
-        $jumlahAbsensiHariIni = Absensi::whereDate('created_at', Carbon::today())->count();
+        $jumlahAbsensiHariIni = Absensi::whereDate('created_at', date('Y-m-d'))->count();
 
         if ($versi === 'lama') {
             return view('dashboard', compact(

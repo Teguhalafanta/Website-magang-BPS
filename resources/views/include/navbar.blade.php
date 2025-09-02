@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-white shadow px-4">
+<nav class="navbar navbar-expand-lg shadow px-4">
     <a class="navbar-brand fw-bold" href="#">Mazer</a>
 
     <div class="ms-auto d-flex align-items-center">

@@ -1,86 +1,58 @@
-@extends('layouts.app') {{-- atau layouts.bps jika sudah kamu ganti --}}
+@extends('kerangka.master')
 
 @section('content')
     <div class="container">
-        <h2 class="mb-4">Dashboard BPS</h2>
+        <h2 class="mb-4">Daftar Absensi</h2>
 
-        {{-- Judul dinamis tergantung query string --}}
-        <h3>
-            {{ request()->has('today') ? 'Absensi Hari Ini' : 'Semua Data Absensi' }}
-        </h3>
+        {{-- Tabel Absensi --}}
+        <div class="card shadow">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">Tabel Absensi</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>No</th>
+                            <th>Nama Pelajar</th>
+                            <th>Tanggal</th>
+                            <th>Status</th>
+                            <th>Keterangan</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @forelse($absensis as $index => $absen)
+                            <tr>
+                                <td>{{ $index + 1 }}</td>
+                                <td>{{ $absen->pelajar->nama }}</td>
+                                <td>{{ $absen->tanggal }}</td>
+                                <td>{{ $absen->status }}</td>
+                                <td>{{ $absen->keterangan ?? '-' }}</td>
+                                <td>
+                                    <a href="{{ route('absensi.edit', $absen->id) }}" class="btn btn-sm btn-warning">Edit</a>
+                                    <form action="{{ route('absensi.destroy', $absen->id) }}" method="POST"
+                                        style="display:inline;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button class="btn btn-sm btn-danger"
+                                            onclick="return confirm('Hapus data ini?')">Hapus</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="6" class="text-center">Belum ada data absensi.</td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
 
-        <div class="row">
-            {{-- Total Pelajar --}}
-            <div class="col-md-4 mb-3">
-                <div class="card text-white bg-primary shadow h-100">
-                    <div class="card-body">
-                        <h5>Total Pelajar</h5>
-                        <h3>{{ $jumlahPelajar }}</h3>
-                    </div>
+                {{-- Pagination --}}
+                <div class="d-flex justify-content-end">
+                    {{ $absensis->links() }}
                 </div>
-            </div>
-
-            {{-- Absensi Hari Ini (Klik-able) --}}
-            <div class="col-md-4 mb-3">
-                <a href="{{ route('absensi.index', ['today' => true]) }}" class="text-decoration-none">
-                    <div class="card bg-warning text-white shadow h-100">
-                        <div class="card-body">
-                            <h5>Absensi Hari Ini</h5>
-                            <h2>{{ $jumlahAbsensiHariIni }}</h2>
-                        </div>
-                    </div>
-                </a>
-            </div>
-
-            {{-- Total Kegiatan --}}
-            <div class="col-md-4 mb-3">
-                <div class="card text-white bg-success shadow h-100">
-                    <div class="card-body">
-                        <h5>Total Kegiatan</h5>
-                        <h3>{{ $jumlahKegiatan }}</h3>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        {{-- Grafik --}}
-        <div class="row mt-4">
-            <div class="col-md-6">
-                <canvas id="grafikAbsensi"></canvas>
-            </div>
-            <div class="col-md-6">
-                <canvas id="grafikJurusan"></canvas>
             </div>
         </div>
     </div>
 @endsection
-
-@push('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        const ctx1 = document.getElementById('grafikAbsensi').getContext('2d');
-        new Chart(ctx1, {
-            type: 'bar',
-            data: {
-                labels: ['Sen', 'Sel', 'Rab', 'Kam', 'Jum'],
-                datasets: [{
-                    label: 'Absensi',
-                    data: [12, 19, 3, 5, 2],
-                    backgroundColor: '#007bff'
-                }]
-            }
-        });
-
-        const ctx2 = document.getElementById('grafikJurusan').getContext('2d');
-        new Chart(ctx2, {
-            type: 'pie',
-            data: {
-                labels: ['Informatika', 'Statistika', 'Ekonomi'],
-                datasets: [{
-                    data: [12, 7, 5],
-                    backgroundColor: ['#17a2b8', '#ffc107', '#dc3545']
-                }]
-            }
-        });
-    </script>
-@endpush

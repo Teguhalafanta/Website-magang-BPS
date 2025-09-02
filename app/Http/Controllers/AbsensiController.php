@@ -19,7 +19,7 @@ class AbsensiController extends Controller
         // Ambil data absensi (semua atau hanya hari ini)
         if ($request->has('today')) {
             $absensis = Absensi::with('pelajar')
-                ->whereDate('tanggal', now()->toDateString())
+                ->whereDate('tanggal', date('Y-m-d'))
                 ->get();
         } else {
             $absensis = Absensi::with('pelajar')->paginate(10);
@@ -28,7 +28,7 @@ class AbsensiController extends Controller
         // Data tambahan untuk tampilan dashboard
         $jumlahPelajar = Pelajar::count();
         $jumlahKegiatan = Kegiatan::count();
-        $jumlahAbsensiHariIni = Absensi::whereDate('created_at', Carbon::today())->count();
+        $jumlahAbsensiHariIni = Absensi::whereDate('created_at', date('Y-m-d'))->count();
 
         // Ambil semua pelajar untuk form tambah absensi
         $pelajars = Pelajar::all();
@@ -39,8 +39,8 @@ class AbsensiController extends Controller
 
         if ($user) {
             $absenHariIni = Absensi::whereHas('pelajar', function ($query) use ($user) {
-                $query->where('id_pelajar', $user->id_user);
-            })->whereDate('tanggal', now()->toDateString())->exists();
+                $query->where('pelajar_id', $user->id_user);
+            })->whereDate('tanggal', date('Y-m-d'))->exists();
         }
 
         return view('absensi.index', compact(
@@ -59,7 +59,7 @@ class AbsensiController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'pelajar_id' => 'required|exists:pelajars,id',
+            'pelajar_id' => 'required|exists:pelajars,id_pelajar',
             'tanggal'      => 'required|date',
             'status'       => 'required|in:Hadir,Izin,Sakit,Alfa',
             'keterangan'   => 'nullable|string|max:255',
@@ -87,7 +87,7 @@ class AbsensiController extends Controller
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
-            'pelajar_id' => 'required|exists:pelajars,id',
+            'pelajar_id' => 'required|exists:pelajars,id_pelajar',
             'tanggal'      => 'required|date',
             'status'       => 'required|in:Hadir,Izin,Sakit,Alfa',
             'keterangan'   => 'nullable|string|max:255',

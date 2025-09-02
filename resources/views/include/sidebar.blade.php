@@ -46,10 +46,27 @@
             <ul class="menu">
                 <li class="sidebar-title">Menu</li>
 
-                <li class="sidebar-item active ">
+                {{-- Dashboard --}}
+                <li class="sidebar-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
                     <a href="{{ route('dashboard') }}" class='sidebar-link'>
                         <i class="bi bi-grid-fill"></i>
                         <span>Dashboard</span>
+                    </a>
+                </li>
+
+                {{-- Absensi --}}
+                <li class="sidebar-item {{ request()->routeIs('absensi.*') ? 'active' : '' }}">
+                    <a href="{{ route('absensi.index') }}" class='sidebar-link'>
+                        <i class="bi bi-calendar-check"></i>
+                        <span>Absensi</span>
+                    </a>
+                </li>
+
+                {{-- Kegiatan --}}
+                <li class="sidebar-item {{ request()->routeIs('kegiatan.*') ? 'active' : '' }}">
+                    <a href="{{ route('kegiatan.index') }}" class='sidebar-link'>
+                        <i class="bi bi-journal-text"></i>
+                        <span>Kegiatan</span>
                     </a>
                 </li>
 

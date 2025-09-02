@@ -3,9 +3,6 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use App\Models\Notification;
-use Illuminate\Support\Facades\View;
-use Illuminate\Support\Facades\Auth;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -14,7 +11,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // Biarkan kosong jika tidak digunakan
     }
 
     /**
@@ -22,25 +19,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        View::composer('*', function ($view) {
-            if (Auth::check()) {
-                $sharedNotifications = Notification::where('id_user', Auth::id())
-                    ->latest()
-                    ->take(5)
-                    ->get();
-
-                $sharedUnreadCount = Notification::where('id_user', Auth::id())
-                    ->where('is_read', false)
-                    ->count();
-            } else {
-                $sharedNotifications = collect();
-                $sharedUnreadCount   = 0;
-            }
-
-            $view->with([
-                'sharedNotifications' => $sharedNotifications,
-                'sharedUnreadCount'   => $sharedUnreadCount,
-            ]);
-        });
+        // Logika notifikasi telah dihapus sesuai permintaan
     }
 }

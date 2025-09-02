@@ -8,7 +8,6 @@ use App\Http\Controllers\LoginSSOController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\AbsensiController;
 use App\Http\Controllers\KegiatanController;
-use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PelajarController;
 
 /*
@@ -53,12 +52,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/daftar-pengajuan', [PelajarController::class, 'index'])
         ->name('pengajuan.index');
 
-    // Notifications
-    Route::prefix('notifications')->name('notifications.')->group(function () {
-        Route::get('/', [NotificationController::class, 'index'])->name('index');
-        Route::post('/read-all', [NotificationController::class, 'markAllAsRead'])->name('readAll');
-        Route::post('/{id}/read', [NotificationController::class, 'markAsRead'])->name('markAsRead');
-    });
 
     // Resource Controllers
     Route::resource('pelajar', PelajarController::class);

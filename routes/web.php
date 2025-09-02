@@ -1,6 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LoginController;
@@ -34,7 +33,6 @@ Route::post('/register', [RegisterController::class, 'store'])
     ->name('register.store')
     ->middleware('guest');
 
-
 /*
 | Protected Routes (wajib login)
 */
@@ -49,7 +47,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/pengajuan-magang', [PelajarController::class, 'store'])
         ->name('pelajars.store');
 
-    // Daftar Pengajuan (butuh login juga)
+    // Daftar Pengajuan
     Route::get('/daftar-pengajuan', [PelajarController::class, 'index'])
         ->name('pengajuan.index');
 

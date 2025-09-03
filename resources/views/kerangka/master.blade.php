@@ -12,8 +12,9 @@
 
 <body>
     <div id="app">
-        
+
         @include('include.sidebar')
+
         @include('include.navbar')
 
         <div id="main">
@@ -26,13 +27,13 @@
             <div class="page-heading">
                 <h3>Dashboard Admin</h3>
             </div>
-            
+
             @yield('content')
 
             @include('include.footer')
         </div>
     </div>
-    
+
     @include('include.scripct')
 
 </body>

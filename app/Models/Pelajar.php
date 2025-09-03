@@ -11,6 +11,8 @@ class Pelajar extends Model
 
     protected $table = 'pelajars';   // tabel di database
     protected $primaryKey = 'id_pelajar'; // primary key
+    public $incrementing = true;
+    protected $keyType = 'int';
 
     protected $fillable = [
         'id_user',
@@ -32,5 +34,11 @@ class Pelajar extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'id_user', 'id_user');
+    }
+
+    // relasi ke Absensi
+    public function absensis()
+    {
+        return $this->hasMany(Absensi::class, 'pelajar_id', 'id_pelajar');
     }
 }

@@ -9,3 +9,6 @@
 
 {{-- css login --}}
 <link rel="stylesheet" href="{{ asset('template/assets/css/pages/auth.css') }}">
+
+{{-- css ikon --}}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">

@@ -14,7 +14,7 @@ class CreateAbsensisTable extends Migration
             $table->unsignedBigInteger('pelajar_id');
             $table->foreign('pelajar_id')
                 ->references('id_pelajar')
-                ->on('pelajar')
+                ->on('pelajars')
                 ->onDelete('cascade');
 
             $table->string('nama_pelajar')->nullable();

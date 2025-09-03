@@ -14,6 +14,7 @@
     <div id="app">
         
         @include('include.sidebar')
+        @include('include.navbar')
 
         <div id="main">
             <header class="mb-3">

@@ -63,17 +63,33 @@
                 </li>
 
                 {{-- Kegiatan --}}
-                <li class="sidebar-item {{ request()->routeIs('kegiatan.*') ? 'active' : '' }}">
+                <li class="sidebar-item has-sub{{ request()->routeIs('kegiatan.*') ? 'active' : '' }}">
                     <a href="{{ route('kegiatan.index') }}" class='sidebar-link'>
                         <i class="bi bi-journal-text"></i>
                         <span>Kegiatan</span>
+                    </a>
+                    <ul class="submenu">
+                        <li class="submenu-item {{ request()->routeIs('kegiatan.harian') ? 'active' : '' }}">
+                            <a href="{{ route('kegiatan.harian') }}">Kegiatan Harian</a>
+                        </li>
+                        <li class="submenu-item {{ request()->routeIs('kegiatan.bulanan') ? 'active' : '' }}">
+                            <a href="{{ route('kegiatan.bulanan') }}">Kegiatan Bulanan</a>
+                        </li>
+                    </ul>
+                </li>
+
+                {{-- Pelajar --}}
+                <li class="sidebar-item {{ request()->routeIs('kegiatan.*') ? 'active' : '' }}">
+                    <a href="{{ route('kegiatan.index') }}" class='sidebar-link'>
+                        <i class="bi bi-journal-text"></i>
+                        <span>Pelajar</span>
                     </a>
                 </li>
 
                 <li class="sidebar-item  has-sub">
                     <a href="#" class='sidebar-link'>
                         <i class="bi bi-collection-fill"></i>
-                        <span>Pelajar</span>
+                        <span>Pengajuan Magang</span>
                     </a>
                     <ul class="submenu ">
                         <li class="submenu-item ">

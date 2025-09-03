@@ -14,7 +14,7 @@
                 <label>Pelajar</label>
                 <select name="pelajar_id" class="form-select">
                     @foreach($pelajars as $mhs)
-                        <option value="{{ $mhs->id }}" {{ $absen->pelajar_id == $mhs->id ? 'selected' : '' }}>
+                        <option value="{{ $mhs->id_pelajar }}" {{ $absen->pelajar_id == $mhs->id_pelajar ? 'selected' : '' }}>
                             {{ $mhs->nama }} ({{ $mhs->nim }})
                         </option>
                     @endforeach

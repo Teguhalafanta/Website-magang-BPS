@@ -52,6 +52,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/daftar-pengajuan', [PelajarController::class, 'index'])
         ->name('pengajuan.index');
 
+    // Resource Utama Kegiatan
+    Route::get('/kegiatan/harian', [KegiatanController::class, 'harian'])->name('kegiatan.harian');
+    Route::get('/kegiatan/bulanan', [KegiatanController::class, 'bulanan'])->name('kegiatan.bulanan');
 
     // Resource Controllers
     Route::resource('pelajar', PelajarController::class);

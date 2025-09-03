@@ -1,163 +1,241 @@
-@extends('layouts.app')
+@extends('kerangka.master')
+
+@section('title', 'Daftar Kegiatan Saya')
 
 @section('content')
-    <div class="card">
-        <div class="card-header bg-success text-white">
-            Absensi Pelajar
-        </div>
-        <div class="card-body">
-            {{-- Tampilkan pesan sukses --}}
-            @if (session('success'))
-                <div class="alert alert-success">{{ session('success') }}</div>
-            @endif
+    <div class="container my-4">
+        <h2 class="mb-4 text-primary">Daftar Kegiatan Saya</h2>
 
-            <h3>
-                {{ request()->has('today') ? 'Absensi Hari Ini' : 'Semua Data Absensi' }}
-            </h3>
+        {{-- Flash message --}}
+        <div id="flash-message"></div>
 
-            {{-- Form tambah absensi --}}
-            <form action="{{ route('absensi.store') }}" method="POST" class="mb-4">
-                @csrf
-                <div class="row g-3 align-items-center">
-                    <div class="col-md-3">
-                        <label class="form-label">Pelajar</label>
-                        <select name="pelajar_id" class="form-select" required>
-                            <option value="">-- Pilih Pelajar --</option>
-                            @foreach ($pelajars as $mhs)
-                                <option value="{{ $mhs->id }}" {{ old('pelajar_id') == $mhs->id ? 'selected' : '' }}>
-                                    {{ $mhs->nama }} ({{ $mhs->nim }})
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('pelajar_id')
-                            <small class="text-danger">{{ $message }}</small>
-                        @enderror
+        {{-- Form tambah kegiatan --}}
+        <div class="card mb-4 shadow-sm">
+            <div class="card-header bg-info text-white fw-bold">Tambah Kegiatan Baru</div>
+            <div class="card-body">
+                <form id="formTambahKegiatan">
+                    @csrf
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label">Nama Kegiatan</label>
+                            <input type="text" name="nama_kegiatan" class="form-control" required>
+                            <small class="text-danger" id="error-nama_kegiatan"></small>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label class="form-label">Tanggal</label>
+                            <input type="date" name="tanggal" class="form-control" required>
+                            <small class="text-danger" id="error-tanggal"></small>
+                        </div>
+
+                        <div class="col-md-5">
+                            <label class="form-label">Deskripsi</label>
+                            <input type="text" name="deskripsi" class="form-control" required>
+                            <small class="text-danger" id="error-deskripsi"></small>
+                        </div>
+
+                        <div class="col-12 text-end mt-2">
+                            <button type="submit" class="btn btn-primary fw-bold">Tambah Kegiatan</button>
+                        </div>
                     </div>
-
-                    <div class="col-md-2">
-                        <label class="form-label">Tanggal</label>
-                        <input type="date" name="tanggal" class="form-control" value="{{ old('tanggal', date('Y-m-d')) }}" required>
-                        @error('tanggal')
-                            <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
-
-                    <div class="col-md-2">
-                        <label class="form-label">Status</label>
-                        <select name="status" class="form-select" required>
-                            <option value="">-- Pilih Status --</option>
-                            @foreach (['Hadir', 'Izin', 'Sakit', 'Alfa'] as $status)
-                                <option value="{{ $status }}" {{ old('status') == $status ? 'selected' : '' }}>
-                                    {{ $status }}
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('status')
-                            <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
-
-                    <div class="col-md-3">
-                        <label class="form-label">Keterangan</label>
-                        <input type="text" name="keterangan" class="form-control" value="{{ old('keterangan') }}">
-                        @error('keterangan')
-                            <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
-
-                    <div class="col-md-2 align-self-end">
-                        <button type="submit" class="btn btn-success w-100">Simpan</button>
-                    </div>
-                </div>
-            </form>
-
-            {{-- Tabel daftar absensi --}}
-            <table class="table table-bordered">
-                <thead class="table-dark text-center">
-                    <tr>
-                        <th>Nama</th>
-                        <th>NIM</th>
-                        <th>Tanggal</th>
-                        <th>Status</th>
-                        <th>Keterangan</th>
-                        <th>Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($absensis as $absen)
-                        <tr>
-                            <td>{{ $absen->pelajar->nama ?? '-' }}</td>
-                            <td>{{ $absen->pelajar->nim ?? '-' }}</td>
-                            <td>{{ \Carbon\Carbon::parse($absen->tanggal)->format('d-m-Y') }}</td>
-                            <td>{{ ucfirst($absen->status) }}</td>
-                            <td>{{ $absen->keterangan ?? '-' }}</td>
-                            <td class="text-center">
-                                <a href="{{ route('absensi.edit', $absen->id) }}" class="btn btn-warning btn-sm">Edit</a>
-
-                                <form action="{{ route('absensi.destroy', $absen->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Hapus data absensi ini?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button class="btn btn-danger btn-sm">Hapus</button>
-                                </form>
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="6" class="text-center">Data absensi belum ada.</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-
-            {{-- Pagination --}}
-            <div class="d-flex justify-content-center">
-                {{ $absensis->links() }}
+                </form>
             </div>
         </div>
 
-        {{-- Tabel ringkasan absensi --}}
-        <div class="card shadow mt-4">
-            <div class="card-header bg-primary text-white">Daftar Absensi</div>
+        {{-- Tabel kegiatan --}}
+        <div class="card shadow-sm">
+            <div class="card-header bg-secondary text-white fw-bold">Tabel Kegiatan Saya</div>
             <div class="card-body p-0">
-                <table class="table table-bordered text-center mb-0">
-                    <thead class="table-dark">
+                <table class="table table-bordered table-hover mb-0" id="tableKegiatan">
+                    <thead class="table-light text-center">
                         <tr>
                             <th>No</th>
-                            <th>Nama</th>
-                            <th>NIM</th>
-                            <th>Status</th>
+                            <th>Nama Kegiatan</th>
                             <th>Tanggal</th>
+                            <th>Deskripsi</th>
+                            <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse($absensis as $absen)
-                            <tr>
-                                <td>{{ $loop->iteration }}</td>
-                                <td>{{ $absen->pelajar->nama ?? '-' }}</td>
-                                <td>{{ $absen->pelajar->nim ?? '-' }}</td>
-                                <td>{{ ucfirst($absen->status) }}</td>
-                                <td>{{ $absen->created_at->format('d-m-Y') }}</td>
+                        @foreach ($kegiatans as $index => $kegiatan)
+                            <tr id="kegiatan-{{ $kegiatan->id }}">
+                                <td>{{ $index + $kegiatans->firstItem() }}</td>
+                                <td class="nama">{{ $kegiatan->nama_kegiatan }}</td>
+                                <td class="tanggal text-center">{{ $kegiatan->tanggal }}</td>
+                                <td class="deskripsi">{{ $kegiatan->deskripsi }}</td>
+                                <td class="text-center">
+                                    <button class="btn btn-sm btn-warning me-1 btnEdit"
+                                        data-id="{{ $kegiatan->id }}">Edit</button>
+                                    <button class="btn btn-sm btn-danger btnHapus"
+                                        data-id="{{ $kegiatan->id }}">Hapus</button>
+                                </td>
                             </tr>
-                        @empty
-                            <tr>
-                                <td colspan="5" class="text-center">Belum ada data absensi</td>
-                            </tr>
-                        @endforelse
+                        @endforeach
                     </tbody>
                 </table>
             </div>
-        </div>
 
-        {{-- Cek absen hari ini --}}
-        <div class="mt-3">
-            @if (!$absenHariIni)
-                <div class="alert alert-warning">
-                    Anda <strong>belum absen hari ini</strong>. Silakan lakukan absen terlebih dahulu.
-                </div>
-                <button class="btn btn-secondary mb-3" disabled>Tambah Kegiatan</button>
-            @else
-                <a href="{{ route('kegiatan.create') }}" class="btn btn-primary mb-3">Tambah Kegiatan</a>
-            @endif
+            <div class="card-footer d-flex justify-content-end">
+                {{ $kegiatans->links() }}
+            </div>
         </div>
     </div>
+
+    {{-- Modal Edit --}}
+    <div class="modal fade" id="modalEdit" tabindex="-1" aria-labelledby="modalEditLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form id="formEditKegiatan">
+                    @csrf
+                    @method('PUT')
+                    <div class="modal-header bg-warning text-white">
+                        <h5 class="modal-title" id="modalEditLabel">Edit Kegiatan</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" name="id" id="edit-id">
+                        <div class="mb-3">
+                            <label class="form-label">Nama Kegiatan</label>
+                            <input type="text" name="nama_kegiatan" id="edit-nama_kegiatan" class="form-control"
+                                required>
+                            <small class="text-danger" id="error-edit-nama_kegiatan"></small>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Tanggal</label>
+                            <input type="date" name="tanggal" id="edit-tanggal" class="form-control" required>
+                            <small class="text-danger" id="error-edit-tanggal"></small>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Deskripsi</label>
+                            <input type="text" name="deskripsi" id="edit-deskripsi" class="form-control" required>
+                            <small class="text-danger" id="error-edit-deskripsi"></small>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-success">Simpan Perubahan</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    {{-- AJAX Script --}}
+@section('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const modalEdit = new bootstrap.Modal(document.getElementById('modalEdit'));
+
+            // Tambah kegiatan live
+            document.getElementById('formTambahKegiatan').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const form = e.target;
+                const data = new FormData(form);
+
+                ['nama_kegiatan', 'tanggal', 'deskripsi'].forEach(id => document.getElementById('error-' +
+                    id).innerText = '');
+
+                fetch("{{ route('kegiatan.store') }}", {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: data
+                    }).then(res => res.json())
+                    .then(res => {
+                        if (res.errors) {
+                            Object.keys(res.errors).forEach(key => {
+                                document.getElementById('error-' + key).innerText = res.errors[
+                                    key][0];
+                            });
+                        } else {
+                            // Tambahkan baris baru ke tabel
+                            const tbody = document.querySelector('#tableKegiatan tbody');
+                            const index = tbody.children.length + 1;
+                            const tr = document.createElement('tr');
+                            tr.id = 'kegiatan-' + res.kegiatan.id;
+                            tr.innerHTML = `
+                <td>${index}</td>
+                <td class="nama">${res.kegiatan.nama_kegiatan}</td>
+                <td class="tanggal text-center">${res.kegiatan.tanggal}</td>
+                <td class="deskripsi">${res.kegiatan.deskripsi}</td>
+                <td class="text-center">
+                    <button class="btn btn-sm btn-warning me-1 btnEdit" data-id="${res.kegiatan.id}">Edit</button>
+                    <button class="btn btn-sm btn-danger btnHapus" data-id="${res.kegiatan.id}">Hapus</button>
+                </td>`;
+                            tbody.appendChild(tr);
+                            form.reset();
+                        }
+                    });
+            });
+
+            // Edit kegiatan live (modal sama seperti sebelumnya)
+            document.querySelector('#tableKegiatan').addEventListener('click', function(e) {
+                if (e.target.classList.contains('btnEdit')) {
+                    const id = e.target.dataset.id;
+                    fetch(`/kegiatan/${id}/edit`).then(res => res.json())
+                        .then(k => {
+                            document.getElementById('edit-id').value = k.id;
+                            document.getElementById('edit-nama_kegiatan').value = k.nama_kegiatan;
+                            document.getElementById('edit-tanggal').value = k.tanggal;
+                            document.getElementById('edit-deskripsi').value = k.deskripsi;
+                            modalEdit.show();
+                        });
+                } else if (e.target.classList.contains('btnHapus')) {
+                    if (confirm('Hapus kegiatan ini?')) {
+                        const id = e.target.dataset.id;
+                        fetch(`/kegiatan/${id}`, {
+                                method: 'DELETE',
+                                headers: {
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                }
+                            }).then(res => res.json())
+                            .then(r => {
+                                if (r.success) {
+                                    document.getElementById('kegiatan-' + r.id).remove();
+                                    // update index
+                                    document.querySelectorAll('#tableKegiatan tbody tr').forEach((tr,
+                                        i) => {
+                                        tr.children[0].innerText = i + 1
+                                    });
+                                }
+                            });
+                    }
+                }
+            });
+
+            // Submit edit live
+            document.getElementById('formEditKegiatan').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const id = document.getElementById('edit-id').value;
+                const data = new FormData(e.target);
+                ['nama_kegiatan', 'tanggal', 'deskripsi'].forEach(k => document.getElementById(
+                    'error-edit-' + k).innerText = '');
+
+                fetch(`/kegiatan/${id}`, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                            'X-HTTP-Method-Override': 'PUT'
+                        },
+                        body: data
+                    }).then(res => res.json())
+                    .then(res => {
+                        if (res.errors) {
+                            Object.keys(res.errors).forEach(k => {
+                                document.getElementById('error-edit-' + k).innerText = res
+                                    .errors[k][0];
+                            });
+                        } else {
+                            // update row
+                            const tr = document.getElementById('kegiatan-' + id);
+                            tr.querySelector('.nama').innerText = res.kegiatan.nama_kegiatan;
+                            tr.querySelector('.tanggal').innerText = res.kegiatan.tanggal;
+                            tr.querySelector('.deskripsi').innerText = res.kegiatan.deskripsi;
+                            modalEdit.hide();
+                        }
+                    });
+            });
+        });
+    </script>
 @endsection

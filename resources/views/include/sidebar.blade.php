@@ -79,9 +79,9 @@
                 </li>
 
                 {{-- Pelajar --}}
-                <li class="sidebar-item {{ request()->routeIs('kegiatan.*') ? 'active' : '' }}">
-                    <a href="{{ route('kegiatan.index') }}" class='sidebar-link'>
-                        <i class="bi bi-journal-text"></i>
+                <li class="sidebar-item {{ request()->routeIs('pelajar.*') ? 'active' : '' }}">
+                    <a href="{{ route('pelajar.index') }}" class='sidebar-link'>
+                        <i class="bi bi-people"></i>
                         <span>Pelajar</span>
                     </a>
                 </li>

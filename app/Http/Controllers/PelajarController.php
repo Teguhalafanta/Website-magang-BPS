@@ -13,7 +13,6 @@ class PelajarController extends Controller
         return view('pelajar.pengajuan_pelajar');
     }
 
-    // Simpan data pengajuan ke tabel pelajars
     public function store(Request $request)
     {
         $request->validate([
@@ -32,7 +31,7 @@ class PelajarController extends Controller
         ]);
 
         Pelajar::create([
-            'id_user'               => Auth::user()->id_user, // foreign key dari users
+            'id_user'               => Auth::id(), // ✅ cukup Auth::id()
             'nama'                  => $request->nama,
             'jenis_kelamin'         => $request->jenis_kelamin,
             'tempat_tanggal_lahir'  => $request->tempat_tanggal_lahir,
@@ -47,14 +46,17 @@ class PelajarController extends Controller
             'rencana_selesai'       => $request->rencana_selesai,
         ]);
 
-        return redirect()->route('dashboard')
+        return redirect()->route('pelajar.pengajuan.index')
             ->with('success', 'Pengajuan magang berhasil dikirim.');
     }
 
-    // untuk menampilkan pelajar yang telah mengajukan magang
     public function index()
     {
-        $pengajuans = Pelajar::with('user')->latest()->get();
+        // Pelajar hanya bisa lihat pengajuan miliknya sendiri
+        $pengajuans = Pelajar::where('id_user', Auth::id())
+            ->with('user')
+            ->latest()
+            ->get();
 
         return view('pelajar.daftar_pengajuan', compact('pengajuans'));
     }

@@ -2,12 +2,12 @@
 
 @section('content')
     <div class="container">
-        <h2 class="mb-4">Dashboard BPS</h2>
+        <h2 class="mb-4">Dashboard Admin BPS</h2>
 
         <div class="row">
             {{-- Total Pelajar --}}
             <div class="col-md-3 mb-3">
-                <a href="{{ route('pengajuan.index') }}" class="text-decoration-none">
+                <a href="{{ route('admin.pengajuan.index') }}">Total Pelajar
                     <div class="card text-white bg-primary shadow">
                         <div class="card-body d-flex justify-content-between align-items-center">
                             <div>
@@ -20,7 +20,7 @@
                 </a>
             </div>
 
-            {{-- Absensi Hari Ini  --}}
+            {{-- Absensi Hari Ini --}}
             <div class="col-md-3 mb-3">
                 <a href="{{ route('absensi.index', ['today' => true]) }}" class="text-decoration-none">
                     <div class="card bg-warning text-white shadow">
@@ -46,20 +46,6 @@
                         <i class="bi bi-list-task fs-2"></i>
                     </div>
                 </div>
-            </div>
-
-            {{-- Ajukan Magang --}}
-            <div class="col-md-3 mb-3">
-                <a href="{{ route('pelajars.create') }}" class="text-decoration-none">
-                    <div class="card text-white bg-info shadow">
-                        <div class="card-body d-flex justify-content-between align-items-center">
-                            <div>
-                                <h5>Ajukan Magang</h5>
-                            </div>
-                            <i class="bi bi-file-earmark-text fs-2"></i>
-                        </div>
-                    </div>
-                </a>
             </div>
         </div>
 

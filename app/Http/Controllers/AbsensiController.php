@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
+use App\Notifications\NotifikasiBaru;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Absensi;
@@ -65,7 +67,25 @@ class AbsensiController extends Controller
             'keterangan'   => 'nullable|string|max:255',
         ]);
 
-        Absensi::create($validated);
+        $absensi = Absensi::create($validated);
+
+        // Kirim notifikasi ke semua Admin
+        $admins = User::where('role', 'admin')->get();
+        foreach ($admins as $admin) {
+            $admin->notify(new NotifikasiBaru(
+                'Ada absensi baru masuk dari pelajar ID: ' . $absensi->pelajar_id,
+                route('absensi.index')
+            ));
+        }
+
+        // Kirim notifikasi ke User yang login
+        $user = Auth::user();
+        if ($user) {
+            $user->notify(new NotifikasiBaru(
+                'Absensi kamu berhasil disimpan!',
+                route('absensi.index')
+            ));
+        }
 
         return redirect()->route('absensi.index')->with('success', 'Data absensi berhasil ditambahkan.');
     }

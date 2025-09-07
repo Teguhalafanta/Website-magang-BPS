@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LoginSSOController;
@@ -8,6 +9,7 @@ use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\AbsensiController;
 use App\Http\Controllers\KegiatanController;
 use App\Http\Controllers\PelajarController;
+use App\Http\Controllers\NotificationController;
 
 /*
 Public Routes (tanpa login)
@@ -58,6 +60,14 @@ Route::middleware('auth')->group(function () {
     Route::resource('pelajar', PelajarController::class);
     Route::resource('kegiatan', KegiatanController::class);
     Route::resource('absensi', AbsensiController::class);
+
+    // Notifikasi
+    Route::get('/notifications', [NotificationController::class, 'index'])
+        ->name('notifications.index');
+    Route::get('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])
+        ->name('notifications.read');
+    Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])
+        ->name('notifications.readAll');
 
     // Logout
     Route::post('/logout', [LoginController::class, 'logout'])

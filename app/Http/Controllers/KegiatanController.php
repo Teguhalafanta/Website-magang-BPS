@@ -37,11 +37,16 @@ class KegiatanController extends Controller
     public function harian()
     {
         $pelajar = Auth::user()->pelajar;
+
+        if (!$pelajar) {
+            return redirect('/')->with('error', 'Akun tidak memiliki data pelajar.');
+        }
+
         $kegiatans = Kegiatan::where('pelajar_id', $pelajar->id_pelajar)
             ->whereDate('tanggal', now()->toDateString())
             ->get();
 
-        return view('kegiatan.harian', compact('kegiatans'));
+        return view('kegiatan.harian', compact('kegiatans', 'pelajar'));
     }
 
     /**
@@ -50,11 +55,16 @@ class KegiatanController extends Controller
     public function bulanan()
     {
         $pelajar = Auth::user()->pelajar;
+
+        if (!$pelajar) {
+            return redirect('/')->with('error', 'Akun tidak memiliki data pelajar.');
+        }
+
         $kegiatans = Kegiatan::where('pelajar_id', $pelajar->id_pelajar)
             ->whereMonth('tanggal', now()->month)
             ->get();
 
-        return view('kegiatan.bulanan', compact('kegiatans'));
+        return view('kegiatan.bulanan', compact('kegiatans', 'pelajar'));
     }
 
     /**

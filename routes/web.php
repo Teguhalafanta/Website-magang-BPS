@@ -11,6 +11,7 @@ use App\Http\Controllers\KegiatanController;
 use App\Http\Controllers\PelajarController;
 use App\Http\Controllers\Admin\PengajuanController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\ProfileController;
 
 // ================= PUBLIC (Guest) =================
 Route::get('/', [LoginController::class, 'index'])->name('login')->middleware('guest');
@@ -48,6 +49,12 @@ Route::middleware('auth')->group(function () {
         Route::get('/kegiatan/bulanan', [KegiatanController::class, 'bulanan'])->name('kegiatan.bulanan');
         Route::resource('absensi', AbsensiController::class);
     });
+
+    // Profil
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+    Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profile/magang/update', [ProfileController::class, 'updateMagang'])->name('magang.update');
+    Route::put('/profile/photo', [ProfileController::class, 'updatePhoto'])->name('profile.updatePhoto');
 
     // Notifikasi
     Route::get('/notifications', [NotificationController::class, 'index'])

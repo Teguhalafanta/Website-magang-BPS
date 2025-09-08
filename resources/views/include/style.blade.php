@@ -1,5 +1,4 @@
 {{-- css --}}
-
 <link rel="stylesheet" href="{{ asset('template/assets/css/main/app.css') }}">
 <link rel="stylesheet" href="{{ asset('template/assets/css/main/app-dark.css') }}">
 <link rel="shortcut icon" href="{{ asset('template/assets/images/logo/favicon.svg') }}" type="image/x-icon">

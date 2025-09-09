@@ -89,7 +89,6 @@
                             </a>
                         </li>
                     @elseif(auth()->user()->role == 'pelajar')
-                    
                         {{-- Pelajar Dashboard --}}
                         <li class="sidebar-item {{ request()->routeIs('pelajar.dashboard') ? 'active' : '' }}">
                             <a href="{{ route('pelajar.dashboard') }}" class="sidebar-link">
@@ -98,7 +97,7 @@
                             </a>
                         </li>
 
-                        {{-- Absensi --}}
+                        {{-- Menu Absensi --}}
                         <li class="sidebar-item {{ request()->routeIs('absensi.*') ? 'active' : '' }}">
                             <a href="{{ route('absensi.index') }}" class="sidebar-link">
                                 <i class="bi bi-calendar-check"></i>
@@ -125,13 +124,12 @@
                         </li>
 
                         {{-- Pelajar --}}
-                        <li class="sidebar-item {{ request()->routeIs('absensi.*') ? 'active' : '' }}">
+                        <li class="sidebar-item {{ request()->routeIs('pelajar.*') ? 'active' : '' }}">
                             <a href="{{ route('absensi.index') }}" class="sidebar-link">
                                 <i class="bi bi-person-lines-fill"></i>
                                 <span>Pelajar</span>
                             </a>
                         </li>
-
 
                         {{-- Pengajuan Magang --}}
                         <li class="sidebar-item has-sub {{ request()->routeIs('pelajar.pengajuan.*') ? 'active' : '' }}">
@@ -172,16 +170,6 @@
                             <i class="bi bi-person-plus"></i>
                             <span>Register</span>
                         </a>
-                    </li>
-                @endauth
-
-                <li class="sidebar-title">Keluar</li>
-                @auth
-                    <li class="sidebar-item">
-                        <form action="{{ route('logout') }}" method="POST" class="mb-0">
-                            @csrf
-                            <button type="submit" class="btn btn-danger w-100">Logout</button>
-                        </form>
                     </li>
                 @endauth
             </ul>

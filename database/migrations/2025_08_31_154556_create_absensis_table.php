@@ -12,7 +12,7 @@ class CreateAbsensisTable extends Migration
             $table->id();
 
             $table->unsignedBigInteger('user_id');  // wajib ada ini
-            $table->foreign('user_id')->references('id_user')->on('users')->onDelete('cascade');
+            $table->foreign('id_user')->references('id_user')->on('users')->onDelete('cascade');
 
             $table->string('nama_pelajar')->nullable();
             $table->date('tanggal');

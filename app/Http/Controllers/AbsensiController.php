@@ -95,6 +95,8 @@ class AbsensiController extends Controller
 
         // Kirim notifikasi ke User yang login
         $user = Auth::user();
+        // DEBUG DI SINI
+        dd($user, get_class($user));
         if ($user) {
             $user->notify(new NotifikasiBaru(
                 'Absensi kamu berhasil disimpan!',

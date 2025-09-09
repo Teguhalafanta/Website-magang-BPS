@@ -10,8 +10,8 @@ return new class extends Migration {
         Schema::create('kegiatans', function (Blueprint $table) {
             $table->bigIncrements('id'); // Primary key
 
-            // Sesuaikan dengan primary key di tabel users
-            $table->unsignedBigInteger('user_id'); // Foreign key ke users.id
+            // Sesuaikan dengan primary key di tabel users (id_user)
+            $table->unsignedBigInteger('user_id');
 
             $table->date('tanggal');
             $table->string('nama_kegiatan');
@@ -22,13 +22,13 @@ return new class extends Migration {
             $table->string('pemberi_tugas')->nullable();
             $table->string('tim_kerja')->nullable();
 
-            // Lebih aman pakai enum (optional), bisa disesuaikan dengan string juga
-            $table->enum('status_penyelesaian', ['Belum Dimulai', 'Dalam Proses', 'Selesai'])->default('Belum Dimulai');
+            $table->enum('status_penyelesaian', ['Belum Dimulai', 'Dalam Proses', 'Selesai'])
+                  ->default('Belum Dimulai');
 
             $table->timestamps();
 
-            // Foreign key constraint
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            // Foreign key constraint → arahkan ke id_user
+            $table->foreign('user_id')->references('id_user')->on('users')->onDelete('cascade');
         });
     }
 

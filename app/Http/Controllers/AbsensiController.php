@@ -9,41 +9,58 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Absensi;
 use App\Models\Kegiatan;
 use App\Models\Pelajar;
-use Carbon\Carbon;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class AbsensiController extends Controller
 {
     /**
-     * Tampilkan daftar absensi, baik semua atau hanya hari ini.
+     * Tampilkan daftar absensi, khusus untuk pelajar yang login.
      */
     public function index(Request $request)
     {
-        // Ambil data absensi (semua atau hanya hari ini)
-        if ($request->has('today')) {
-            $absensis = Absensi::with('pelajar')
-                ->whereDate('tanggal', date('Y-m-d'))
-                ->get();
-        } else {
-            $absensis = Absensi::with('pelajar')->paginate(10);
+        $user = Auth::user();
+
+        if (!$user) {
+            abort(403, 'Unauthorized');
         }
 
-        // Data tambahan untuk tampilan dashboard
+        // Ambil pelajar yang terkait user login
+        $pelajar = Pelajar::where('id_user', $user->id_user)->first();
+
+        if (!$pelajar) {
+            // Fallback kosong agar tidak error saat memanggil ->links() di Blade
+            $absensis = new LengthAwarePaginator([], 0, 10);
+            $pelajar_id = null;
+        } else {
+            $pelajar_id = $pelajar->id_pelajar;
+
+            if ($request->has('today')) {
+                // Gunakan paginate agar bisa pakai links() di Blade
+                $absensis = Absensi::with('pelajar')
+                    ->whereDate('tanggal', date('Y-m-d'))
+                    ->where('pelajar_id', $pelajar_id)
+                    ->paginate(10);
+            } else {
+                $absensis = Absensi::with('pelajar')
+                    ->where('pelajar_id', $pelajar_id)
+                    ->paginate(10);
+            }
+        }
+
+        // Data tambahan untuk dashboard
         $jumlahPelajar = Pelajar::count();
         $jumlahKegiatan = Kegiatan::count();
-        $jumlahAbsensiHariIni = Absensi::whereDate('created_at', date('Y-m-d'))->count();
+        $jumlahAbsensiHariIni = Absensi::whereDate('tanggal', date('Y-m-d'))->count();
 
-        // Ambil semua pelajar untuk form tambah absensi
+        // Semua pelajar (jika dibutuhkan untuk form tambah absensi)
         $pelajars = Pelajar::all();
 
-        // Cek apakah pelajar yang login sudah absen hari ini
-        $user = Auth::user();
-        $absenHariIni = false;
-
-        if ($user) {
-            $absenHariIni = Absensi::whereHas('pelajar', function ($query) use ($user) {
-                $query->where('pelajar_id', $user->id_user);
-            })->whereDate('tanggal', date('Y-m-d'))->exists();
-        }
+        // Cek apakah pelajar sudah absen hari ini
+        $absenHariIni = $pelajar_id
+            ? Absensi::where('pelajar_id', $pelajar_id)
+            ->whereDate('tanggal', date('Y-m-d'))
+            ->exists()
+            : false;
 
         return view('absensi.index', compact(
             'absensis',
@@ -62,9 +79,9 @@ class AbsensiController extends Controller
     {
         $validated = $request->validate([
             'pelajar_id' => 'required|exists:pelajars,id_pelajar',
-            'tanggal'      => 'required|date',
-            'status'       => 'required|in:Hadir,Izin,Sakit,Alfa',
-            'keterangan'   => 'nullable|string|max:255',
+            'tanggal'    => 'required|date',
+            'status'     => 'required|in:Hadir,Izin,Sakit,Alfa',
+            'keterangan' => 'nullable|string|max:255',
         ]);
 
         $absensi = Absensi::create($validated);
@@ -78,8 +95,10 @@ class AbsensiController extends Controller
             ));
         }
 
-        // Kirim notifikasi ke User yang login
+        // Kirim notifikasi ke User yang login 
         $user = Auth::user();
+        // DEBUG DI SINI 
+        dd($user, get_class($user));
         if ($user) {
             $user->notify(new NotifikasiBaru(
                 'Absensi kamu berhasil disimpan!',
@@ -108,9 +127,9 @@ class AbsensiController extends Controller
     {
         $validated = $request->validate([
             'pelajar_id' => 'required|exists:pelajars,id_pelajar',
-            'tanggal'      => 'required|date',
-            'status'       => 'required|in:Hadir,Izin,Sakit,Alfa',
-            'keterangan'   => 'nullable|string|max:255',
+            'tanggal'    => 'required|date',
+            'status'     => 'required|in:Hadir,Izin,Sakit,Alfa',
+            'keterangan' => 'nullable|string|max:255',
         ]);
 
         $absen = Absensi::findOrFail($id);

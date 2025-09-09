@@ -3,33 +3,60 @@
 @section('content')
     <div class="container">
         <h3>Kegiatan Bulanan</h3>
-        <p>Bulan: {{ now()->format('F Y') }}</p>
 
-        @if ($kegiatans->isEmpty())
-            <div class="alert alert-info">
-                Tidak ada kegiatan untuk bulan ini.
+        <form method="GET" action="{{ route('pelajar.kegiatan.bulanan') }}" class="row g-2 align-items-end mb-4">
+            <div class="col-md-4 col-sm-6">
+                <label for="bulan" class="form-label">Pilih Bulan:</label>
+                <input type="month" id="bulan" name="bulan" class="form-control"
+                    value="{{ request('bulan', \Carbon\Carbon::now()->format('Y-m')) }}">
             </div>
-        @else
-            <table class="table table-striped">
-                <thead>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary">Tampilkan</button>
+            </div>
+        </form>
+
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Uraian Kegiatan</th>
+                    <th>Satuan</th>
+                    <th>Target</th>
+                    <th>Realisasi</th>
+                    <th>Persentase</th>
+                    <th>Tingkat</th>
+                    <th>Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse ($kegiatans as $i => $kegiatan)
                     <tr>
-                        <th>No</th>
-                        <th>Nama Kegiatan</th>
-                        <th>Tanggal</th>
-                        <th>Deskripsi</th>
+                        <td>{{ $i + 1 }}</td>
+                        <td>{{ $kegiatan->uraian_kegiatan }}</td>
+                        <td>{{ $kegiatan->satuan }}</td>
+                        <td>{{ $kegiatan->target }}</td>
+                        <td>{{ $kegiatan->realisasi }}</td>
+                        <td>
+                            @php
+                                $persen =
+                                    $kegiatan->target > 0
+                                        ? round(($kegiatan->realisasi / $kegiatan->target) * 100, 2)
+                                        : 0;
+                            @endphp
+                            {{ $persen }}%
+                        </td>
+                        <td>{{ $kegiatan->tingkat ?? '-' }}</td>
+                        <td>
+                            <a href="{{ route('pelajar.kegiatan.edit', $kegiatan->id) }}"
+                                class="btn btn-sm btn-outline-primary"></a>
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    @foreach ($kegiatans as $index => $kegiatan)
-                        <tr>
-                            <td>{{ $index + 1 }}</td>
-                            <td>{{ $kegiatan->nama_kegiatan }}</td>
-                            <td>{{ \Carbon\Carbon::parse($kegiatan->tanggal)->format('d-m-Y') }}</td>
-                            <td>{{ $kegiatan->deskripsi }}</td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        @endif
+                @empty
+                    <tr>
+                        <td colspan="8" class="text-center">Tidak ada kegiatan di bulan ini.</td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
     </div>
 @endsection

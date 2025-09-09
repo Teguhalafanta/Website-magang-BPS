@@ -11,16 +11,14 @@ class CreateAbsensisTable extends Migration
         Schema::create('absensis', function (Blueprint $table) {
             $table->id();
 
-            $table->unsignedBigInteger('pelajar_id');
-            $table->foreign('pelajar_id')
-                ->references('id_pelajar')
-                ->on('pelajars')
-                ->onDelete('cascade');
+            $table->unsignedBigInteger('user_id');  // wajib ada ini
+            $table->foreign('id_user')->references('id_user')->on('users')->onDelete('cascade');
 
             $table->string('nama_pelajar')->nullable();
             $table->date('tanggal');
             $table->enum('status', ['Hadir', 'Izin', 'Sakit', 'Alfa']);
             $table->string('keterangan')->nullable();
+
             $table->timestamps();
         });
     }

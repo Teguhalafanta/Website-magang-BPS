@@ -3,137 +3,116 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use App\Models\Kegiatan;
-use App\Models\Absensi;
+use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class KegiatanController extends Controller
 {
-    /**
-     * Tampilkan daftar kegiatan user login.
-     */
-    public function index()
-    {
-        $pelajar = Auth::user()->pelajar;
-
-        if (!$pelajar) {
-            return redirect('/')->with('error', 'Akun tidak memiliki data pelajar.');
-        }
-
-        $kegiatans = Kegiatan::where('pelajar_id', $pelajar->id_pelajar)
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
-
-        $absenHariIni = Absensi::where('id_pelajar', $pelajar->id_pelajar)
-            ->whereDate('tanggal', now()->toDateString())
-            ->first();
-
-        return view('kegiatan.index', compact('kegiatans', 'pelajar', 'absenHariIni'));
-    }
-
-    /**
-     * Kegiatan Harian.
-     */
+    // Tampilkan kegiatan harian user (tanggal hari ini)
     public function harian()
     {
-        $pelajar = Auth::user()->pelajar;
+        $today = now()->toDateString();
 
-        if (!$pelajar) {
-            return redirect('/')->with('error', 'Akun tidak memiliki data pelajar.');
-        }
-
-        $kegiatans = Kegiatan::where('pelajar_id', $pelajar->id_pelajar)
-            ->whereDate('tanggal', now()->toDateString())
+        $kegiatans = Kegiatan::where('user_id', Auth::id())
+            ->whereDate('tanggal', $today)
             ->get();
 
-        return view('kegiatan.harian', compact('kegiatans', 'pelajar'));
+        return view('kegiatan.harian', compact('kegiatans', 'today'));
     }
 
-    /**
-     * Kegiatan Bulanan.
-     */
-    public function bulanan()
+    // Tampilkan kegiatan bulanan user (bulan dan tahun sekarang)
+    public function kegiatanBulanan(Request $request)
     {
-        $pelajar = Auth::user()->pelajar;
+        $user = Auth::user();
 
-        if (!$pelajar) {
-            return redirect('/')->with('error', 'Akun tidak memiliki data pelajar.');
-        }
+        // Ambil bulan yang dipilih dari request (default: bulan ini)
+        $bulan = $request->input('bulan', Carbon::now()->format('Y-m'));
 
-        $kegiatans = Kegiatan::where('pelajar_id', $pelajar->id_pelajar)
-            ->whereMonth('tanggal', now()->month)
+        // Ambil tahun & bulan dari string (format: YYYY-MM)
+        [$tahun, $bulanNum] = explode('-', $bulan);
+
+        // Ambil kegiatan user sesuai bulan
+        $kegiatans = Kegiatan::where('user_id', $user->id)
+            ->whereYear('tanggal', $tahun)
+            ->whereMonth('tanggal', $bulanNum)
             ->get();
 
-        return view('kegiatan.bulanan', compact('kegiatans', 'pelajar'));
+        return view('kegiatan.bulanan', compact('kegiatans', 'bulan'));
     }
 
-    /**
-     * Simpan kegiatan baru (AJAX).
-     */
+    // Simpan data kegiatan baru
     public function store(Request $request)
     {
         $request->validate([
-            'nama_kegiatan' => 'required|string|max:255',
             'tanggal' => 'required|date',
-            'deskripsi' => 'required|string',
+            'judul' => 'required|string|max:255',
+            'deskripsi' => 'nullable|string',
+            'volume' => 'nullable|integer|min:0',
+            'satuan' => 'nullable|string|max:100',
+            'durasi' => 'nullable|integer|min:0',
+            'pemberi_tugas' => 'nullable|string|max:255',
+            'tim_kerja' => 'nullable|string|max:255',
+            'status' => 'nullable|string|in:Belum,Proses,Selesai',
         ]);
 
-        $pelajar = Auth::user()->pelajar;
-
-        $kegiatan = Kegiatan::create([
-            'nama_kegiatan' => $request->nama_kegiatan,
+        Kegiatan::create([
+            'user_id' => Auth::id(),
             'tanggal' => $request->tanggal,
+            'judul' => $request->judul,
             'deskripsi' => $request->deskripsi,
-            'pelajar_id' => $pelajar->id_pelajar,
+            'volume' => $request->volume,
+            'satuan' => $request->satuan,
+            'durasi' => $request->durasi,
+            'pemberi_tugas' => $request->pemberi_tugas,
+            'tim_kerja' => $request->tim_kerja,
+            'status' => $request->status ?? 'Belum',
         ]);
 
-        return response()->json(['success' => true, 'kegiatan' => $kegiatan]);
+        return redirect()->route('pelajar.kegiatan.index')->with('success', 'Kegiatan berhasil ditambahkan');
     }
 
-    /**
-     * Tampilkan form edit (untuk AJAX, optional).
-     */
-    public function edit(Kegiatan $kegiatan)
+    // Tampilkan form edit kegiatan (misal modal ajax)
+    public function edit($id)
     {
-        $pelajar = Auth::user()->pelajar;
-        if ($kegiatan->pelajar_id !== $pelajar->id_pelajar) {
-            return response()->json(['error' => 'Tidak bisa mengedit kegiatan ini.'], 403);
-        }
-        return response()->json($kegiatan);
+        $kegiatan = Kegiatan::findOrFail($id);
+
+        $html = view('kegiatan._form_edit', compact('kegiatan'))->render();
+
+        return response()->json([
+            'success' => true,
+            'html' => $html
+        ]);
     }
 
-    /**
-     * Update kegiatan (AJAX).
-     */
-    public function update(Request $request, Kegiatan $kegiatan)
+    // Update data kegiatan
+    public function update(Request $request, $id)
     {
-        $pelajar = Auth::user()->pelajar;
-        if ($kegiatan->pelajar_id !== $pelajar->id_pelajar) {
-            return response()->json(['error' => 'Tidak bisa update kegiatan ini.'], 403);
-        }
-
         $request->validate([
-            'nama_kegiatan' => 'required|string|max:255',
+            'nama_kegiatan' => 'required',
             'tanggal' => 'required|date',
-            'deskripsi' => 'required|string',
+            'deskripsi' => 'nullable',
+            'volume' => 'nullable|numeric',
+            'satuan' => 'nullable|string',
+            'durasi' => 'required|numeric',
+            'pemberi_tugas' => 'nullable|string',
+            'tim_kerja' => 'nullable|string',
+            'status' => 'required|string',
         ]);
 
-        $kegiatan->update($request->only('nama_kegiatan', 'tanggal', 'deskripsi'));
+        $kegiatan = Kegiatan::findOrFail($id);
+        $kegiatan->update($request->all());
 
-        return response()->json(['success' => true, 'kegiatan' => $kegiatan]);
+        return redirect()->back()->with('success', 'Kegiatan berhasil diperbarui.');
     }
 
-    /**
-     * Hapus kegiatan (AJAX).
-     */
-    public function destroy(Kegiatan $kegiatan)
-    {
-        $pelajar = Auth::user()->pelajar;
-        if ($kegiatan->pelajar_id !== $pelajar->id_pelajar) {
-            return response()->json(['error' => 'Tidak bisa hapus kegiatan ini.'], 403);
-        }
 
+    // Hapus data kegiatan
+    public function destroy($id)
+    {
+        $kegiatan = Kegiatan::findOrFail($id);
         $kegiatan->delete();
-        return response()->json(['success' => true, 'id' => $kegiatan->id]);
+
+        return redirect()->back()->with('success', 'Kegiatan berhasil dihapus.');
     }
 }

@@ -20,32 +20,60 @@ Route::get('/register', [RegisterController::class, 'index'])->name('register')-
 Route::post('/register', [RegisterController::class, 'store'])->name('register.store')->middleware('guest');
 
 // ================= PROTECTED (Auth) =================
-Route::middleware('auth')->group(function () {
-    // Dashboard otomatis redirect sesuai role
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+Route::middleware(['auth'])->group(function () {
 
     // ================= ADMIN =================
-    Route::prefix('admin')->middleware('role:admin')->group(function () {
-        Route::get('/dashboard', [DashboardController::class, 'admin'])->name('admin.dashboard');
-        Route::get('/pengajuan', [PengajuanController::class, 'index'])->name('admin.pengajuan.index');
-        Route::resource('pelajar', PelajarController::class);
-    });
+    Route::prefix('admin')
+        ->middleware('role:admin')
+        ->name('admin.')
+        ->group(function () {
+            Route::get('/dashboard', [DashboardController::class, 'admin'])->name('dashboard');
+
+            // Pengajuan
+            Route::get('/pengajuan', [PengajuanController::class, 'index'])->name('pengajuan.index');
+
+            // CRUD Pelajar
+            Route::resource('pelajar', PelajarController::class)->names('pelajar');
+
+            // CRUD Kegiatan (Admin bisa kelola semua kegiatan)
+            Route::resource('kegiatan', KegiatanController::class)->names('kegiatan');
+
+            // CRUD Absensi
+            Route::resource('absensi', AbsensiController::class)->names('absensi');
+        });
 
     // ================= PELAJAR =================
-    Route::prefix('pelajar')->middleware('role:pelajar')->group(function () {
-        Route::get('/dashboard', [DashboardController::class, 'pelajar'])->name('pelajar.dashboard');
+    Route::prefix('pelajar')
+        ->middleware('role:pelajar')
+        ->name('pelajar.')
+        ->group(function () {
 
-        // Pengajuan magang (pelajar hanya bisa kelola miliknya sendiri)
-        Route::get('/pengajuan/create', [PelajarController::class, 'create'])->name('pelajar.pengajuan.create');
-        Route::post('/pengajuan', [PelajarController::class, 'store'])->name('pelajar.pengajuan.store');
-        Route::get('/pengajuan', [PelajarController::class, 'index'])->name('pelajar.pengajuan.index');
+            // Dashboard pelajar
+            Route::get('/dashboard', [DashboardController::class, 'pelajar'])->name('dashboard');
 
-        // Kegiatan & Absensi
-        Route::resource('kegiatan', KegiatanController::class);
-        Route::get('/kegiatan/harian', [KegiatanController::class, 'harian'])->name('kegiatan.harian');
-        Route::get('/kegiatan/bulanan', [KegiatanController::class, 'bulanan'])->name('kegiatan.bulanan');
-        Route::resource('absensi', AbsensiController::class);
-    });
+            // Pengajuan magang
+            Route::get('/pengajuan', [PelajarController::class, 'index'])->name('pengajuan.index');
+            Route::get('/pengajuan/create', [PelajarController::class, 'create'])->name('pengajuan.create');
+            Route::post('/pengajuan', [PelajarController::class, 'store'])->name('pengajuan.store');
+
+            // Resource Kegiatan untuk Pelajar (edit, update, delete, index, create, store)
+            Route::resource('kegiatan', KegiatanController::class)
+                ->except(['show']) // biasanya show tidak dipakai
+                ->names('kegiatan');
+
+            // Tambahan route khusus edit dan delete jika ingin eksplisit (tidak wajib karena sudah ada resource di atas)
+            Route::get('/kegiatan/{kegiatan}/edit', [KegiatanController::class, 'edit'])->name('pelajar.kegiatan.edit');
+            Route::delete('/kegiatan/{kegiatan}', [KegiatanController::class, 'destroy'])->name('pelajar.kegiatan.destroy');
+
+            // Route khusus untuk fitur harian dan bulanan
+            Route::get('kegiatan/harian', [KegiatanController::class, 'harian'])->name('kegiatan.harian');
+            Route::get('kegiatan/bulanan', [KegiatanController::class, 'kegiatanBulanan'])->name('kegiatan.bulanan');
+        });
+
+    // Route resource absensi (jika pelajar boleh akses)
+    Route::resource('absensi', AbsensiController::class)
+        ->names('absensi')
+        ->middleware('role:pelajar');
 
     // Logout
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');

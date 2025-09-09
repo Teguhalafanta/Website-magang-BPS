@@ -1,150 +1,189 @@
-{{-- sidebar --}}
-
+{{-- sidebar.blade.php --}}
 <div id="sidebar" class="active">
     <div class="sidebar-wrapper active">
         <div class="sidebar-header position-relative">
             <div class="d-flex justify-content-between align-items-center">
                 <div class="logo">
-                    <a href="index.html"><img src="{{ asset('template/assets/images/logo/logo.svg') }}" alt="Logo"
-                            srcset=""></a>
+                    @if (auth()->check())
+                        @if (auth()->user()->role == 'admin')
+                            <a href="{{ route('admin.dashboard') }}">
+                                <img src="{{ asset('template/assets/images/logo/logo.svg') }}" alt="Logo">
+                            </a>
+                        @elseif(auth()->user()->role == 'pelajar')
+                            <a href="{{ route('pelajar.dashboard') }}">
+                                <img src="{{ asset('template/assets/images/logo/logo.svg') }}" alt="Logo">
+                            </a>
+                        @else
+                            <a href="{{ url('/') }}">
+                                <img src="{{ asset('template/assets/images/logo/logo.svg') }}" alt="Logo">
+                            </a>
+                        @endif
+                    @else
+                        <a href="{{ url('/') }}">
+                            <img src="{{ asset('template/assets/images/logo/logo.svg') }}" alt="Logo">
+                        </a>
+                    @endif
                 </div>
-                <div class="theme-toggle d-flex gap-2  align-items-center mt-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                        aria-hidden="true" role="img" class="iconify iconify--system-uicons" width="20"
-                        height="20" preserveAspectRatio="xMidYMid meet" viewBox="0 0 21 21">
-                        <g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round"
-                            stroke-linejoin="round">
-                            <path
-                                d="M10.5 14.5c2.219 0 4-1.763 4-3.982a4.003 4.003 0 0 0-4-4.018c-2.219 0-4 1.781-4 4c0 2.219 1.781 4 4 4zM4.136 4.136L5.55 5.55m9.9 9.9l1.414 1.414M1.5 10.5h2m14 0h2M4.135 16.863L5.55 15.45m9.899-9.9l1.414-1.415M10.5 19.5v-2m0-14v-2"
-                                opacity=".3"></path>
-                            <g transform="translate(-210 -1)">
-                                <path d="M220.5 2.5v2m6.5.5l-1.5 1.5"></path>
-                                <circle cx="220.5" cy="11.5" r="4"></circle>
-                                <path d="m214 5l1.5 1.5m5 14v-2m6.5-.5l-1.5-1.5M214 18l1.5-1.5m-4-5h2m14 0h2">
-                                </path>
-                            </g>
-                        </g>
+                <div class="theme-toggle d-flex gap-2 align-items-center mt-2">
+                    {{-- Toggle Theme --}}
+                    <svg class="iconify iconify--system-uicons" width="20" height="20">
+                        <use xlink:href="#moon"></use>
                     </svg>
                     <div class="form-check form-switch fs-6">
-                        <input class="form-check-input  me-0" type="checkbox" id="toggle-dark">
+                        <input class="form-check-input me-0" type="checkbox" id="toggle-dark">
                         <label class="form-check-label"></label>
                     </div>
-                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                        aria-hidden="true" role="img" class="iconify iconify--mdi" width="20" height="20"
-                        preserveAspectRatio="xMidYMid meet" viewBox="0 0 24 24">
-                        <path fill="currentColor"
-                            d="m17.75 4.09l-2.53 1.94l.91 3.06l-2.63-1.81l-2.63 1.81l.91-3.06l-2.53-1.94L12.44 4l1.06-3l1.06 3l3.19.09m3.5 6.91l-1.64 1.25l.59 1.98l-1.7-1.17l-1.7 1.17l.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95l2.06.05m-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85c-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14c.4-.4.82-.76 1.27-1.08c.75-.53 1.93.36 1.85 1.19c-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82c-2.81 3.14-2.7 7.96.31 10.98c3.02 3.01 7.84 3.12 10.98.31Z">
-                        </path>
+                    <svg class="iconify iconify--system-uicons" width="20" height="20">
+                        <use xlink:href="#sun"></use>
                     </svg>
                 </div>
-                <div class="sidebar-toggler  x">
+                <div class="sidebar-toggler x">
                     <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
                 </div>
             </div>
         </div>
+
         <div class="sidebar-menu">
             <ul class="menu">
                 <li class="sidebar-title">Menu</li>
 
-                {{-- Dashboard --}}
-                <li class="sidebar-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
-                    <a href="{{ route('dashboard') }}" class='sidebar-link'>
-                        <i class="bi bi-grid-fill"></i>
-                        <span>Dashboard</span>
-                    </a>
-                </li>
+                @auth
+                    @if (auth()->user()->role == 'admin')
+                        {{-- Admin Dashboard --}}
+                        <li class="sidebar-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+                            <a href="{{ route('admin.dashboard') }}" class="sidebar-link">
+                                <i class="bi bi-speedometer2"></i>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
 
-                {{-- Absensi --}}
-                <li class="sidebar-item {{ request()->routeIs('absensi.*') ? 'active' : '' }}">
-                    <a href="{{ route('absensi.index') }}" class='sidebar-link'>
-                        <i class="bi bi-calendar-check"></i>
-                        <span>Absensi</span>
-                    </a>
-                </li>
+                        {{-- Data Pelajar --}}
+                        <li class="sidebar-item {{ request()->routeIs('admin.pelajar.*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.pelajar.index') }}" class="sidebar-link">
+                                <i class="bi bi-people"></i>
+                                <span>Data Pelajar</span>
+                            </a>
+                        </li>
 
-                {{-- Kegiatan --}}
-                <li class="sidebar-item has-sub{{ request()->routeIs('kegiatan.*') ? 'active' : '' }}">
-                    <a href="{{ route('kegiatan.index') }}" class='sidebar-link'>
-                        <i class="bi bi-journal-text"></i>
-                        <span>Kegiatan</span>
-                    </a>
-                    <ul class="submenu">
-                        <li class="submenu-item {{ request()->routeIs('kegiatan.harian') ? 'active' : '' }}">
-                            <a href="{{ route('kegiatan.harian') }}">Kegiatan Harian</a>
+                        {{-- Pengajuan --}}
+                        <li class="sidebar-item {{ request()->routeIs('admin.pengajuan.index') ? 'active' : '' }}">
+                            <a href="{{ route('admin.pengajuan.index') }}" class="sidebar-link">
+                                <i class="bi bi-file-earmark-text"></i>
+                                <span>Pengajuan Magang</span>
+                            </a>
                         </li>
-                        <li class="submenu-item {{ request()->routeIs('kegiatan.bulanan') ? 'active' : '' }}">
-                            <a href="{{ route('kegiatan.bulanan') }}">Kegiatan Bulanan</a>
-                        </li>
-                    </ul>
-                </li>
 
-                {{-- Pelajar --}}
-                <li class="sidebar-item {{ request()->routeIs('pelajar.*') ? 'active' : '' }}">
-                    <a href="{{ route('pelajar.index') }}" class='sidebar-link'>
-                        <i class="bi bi-people"></i>
-                        <span>Pelajar</span>
-                    </a>
-                </li>
+                        {{-- Kegiatan --}}
+                        <li class="sidebar-item {{ request()->routeIs('admin.kegiatan.*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.kegiatan.index') }}" class="sidebar-link">
+                                <i class="bi bi-journal-text"></i>
+                                <span>Kegiatan</span>
+                            </a>
+                        </li>
 
-                <li class="sidebar-item  has-sub">
-                    <a href="#" class='sidebar-link'>
-                        <i class="bi bi-collection-fill"></i>
-                        <span>Pengajuan Magang</span>
-                    </a>
-                    <ul class="submenu ">
-                        <li class="submenu-item ">
-                            <a href="extra-component-avatar.html">Avatar</a>
+                        {{-- Absensi --}}
+                        <li class="sidebar-item {{ request()->routeIs('admin.absensi.*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.absensi.index') }}" class="sidebar-link">
+                                <i class="bi bi-calendar-check"></i>
+                                <span>Absensi</span>
+                            </a>
                         </li>
-                        <li class="submenu-item ">
-                            <a href="extra-component-sweetalert.html">Sweet Alert</a>
+                    @elseif(auth()->user()->role == 'pelajar')
+                    
+                        {{-- Pelajar Dashboard --}}
+                        <li class="sidebar-item {{ request()->routeIs('pelajar.dashboard') ? 'active' : '' }}">
+                            <a href="{{ route('pelajar.dashboard') }}" class="sidebar-link">
+                                <i class="bi bi-speedometer2"></i>
+                                <span>Dashboard</span>
+                            </a>
                         </li>
-                        <li class="submenu-item ">
-                            <a href="extra-component-toastify.html">Toastify</a>
-                        </li>
-                        <li class="submenu-item ">
-                            <a href="extra-component-rating.html">Rating</a>
-                        </li>
-                        <li class="submenu-item ">
-                            <a href="extra-component-divider.html">Divider</a>
-                        </li>
-                    </ul>
-                </li>
 
-                <li class="sidebar-item  has-sub">
-                    <a href="#" class='sidebar-link'>
-                        <i class="bi bi-grid-1x2-fill"></i>
-                        <span>Layouts</span>
-                    </a>
-                    <ul class="submenu ">
-                        <li class="submenu-item ">
-                            <a href="layout-default.html">Default Layout</a>
+                        {{-- Absensi --}}
+                        <li class="sidebar-item {{ request()->routeIs('absensi.*') ? 'active' : '' }}">
+                            <a href="{{ route('absensi.index') }}" class="sidebar-link">
+                                <i class="bi bi-calendar-check"></i>
+                                <span>Absensi</span>
+                            </a>
                         </li>
-                        <li class="submenu-item ">
-                            <a href="layout-vertical-1-column.html">1 Column</a>
-                        </li>
-                        <li class="submenu-item ">
-                            <a href="layout-vertical-navbar.html">Vertical Navbar</a>
-                        </li>
-                        <li class="submenu-item ">
-                            <a href="layout-rtl.html">RTL Layout</a>
-                        </li>
-                        <li class="submenu-item ">
-                            <a href="layout-horizontal.html">Horizontal Menu</a>
-                        </li>
-                    </ul>
-                </li>
 
-                <li class="sidebar-title">Forms &amp; Tables</li>
+                        {{-- Kegiatan --}}
+                        <li class="sidebar-item has-sub {{ request()->routeIs('pelajar.kegiatan.*') ? 'active' : '' }}">
+                            <a href="#" class="sidebar-link">
+                                <i class="bi bi-journal-text"></i>
+                                <span>Kegiatan</span>
+                            </a>
+                            <ul class="submenu">
+                                <li
+                                    class="submenu-item {{ request()->routeIs('pelajar.kegiatan.harian') ? 'active' : '' }}">
+                                    <a href="{{ route('pelajar.kegiatan.harian') }}">Kegiatan Harian</a>
+                                </li>
+                                <li
+                                    class="submenu-item {{ request()->routeIs('pelajar.kegiatan.bulanan') ? 'active' : '' }}">
+                                    <a href="{{ route('pelajar.kegiatan.bulanan') }}">Kegiatan Bulanan</a>
+                                </li>
+                            </ul>
+                        </li>
 
-                <li class="sidebar-item">
-                    @auth
-                        <form action="{{ route('logout') }}" method="post">
+                        {{-- Pelajar --}}
+                        <li class="sidebar-item {{ request()->routeIs('absensi.*') ? 'active' : '' }}">
+                            <a href="{{ route('absensi.index') }}" class="sidebar-link">
+                                <i class="bi bi-person-lines-fill"></i>
+                                <span>Pelajar</span>
+                            </a>
+                        </li>
+
+
+                        {{-- Pengajuan Magang --}}
+                        <li class="sidebar-item has-sub {{ request()->routeIs('pelajar.pengajuan.*') ? 'active' : '' }}">
+                            <a href="#" class="sidebar-link">
+                                <i class="bi bi-collection-fill"></i>
+                                <span>Pengajuan Magang</span>
+                            </a>
+                            <ul class="submenu">
+                                <li
+                                    class="submenu-item {{ request()->routeIs('pelajar.pengajuan.index') ? 'active' : '' }}">
+                                    <a href="{{ route('pelajar.pengajuan.index') }}">Daftar Pengajuan</a>
+                                </li>
+                                <li
+                                    class="submenu-item {{ request()->routeIs('pelajar.pengajuan.create') ? 'active' : '' }}">
+                                    <a href="{{ route('pelajar.pengajuan.create') }}">Ajukan Magang</a>
+                                </li>
+                            </ul>
+                        </li>
+                    @else
+                        {{-- Menu untuk role lain atau tidak dikenal --}}
+                        <li class="sidebar-item">
+                            <a href="{{ url('/') }}" class="sidebar-link">
+                                <i class="bi bi-house"></i>
+                                <span>Home</span>
+                            </a>
+                        </li>
+                    @endif
+                @else
+                    {{-- Menu untuk Guest --}}
+                    <li class="sidebar-item">
+                        <a href="{{ route('login') }}" class="sidebar-link">
+                            <i class="bi bi-box-arrow-in-right"></i>
+                            <span>Login</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="{{ route('register') }}" class="sidebar-link">
+                            <i class="bi bi-person-plus"></i>
+                            <span>Register</span>
+                        </a>
+                    </li>
+                @endauth
+
+                <li class="sidebar-title">Keluar</li>
+                @auth
+                    <li class="sidebar-item">
+                        <form action="{{ route('logout') }}" method="POST" class="mb-0">
                             @csrf
-                            <button class="btn btn-danger">Logout</button>
+                            <button type="submit" class="btn btn-danger w-100">Logout</button>
                         </form>
-                    @endauth
-                </li>
-
+                    </li>
+                @endauth
             </ul>
         </div>
     </div>

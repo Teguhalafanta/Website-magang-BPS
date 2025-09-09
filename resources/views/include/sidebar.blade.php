@@ -3,27 +3,53 @@
     <div class="sidebar-wrapper active">
         <div class="sidebar-header position-relative">
             <div class="d-flex justify-content-between align-items-center">
-                <div class="logo">
+
+                <div class="logo text-center my-3" style="position: relative; left: 15px;">
+                    @php
+                        $logoUrl = asset('template/assets/images/logo/logo.png');
+                    @endphp
+
                     @if (auth()->check())
                         @if (auth()->user()->role == 'admin')
-                            <a href="{{ route('admin.dashboard') }}">
-                                <img src="{{ asset('template/assets/images/logo/logo.svg') }}" alt="Logo">
+                            <a href="{{ route('admin.dashboard') }}" class="text-decoration-none d-block">
+                                <img src="{{ $logoUrl }}" alt="Logo"
+                                    style="width:120px; height:auto; display:block; margin:0 auto;">
+                                <div style="font-size:16px; font-weight:bold; white-space:nowrap; margin-top:8px; text-align:center;"
+                                    class="text-body">
+                                    Badan Pusat Statistik
+                                </div>
                             </a>
                         @elseif(auth()->user()->role == 'pelajar')
-                            <a href="{{ route('pelajar.dashboard') }}">
-                                <img src="{{ asset('template/assets/images/logo/logo.svg') }}" alt="Logo">
+                            <a href="{{ route('pelajar.dashboard') }}" class="text-decoration-none d-block">
+                                <img src="{{ $logoUrl }}" alt="Logo"
+                                    style="width:120px; height:auto; display:block; margin:0 auto;">
+                                <div style="font-size:16px; font-weight:bold; white-space:nowrap; margin-top:8px; text-align:center;"
+                                    class="text-body">
+                                    Badan Pusat Statistik
+                                </div>
                             </a>
                         @else
-                            <a href="{{ url('/') }}">
-                                <img src="{{ asset('template/assets/images/logo/logo.svg') }}" alt="Logo">
+                            <a href="{{ url('/') }}" class="text-decoration-none d-block">
+                                <img src="{{ $logoUrl }}" alt="Logo"
+                                    style="width:120px; height:auto; display:block; margin:0 auto;">
+                                <div style="font-size:16px; font-weight:bold; white-space:nowrap; margin-top:8px; text-align:center;"
+                                    class="text-body">
+                                    Badan Pusat Statistik
+                                </div>
                             </a>
                         @endif
                     @else
-                        <a href="{{ url('/') }}">
-                            <img src="{{ asset('template/assets/images/logo/logo.svg') }}" alt="Logo">
+                        <a href="{{ url('/') }}" class="text-decoration-none d-block">
+                            <img src="{{ $logoUrl }}" alt="Logo"
+                                style="width:120px; height:auto; display:block; margin:0 auto;">
+                            <div style="font-size:16px; font-weight:bold; white-space:nowrap; margin-top:8px; text-align:center;"
+                                class="text-body">
+                                Badan Pusat Statistik
+                            </div>
                         </a>
                     @endif
                 </div>
+
                 <div class="theme-toggle d-flex gap-2 align-items-center mt-2">
                     {{-- Toggle Theme --}}
                     <svg class="iconify iconify--system-uicons" width="20" height="20">
@@ -89,7 +115,6 @@
                             </a>
                         </li>
                     @elseif(auth()->user()->role == 'pelajar')
-                    
                         {{-- Pelajar Dashboard --}}
                         <li class="sidebar-item {{ request()->routeIs('pelajar.dashboard') ? 'active' : '' }}">
                             <a href="{{ route('pelajar.dashboard') }}" class="sidebar-link">

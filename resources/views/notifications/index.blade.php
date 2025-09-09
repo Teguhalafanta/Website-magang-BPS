@@ -24,7 +24,7 @@
                 <table class="table table-striped mb-0 align-middle">
                     <thead class="table-dark">
                         <tr>
-                            <th scope="col">#</th>
+                            <th scope="col">No</th>
                             <th scope="col">Pesan</th>
                             <th scope="col">Status</th>
                             <th scope="col">Tanggal</th>

@@ -25,7 +25,7 @@
             </header>
 
             <div class="page-heading">
-                <h3>Dashboard Zuyyin</h3>
+                <h3>Dashboard Admin</h3>
             </div>
 
             @yield('content')

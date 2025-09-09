@@ -9,7 +9,7 @@ class Pelajar extends Model
 {
     use HasFactory;
 
-    protected $table = 'pelajars';   // tabel di database
+    protected $table = 'pelajars';   // nama tabel
     protected $primaryKey = 'id_pelajar'; // primary key
     public $incrementing = true;
     protected $keyType = 'int';
@@ -18,7 +18,8 @@ class Pelajar extends Model
         'id_user',
         'nama',
         'jenis_kelamin',
-        'tempat_tanggal_lahir',
+        'tempat_lahir',
+        'tanggal_lahir',  
         'alamat',
         'telepon',
         'email',
@@ -40,5 +41,11 @@ class Pelajar extends Model
     public function absensis()
     {
         return $this->hasMany(Absensi::class, 'pelajar_id', 'id_pelajar');
+    }
+
+    // accessor untuk format tanggal lahir
+    public function getTanggalLahirFormattedAttribute()
+    {
+        return \Carbon\Carbon::parse($this->tanggal_lahir)->translatedFormat('d F Y');
     }
 }

@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Absensi;
 use App\Models\Kegiatan;
 use App\Models\Pelajar;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class AbsensiController extends Controller
 {
@@ -24,20 +25,21 @@ class AbsensiController extends Controller
         }
 
         // Ambil pelajar yang terkait user login
-        $pelajar = Pelajar::where('user_id', $user->id)->first();
+        $pelajar = Pelajar::where('id_user', $user->id_user)->first();
 
         if (!$pelajar) {
-            // Jika tidak ada pelajar terkait, kosongkan hasilnya
-            $absensis = collect();
+            // Fallback kosong agar tidak error saat memanggil ->links() di Blade
+            $absensis = new LengthAwarePaginator([], 0, 10);
             $pelajar_id = null;
         } else {
             $pelajar_id = $pelajar->id_pelajar;
 
             if ($request->has('today')) {
+                // Gunakan paginate agar bisa pakai links() di Blade
                 $absensis = Absensi::with('pelajar')
                     ->whereDate('tanggal', date('Y-m-d'))
                     ->where('pelajar_id', $pelajar_id)
-                    ->get();
+                    ->paginate(10);
             } else {
                 $absensis = Absensi::with('pelajar')
                     ->where('pelajar_id', $pelajar_id)
@@ -54,10 +56,10 @@ class AbsensiController extends Controller
         $pelajars = Pelajar::all();
 
         // Cek apakah pelajar sudah absen hari ini
-        $absenHariIni = $pelajar_id 
+        $absenHariIni = $pelajar_id
             ? Absensi::where('pelajar_id', $pelajar_id)
-                ->whereDate('tanggal', date('Y-m-d'))
-                ->exists()
+            ->whereDate('tanggal', date('Y-m-d'))
+            ->exists()
             : false;
 
         return view('absensi.index', compact(
@@ -93,9 +95,9 @@ class AbsensiController extends Controller
             ));
         }
 
-        // Kirim notifikasi ke User yang login
+        // Kirim notifikasi ke User yang login 
         $user = Auth::user();
-        // DEBUG DI SINI
+        // DEBUG DI SINI 
         dd($user, get_class($user));
         if ($user) {
             $user->notify(new NotifikasiBaru(

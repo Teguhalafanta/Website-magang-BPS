@@ -38,8 +38,8 @@ class User extends Authenticatable
         return 'id_user';
     }
 
-    public function notifications()
+    public function getKeyName()
     {
-        return $this->morphMany(DatabaseNotification::class, 'notifiable');
+        return 'id_user';
     }
 }

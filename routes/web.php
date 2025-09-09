@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\LoginSSOController;
@@ -9,6 +10,8 @@ use App\Http\Controllers\AbsensiController;
 use App\Http\Controllers\KegiatanController;
 use App\Http\Controllers\PelajarController;
 use App\Http\Controllers\Admin\PengajuanController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\ProfileController;
 
 // ================= PUBLIC (Guest) =================
 Route::get('/', [LoginController::class, 'index'])->name('login')->middleware('guest');
@@ -74,6 +77,20 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('absensi', AbsensiController::class)
         ->names('absensi')
         ->middleware('role:pelajar');
+
+    // Profil
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+    Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profile/magang/update', [ProfileController::class, 'updateMagang'])->name('magang.update');
+    Route::put('/profile/photo', [ProfileController::class, 'updatePhoto'])->name('profile.updatePhoto');
+
+    // Notifikasi
+    Route::get('/notifications', [NotificationController::class, 'index'])
+        ->name('notifications.index');
+    Route::get('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])
+        ->name('notifications.read');
+    Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])
+        ->name('notifications.readAll');
 
     // Logout
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');

@@ -35,7 +35,7 @@
 
         {{-- Ajukan Magang --}}
         <div class="col-md-4 mb-3">
-            <a href="{{ route('pelajars.create') }}" class="text-decoration-none">
+            <a href="{{ route('pelajar.create') }}" class="text-decoration-none">
                 <div class="card text-white bg-info shadow">
                     <div class="card-body d-flex justify-content-between align-items-center">
                         <div>

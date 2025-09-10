@@ -150,18 +150,10 @@
                         </li>
 
                         {{-- Pelajar --}}
-                        <li class="sidebar-item {{ request()->routeIs('pelajar.*') ? 'active' : '' }}">
-                            <a href="{{ route('absensi.index') }}" class="sidebar-link">
+                        <li class="sidebar-item has-sub {{ request()->routeIs('pelajar.*') ? 'active' : '' }}">
+                            <a href="#" class="sidebar-link">
                                 <i class="bi bi-person-lines-fill"></i>
                                 <span>Pelajar</span>
-                            </a>
-                        </li>
-
-                        {{-- Pengajuan Magang --}}
-                        <li class="sidebar-item has-sub {{ request()->routeIs('pelajar.pengajuan.*') ? 'active' : '' }}">
-                            <a href="#" class="sidebar-link">
-                                <i class="bi bi-collection-fill"></i>
-                                <span>Pengajuan Magang</span>
                             </a>
                             <ul class="submenu">
                                 <li
@@ -174,6 +166,7 @@
                                 </li>
                             </ul>
                         </li>
+
                     @else
                         {{-- Menu untuk role lain atau tidak dikenal --}}
                         <li class="sidebar-item">

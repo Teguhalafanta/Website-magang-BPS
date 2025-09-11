@@ -1,5 +1,11 @@
 <nav class="navbar navbar-expand-lg shadow px-4">
-    <a class="navbar-brand fw-bold" href="#">Mazer</a>
+    {{-- Tombol Hamburger --}}
+    <button class="btn border-0 me-3 burger-btn" type="button">
+        <i class="bi bi-justify fs-3 text-primary"></i>
+    </button>
+
+    {{-- Logo / Brand --}}
+    <a class="navbar-brand fw-bold" href="#">Badan Pusat Statistik</a>
 
     <div class="ms-auto d-flex align-items-center">
         {{-- Notifikasi Dropdown --}}
@@ -35,7 +41,7 @@
             </ul>
         </div>
 
-        {{-- Profile dropdown --}}
+        {{-- Profile Dropdown --}}
         <div class="dropdown">
             <a href="#" class="d-flex align-items-center text-dark" data-bs-toggle="dropdown">
                 <svg xmlns="http://www.w3.org/2000/svg" width="1.5em" height="1.5em" fill="none" viewBox="0 0 16 16"

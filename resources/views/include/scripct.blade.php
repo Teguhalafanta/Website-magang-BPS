@@ -1,8 +1,47 @@
 {{-- javascripct --}}
-
 <script src="{{ asset('template/assets/js/bootstrap.js') }}"></script>
 <script src="{{ asset('template/assets/js/app.js') }}"></script>
 
 <!-- Need: Apexcharts -->
 <script src="{{ asset('template/assets/extensions/apexcharts/apexcharts.min.js') }}"></script>
 <script src="{{ asset('template/assets/js/pages/dashboard.js') }}"></script>
+
+{{-- Script untuk toggle sidebar (buka/tutup) --}}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const sidebar = document.getElementById("sidebar");
+        const openBtn = document.querySelector(".burger-btn");
+        const closeBtn = document.querySelector(".sidebar-hide");
+
+        // buka sidebar di mobile
+        if (openBtn && sidebar) {
+            openBtn.addEventListener("click", function(e) {
+                e.preventDefault();
+                sidebar.classList.add("active");
+            });
+        }
+
+        // tutup sidebar di mobile
+        if (closeBtn && sidebar) {
+            closeBtn.addEventListener("click", function(e) {
+                e.preventDefault();
+                sidebar.classList.remove("active");
+            });
+        }
+
+        // cek ukuran layar (reset otomatis sesuai breakpoint)
+        function handleResize() {
+            if (window.innerWidth >= 1200) {
+                // Desktop → sidebar harus terbuka
+                sidebar.classList.add("active");
+            } else {
+                // Mobile → sidebar harus tertutup
+                sidebar.classList.remove("active");
+            }
+        }
+
+        // jalankan saat load & saat resize
+        handleResize();
+        window.addEventListener("resize", handleResize);
+    });
+</script>

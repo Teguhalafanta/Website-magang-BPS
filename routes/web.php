@@ -36,9 +36,12 @@ Route::middleware(['auth'])->group(function () {
 
         // Pengajuan (lihat semua pengajuan pelajar)
         Route::get('/pengajuan', [PengajuanController::class, 'index'])->name('pengajuan.index');
+        Route::put('/pengajuan/{id}/update-status', [PengajuanController::class, 'updateStatus'])->name('pengajuan.updateStatus');
 
         // CRUD Pelajar
-        Route::resource('pelajar', PelajarController::class)->names('pelajar');
+        Route::get('/pengajuan/{id}/edit', [PengajuanController::class, 'edit'])->name('pengajuan.edit');
+        Route::put('/pengajuan/{id}', [PengajuanController::class, 'update'])->name('pengajuan.update');
+        Route::delete('/pengajuan/{id}', [PengajuanController::class, 'destroy'])->name('pengajuan.destroy');
 
         // CRUD Kegiatan
         Route::resource('kegiatan', KegiatanController::class)->names('kegiatan');
@@ -46,6 +49,7 @@ Route::middleware(['auth'])->group(function () {
         // CRUD Absensi
         Route::resource('absensi', AbsensiController::class)->names('absensi');
     });
+
 
     // -------- PELAJAR --------
     Route::prefix('pelajar')->middleware('role:pelajar')->name('pelajar.')->group(function () {

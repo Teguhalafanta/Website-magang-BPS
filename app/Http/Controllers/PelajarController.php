@@ -5,14 +5,17 @@ namespace App\Http\Controllers;
 use App\Models\Pelajar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class PelajarController extends Controller
 {
+    // Form pengajuan magang
     public function create()
     {
         return view('pelajar.pengajuan_pelajar');
     }
 
+    // Simpan pengajuan baru
     public function store(Request $request)
     {
         $request->validate([
@@ -29,8 +32,15 @@ class PelajarController extends Controller
             'jurusan'         => 'required|string|max:255',
             'rencana_mulai'   => 'required|date',
             'rencana_selesai' => 'required|date|after_or_equal:rencana_mulai',
+            'proposal'        => 'required|mimes:pdf,doc,docx|max:2048',
+            'surat_pengajuan' => 'required|mimes:pdf,doc,docx|max:2048',
         ]);
 
+        // Simpan file
+        $proposalPath = $request->file('proposal')->store('proposals', 'public');
+        $suratPath    = $request->file('surat_pengajuan')->store('surat_pengajuan', 'public');
+
+        // Simpan data pelajar
         Pelajar::create([
             'id_user'         => Auth::id(),
             'nama'            => $request->nama,
@@ -46,20 +56,42 @@ class PelajarController extends Controller
             'jurusan'         => $request->jurusan,
             'rencana_mulai'   => $request->rencana_mulai,
             'rencana_selesai' => $request->rencana_selesai,
+
+            // file & status
+            'proposal'        => $proposalPath,
+            'surat_pengajuan' => $suratPath,
+            'status'          => 'menunggu', // default
         ]);
 
         return redirect()->route('pelajar.pengajuan.index')
             ->with('success', 'Pengajuan magang berhasil dikirim.');
     }
 
+    // Pelajar lihat daftar pengajuan miliknya
     public function index()
     {
-        // Pelajar hanya bisa lihat pengajuan miliknya sendiri
         $pengajuans = Pelajar::where('id_user', Auth::id())
             ->with('user')
             ->latest()
             ->get();
 
         return view('pelajar.daftar_pengajuan', compact('pengajuans'));
+    }
+
+    // Admin update status & alasan
+    public function updateStatus(Request $request, $id)
+    {
+        $request->validate([
+            'status' => 'required|in:diterima,ditolak',
+            'alasan' => 'nullable|string',
+        ]);
+
+        $pengajuan = Pelajar::findOrFail($id);
+        $pengajuan->update([
+            'status' => $request->status,
+            'alasan' => $request->alasan,
+        ]);
+
+        return redirect()->back()->with('success', 'Status pengajuan berhasil diperbarui.');
     }
 }

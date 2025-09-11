@@ -83,14 +83,6 @@
                             </a>
                         </li>
 
-                        {{-- Data Pelajar --}}
-                        <li class="sidebar-item {{ request()->routeIs('admin.pelajar.*') ? 'active' : '' }}">
-                            <a href="{{ route('admin.pelajar.index') }}" class="sidebar-link">
-                                <i class="bi bi-people"></i>
-                                <span>Data Pelajar</span>
-                            </a>
-                        </li>
-
                         {{-- Pengajuan --}}
                         <li class="sidebar-item {{ request()->routeIs('admin.pengajuan.index') ? 'active' : '' }}">
                             <a href="{{ route('admin.pengajuan.index') }}" class="sidebar-link">

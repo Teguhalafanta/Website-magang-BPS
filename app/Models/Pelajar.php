@@ -29,6 +29,10 @@ class Pelajar extends Model
         'jurusan',
         'rencana_mulai',
         'rencana_selesai',
+        'proposal',
+        'surat_pengajuan',
+        'status',
+        'alasan',
     ];
 
     // relasi ke User

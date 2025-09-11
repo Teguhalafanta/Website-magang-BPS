@@ -2,70 +2,65 @@
 <div id="sidebar" class="active">
     <div class="sidebar-wrapper active">
         <div class="sidebar-header position-relative">
-            <div class="d-flex justify-content-between align-items-center">
+            <div class="logo text-center my-3">
+                @php
+                    $logoUrl = asset('template/assets/images/logo/logo.png');
+                @endphp
 
-                <div class="logo text-center my-3" style="position: relative; left: 15px;">
-                    @php
-                        $logoUrl = asset('template/assets/images/logo/logo.png');
-                    @endphp
-
-                    @if (auth()->check())
-                        @if (auth()->user()->role == 'admin')
-                            <a href="{{ route('admin.dashboard') }}" class="text-decoration-none d-block">
-                                <img src="{{ $logoUrl }}" alt="Logo"
-                                    style="width:120px; height:auto; display:block; margin:0 auto;">
-                                <div style="font-size:16px; font-weight:bold; white-space:nowrap; margin-top:8px; text-align:center;"
-                                    class="text-body">
-                                    Badan Pusat Statistik
-                                </div>
-                            </a>
-                        @elseif(auth()->user()->role == 'pelajar')
-                            <a href="{{ route('pelajar.dashboard') }}" class="text-decoration-none d-block">
-                                <img src="{{ $logoUrl }}" alt="Logo"
-                                    style="width:120px; height:auto; display:block; margin:0 auto;">
-                                <div style="font-size:16px; font-weight:bold; white-space:nowrap; margin-top:8px; text-align:center;"
-                                    class="text-body">
-                                    Badan Pusat Statistik
-                                </div>
-                            </a>
-                        @else
-                            <a href="{{ url('/') }}" class="text-decoration-none d-block">
-                                <img src="{{ $logoUrl }}" alt="Logo"
-                                    style="width:120px; height:auto; display:block; margin:0 auto;">
-                                <div style="font-size:16px; font-weight:bold; white-space:nowrap; margin-top:8px; text-align:center;"
-                                    class="text-body">
-                                    Badan Pusat Statistik
-                                </div>
-                            </a>
-                        @endif
+                @if (auth()->check())
+                    @if (auth()->user()->role == 'admin')
+                        <a href="{{ route('admin.dashboard') }}" class="text-decoration-none d-block">
+                            <img src="{{ $logoUrl }}" alt="Logo"
+                                style="width:120px; height:auto; display:block; margin:0 auto;">
+                            <div
+                                style="font-size:20px; font-weight:bold; white-space:nowrap; margin-top:8px; text-align:center; font-family:'Poppins', sans-serif;">
+                                <span style="color:#007bff;">Badan</span>
+                                <span style="color:#28a745;">Pusat</span>
+                                <span style="color:#fd7e14;">Statistik</span>
+                            </div>
+                        </a>
+                    @elseif(auth()->user()->role == 'pelajar')
+                        <a href="{{ route('pelajar.dashboard') }}" class="text-decoration-none d-block">
+                            <img src="{{ $logoUrl }}" alt="Logo"
+                                style="width:120px; height:auto; display:block; margin:0 auto;">
+                            <div
+                                style="font-size:20px; font-weight:bold; white-space:nowrap; margin-top:8px; text-align:center; font-family:'Poppins', sans-serif;">
+                                <span style="color:#007bff;">Badan</span>
+                                <span style="color:#28a745;">Pusat</span>
+                                <span style="color:#fd7e14;">Statistik</span>
+                            </div>
+                        </a>
                     @else
                         <a href="{{ url('/') }}" class="text-decoration-none d-block">
                             <img src="{{ $logoUrl }}" alt="Logo"
                                 style="width:120px; height:auto; display:block; margin:0 auto;">
-                            <div style="font-size:16px; font-weight:bold; white-space:nowrap; margin-top:8px; text-align:center;"
-                                class="text-body">
-                                Badan Pusat Statistik
+                            <div
+                                style="font-size:20px; font-weight:bold; white-space:nowrap; margin-top:8px; text-align:center; font-family:'Poppins', sans-serif;">
+                                <span style="color:#007bff;">Badan</span>
+                                <span style="color:#28a745;">Pusat</span>
+                                <span style="color:#fd7e14;">Statistik</span>
                             </div>
                         </a>
                     @endif
-                </div>
+                @else
+                    <a href="{{ url('/') }}" class="text-decoration-none d-block">
+                        <img src="{{ $logoUrl }}" alt="Logo"
+                            style="width:120px; height:auto; display:block; margin:0 auto;">
+                        <div
+                            style="font-size:20px; font-weight:bold; white-space:nowrap; margin-top:8px; text-align:center; font-family:'Poppins', sans-serif;">
+                            <span style="color:#007bff;">Badan</span>
+                            <span style="color:#28a745;">Pusat</span>
+                            <span style="color:#fd7e14;">Statistik</span>
+                        </div>
+                    </a>
+                @endif
+            </div>
 
-                <div class="theme-toggle d-flex gap-2 align-items-center mt-2">
-                    {{-- Toggle Theme --}}
-                    <svg class="iconify iconify--system-uicons" width="20" height="20">
-                        <use xlink:href="#moon"></use>
-                    </svg>
-                    <div class="form-check form-switch fs-6">
-                        <input class="form-check-input me-0" type="checkbox" id="toggle-dark">
-                        <label class="form-check-label"></label>
-                    </div>
-                    <svg class="iconify iconify--system-uicons" width="20" height="20">
-                        <use xlink:href="#sun"></use>
-                    </svg>
-                </div>
-                <div class="sidebar-toggler x">
-                    <a href="#" class="sidebar-hide d-xl-none d-block"><i class="bi bi-x bi-middle"></i></a>
-                </div>
+            <div class="absolute top-4 right-4 z-50">
+                <a href="#" class="sidebar-hide" id="sidebar-close"
+                    style="position:absolute; top:15px; right:15px; font-size:28px; color:#0d6efd; cursor:pointer;">
+                    <i class="bi bi-x"></i>
+                </a>
             </div>
         </div>
 

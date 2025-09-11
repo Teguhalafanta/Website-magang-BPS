@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Pelajar;
 use App\Models\Kegiatan;
 use App\Models\Absensi;
+use Carbon\Carbon;
 use App\Http\Controllers\PengajuanController;
 
 class DashboardController extends Controller
@@ -18,7 +19,15 @@ class DashboardController extends Controller
         if ($user->role === 'admin') {
             return redirect()->route('admin.dashboard');
         } elseif ($user->role === 'pelajar') {
-            return redirect()->route('pelajar.dashboard');
+            $tanggalHariIni = Carbon::today()->toDateString();
+
+            // Ambil kegiatan hari ini
+            $kegiatanHariIni = Kegiatan::where('tanggal', $tanggalHariIni)->get();
+
+            // Total kegiatan
+            $totalKegiatan = Kegiatan::count();
+
+            return view('pelajar.dashboard', compact('user', 'kegiatanHariIni', 'totalKegiatan'));
         }
 
         abort(403, 'Unauthorized');

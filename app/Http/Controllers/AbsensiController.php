@@ -35,7 +35,6 @@ class AbsensiController extends Controller
             $pelajar_id = $pelajar->id_pelajar;
 
             if ($request->has('today')) {
-                // Gunakan paginate agar bisa pakai links() di Blade
                 $absensis = Absensi::with('pelajar')
                     ->whereDate('tanggal', date('Y-m-d'))
                     ->where('pelajar_id', $pelajar_id)
@@ -55,11 +54,11 @@ class AbsensiController extends Controller
         // Semua pelajar (jika dibutuhkan untuk form tambah absensi)
         $pelajars = Pelajar::all();
 
-        // Cek apakah pelajar sudah absen hari ini
+        // Cek apakah pelajar sudah absen hari ini  
         $absenHariIni = $pelajar_id
             ? Absensi::where('pelajar_id', $pelajar_id)
-            ->whereDate('tanggal', date('Y-m-d'))
-            ->exists()
+                ->whereDate('tanggal', date('Y-m-d'))
+                ->exists()
             : false;
 
         return view('absensi.index', compact(
@@ -96,14 +95,14 @@ class AbsensiController extends Controller
         }
 
         // Kirim notifikasi ke User yang login 
-        $user = Auth::user();
+        $user = Auth::user(); 
         // DEBUG DI SINI 
-        dd($user, get_class($user));
-        if ($user) {
-            $user->notify(new NotifikasiBaru(
-                'Absensi kamu berhasil disimpan!',
-                route('absensi.index')
-            ));
+        dd($user, get_class($user)); 
+        if ($user) { 
+            $user->notify(new NotifikasiBaru( 
+                'Absensi kamu berhasil disimpan!', 
+                route('absensi.index') 
+            )); 
         }
 
         return redirect()->route('absensi.index')->with('success', 'Data absensi berhasil ditambahkan.');

@@ -32,16 +32,34 @@
         // cek ukuran layar (reset otomatis sesuai breakpoint)
         function handleResize() {
             if (window.innerWidth >= 1200) {
-                // Desktop → sidebar harus terbuka
                 sidebar.classList.add("active");
             } else {
-                // Mobile → sidebar harus tertutup
                 sidebar.classList.remove("active");
             }
         }
 
-        // jalankan saat load & saat resize
         handleResize();
         window.addEventListener("resize", handleResize);
+
+        // Tambahan: Toggle submenu kegiatan & pelajar
+        const menuKegiatan = document.getElementById("menu-kegiatan");
+        const submenuKegiatan = document.getElementById("submenu-kegiatan");
+
+        const menuPelajar = document.getElementById("menu-pelajar");
+        const submenuPelajar = document.getElementById("submenu-pelajar");
+
+        if (menuKegiatan && submenuKegiatan) {
+            menuKegiatan.addEventListener("click", function(e) {
+                e.preventDefault();
+                submenuKegiatan.classList.toggle("hidden");
+            });
+        }
+
+        if (menuPelajar && submenuPelajar) {
+            menuPelajar.addEventListener("click", function(e) {
+                e.preventDefault();
+                submenuPelajar.classList.toggle("hidden");
+            });
+        }
     });
 </script>

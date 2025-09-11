@@ -120,11 +120,14 @@
 
                         {{-- Kegiatan --}}
                         <li class="sidebar-item has-sub {{ request()->routeIs('pelajar.kegiatan.*') ? 'active' : '' }}">
-                            <a href="#" class="sidebar-link">
+                            {{-- Parent menu klik tidak langsung ke index, karena ada submenu --}}
+                            <a href="{{ route('pelajar.kegiatan.index') }}" class="sidebar-link">
                                 <i class="bi bi-journal-text"></i>
                                 <span>Kegiatan</span>
+                                <i class="bi bi-chevron-down ms-auto"></i> {{-- Icon panah bawah --}}
                             </a>
-                            <ul class="submenu">
+                            <ul class="submenu"
+                                style="{{ request()->routeIs('pelajar.kegiatan.*') ? 'display: block;' : 'display: none;' }}">
                                 <li
                                     class="submenu-item {{ request()->routeIs('pelajar.kegiatan.harian') ? 'active' : '' }}">
                                     <a href="{{ route('pelajar.kegiatan.harian') }}">Kegiatan Harian</a>
@@ -135,6 +138,7 @@
                                 </li>
                             </ul>
                         </li>
+
 
                         {{-- Pelajar --}}
                         <li class="sidebar-item has-sub {{ request()->routeIs('pelajar.*') ? 'active' : '' }}">
@@ -153,7 +157,6 @@
                                 </li>
                             </ul>
                         </li>
-
                     @else
                         {{-- Menu untuk role lain atau tidak dikenal --}}
                         <li class="sidebar-item">

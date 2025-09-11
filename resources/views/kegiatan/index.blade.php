@@ -353,7 +353,7 @@
                 submitBtn.disabled = true;
                 submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Menyimpan...';
 
-                fetch("{{ route('kegiatan.store') }}", {
+                fetch("{{ url('/kegiatan') }}", {
                         method: 'POST',
                         headers: {
                             'X-CSRF-TOKEN': '{{ csrf_token() }}'

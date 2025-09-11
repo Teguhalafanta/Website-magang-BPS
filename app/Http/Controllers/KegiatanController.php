@@ -9,16 +9,36 @@ use Carbon\Carbon;
 
 class KegiatanController extends Controller
 {
+    // ✅ Tambahan: Menampilkan semua data kegiatan (untuk admin misalnya)
+    public function index()
+    {
+        $kegiatans = Kegiatan::paginate(10);
+        return view('kegiatan.index', compact('kegiatans'));
+    }
+
     // Tampilkan kegiatan harian user (tanggal hari ini)
     public function harian()
     {
-        $today = now()->toDateString();
-
+        $today = now()->format('Y-m-d');
         $kegiatans = Kegiatan::where('user_id', Auth::id())
             ->whereDate('tanggal', $today)
-            ->get();
+            ->get()  // <- jangan lupa get() dulu
+            ->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'nama_kegiatan' => $item->nama_kegiatan,
+                    'tanggal' => $item->tanggal,
+                    'deskripsi' => $item->deskripsi,
+                    'volume' => $item->volume,
+                    'satuan' => $item->satuan,
+                    'durasi' => $item->durasi,
+                    'status' => $item->status,
+                    'pemberi_tugas' => $item->pemberi_tugas,
+                    'tim_kerja' => $item->tim_kerja,
+                ];
+            });
 
-        return view('kegiatan.harian', compact('kegiatans', 'today'));
+        return view('kegiatan.harian', compact('kegiatans'));
     }
 
     // Tampilkan kegiatan bulanan user (bulan dan tahun sekarang)
@@ -26,13 +46,10 @@ class KegiatanController extends Controller
     {
         $user = Auth::user();
 
-        // Ambil bulan yang dipilih dari request (default: bulan ini)
         $bulan = $request->input('bulan', Carbon::now()->format('Y-m'));
 
-        // Ambil tahun & bulan dari string (format: YYYY-MM)
         [$tahun, $bulanNum] = explode('-', $bulan);
 
-        // Ambil kegiatan user sesuai bulan
         $kegiatans = Kegiatan::where('user_id', $user->id)
             ->whereYear('tanggal', $tahun)
             ->whereMonth('tanggal', $bulanNum)
@@ -72,7 +89,7 @@ class KegiatanController extends Controller
         return redirect()->route('pelajar.kegiatan.index')->with('success', 'Kegiatan berhasil ditambahkan');
     }
 
-    // Tampilkan form edit kegiatan (misal modal ajax)
+    // Tampilkan form edit kegiatan
     public function edit($id)
     {
         $kegiatan = Kegiatan::findOrFail($id);
@@ -105,7 +122,6 @@ class KegiatanController extends Controller
 
         return redirect()->back()->with('success', 'Kegiatan berhasil diperbarui.');
     }
-
 
     // Hapus data kegiatan
     public function destroy($id)

@@ -185,3 +185,26 @@
         </div>
     </div>
 </div>
+
+@push("scripts")
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll(".sidebar-item.has-sub > .sidebar-link").forEach(link => {
+        link.addEventListener("click", function (e) {
+            e.preventDefault();
+            const parent = this.closest(".sidebar-item.has-sub");
+            const submenu = parent.querySelector(".submenu");
+
+            if (submenu) {
+                // Toggle display langsung
+                if (submenu.style.display === "block") {
+                    submenu.style.display = "none";
+                } else {
+                    submenu.style.display = "block";
+                }
+            }
+        });
+    });
+});
+</script>
+@endpush

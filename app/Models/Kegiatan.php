@@ -14,16 +14,16 @@ class Kegiatan extends Model
 
     protected $fillable = [
         'user_id',
-        'nama_kegiatan',
         'tanggal',
+        'nama_kegiatan',
         'deskripsi',
         'volume',
         'satuan',
         'durasi',
         'pemberi_tugas',
         'tim_kerja',
-        'status_penyelesaian',
-        'pelajar_id'
+        'status',
+        'bukti_dukung',
     ];
 
     protected $casts = [
@@ -61,10 +61,10 @@ class Kegiatan extends Model
     public function getDurasiFormattedAttribute()
     {
         if (!$this->durasi) return '-';
-        
+
         $jam = floor($this->durasi / 60);
         $menit = $this->durasi % 60;
-        
+
         if ($jam > 0 && $menit > 0) {
             return "{$jam} jam {$menit} menit";
         } elseif ($jam > 0) {
@@ -88,7 +88,7 @@ class Kegiatan extends Model
     public function scopeBulanIni($query)
     {
         return $query->whereMonth('tanggal', now()->month)
-                    ->whereYear('tanggal', now()->year);
+            ->whereYear('tanggal', now()->year);
     }
 
     /**

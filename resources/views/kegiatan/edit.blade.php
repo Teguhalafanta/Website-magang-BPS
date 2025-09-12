@@ -32,6 +32,19 @@
             @enderror
         </div>
 
+        {{-- Tambahan untuk Status --}}
+        <div class="mb-3">
+            <label for="status" class="form-label">Status</label>
+            <select name="status" id="status" class="form-control">
+                <option value="Selesai" {{ old('status', $kegiatan->status) == 'Selesai' ? 'selected' : '' }}>Selesai</option>
+                <option value="Belum Selesai" {{ old('status', $kegiatan->status) == 'Belum Selesai' ? 'selected' : '' }}>Belum Selesai</option>
+                <option value="Proses" {{ old('status', $kegiatan->status) == 'Proses' ? 'selected' : '' }}>Proses</option>
+            </select>
+            @error('status')
+                <div class="text-danger">{{ $message }}</div>
+            @enderror
+        </div>
+
         <button type="submit" class="btn btn-primary">Update</button>
         <a href="{{ route('kegiatan.index') }}" class="btn btn-secondary">Batal</a>
     </form>

@@ -103,6 +103,13 @@
                             <small class="text-danger" id="error-tim_kerja"></small>
                         </div>
 
+                        {{-- Upload Bukti Dukung --}}
+                        <div class="mb-3">
+                            <label class="form-label">Bukti Dukung</label>
+                            <input type="file" name="bukti_dukung" class="form-control"
+                                accept=".pdf,.doc,.docx,.img,.jpg,.png" required>
+                        </div>
+
                         <div class="col-12 text-end mt-3">
                             <button type="submit" class="btn btn-primary fw-bold">
                                 <i class="fas fa-save me-1"></i>Tambah Kegiatan
@@ -131,6 +138,7 @@
                                 <th width="80">Satuan</th>
                                 <th width="90">Durasi</th>
                                 <th width="120">Status</th>
+                                <th width="120">Bukti Dukung</th>
                                 <th width="120">Aksi</th>
                             </tr>
                         </thead>
@@ -491,11 +499,11 @@
                                     // Update nomor urut
                                     document.querySelectorAll('#tableKegiatan tbody tr').forEach((tr,
                                         i) => {
-                                            const firstCell = tr.children[0];
-                                            if (firstCell && !firstCell.hasAttribute('colspan')) {
-                                                firstCell.innerText = i + 1;
-                                            }
-                                        });
+                                        const firstCell = tr.children[0];
+                                        if (firstCell && !firstCell.hasAttribute('colspan')) {
+                                            firstCell.innerText = i + 1;
+                                        }
+                                    });
 
                                     // Tampilkan pesan "no data" jika tidak ada data
                                     const tbody = document.querySelector('#tableKegiatan tbody');

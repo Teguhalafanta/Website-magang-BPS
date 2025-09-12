@@ -9,7 +9,6 @@ use Carbon\Carbon;
 
 class KegiatanController extends Controller
 {
-    // ✅ Tambahan: Menampilkan semua data kegiatan (untuk admin misalnya)
     public function index()
     {
         $kegiatans = Kegiatan::paginate(10);
@@ -20,23 +19,10 @@ class KegiatanController extends Controller
     public function harian()
     {
         $today = now()->format('Y-m-d');
+
         $kegiatans = Kegiatan::where('user_id', Auth::id())
             ->whereDate('tanggal', $today)
-            ->get()  // <- jangan lupa get() dulu
-            ->map(function ($item) {
-                return [
-                    'id' => $item->id,
-                    'nama_kegiatan' => $item->nama_kegiatan,
-                    'tanggal' => $item->tanggal,
-                    'deskripsi' => $item->deskripsi,
-                    'volume' => $item->volume,
-                    'satuan' => $item->satuan,
-                    'durasi' => $item->durasi,
-                    'status' => $item->status,
-                    'pemberi_tugas' => $item->pemberi_tugas,
-                    'tim_kerja' => $item->tim_kerja,
-                ];
-            });
+            ->get();
 
         return view('kegiatan.harian', compact('kegiatans'));
     }
@@ -45,9 +31,7 @@ class KegiatanController extends Controller
     public function kegiatanBulanan(Request $request)
     {
         $user = Auth::user();
-
         $bulan = $request->input('bulan', Carbon::now()->format('Y-m'));
-
         [$tahun, $bulanNum] = explode('-', $bulan);
 
         $kegiatans = Kegiatan::where('user_id', $user->id)
@@ -61,9 +45,9 @@ class KegiatanController extends Controller
     // Simpan data kegiatan baru
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'tanggal' => 'required|date',
-            'judul' => 'required|string|max:255',
+            'nama_kegiatan' => 'required|string|max:255',
             'deskripsi' => 'nullable|string',
             'volume' => 'nullable|integer|min:0',
             'satuan' => 'nullable|string|max:100',
@@ -71,22 +55,31 @@ class KegiatanController extends Controller
             'pemberi_tugas' => 'nullable|string|max:255',
             'tim_kerja' => 'nullable|string|max:255',
             'status' => 'nullable|string|in:Belum,Proses,Selesai',
+            'bukti_dukung' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:2048'
         ]);
 
-        Kegiatan::create([
-            'user_id' => Auth::id(),
-            'tanggal' => $request->tanggal,
-            'judul' => $request->judul,
-            'deskripsi' => $request->deskripsi,
-            'volume' => $request->volume,
-            'satuan' => $request->satuan,
-            'durasi' => $request->durasi,
-            'pemberi_tugas' => $request->pemberi_tugas,
-            'tim_kerja' => $request->tim_kerja,
-            'status' => $request->status ?? 'Belum',
-        ]);
+        $data = $validated;
+        $data['user_id'] = Auth::id();
 
-        return redirect()->route('pelajar.kegiatan.index')->with('success', 'Kegiatan berhasil ditambahkan');
+        if ($request->hasFile('bukti_dukung')) {
+            $filePath = $request->file('bukti_dukung')->store('bukti', 'public');
+            $data['bukti_dukung'] = $filePath;
+        }
+
+        // Mapping status → ke kolom status_penyelesaian
+        $data['status_penyelesaian'] = $data['status'] ?? 'Belum';
+        unset($data['status']);
+
+        Kegiatan::create($data);
+
+        return redirect()->route('pelajar.kegiatan.harian')->with('success', 'Kegiatan berhasil ditambahkan');
+    }
+
+    // Tampilkan detail kegiatan
+    public function show($id)
+    {
+        $kegiatan = Kegiatan::findOrFail($id);
+        return view('kegiatan.show', compact('kegiatan'));
     }
 
     // Tampilkan form edit kegiatan
@@ -94,18 +87,13 @@ class KegiatanController extends Controller
     {
         $kegiatan = Kegiatan::findOrFail($id);
 
-        $html = view('kegiatan._form_edit', compact('kegiatan'))->render();
-
-        return response()->json([
-            'success' => true,
-            'html' => $html
-        ]);
+        return view('kegiatan.edit', compact('kegiatan'));
     }
 
     // Update data kegiatan
     public function update(Request $request, $id)
     {
-        $request->validate([
+        $validated = $request->validate([
             'nama_kegiatan' => 'required',
             'tanggal' => 'required|date',
             'deskripsi' => 'nullable',
@@ -114,13 +102,26 @@ class KegiatanController extends Controller
             'durasi' => 'required|numeric',
             'pemberi_tugas' => 'nullable|string',
             'tim_kerja' => 'nullable|string',
-            'status' => 'required|string',
+            'status' => 'required|string|in:Belum,Proses,Selesai',
+            'bukti_dukung' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:2048',
         ]);
 
         $kegiatan = Kegiatan::findOrFail($id);
-        $kegiatan->update($request->all());
 
-        return redirect()->back()->with('success', 'Kegiatan berhasil diperbarui.');
+        $data = $validated;
+
+        if ($request->hasFile('bukti_dukung')) {
+            $filePath = $request->file('bukti_dukung')->store('bukti', 'public');
+            $data['bukti_dukung'] = $filePath;
+        }
+
+        // Mapping status → ke kolom status_penyelesaian
+        $data['status_penyelesaian'] = $data['status'];
+        unset($data['status']);
+
+        $kegiatan->update($data);
+
+        return redirect()->route('pelajar.kegiatan.harian')->with('success', 'Kegiatan berhasil diperbarui.');
     }
 
     // Hapus data kegiatan

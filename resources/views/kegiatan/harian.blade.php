@@ -24,15 +24,16 @@
                     <th>Pemberi Tugas</th>
                     <th>Tim Kerja</th>
                     <th>Status</th>
+                    <th>Bukti Dukung</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse ($kegiatans as $index => $kegiatan)
                     <tr>
-                        <td>{{ $index + 1 }}</td>
+                        <td>{{ $loop->iteration }}</td> 
                         <td>{{ $kegiatan->nama_kegiatan }}</td>
-                        <td>{{ \Carbon\Carbon::parse($kegiatan->tanggal)->format('d-m-Y') }}</td>
+                        <td>{{ $kegiatan->tanggal }}</td>
                         <td>{{ $kegiatan->deskripsi }}</td>
                         <td>{{ $kegiatan->volume }}</td>
                         <td>{{ $kegiatan->satuan }}</td>
@@ -41,11 +42,21 @@
                         <td>{{ $kegiatan->tim_kerja }}</td>
                         <td>{{ $kegiatan->status }}</td>
                         <td>
-                            <a href="{{ route('pelajar.kegiatan.edit', $kegiatan->id) }}" class="btn btn-sm btn-warning">Edit</a>
-                            <form action="{{ route('pelajar.kegiatan.destroy', $kegiatan->id) }}" method="POST" style="display:inline-block;">
+                            @if ($kegiatan->bukti_dukung)
+                                <a href="{{ asset('storage/' . $kegiatan->bukti_dukung) }}" target="_blank">Lihat Bukti</a>
+                            @else
+                                <span class="text-muted">-</span>
+                            @endif
+                        </td>
+                        <td>
+                            <a href="{{ route('pelajar.kegiatan.edit', $kegiatan->id) }}"
+                                class="btn btn-sm btn-warning">Edit</a>
+                            <form action="{{ route('pelajar.kegiatan.destroy', $kegiatan->id) }}" method="POST"
+                                style="display:inline-block;">
                                 @csrf
                                 @method('DELETE')
-                                <button class="btn btn-sm btn-danger" onclick="return confirm('Yakin ingin hapus kegiatan ini?')">Hapus</button>
+                                <button class="btn btn-sm btn-danger"
+                                    onclick="return confirm('Yakin ingin hapus kegiatan ini?')">Hapus</button>
                             </form>
                         </td>
                     </tr>
@@ -59,9 +70,10 @@
     </div>
 
     <!-- Modal Tambah Kegiatan -->
-    <div class="modal fade" id="tambahKegiatanModal" tabindex="-1" aria-labelledby="tambahKegiatanModalLabel" aria-hidden="true">
+    <div class="modal fade" id="tambahKegiatanModal" tabindex="-1" aria-labelledby="tambahKegiatanModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog">
-            <form action="{{ route('pelajar.kegiatan.store') }}" method="POST">
+            <form action="{{ route('pelajar.kegiatan.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-content">
                     <div class="modal-header">
@@ -84,7 +96,8 @@
                         </div>
                         <div class="mb-3">
                             <label for="volume" class="form-label">Volume</label>
-                            <input type="number" class="form-control" id="volume" name="volume" min="0" value="0" required>
+                            <input type="number" class="form-control" id="volume" name="volume" min="0"
+                                value="0" required>
                         </div>
                         <div class="mb-3">
                             <label for="satuan" class="form-label">Satuan</label>
@@ -108,6 +121,12 @@
                                 <option value="Belum">Belum</option>
                                 <option value="Selesai">Selesai</option>
                             </select>
+                        </div>
+                        {{-- Upload Bukti Dukung --}}
+                        <div class="mb-3">
+                            <label class="form-label">Bukti Dukung</label>
+                            <input type="file" name="bukti_dukung" class="form-control"
+                                accept=".pdf,.doc,.docx,.img,.jpg,.png" required>
                         </div>
                     </div>
                     <div class="modal-footer">

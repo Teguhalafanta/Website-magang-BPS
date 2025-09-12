@@ -11,19 +11,19 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('absensis', function (Blueprint $table) {
-            $table->unsignedBigInteger('pelajar_id')->after('user_id');
+        // Schema::table('absensis', function (Blueprint $table) {
+        //     $table->unsignedBigInteger('pelajar_id')->after('user_id');
 
-            // Jika ingin tambah foreign key, tambahkan:
-            $table->foreign('pelajar_id')->references('pelajar_id')->on('pelajars')->onDelete('cascade');
-        });
+        //     // Jika ingin tambah foreign key, tambahkan:
+        //     $table->foreign('pelajar_id')->references('id_pelajar')->on('pelajars')->onDelete('cascade');
+        // });
     }
 
     public function down()
     {
-        Schema::table('absensis', function (Blueprint $table) {
-            $table->dropForeign(['pelajar_id']);
-            $table->dropColumn('pelajar_id');
-        });
+        // Schema::table('absensis', function (Blueprint $table) {
+        //     $table->dropForeign(['id_pelajar']);
+        //     $table->dropColumn('id_pelajar');
+        // });
     }
 };

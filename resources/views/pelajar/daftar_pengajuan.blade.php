@@ -35,8 +35,8 @@
                         <td>
                             @if ($p->status == 'diajukan')
                                 <span class="badge bg-warning">Diajukan</span>
-                            @elseif($p->status == 'diterima')
-                                <span class="badge bg-success">Diterima</span>
+                            @elseif($p->status == 'disetujui')
+                                <span class="badge bg-success">Disetujui</span>
                             @elseif($p->status == 'ditolak')
                                 <span class="badge bg-danger">Ditolak</span>
                             @endif

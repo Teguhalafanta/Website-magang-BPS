@@ -41,6 +41,12 @@
             </ul>
         </div>
 
+        {{-- Toggle Theme dengan Ikon di Dalam Switch --}}
+        <div class="form-check form-switch m-0">
+            <input class="form-check-input theme-switch" type="checkbox" id="toggle-dark">
+            <label class="form-check-label" for="toggle-dark"></label>
+        </div>
+
         {{-- Profile Dropdown --}}
         <div class="dropdown">
             <a href="#" class="d-flex align-items-center text-dark" data-bs-toggle="dropdown">

@@ -25,14 +25,15 @@
                         <td>{{ $p->nama }}</td>
                         <td>{{ $p->asal_institusi }}</td>
                         <td>
-                            @if ($p->status == 'pending')
-                                <span class="badge bg-warning">Pending</span>
-                            @elseif($p->status == 'diterima')
-                                <span class="badge bg-success">Diterima</span>
+                            @if ($p->status == 'diajukan')
+                                <span class="badge bg-primary">Diajukan</span>
+                            @elseif($p->status == 'disetujui')
+                                <span class="badge bg-success">Disetujui</span>
                             @elseif($p->status == 'ditolak')
                                 <span class="badge bg-danger">Ditolak</span>
                             @endif
                         </td>
+
                         <td class="text-center">
                             <!-- Tombol Lihat (Modal) -->
                             <button class="btn btn-sm btn-info" data-bs-toggle="modal"
@@ -104,13 +105,19 @@
                                         <div class="mb-2">
                                             <label class="form-label">Status</label>
                                             <select name="status" class="form-select" required>
-                                                <option value="pending" {{ $p->status == 'pending' ? 'selected' : '' }}>
-                                                    Pending</option>
-                                                <option value="diterima" {{ $p->status == 'diterima' ? 'selected' : '' }}>
-                                                    Diterima</option>
+                                                <option value="diajukan" {{ $p->status == 'diajukan' ? 'selected' : '' }}
+                                                    disabled>
+                                                    Diajukan
+                                                </option>
+                                                <option value="disetujui"
+                                                    {{ $p->status == 'disetujui' ? 'selected' : '' }}>
+                                                    Disetujui
+                                                </option>
                                                 <option value="ditolak" {{ $p->status == 'ditolak' ? 'selected' : '' }}>
-                                                    Ditolak</option>
+                                                    Ditolak
+                                                </option>
                                             </select>
+
                                         </div>
 
                                         <div class="mb-2">

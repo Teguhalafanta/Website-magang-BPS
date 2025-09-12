@@ -7,7 +7,7 @@
         </div>
         <div class="float-end">
             <p>Crafted with <span class="text-danger"><i class="bi bi-heart"></i></span> by <a
-                    href="https://saugi.me">Saugi</a></p>
+                    href="https://www.instagram.com/teguh_alafantaa?igsh=MXRodXRrNnBxMjJnbw==">teguh hehe</a></p>
         </div>
     </div>
 </footer>

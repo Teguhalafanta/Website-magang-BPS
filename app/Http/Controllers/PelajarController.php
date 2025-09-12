@@ -60,7 +60,7 @@ class PelajarController extends Controller
             // file & status
             'proposal'        => $proposalPath,
             'surat_pengajuan' => $suratPath,
-            'status'          => 'menunggu', // default
+            'status'          => 'diajukan', // default
         ]);
 
         return redirect()->route('pelajar.pengajuan.index')

@@ -13,7 +13,7 @@ class CreateAbsensisTable extends Migration
 
             // Relasi ke tabel users
             $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id_user')->on('users')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 
             // Relasi ke tabel pelajars
             $table->unsignedBigInteger('pelajar_id');

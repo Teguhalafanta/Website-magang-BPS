@@ -15,7 +15,7 @@ class Pelajar extends Model
     protected $keyType = 'int';
 
     protected $fillable = [
-        'id_user',
+        'user_id',
         'nama',
         'jenis_kelamin',
         'tempat_lahir',
@@ -38,7 +38,7 @@ class Pelajar extends Model
     // relasi ke User
     public function user()
     {
-        return $this->belongsTo(User::class, 'id_user', 'id_user');
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
     // relasi ke Absensi

@@ -25,7 +25,7 @@ class AbsensiController extends Controller
         }
 
         // Ambil pelajar yang terkait user login
-        $pelajar = Pelajar::where('id_user', $user->id_user)->first();
+        $pelajar = Pelajar::where('id_user', $user->id)->first();
 
         if (!$pelajar) {
             // Fallback kosong agar tidak error saat memanggil ->links() di Blade

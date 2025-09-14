@@ -42,7 +42,7 @@ class PelajarController extends Controller
 
         // Simpan data pelajar
         Pelajar::create([
-            'id_user'         => Auth::id(),
+            'user_id'         => Auth::id(),
             'nama'            => $request->nama,
             'jenis_kelamin'   => $request->jenis_kelamin,
             'tempat_lahir'    => $request->tempat_lahir,
@@ -70,7 +70,7 @@ class PelajarController extends Controller
     // Pelajar lihat daftar pengajuan miliknya
     public function index()
     {
-        $pengajuans = Pelajar::where('id_user', Auth::id())
+        $pengajuans = Pelajar::where('user_id', Auth::id())
             ->with('user')
             ->latest()
             ->get();

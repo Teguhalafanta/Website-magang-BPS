@@ -9,7 +9,8 @@ return new class extends Migration {
     {
         Schema::create('pelajars', function (Blueprint $table) {
             $table->bigIncrements('id_pelajar'); // primary key
-            $table->unsignedBigInteger('id_user'); // foreign key ke users
+            $table->unsignedBigInteger('user_id'); // foreign key ke users
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 
             $table->string('nama');
             $table->enum('jenis_kelamin', ['Laki-laki', 'Perempuan']);
@@ -24,9 +25,6 @@ return new class extends Migration {
             $table->date('rencana_mulai');
             $table->date('rencana_selesai');
             $table->timestamps();
-
-            // foreign key ke users.id_user
-            $table->foreign('id_user')->references('id_user')->on('users')->onDelete('cascade');
         });
     }
 

@@ -12,7 +12,7 @@ return new class extends Migration {
             $table->string('username')->unique();
             $table->string('email')->unique();
             $table->string('password');
-            $table->string('role')->default('pelajar')->after('password');
+            $table->string('role')->default('pelajar');
             $table->timestamps();
         });
     }

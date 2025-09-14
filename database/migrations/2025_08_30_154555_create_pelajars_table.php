@@ -8,13 +8,14 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('pelajars', function (Blueprint $table) {
-            $table->bigIncrements('id_pelajar'); // primary key
+            $table->bigIncrements('id'); // primary key
             $table->unsignedBigInteger('user_id'); // foreign key ke users
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 
             $table->string('nama');
             $table->enum('jenis_kelamin', ['Laki-laki', 'Perempuan']);
-            $table->string('tempat_tanggal_lahir');
+            $table->string('tempat_lahir');
+            $table->date('tanggal_lahir');
             $table->text('alamat');
             $table->string('telepon')->nullable();
             $table->string('email')->unique();
@@ -24,6 +25,10 @@ return new class extends Migration {
             $table->string('jurusan');
             $table->date('rencana_mulai');
             $table->date('rencana_selesai');
+            $table->string('proposal')->nullable();
+            $table->string('surat_pengajuan')->nullable();
+            $table->string('status')->default('menunggu'); // menunggu, diterima, ditolak
+            $table->text('alasan')->nullable();
             $table->timestamps();
         });
     }
@@ -33,4 +38,3 @@ return new class extends Migration {
         Schema::dropIfExists('pelajars');
     }
 };
-

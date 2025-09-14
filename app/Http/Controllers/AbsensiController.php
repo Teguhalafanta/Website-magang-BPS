@@ -25,14 +25,14 @@ class AbsensiController extends Controller
         }
 
         // Ambil pelajar yang terkait user login
-        $pelajar = Pelajar::where('id_user', $user->id)->first();
+        $pelajar = Pelajar::where('user_id', $user->id)->first();
 
         if (!$pelajar) {
             // Fallback kosong agar tidak error saat memanggil ->links() di Blade
             $absensis = new LengthAwarePaginator([], 0, 10);
             $pelajar_id = null;
         } else {
-            $pelajar_id = $pelajar->id_pelajar;
+            $pelajar_id = $pelajar->id;
 
             if ($request->has('today')) {
                 $absensis = Absensi::with('pelajar')
@@ -57,8 +57,8 @@ class AbsensiController extends Controller
         // Cek apakah pelajar sudah absen hari ini  
         $absenHariIni = $pelajar_id
             ? Absensi::where('pelajar_id', $pelajar_id)
-                ->whereDate('tanggal', date('Y-m-d'))
-                ->exists()
+            ->whereDate('tanggal', date('Y-m-d'))
+            ->exists()
             : false;
 
         return view('absensi.index', compact(
@@ -77,7 +77,7 @@ class AbsensiController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'pelajar_id' => 'required|exists:pelajars,id_pelajar',
+            'pelajar_id' => 'required|exists:pelajars,id',
             'tanggal'    => 'required|date',
             'status'     => 'required|in:Hadir,Izin,Sakit,Alfa',
             'keterangan' => 'nullable|string|max:255',
@@ -95,14 +95,14 @@ class AbsensiController extends Controller
         }
 
         // Kirim notifikasi ke User yang login 
-        $user = Auth::user(); 
+        $user = Auth::user();
         // DEBUG DI SINI 
-        dd($user, get_class($user)); 
-        if ($user) { 
-            $user->notify(new NotifikasiBaru( 
-                'Absensi kamu berhasil disimpan!', 
-                route('absensi.index') 
-            )); 
+        dd($user, get_class($user));
+        if ($user) {
+            $user->notify(new NotifikasiBaru(
+                'Absensi kamu berhasil disimpan!',
+                route('absensi.index')
+            ));
         }
 
         return redirect()->route('absensi.index')->with('success', 'Data absensi berhasil ditambahkan.');
@@ -125,7 +125,7 @@ class AbsensiController extends Controller
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
-            'pelajar_id' => 'required|exists:pelajars,id_pelajar',
+            'pelajar_id' => 'required|exists:pelajars,id',
             'tanggal'    => 'required|date',
             'status'     => 'required|in:Hadir,Izin,Sakit,Alfa',
             'keterangan' => 'nullable|string|max:255',

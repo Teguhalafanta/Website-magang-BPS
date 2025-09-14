@@ -14,13 +14,13 @@
                 <label>Pelajar</label>
                 <select name="pelajar_id" class="form-select">
                     @foreach($pelajars as $mhs)
-                        <option value="{{ $mhs->id_pelajar }}" {{ $absen->pelajar_id == $mhs->id_pelajar ? 'selected' : '' }}>
-                            {{ $mhs->nama }} ({{ $mhs->nim }})
-                        </option>
+                    <option value="{{ $mhs->id }}" {{ $absen->pelajar_id == $mhs->id ? 'selected' : '' }}>
+                        {{ $mhs->nama }} ({{ $mhs->nim }})
+                    </option>
                     @endforeach
                 </select>
                 @error('pelajar_id')
-                    <small class="text-danger">{{ $message }}</small>
+                <small class="text-danger">{{ $message }}</small>
                 @enderror
             </div>
 
@@ -28,7 +28,7 @@
                 <label>Tanggal</label>
                 <input type="date" name="tanggal" class="form-control" value="{{ $absen->tanggal }}">
                 @error('tanggal')
-                    <small class="text-danger">{{ $message }}</small>
+                <small class="text-danger">{{ $message }}</small>
                 @enderror
             </div>
 
@@ -36,11 +36,11 @@
                 <label>Status</label>
                 <select name="status" class="form-select">
                     @foreach(['Hadir','Izin','Sakit','Alfa'] as $status)
-                        <option value="{{ $status }}" {{ $absen->status == $status ? 'selected' : '' }}>{{ $status }}</option>
+                    <option value="{{ $status }}" {{ $absen->status == $status ? 'selected' : '' }}>{{ $status }}</option>
                     @endforeach
                 </select>
                 @error('status')
-                    <small class="text-danger">{{ $message }}</small>
+                <small class="text-danger">{{ $message }}</small>
                 @enderror
             </div>
 
@@ -48,7 +48,7 @@
                 <label>Keterangan</label>
                 <input type="text" name="keterangan" class="form-control" value="{{ $absen->keterangan }}">
                 @error('keterangan')
-                    <small class="text-danger">{{ $message }}</small>
+                <small class="text-danger">{{ $message }}</small>
                 @enderror
             </div>
 

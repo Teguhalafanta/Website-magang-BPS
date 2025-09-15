@@ -42,7 +42,7 @@ class PelajarController extends Controller
 
         // Simpan data pelajar
         Pelajar::create([
-            'user_id'         => Auth::id(),
+            'user_id'         => Auth::id() ?? 0, // pastikan selalu ada nilai
             'nama'            => $request->nama,
             'jenis_kelamin'   => $request->jenis_kelamin,
             'tempat_lahir'    => $request->tempat_lahir,

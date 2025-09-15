@@ -20,9 +20,16 @@ class PengajuanController extends Controller
 
     public function updateStatus(Request $request, $id)
     {
+        $request->validate([
+            'status' => 'required|in:diterima,ditolak',
+            'alasan' => 'nullable|string',
+        ]);
+
         $pengajuan = Pelajar::findOrFail($id);
         $pengajuan->status = $request->status;
+        $pengajuan->alasan = $request->alasan;
         $pengajuan->save();
+        
 
         return redirect()->route('admin.pengajuan.index')->with('success', 'Status pengajuan berhasil diperbarui.');
     }

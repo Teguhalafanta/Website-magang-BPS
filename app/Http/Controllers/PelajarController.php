@@ -42,7 +42,7 @@ class PelajarController extends Controller
 
         // Simpan data pelajar
         Pelajar::create([
-            'user_id'         => Auth::id() ?? 0, // pastikan selalu ada nilai
+            'user_id'         => Auth::id() ?? 0,
             'nama'            => $request->nama,
             'jenis_kelamin'   => $request->jenis_kelamin,
             'tempat_lahir'    => $request->tempat_lahir,
@@ -82,7 +82,7 @@ class PelajarController extends Controller
     public function updateStatus(Request $request, $id)
     {
         $request->validate([
-            'status' => 'required|in:diterima,ditolak',
+            'status' => 'required|in:disetujui,ditolak',
             'alasan' => 'nullable|string',
         ]);
 

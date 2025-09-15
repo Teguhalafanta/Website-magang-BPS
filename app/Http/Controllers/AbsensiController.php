@@ -76,13 +76,24 @@ class AbsensiController extends Controller
         $validated = $request->validate([
             'pelajar_id' => 'required|exists:pelajars,id',
             'tanggal'    => 'required|date',
-            'status'     => 'required|in:Hadir,Izin,Sakit,Alfa',
+            'status'     => 'required|in:Hadir,Izin,Sakit,Alpha',
+            'shift'      => 'required|in:Pagi,Siang',
             'keterangan' => 'nullable|string|max:255',
         ]);
 
+        // Cek duplikasi absensi
+        $exists = Absensi::where('pelajar_id', $validated['pelajar_id'])
+            ->where('tanggal', $validated['tanggal'])
+            ->where('shift', $validated['shift'])
+            ->exists();
+
+        if ($exists) {
+            return back()->withErrors(['shift' => 'Absensi untuk shift ini sudah ada di tanggal tersebut.'])->withInput();
+        }
+
         $absensi = Absensi::create($validated);
 
-        // Kirim notifikasi ke semua Admin
+        // Notifikasi ke admin
         $admins = User::where('role', 'admin')->get();
         foreach ($admins as $admin) {
             $admin->notify(new NotifikasiBaru(

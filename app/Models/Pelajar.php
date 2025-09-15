@@ -10,16 +10,16 @@ class Pelajar extends Model
     use HasFactory;
 
     protected $table = 'pelajars';   // nama tabel
-    protected $primaryKey = 'id_pelajar'; // primary key
+    protected $primaryKey = 'id'; // primary key
     public $incrementing = true;
     protected $keyType = 'int';
 
     protected $fillable = [
-        'id_user',
+        'user_id',
         'nama',
         'jenis_kelamin',
         'tempat_lahir',
-        'tanggal_lahir',  
+        'tanggal_lahir',
         'alamat',
         'telepon',
         'email',
@@ -38,13 +38,13 @@ class Pelajar extends Model
     // relasi ke User
     public function user()
     {
-        return $this->belongsTo(User::class, 'id_user', 'id_user');
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
     // relasi ke Absensi
     public function absensis()
     {
-        return $this->hasMany(Absensi::class, 'pelajar_id', 'id_pelajar');
+        return $this->hasMany(Absensi::class, 'pelajar_id', 'id');
     }
 
     // accessor untuk format tanggal lahir

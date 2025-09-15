@@ -2,9 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\LoginController;
-use App\Http\Controllers\LoginSSOController;
-use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AbsensiController;
 use App\Http\Controllers\KegiatanController;
 use App\Http\Controllers\PelajarController;
@@ -13,11 +11,11 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
 
 // ================== GUEST ==================
-Route::get('/', [LoginController::class, 'index'])->name('login')->middleware('guest');
-Route::post('/log', [LoginController::class, 'login'])->name('login.store')->middleware('guest');
-Route::get('/login-sso', [LoginSSOController::class, 'index'])->name('login.sso')->middleware('guest');
-Route::get('/register', [RegisterController::class, 'index'])->name('register')->middleware('guest');
-Route::post('/register', [RegisterController::class, 'store'])->name('register.store')->middleware('guest');
+Route::get('/', [AuthController::class, 'index'])->name('login')->middleware('guest');
+Route::post('/log', [AuthController::class, 'login'])->name('login.store')->middleware('guest');
+Route::get('/login-sso', [AuthController::class, 'sso'])->name('login.sso')->middleware('guest');
+Route::get('/register', [AuthController::class, 'register'])->name('register')->middleware('guest');
+Route::post('/register', [AuthController::class, 'store'])->name('register.store')->middleware('guest');
 
 Route::middleware(['auth', 'role:pelajar'])->group(function () {
     Route::get('/pelajar/create', [PelajarController::class, 'create'])->name('pelajar.create');
@@ -83,7 +81,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.readAll');
 
     // -------- LOGOUT --------
-    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
 
 // ================== FALLBACK ==================

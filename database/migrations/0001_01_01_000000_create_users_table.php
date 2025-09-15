@@ -8,10 +8,11 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id('id_user'); // primary key custom
+            $table->id('id'); // primary key custom
             $table->string('username')->unique();
             $table->string('email')->unique();
             $table->string('password');
+            $table->string('role')->default('pelajar');
             $table->timestamps();
         });
     }

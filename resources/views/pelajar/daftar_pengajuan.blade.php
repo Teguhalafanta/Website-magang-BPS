@@ -33,16 +33,17 @@
                         <td>{{ $p->asal_institusi }}</td>
                         <td>{{ $p->jurusan }}</td>
                         <td>
-                            @if ($p->status == 'pending')
-                                <span class="badge bg-warning">Menunggu Konfirmasi</span>
-                            @elseif($p->status == 'diterima')
-                                <span class="badge bg-success">Diterima</span>
+                            @if ($p->status == 'diajukan')
+                                <span class="badge bg-warning">Diajukan</span>
+                            @elseif($p->status == 'disetujui')
+                                <span class="badge bg-success">Disetujui</span>
                             @elseif($p->status == 'ditolak')
                                 <span class="badge bg-danger">Ditolak</span>
                             @endif
                         </td>
+
+                        <!-- aksi -->
                         <td>
-                            <!-- Tombol buka modal -->
                             <button class="btn btn-info btn-sm" data-bs-toggle="modal"
                                 data-bs-target="#detailModal{{ $p->id }}">
                                 Detail
@@ -77,10 +78,10 @@
                                     <p><strong>Telepon:</strong> {{ $p->telepon }}</p>
                                     <p>
                                         <strong>Status:</strong>
-                                        @if ($p->status == 'pending')
-                                            <span class="badge bg-warning">Menunggu Konfirmasi</span>
-                                        @elseif($p->status == 'diterima')
-                                            <span class="badge bg-success">Diterima</span>
+                                        @if ($p->status == 'diajukan')
+                                            <span class="badge bg-primary">Diajukan</span>
+                                        @elseif($p->status == 'disetujui')
+                                            <span class="badge bg-success">Disetujui</span>
                                         @elseif($p->status == 'ditolak')
                                             <span class="badge bg-danger">Ditolak</span>
                                             <br>

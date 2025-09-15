@@ -11,7 +11,7 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
 
     protected $table = 'users';
-    protected $primaryKey = 'id_user';
+    protected $primaryKey = 'id';
     public $incrementing = true;
     protected $keyType = 'int';
 
@@ -29,16 +29,16 @@ class User extends Authenticatable
 
     public function pelajar()
     {
-        return $this->hasOne(Pelajar::class, 'id_user', 'id_user');
+        return $this->hasOne(Pelajar::class, 'id', 'user_id');
     }
 
     public function getAuthIdentifierName()
     {
-        return 'id_user';
+        return 'id';
     }
 
     public function getKeyName()
     {
-        return 'id_user';
+        return 'id';
     }
 }

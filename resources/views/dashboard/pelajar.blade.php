@@ -22,15 +22,16 @@
 
             {{-- Total Kegiatan --}}
             <div class="col-md-4 mb-3">
-                <div class="card text-white bg-success shadow">
-                    <div class="card-body d-flex justify-content-between align-items-center">
-                        <div>
-                            <h5>Total Kegiatan</h5>
-                            <h3>{{ $jumlahKegiatan }}</h3>
+                <a href="{{ route('pelajar.kegiatan.index', ['today' => true]) }}" class="text-decoration-none">
+                    <div class="card text-white bg-success shadow">
+                        <div class="card-body d-flex justify-content-between align-items-center">
+                            <div>
+                                <h5>Total Kegiatan</h5>
+                                <h3>{{ $jumlahKegiatan }}</h3>
+                            </div>
+                            <i class="bi bi-list-task fs-2"></i>
                         </div>
-                        <i class="bi bi-list-task fs-2"></i>
                     </div>
-                </div>
             </div>
 
             {{-- Ajukan Magang --}}

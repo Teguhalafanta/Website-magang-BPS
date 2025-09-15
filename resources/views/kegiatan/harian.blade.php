@@ -10,9 +10,8 @@
             Tambah Kegiatan
         </button>
 
-        <!-- Tabel Kegiatan -->
         <table class="table table-bordered">
-            <thead class="table-secondary">
+            <thead>
                 <tr>
                     <th>No</th>
                     <th>Nama Kegiatan</th>
@@ -20,51 +19,51 @@
                     <th>Deskripsi</th>
                     <th>Volume</th>
                     <th>Satuan</th>
-                    <th>Durasi (menit)</th>
-                    <th>Pemberi Tugas</th>
-                    <th>Tim Kerja</th>
+                    <th>Durasi</th>
                     <th>Status</th>
                     <th>Bukti Dukung</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
             <tbody>
-                @forelse ($kegiatans as $index => $kegiatan)
+                @foreach ($kegiatans as $index => $kegiatan)
                     <tr>
-                        <td>{{ $loop->iteration }}</td> 
+                        <td>{{ $index + 1 }}</td>
                         <td>{{ $kegiatan->nama_kegiatan }}</td>
-                        <td>{{ $kegiatan->tanggal }}</td>
+                        <td>{{ \Carbon\Carbon::parse($kegiatan->tanggal)->format('d-m-Y') }}</td>
                         <td>{{ $kegiatan->deskripsi }}</td>
-                        <td>{{ $kegiatan->volume }}</td>
-                        <td>{{ $kegiatan->satuan }}</td>
-                        <td>{{ $kegiatan->durasi }}</td>
-                        <td>{{ $kegiatan->pemberi_tugas }}</td>
-                        <td>{{ $kegiatan->tim_kerja }}</td>
-                        <td>{{ $kegiatan->status }}</td>
+                        <td>{{ $kegiatan->volume ?? 0 }}</td>
+                        <td>{{ $kegiatan->satuan ?? '-' }}</td>
+                        <td>{{ $kegiatan->durasi }} mnt</td>
+                        <td>
+                            @if ($kegiatan->status_penyelesaian == 'Selesai')
+                                <span class="badge bg-success">Selesai</span>
+                            @elseif($kegiatan->status_penyelesaian == 'Dalam Proses')
+                                <span class="badge bg-warning">Proses</span>
+                            @else
+                                <span class="badge bg-secondary">Belum Dimulai</span>
+                            @endif
+                        </td>
                         <td>
                             @if ($kegiatan->bukti_dukung)
-                                <a href="{{ asset('storage/' . $kegiatan->bukti_dukung) }}" target="_blank">Lihat Bukti</a>
+                                <a href="{{ asset('storage/' . $kegiatan->bukti_dukung) }}" target="_blank"
+                                    class="btn btn-sm btn-primary">Lihat</a>
                             @else
                                 <span class="text-muted">-</span>
                             @endif
                         </td>
                         <td>
-                            <a href="{{ route('pelajar.kegiatan.edit', $kegiatan->id) }}"
-                                class="btn btn-sm btn-warning">Edit</a>
+                            <a href="{{ route('pelajar.kegiatan.edit', $kegiatan->id) }}" class="btn btn-sm btn-warning">Edit</a>
                             <form action="{{ route('pelajar.kegiatan.destroy', $kegiatan->id) }}" method="POST"
-                                style="display:inline-block;">
+                                style="display:inline;">
                                 @csrf
                                 @method('DELETE')
                                 <button class="btn btn-sm btn-danger"
-                                    onclick="return confirm('Yakin ingin hapus kegiatan ini?')">Hapus</button>
+                                    onclick="return confirm('Yakin hapus?')">Hapus</button>
                             </form>
                         </td>
                     </tr>
-                @empty
-                    <tr>
-                        <td colspan="11" class="text-center">Belum ada kegiatan yang tercatat</td>
-                    </tr>
-                @endforelse
+                @endforeach
             </tbody>
         </table>
     </div>
@@ -119,6 +118,7 @@
                             <label for="status" class="form-label">Status</label>
                             <select class="form-select" id="status" name="status" required>
                                 <option value="Belum">Belum</option>
+                                <option value="Belum">Proses</option>
                                 <option value="Selesai">Selesai</option>
                             </select>
                         </div>

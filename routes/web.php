@@ -11,15 +11,12 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
 
 // ================== GUEST ==================
-Route::get('/', [AuthController::class, 'index'])->name('login')->middleware('guest');
-Route::post('/log', [AuthController::class, 'login'])->name('login.store')->middleware('guest');
-Route::get('/login-sso', [AuthController::class, 'sso'])->name('login.sso')->middleware('guest');
-Route::get('/register', [AuthController::class, 'register'])->name('register')->middleware('guest');
-Route::post('/register', [AuthController::class, 'store'])->name('register.store')->middleware('guest');
-
-Route::middleware(['auth', 'role:pelajar'])->group(function () {
-    Route::get('/pelajar/create', [PelajarController::class, 'create'])->name('pelajar.create');
-    Route::post('/pelajar/store', [PelajarController::class, 'store'])->name('pelajar.store');
+Route::middleware('guest')->group(function () {
+    Route::get('/', [AuthController::class, 'index'])->name('login');
+    Route::post('/log', [AuthController::class, 'login'])->name('login.store');
+    Route::get('/login-sso', [AuthController::class, 'sso'])->name('login.sso');
+    Route::get('/register', [AuthController::class, 'register'])->name('register');
+    Route::post('/register', [AuthController::class, 'store'])->name('register.store');
 });
 
 // ================== AUTH ==================
@@ -36,7 +33,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/pengajuan', [PengajuanController::class, 'index'])->name('pengajuan.index');
         Route::put('/pengajuan/{id}/update-status', [PengajuanController::class, 'updateStatus'])->name('pengajuan.updateStatus');
 
-        // CRUD Pelajar
+        // CRUD Pengajuan
         Route::get('/pengajuan/{id}/edit', [PengajuanController::class, 'edit'])->name('pengajuan.edit');
         Route::put('/pengajuan/{id}', [PengajuanController::class, 'update'])->name('pengajuan.update');
         Route::delete('/pengajuan/{id}', [PengajuanController::class, 'destroy'])->name('pengajuan.destroy');
@@ -48,7 +45,6 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('absensi', AbsensiController::class)->names('absensi');
     });
 
-
     // -------- PELAJAR --------
     Route::prefix('pelajar')->middleware('role:pelajar')->name('pelajar.')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'pelajar'])->name('dashboard');
@@ -59,11 +55,15 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/pengajuan', [PelajarController::class, 'store'])->name('pengajuan.store');
 
         // CRUD Kegiatan (tanpa show)
-        Route::resource('kegiatan', KegiatanController::class)->except(['show'])->names('kegiatan');
+        Route::get('/kegiatan', [KegiatanController::class, 'index'])->name('kegiatan.index');
+        Route::get('/kegiatan/create', [KegiatanController::class, 'create'])->name('kegiatan.create');
+        Route::post('/kegiatan', [KegiatanController::class, 'store'])->name('kegiatan.store');
+        Route::get('/kegiatan/{kegiatan}/edit', [KegiatanController::class, 'edit'])->name('kegiatan.edit');
+        Route::put('/kegiatan/{kegiatan}', [KegiatanController::class, 'update'])->name('kegiatan.update');
+        Route::delete('/kegiatan/{kegiatan}', [KegiatanController::class, 'destroy'])->name('kegiatan.destroy');
+
         Route::get('/kegiatan/harian', [KegiatanController::class, 'harian'])->name('kegiatan.harian');
         Route::get('/kegiatan/bulanan', [KegiatanController::class, 'kegiatanBulanan'])->name('kegiatan.bulanan');
-        Route::get('/kegiatan/{kegiatan}/edit', [KegiatanController::class, 'edit'])->name('kegiatan.edit');
-        Route::delete('/kegiatan/{kegiatan}', [KegiatanController::class, 'destroy'])->name('kegiatan.destroy');
     });
 
     // -------- ABSENSI (pelajar) --------

@@ -47,7 +47,6 @@
                         <div class="col-md-3">
                             <label class="form-label">Status Penyelesaian <span class="text-danger">*</span></label>
                             <select name="status_penyelesaian" class="form-select" required>
-                                <option value="">Pilih Status</option>
                                 <option value="Belum Dimulai">Belum Dimulai</option>
                                 <option value="Dalam Proses">Dalam Proses</option>
                                 <option value="Selesai" selected>Selesai</option>
@@ -162,16 +161,20 @@
                                     </td>
                                     <td class="text-center">
                                         <div class="btn-group" role="group">
-                                            <button class="btn btn-sm btn-warning btnEdit" data-id="{{ $kegiatan->id }}"
-                                                title="Edit">
+                                            {{-- Tombol Edit --}}
+                                            <button type="button" class="btn btn-sm btn-warning btnEdit"
+                                                data-id="{{ $kegiatan->id }}" title="Edit">
                                                 <i class="fas fa-edit"></i>
                                             </button>
-                                            <button class="btn btn-sm btn-danger btnHapus" data-id="{{ $kegiatan->id }}"
-                                                title="Hapus">
+
+                                            {{-- Tombol Hapus --}}
+                                            <button type="button" class="btn btn-sm btn-danger btnHapus"
+                                                data-id="{{ $kegiatan->id }}" title="Hapus">
                                                 <i class="fas fa-trash"></i>
                                             </button>
                                         </div>
                                     </td>
+
                                 </tr>
                             @empty
                                 <tr>

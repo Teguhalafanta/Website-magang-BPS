@@ -24,26 +24,23 @@ class AbsensiController extends Controller
             abort(403, 'Unauthorized');
         }
 
-        // Ambil pelajar yang terkait user login
-        $pelajar = Pelajar::where('user_id', $user->id)->first();
+        // Ambil pelajar via relasi User -> Pelajar
+        $pelajar = $user->pelajar;
 
         if (!$pelajar) {
-            // Fallback kosong agar tidak error saat memanggil ->links() di Blade
+            // fallback kosong agar tidak error saat di Blade
             $absensis = new LengthAwarePaginator([], 0, 10);
             $pelajar_id = null;
         } else {
             $pelajar_id = $pelajar->id;
 
+            $query = Absensi::with('pelajar')->where('pelajar_id', $pelajar_id);
+
             if ($request->has('today')) {
-                $absensis = Absensi::with('pelajar')
-                    ->whereDate('tanggal', date('Y-m-d'))
-                    ->where('pelajar_id', $pelajar_id)
-                    ->paginate(10);
-            } else {
-                $absensis = Absensi::with('pelajar')
-                    ->where('pelajar_id', $pelajar_id)
-                    ->paginate(10);
+                $query->whereDate('tanggal', date('Y-m-d'));
             }
+
+            $absensis = $query->paginate(10);
         }
 
         // Data tambahan untuk dashboard

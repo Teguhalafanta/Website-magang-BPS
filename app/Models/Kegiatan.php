@@ -22,8 +22,8 @@ class Kegiatan extends Model
         'durasi',
         'pemberi_tugas',
         'tim_kerja',
-        'status',
-        'bukti_dukung',
+        'status_penyelesaian',
+        'bukti_dukung'
     ];
 
     protected $casts = [

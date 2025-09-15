@@ -42,8 +42,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/pengajuan/{id}/edit', [PengajuanController::class, 'edit'])->name('pengajuan.edit');
         Route::put('/pengajuan/{id}', [PengajuanController::class, 'update'])->name('pengajuan.update');
         Route::delete('/pengajuan/{id}', [PengajuanController::class, 'destroy'])->name('pengajuan.destroy');
-        Route::post('/admin/pengajuan', [PengajuanController::class, 'store'])->name('admin.pengajuan.store');
-
 
         // CRUD Kegiatan
         Route::resource('kegiatan', KegiatanController::class)->names('kegiatan');
@@ -90,5 +88,5 @@ Route::middleware(['auth'])->group(function () {
 
 // ================== FALLBACK ==================
 Route::fallback(function () {
-    abort(404);
+    return response()->view('errors.404', [], 404);
 });

@@ -5,7 +5,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    @include('include.style')
+
+    <!-- {{-- css login --}} -->
+    <link rel="stylesheet" href="{{ asset('assets/css/main/app.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/main/app-dark.css') }}">
+    <link rel="shortcut icon" href="{{ asset('assets/images/logo/favicon.svg') }}" type="image/x-icon">
+    <link rel="shortcut icon" href="{{ asset('assets/images/logo/favicon.png') }}" type="image/png">
+    <link rel="stylesheet" href="{{ asset('assets/css/shared/iconly.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('assets/css/pages/auth.css') }}">
+
 </head>
 
 <body>
@@ -15,7 +25,7 @@
                 <div id="auth-left">
                     <div class="auth-logo d-flex align-items-center justify-content-center mb-4">
                         <a href="index.html" class="d-flex align-items-center text-decoration-none">
-                            <img src="{{ asset('template/assets/images/logo/pngegg.png') }}" alt="Logo"
+                            <img src="{{ asset('assets/images/logo/pngegg.png') }}" alt="Logo"
                                 style="width: 80px; height: auto; margin-right: 15px;">
                             <span style="font-size: 20px; font-weight: bold; color: #333;">
                                 Badan Pusat Statistik Provinsi Aceh
@@ -38,7 +48,7 @@
                                 <i class="bi bi-person"></i>
                             </div>
                             @error('email')
-                                <small class="btn btn-danger">{{ $message }}</small>
+                            <small class="btn btn-danger">{{ $message }}</small>
                             @enderror
                         </div>
 
@@ -51,7 +61,7 @@
                                 <i class="bi bi-shield-lock"></i>
                             </div>
                             @error('password')
-                                <small class="btn btn-danger">{{ $message }}</small>
+                            <small class="btn btn-danger">{{ $message }}</small>
                             @enderror
                         </div>
 

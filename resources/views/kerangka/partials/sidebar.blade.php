@@ -4,7 +4,7 @@
         <div class="sidebar-header position-relative">
             <div class="logo text-center my-3">
                 @php
-                    $logoUrl = asset('template/assets/images/logo/logo.png');
+                    $logoUrl = asset('assets/images/logo/logo.png');
                 @endphp
 
                 @if (auth()->check())

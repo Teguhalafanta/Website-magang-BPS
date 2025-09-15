@@ -16,7 +16,7 @@
                 <div id="auth-left">
                     <div class="auth-logo d-flex align-items-center justify-content-center mb-4">
                         <a href="{{ url('/') }}" class="d-flex align-items-center text-decoration-none">
-                            <img src="{{ asset('template/assets/images/logo/pngegg.png') }}" alt="Logo"
+                            <img src="{{ asset('assets/images/logo/pngegg.png') }}" alt="Logo"
                                 style="width: 80px; height: auto; margin-right: 15px;">
                             <span style="font-size: 20px; font-weight: bold; color: #333;">
                                 Badan Pusat Statistik Provinsi Aceh

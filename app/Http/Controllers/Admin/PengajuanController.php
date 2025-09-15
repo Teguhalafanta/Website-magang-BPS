@@ -29,7 +29,7 @@ class PengajuanController extends Controller
         $pengajuan->status = $request->status;
         $pengajuan->alasan = $request->alasan;
         $pengajuan->save();
-        
+
 
         return redirect()->route('admin.pengajuan.index')->with('success', 'Status pengajuan berhasil diperbarui.');
     }

@@ -32,23 +32,24 @@
                 @forelse ($kegiatans as $i => $kegiatan)
                     <tr>
                         <td>{{ $i + 1 }}</td>
-                        <td>{{ $kegiatan->uraian_kegiatan }}</td>
-                        <td>{{ $kegiatan->satuan }}</td>
-                        <td>{{ $kegiatan->target }}</td>
-                        <td>{{ $kegiatan->realisasi }}</td>
+                        <td>{{ $kegiatan->nama_kegiatan ?? '-' }}</td>
+                        <td>{{ $kegiatan->satuan ?? '-' }}</td>
+                        <td>{{ $kegiatan->target ?? 0 }}</td>
+                        <td>{{ $kegiatan->realisasi ?? 0 }}</td>
                         <td>
                             @php
-                                $persen =
-                                    $kegiatan->target > 0
-                                        ? round(($kegiatan->realisasi / $kegiatan->target) * 100, 2)
-                                        : 0;
+                                $target = $kegiatan->target ?? 0;
+                                $realisasi = $kegiatan->realisasi ?? 0;
+                                $persen = ($target > 0) ? round(($realisasi / $target) * 100, 2) : 0;
                             @endphp
                             {{ $persen }}%
                         </td>
                         <td>{{ $kegiatan->tingkat ?? '-' }}</td>
                         <td>
                             <a href="{{ route('pelajar.kegiatan.edit', $kegiatan->id) }}"
-                                class="btn btn-sm btn-outline-primary"></a>
+                                class="btn btn-sm btn-outline-primary" title="Edit">
+                                ✏️
+                            </a>
                         </td>
                     </tr>
                 @empty

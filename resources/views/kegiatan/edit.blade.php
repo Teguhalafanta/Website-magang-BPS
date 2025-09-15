@@ -37,7 +37,7 @@
             <div class="mb-3">
                 <label for="status" class="form-label">Status</label>
                 <select name="status" id="status" class="form-control">
-                    <option value="Belum" {{ old('status', $kegiatan->status_penyelesaian) == 'Belum' ? 'selected' : '' }}>Belum</option>
+                    <option value="Belum Dimulai" {{ old('status', $kegiatan->status_penyelesaian) == 'Belum Dimulai' ? 'selected' : '' }}>Belum Dimulai</option>
                     <option value="Proses" {{ old('status', $kegiatan->status_penyelesaian) == 'Proses' ? 'selected' : '' }}>Proses</option>
                     <option value="Selesai" {{ old('status', $kegiatan->status_penyelesaian) == 'Selesai' ? 'selected' : '' }}>Selesai</option>
                 </select>

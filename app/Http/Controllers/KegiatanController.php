@@ -93,19 +93,26 @@ class KegiatanController extends Controller
             'deskripsi' => 'nullable|string',
             'volume' => 'nullable|integer|min:0',
             'satuan' => 'nullable|string|max:100',
-            'durasi' => 'required|integer|min:0',
+            'durasi' => 'nullable|integer|min:0',
             'pemberi_tugas' => 'nullable|string|max:255',
             'tim_kerja' => 'nullable|string|max:255',
-            'status' => 'required|string|in:Belum,Proses,Selesai',
+            'status' => 'required|string|in:Belum Dimulai,Proses,Selesai',
             'bukti_dukung' => 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:2048',
         ]);
 
         $kegiatan = Kegiatan::findOrFail($id);
 
-        // Map input status → status_penyelesaian
-        $validated['status_penyelesaian'] = $validated['status'];
-        unset($validated['status']);
+        // ✅ Mapping dari status form (Belum, Proses, Selesai) ke status_penyelesaian DB
+        $statusMap = [
+            'Belum' => 'Belum Dimulai',
+            'Proses' => 'Dalam Proses',
+            'Selesai' => 'Selesai',
+        ];
+        $validated['status_penyelesaian'] = $statusMap[$validated['status']] ?? 'Belum Dimulai';
 
+        unset($validated['status']); // Jangan simpan kolom 'status' karena tidak ada di DB
+
+        // ✅ Handle file upload
         if ($request->hasFile('bukti_dukung')) {
             if ($kegiatan->bukti_dukung && Storage::disk('public')->exists($kegiatan->bukti_dukung)) {
                 Storage::disk('public')->delete($kegiatan->bukti_dukung);
@@ -113,10 +120,12 @@ class KegiatanController extends Controller
             $validated['bukti_dukung'] = $request->file('bukti_dukung')->store('bukti', 'public');
         }
 
+        // ✅ Update ke DB
         $kegiatan->update($validated);
 
         return redirect()->route('pelajar.kegiatan.harian')->with('success', 'Kegiatan berhasil diperbarui.');
     }
+
 
     // Hapus kegiatan
     public function destroy($id)

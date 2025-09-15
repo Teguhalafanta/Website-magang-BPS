@@ -36,12 +36,14 @@
                         <td>{{ $kegiatan->satuan ?? '-' }}</td>
                         <td>{{ $kegiatan->durasi }} mnt</td>
                         <td>
-                            @if ($kegiatan->status_penyelesaian == 'Selesai')
+                            @if ($kegiatan->status_penyelesaian === 'Selesai')
                                 <span class="badge bg-success">Selesai</span>
-                            @elseif($kegiatan->status_penyelesaian == 'Dalam Proses')
-                                <span class="badge bg-warning">Proses</span>
-                            @else
+                            @elseif ($kegiatan->status_penyelesaian === 'Dalam Proses')
+                                <span class="badge bg-warning text-dark">Proses</span>
+                            @elseif ($kegiatan->status_penyelesaian === 'Belum Dimulai')
                                 <span class="badge bg-secondary">Belum Dimulai</span>
+                            @else
+                                <span class="badge bg-dark">Tidak Diketahui</span> {{-- fallback jika status tidak valid --}}
                             @endif
                         </td>
                         <td>
@@ -53,7 +55,8 @@
                             @endif
                         </td>
                         <td>
-                            <a href="{{ route('pelajar.kegiatan.edit', $kegiatan->id) }}" class="btn btn-sm btn-warning">Edit</a>
+                            <a href="{{ route('pelajar.kegiatan.edit', $kegiatan->id) }}"
+                                class="btn btn-sm btn-warning">Edit</a>
                             <form action="{{ route('pelajar.kegiatan.destroy', $kegiatan->id) }}" method="POST"
                                 style="display:inline;">
                                 @csrf
@@ -117,8 +120,8 @@
                         <div class="mb-3">
                             <label for="status" class="form-label">Status</label>
                             <select class="form-select" id="status" name="status" required>
-                                <option value="Belum">Belum</option>
-                                <option value="Belum">Proses</option>
+                                <option value="Belum Dimulai">Belum Dimulai</option>
+                                <option value="Proses">Proses</option>
                                 <option value="Selesai">Selesai</option>
                             </select>
                         </div>

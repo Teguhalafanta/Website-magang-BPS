@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Pelajar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
 
 class PelajarController extends Controller
 {
@@ -18,6 +17,13 @@ class PelajarController extends Controller
     // Simpan pengajuan baru
     public function store(Request $request)
     {
+        // Cek apakah user sudah pernah mengajukan
+        $sudahAda = Pelajar::where('user_id', Auth::id())->exists();
+        if ($sudahAda) {
+            return redirect()->route('pelajar.pengajuan.index')
+                ->with('error', 'Anda sudah pernah mengajukan magang, tidak bisa mengajukan lagi.');
+        }
+
         $request->validate([
             'nama'            => 'required|string|max:255',
             'jenis_kelamin'   => 'required|in:Laki-laki,Perempuan',
@@ -42,7 +48,7 @@ class PelajarController extends Controller
 
         // Simpan data pelajar
         Pelajar::create([
-            'user_id'         => Auth::id() ?? 0,
+            'user_id'         => Auth::id(),
             'nama'            => $request->nama,
             'jenis_kelamin'   => $request->jenis_kelamin,
             'tempat_lahir'    => $request->tempat_lahir,
@@ -56,11 +62,9 @@ class PelajarController extends Controller
             'jurusan'         => $request->jurusan,
             'rencana_mulai'   => $request->rencana_mulai,
             'rencana_selesai' => $request->rencana_selesai,
-
-            // file & status
             'proposal'        => $proposalPath,
             'surat_pengajuan' => $suratPath,
-            'status'          => 'diajukan', // default
+            'status'          => 'diajukan',
         ]);
 
         return redirect()->route('pelajar.pengajuan.index')

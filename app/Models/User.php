@@ -29,8 +29,9 @@ class User extends Authenticatable
 
     public function pelajar()
     {
-        return $this->hasOne(Pelajar::class, 'id', 'user_id');
+        return $this->hasOne(Pelajar::class, 'user_id', 'id');
     }
+
 
     public function getAuthIdentifierName()
     {

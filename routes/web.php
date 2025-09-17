@@ -25,6 +25,12 @@ Route::middleware(['auth'])->group(function () {
     // Dashboard umum → redirect sesuai role
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
+    // -------- PROFILE --------
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+    Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profile/magang/update', [ProfileController::class, 'updateMagang'])->name('magang.update');
+    Route::put('/profile/photo', [ProfileController::class, 'updatePhoto'])->name('profile.updatePhoto');
+
     // -------- ADMIN --------
     Route::prefix('admin')->middleware('role:admin')->name('admin.')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'admin'])->name('dashboard');
@@ -68,12 +74,6 @@ Route::middleware(['auth'])->group(function () {
 
     // -------- ABSENSI (pelajar) --------
     Route::resource('absensi', AbsensiController::class)->names('absensi')->middleware('role:pelajar');
-
-    // -------- PROFILE --------
-    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
-    Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
-    Route::put('/profile/magang/update', [ProfileController::class, 'updateMagang'])->name('magang.update');
-    Route::put('/profile/photo', [ProfileController::class, 'updatePhoto'])->name('profile.updatePhoto');
 
     // -------- NOTIFIKASI --------
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');

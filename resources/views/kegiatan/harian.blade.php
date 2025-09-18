@@ -28,13 +28,28 @@
             <tbody>
                 @foreach ($kegiatans as $index => $kegiatan)
                     <tr>
+                        {{-- No --}}
                         <td>{{ $index + 1 }}</td>
+
+                        {{-- Nama Kegiatan --}}
                         <td>{{ $kegiatan->nama_kegiatan }}</td>
+
+                        {{-- Tanggal --}}
                         <td>{{ \Carbon\Carbon::parse($kegiatan->tanggal)->format('d-m-Y') }}</td>
+
+                        {{-- Deskripsi --}}
                         <td>{{ $kegiatan->deskripsi }}</td>
+
+                        {{-- Volume --}}
                         <td>{{ $kegiatan->volume ?? 0 }}</td>
+
+                        {{-- Satuan --}}
                         <td>{{ $kegiatan->satuan ?? '-' }}</td>
+
+                        {{-- Durasi --}}
                         <td>{{ $kegiatan->durasi }} mnt</td>
+
+                        {{-- Status --}}
                         <td>
                             @if ($kegiatan->status_penyelesaian === 'Selesai')
                                 <span class="badge bg-success">Selesai</span>
@@ -43,9 +58,11 @@
                             @elseif ($kegiatan->status_penyelesaian === 'Belum Dimulai')
                                 <span class="badge bg-secondary">Belum Dimulai</span>
                             @else
-                                <span class="badge bg-dark">Tidak Diketahui</span> {{-- fallback jika status tidak valid --}}
+                                <span class="badge bg-dark">Tidak Diketahui</span>
                             @endif
                         </td>
+
+                        {{-- Bukti Dukung --}}
                         <td>
                             @if ($kegiatan->bukti_dukung)
                                 <a href="{{ asset('storage/' . $kegiatan->bukti_dukung) }}" target="_blank"
@@ -54,15 +71,19 @@
                                 <span class="text-muted">-</span>
                             @endif
                         </td>
+
+                        {{-- Aksi --}}
                         <td>
                             <a href="{{ route('pelajar.kegiatan.edit', $kegiatan->id) }}"
                                 class="btn btn-sm btn-warning">Edit</a>
+
                             <form action="{{ route('pelajar.kegiatan.destroy', $kegiatan->id) }}" method="POST"
                                 style="display:inline;">
                                 @csrf
                                 @method('DELETE')
-                                <button class="btn btn-sm btn-danger"
-                                    onclick="return confirm('Yakin hapus?')">Hapus</button>
+                                <button class="btn btn-sm btn-danger" onclick="return confirm('Yakin hapus?')">
+                                    Hapus
+                                </button>
                             </form>
                         </td>
                     </tr>
@@ -83,6 +104,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
+                        <!-- Input fields -->
                         <div class="mb-3">
                             <label for="tanggal" class="form-label">Tanggal</label>
                             <input type="date" class="form-control" id="tanggal" name="tanggal"
@@ -98,8 +120,8 @@
                         </div>
                         <div class="mb-3">
                             <label for="volume" class="form-label">Volume</label>
-                            <input type="number" class="form-control" id="volume" name="volume" min="0"
-                                value="0" required>
+                            <input type="number" class="form-control" id="volume" name="volume" min="0" value="0"
+                                required>
                         </div>
                         <div class="mb-3">
                             <label for="satuan" class="form-label">Satuan</label>
@@ -121,15 +143,15 @@
                             <label for="status" class="form-label">Status</label>
                             <select class="form-select" id="status" name="status" required>
                                 <option value="Belum Dimulai">Belum Dimulai</option>
-                                <option value="Proses">Proses</option>
+                                <option value="Dalam Proses">Dalam Proses</option>
                                 <option value="Selesai">Selesai</option>
                             </select>
                         </div>
-                        {{-- Upload Bukti Dukung --}}
+                        <!-- Upload Bukti Dukung -->
                         <div class="mb-3">
                             <label class="form-label">Bukti Dukung</label>
                             <input type="file" name="bukti_dukung" class="form-control"
-                                accept=".pdf,.doc,.docx,.img,.jpg,.png" required>
+                                accept=".pdf,.doc,.docx,image/*" required>
                         </div>
                     </div>
                     <div class="modal-footer">

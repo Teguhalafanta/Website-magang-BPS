@@ -44,7 +44,7 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/pengajuan/{id}', [PengajuanController::class, 'update'])->name('pengajuan.update');
         Route::delete('/pengajuan/{id}', [PengajuanController::class, 'destroy'])->name('pengajuan.destroy');
 
-        // CRUD Kegiatan
+        // CRUD Kegiatan (admin bisa kelola semua kegiatan)
         Route::resource('kegiatan', KegiatanController::class)->names('kegiatan');
 
         // CRUD Absensi
@@ -55,12 +55,12 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('pelajar')->middleware('role:pelajar')->name('pelajar.')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'pelajar'])->name('dashboard');
 
-        // Pengajuan Magang
+        // Pengajuan Magang (khusus pelajar)
         Route::get('/pengajuan', [PelajarController::class, 'index'])->name('pengajuan.index');
         Route::get('/pengajuan/create', [PelajarController::class, 'create'])->name('pengajuan.create');
         Route::post('/pengajuan', [PelajarController::class, 'store'])->name('pengajuan.store');
 
-        // CRUD Kegiatan (tanpa show)
+        // CRUD Kegiatan (tanpa show, khusus pelajar)
         Route::get('/kegiatan', [KegiatanController::class, 'index'])->name('kegiatan.index');
         Route::get('/kegiatan/create', [KegiatanController::class, 'create'])->name('kegiatan.create');
         Route::post('/kegiatan', [KegiatanController::class, 'store'])->name('kegiatan.store');
@@ -68,12 +68,19 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/kegiatan/{kegiatan}', [KegiatanController::class, 'update'])->name('kegiatan.update');
         Route::delete('/kegiatan/{kegiatan}', [KegiatanController::class, 'destroy'])->name('kegiatan.destroy');
 
+        // Upload Bukti Dukung
+        Route::post('/kegiatan/{kegiatan}/bukti', [KegiatanController::class, 'uploadBukti'])->name('kegiatan.uploadBukti');
+        Route::get('/kegiatan/{kegiatan}/bukti', [KegiatanController::class, 'lihatBukti'])->name('kegiatan.lihatBukti');
+
+        // Filter kegiatan
         Route::get('/kegiatan/harian', [KegiatanController::class, 'harian'])->name('kegiatan.harian');
         Route::get('/kegiatan/bulanan', [KegiatanController::class, 'kegiatanBulanan'])->name('kegiatan.bulanan');
     });
 
     // -------- ABSENSI (pelajar) --------
-    Route::resource('absensi', AbsensiController::class)->names('absensi')->middleware('role:pelajar');
+    Route::resource('absensi', AbsensiController::class)
+        ->names('absensi')
+        ->middleware('role:pelajar');
 
     // -------- NOTIFIKASI --------
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');

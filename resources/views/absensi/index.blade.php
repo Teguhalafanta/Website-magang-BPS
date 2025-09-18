@@ -65,7 +65,6 @@
                         <div class="mb-3">
                             <label for="status" class="form-label">Status</label>
                             <select name="status" class="form-control" required>
-                                <option value="">Pilih Status</option>
                                 <option value="Hadir">Hadir</option>
                                 <option value="Izin">Izin</option>
                                 <option value="Sakit">Sakit</option>
@@ -81,7 +80,6 @@
                         <div class="mb-3">
                             <label for="shift" class="form-label">Shift</label>
                             <select name="shift" class="form-control" required>
-                                <option value="">Pilih Shift</option>
                                 <option value="Pagi">Pagi</option>
                                 <option value="Siang">Siang</option>
                             </select>

@@ -4,7 +4,7 @@
 
 @section('content')
     <div class="container my-4">
-        <h2 class="mb-4 text-primary">Daftar Kegiatan Saya</h2>
+        <h2 class="mb-4 text">Daftar Kegiatan Saya</h2>
 
         {{-- Flash message --}}
         @if (session('success'))
@@ -22,102 +22,105 @@
 
         <div id="flash-message"></div>
 
-        {{-- Form tambah kegiatan --}}
-        <div class="card mb-4 shadow-sm">
-            <div class="card-header bg-info text-white fw-bold">
-                <i class="fas fa-plus-circle me-2"></i>Tambah Kegiatan Baru
-            </div>
-            <div class="card-body">
-                <form id="formTambahKegiatan">
-                    @csrf
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <label class="form-label">Nama Kegiatan <span class="text-danger">*</span></label>
-                            <input type="text" name="nama_kegiatan" class="form-control"
-                                placeholder="Masukkan nama kegiatan" required>
-                            <small class="text-danger" id="error-nama_kegiatan"></small>
-                        </div>
+        <div class="col-12 text-end mt-3">
+            <button class="btn btn-primary fw-bold" type="button" data-bs-toggle="collapse"
+                data-bs-target="#formTambahKegiatanWrapper" aria-expanded="false" aria-controls="formTambahKegiatanWrapper">
+                <i class="fas fa-plus-circle me-1"></i> Tambah Kegiatan
+            </button>
+        </div>
 
-                        <div class="col-md-3">
-                            <label class="form-label">Tanggal <span class="text-danger">*</span></label>
-                            <input type="date" name="tanggal" class="form-control" value="{{ date('Y-m-d') }}" required>
-                            <small class="text-danger" id="error-tanggal"></small>
-                        </div>
+        {{-- Form tambah kegiatan (Collapse) --}}
+        <div class="collapse mt-3" id="formTambahKegiatanWrapper">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-info text-white fw-bold">
+                    <i class="fas fa-plus-circle me-2"></i>Tambah Kegiatan Baru
+                </div>
+                <div class="card-body">
+                    <form id="formTambahKegiatan" enctype="multipart/form-data" method="POST"
+                        action="{{ route('pelajar.kegiatan.store') }}">
+                        @csrf
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Nama Kegiatan <span class="text-danger">*</span></label>
+                                <input type="text" name="nama_kegiatan" class="form-control"
+                                    placeholder="Masukkan nama kegiatan" required>
+                            </div>
 
-                        <div class="col-md-3">
-                            <label class="form-label">Status Penyelesaian <span class="text-danger">*</span></label>
-                            <select name="status_penyelesaian" class="form-select" required>
-                                <option value="Belum Dimulai">Belum Dimulai</option>
-                                <option value="Dalam Proses">Dalam Proses</option>
-                                <option value="Selesai" selected>Selesai</option>
-                            </select>
-                            <small class="text-danger" id="error-status_penyelesaian"></small>
-                        </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Tanggal <span class="text-danger">*</span></label>
+                                <input type="date" name="tanggal" class="form-control" value="{{ date('Y-m-d') }}"
+                                    required>
+                            </div>
 
-                        <div class="col-md-12">
-                            <label class="form-label">Deskripsi <span class="text-danger">*</span></label>
-                            <textarea name="deskripsi" class="form-control" rows="2" placeholder="Jelaskan kegiatan yang dilakukan" required></textarea>
-                            <small class="text-danger" id="error-deskripsi"></small>
-                        </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Status Penyelesaian <span class="text-danger">*</span></label>
+                                <select name="status_penyelesaian" class="form-select" required>
+                                    <option value="Belum Dimulai">Belum Dimulai</option>
+                                    <option value="Dalam Proses">Dalam Proses</option>
+                                    <option value="Selesai" selected>Selesai</option>
+                                </select>
+                            </div>
 
-                        <div class="col-md-3">
-                            <label class="form-label">Volume</label>
-                            <input type="text" name="volume" class="form-control" placeholder="Contoh: 5">
-                            <small class="text-danger" id="error-volume"></small>
-                        </div>
+                            <div class="col-md-12">
+                                <label class="form-label">Deskripsi <span class="text-danger">*</span></label>
+                                <textarea name="deskripsi" class="form-control" rows="2" placeholder="Jelaskan kegiatan yang dilakukan" required></textarea>
+                            </div>
 
-                        <div class="col-md-3">
-                            <label class="form-label">Satuan</label>
-                            <select name="satuan" class="form-select">
-                                <option value="">Pilih Satuan</option>
-                                <option value="Dokumen">Dokumen</option>
-                                <option value="Lembar">Lembar</option>
-                                <option value="Unit">Unit</option>
-                                <option value="Paket">Paket</option>
-                                <option value="Buah">Buah</option>
-                                <option value="Set">Set</option>
-                                <option value="File">File</option>
-                            </select>
-                            <small class="text-danger" id="error-satuan"></small>
-                        </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Volume</label>
+                                <input type="text" name="volume" class="form-control" placeholder="Contoh: 5">
+                            </div>
 
-                        <div class="col-md-3">
-                            <label class="form-label">Durasi (menit)</label>
-                            <input type="number" name="durasi" class="form-control" min="1"
-                                placeholder="Contoh: 120">
-                            <small class="text-danger" id="error-durasi"></small>
-                        </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Satuan</label>
+                                <select name="satuan" class="form-select">
+                                    <option value="">Pilih Satuan</option>
+                                    <option value="Dokumen">Dokumen</option>
+                                    <option value="Lembar">Lembar</option>
+                                    <option value="Unit">Unit</option>
+                                    <option value="Paket">Paket</option>
+                                    <option value="Buah">Buah</option>
+                                    <option value="Set">Set</option>
+                                    <option value="File">File</option>
+                                </select>
+                            </div>
 
-                        <div class="col-md-3">
-                            <label class="form-label">Pemberi Tugas</label>
-                            <input type="text" name="pemberi_tugas" class="form-control"
-                                placeholder="Nama pemberi tugas">
-                            <small class="text-danger" id="error-pemberi_tugas"></small>
-                        </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Durasi (menit)</label>
+                                <input type="number" name="durasi" class="form-control" min="1"
+                                    placeholder="Contoh: 120">
+                            </div>
 
-                        <div class="col-md-12">
-                            <label class="form-label">Tim Kerja</label>
-                            <input type="text" name="tim_kerja" class="form-control"
-                                placeholder="Anggota tim yang terlibat">
-                            <small class="text-danger" id="error-tim_kerja"></small>
-                        </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Pemberi Tugas</label>
+                                <input type="text" name="pemberi_tugas" class="form-control"
+                                    placeholder="Nama pemberi tugas">
+                            </div>
 
-                        {{-- Upload Bukti Dukung --}}
-                        <div class="mb-3">
-                            <label class="form-label">Bukti Dukung</label>
-                            <input type="file" name="bukti_dukung" class="form-control"
-                                accept=".pdf,.doc,.docx,.img,.jpg,.png" required>
-                        </div>
+                            <div class="col-md-12">
+                                <label class="form-label">Tim Kerja</label>
+                                <input type="text" name="tim_kerja" class="form-control"
+                                    placeholder="Anggota tim yang terlibat">
+                            </div>
 
-                        <div class="col-12 text-end mt-3">
-                            <button type="submit" class="btn btn-primary fw-bold">
-                                <i class="fas fa-save me-1"></i>Tambah Kegiatan
-                            </button>
+                            {{-- Upload Bukti Dukung --}}
+                            <div class="mb-3">
+                                <label class="form-label">Bukti Dukung</label>
+                                <input type="file" name="bukti_dukung" class="form-control"
+                                    accept=".pdf,.doc,.docx,.img,.jpg,.png" required>
+                            </div>
+
+                            <div class="col-12 text-end">
+                                <button type="submit" class="btn btn-success fw-bold">
+                                    <i class="fas fa-save me-1"></i> Simpan Kegiatan
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
+
 
         {{-- Tabel kegiatan --}}
         <div class="card shadow-sm">
@@ -160,6 +163,16 @@
                                         </span>
                                     </td>
                                     <td class="text-center">
+                                        @if ($kegiatan->bukti_dukung)
+                                            <a href="{{ asset('storage/' . $kegiatan->bukti_dukung) }}" target="_blank"
+                                                class="btn btn-sm btn-primary" title="Lihat Bukti Dukung">
+                                                <i class="fas fa-file-alt"></i>
+                                            </a>
+                                        @else
+                                            -
+                                        @endif
+                                    </td>
+                                    <td class="text-center">
                                         <div class="btn-group" role="group">
                                             {{-- Tombol Edit --}}
                                             <button type="button" class="btn btn-sm btn-warning btnEdit"
@@ -174,7 +187,6 @@
                                             </button>
                                         </div>
                                     </td>
-
                                 </tr>
                             @empty
                                 <tr>

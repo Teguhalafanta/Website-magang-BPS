@@ -138,22 +138,12 @@
                             </ul>
                         </li>
 
-
-                        {{-- Pengajuan --}}
-                        <li class="sidebar-item has-sub {{ request()->routeIs('pelajar.pengajuan.*') ? 'active' : '' }}">
-                            <a href="#" class="sidebar-link">
+                        {{-- Daftar Pengajuan --}}
+                        <li class="sidebar-item {{ request()->routeIs('pelajar.pengajuan.index') ? 'active' : '' }}">
+                            <a href="{{ route('pelajar.pengajuan.index') }}" class="sidebar-link">
                                 <i class="bi bi-file-earmark-text"></i>
-                                <span>Pengajuan</span>
+                                <span>Daftar Pengajuan</span>
                             </a>
-                            <ul class="submenu"
-                                style="{{ request()->routeIs('pelajar.pengajuan.*') ? 'display: block;' : 'display: none;' }}">
-                                <li class="submenu-item {{ request()->routeIs('pelajar.pengajuan.index') ? 'active' : '' }}">
-                                    <a href="{{ route('pelajar.pengajuan.index') }}">Daftar Pengajuan</a>
-                                </li>
-                                <li class="submenu-item {{ request()->routeIs('pelajar.pengajuan.create') ? 'active' : '' }}">
-                                    <a href="{{ route('pelajar.pengajuan.create') }}">Ajukan Magang</a>
-                                </li>
-                            </ul>
                         </li>
                     @else
                         {{-- Menu untuk role lain atau tidak dikenal --}}

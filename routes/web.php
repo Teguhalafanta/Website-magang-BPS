@@ -40,7 +40,6 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/pengajuan/{id}/update-status', [PengajuanController::class, 'updateStatus'])->name('pengajuan.updateStatus');
 
         // CRUD Pengajuan
-        Route::get('/pengajuan/{id}/edit', [PengajuanController::class, 'edit'])->name('pengajuan.edit');
         Route::put('/pengajuan/{id}', [PengajuanController::class, 'update'])->name('pengajuan.update');
         Route::delete('/pengajuan/{id}', [PengajuanController::class, 'destroy'])->name('pengajuan.destroy');
 
@@ -59,6 +58,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/pengajuan', [PelajarController::class, 'index'])->name('pengajuan.index');
         Route::get('/pengajuan/create', [PelajarController::class, 'create'])->name('pengajuan.create');
         Route::post('/pengajuan', [PelajarController::class, 'store'])->name('pengajuan.store');
+        Route::put('/pengajuan/{id}', [PelajarController::class, 'update'])->name('pengajuan.update');
+        Route::delete('/pengajuan/{id}', [PelajarController::class, 'destroy'])->name('pengajuan.destroy');
 
         // CRUD Kegiatan (tanpa show)
         Route::get('/kegiatan', [KegiatanController::class, 'index'])->name('kegiatan.index');

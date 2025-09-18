@@ -5,86 +5,95 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
-    // Tampilkan halaman profil
+    /**
+     * Tampilkan halaman profil mahasiswa magang
+     */
     public function show()
     {
+        // ambil user login beserta data pelajarnya
         $user = User::with('pelajar')->findOrFail(Auth::id());
+
         return view('profile.show', compact('user'));
     }
 
-    // Update data pribadi
+    /**
+     * Update data pribadi
+     */
     public function update(Request $request)
     {
-        $user = auth()->user();
-
-        $validated = $request->validate([
-            'nama'    => 'required|string|max:255',
-            'email'   => 'required|email',
-            'telepon' => 'nullable|string|max:20',
+        $request->validate([
+            'name'   => 'required|string|max:255',
+            'email'  => 'required|email|max:255',
+            'phone'  => 'nullable|string|max:20',
         ]);
 
-        // Update ke tabel users
+        $user = User::with('pelajar')->findOrFail(Auth::id());
+
+        // update field pada tabel users
         $user->update([
-            'name'  => $validated['nama'],
-            'email' => $validated['email'],
-            'phone' => $validated['telepon'],
+            'name'  => $request->name,
+            'email' => $request->email,
         ]);
 
-        // Update atau buat data di tabel pelajars
-        $user->pelajar()->updateOrCreate(
-            ['user_id' => $user->id],
-            $validated
-        );
+        // update field pada tabel pelajars
+        if ($user->pelajar) {
+            $user->pelajar->update([
+                'telepon' => $request->phone,
+            ]);
+        }
 
-        return back()->with('success', 'Data pribadi berhasil diperbarui');
+        return back()->with('success', 'Data pribadi berhasil diperbarui.');
     }
 
-    // Update informasi magang (khusus pelajar)
+    /**
+     * Update informasi magang
+     */
     public function updateMagang(Request $request)
     {
-        $user = auth()->user();
-
-        $validated = $request->validate([
-            'rencana_mulai' => 'nullable|date',
-            'rencana_selesai' => 'nullable|date',
-            'mentor' => 'nullable|string|max:255',
-            'status' => 'required|string|in:aktif,tidak',
+        $request->validate([
+            'start_date' => 'nullable|date',
+            'end_date'   => 'nullable|date',
+            'division'   => 'nullable|string|max:100',
+            'mentor'     => 'nullable|string|max:100',
+            'status'     => 'required|in:aktif,tidak',
         ]);
 
-        $user->pelajar()->updateOrCreate(
-            ['user_id' => $user->id],
-            $validated
-        );
+        $user = User::with('pelajar')->findOrFail(Auth::id());
 
-        return back()->with('success', 'Informasi magang berhasil diperbarui');
+        if ($user->pelajar) {
+            $user->pelajar->update([
+                'rencana_mulai'   => $request->start_date,
+                'rencana_selesai' => $request->end_date,
+                'division'        => $request->division,
+                'mentor'          => $request->mentor,
+                'status'          => $request->status,
+            ]);
+        }
+
+        return back()->with('success', 'Informasi magang berhasil diperbarui.');
     }
 
-    // Update foto profil (tabel users)
-    public function updateFoto(Request $request)
+    /**
+     * Update foto profil
+     */
+    public function updatePhoto(Request $request)
     {
-        $user = Auth::user();
-
         $request->validate([
             'foto' => 'required|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        $modelUser = $user instanceof \Illuminate\Database\Eloquent\Model
-            ? $user
-            : User::findOrFail($user->id ?? $user->id_user);
+        $user = User::with('pelajar')->findOrFail(Auth::id());
 
-        // hapus foto lama kalau ada
-        if ($modelUser->foto && Storage::disk('public')->exists($modelUser->foto)) {
-            Storage::disk('public')->delete($modelUser->foto);
+        if ($user->pelajar) {
+            $path = $request->file('photo')->store('foto_mahasiswa', 'public');
+            $user->pelajar->update([
+                'foto' => $path,
+            ]);
         }
 
-        $path = $request->file('foto')->store('avatars', 'public');
-
-        $modelUser->update(['foto' => $path]);
-
-        return redirect()->route('profile.show')->with('success', 'Foto profil berhasil diperbarui!');
+        return back()->with('success', 'Foto profil berhasil diperbarui.');
     }
 }

@@ -33,6 +33,7 @@ class User extends Authenticatable
         return $this->hasOne(Pelajar::class, 'user_id', 'id');
     }
 
+
     public function getAuthIdentifierName()
     {
         return 'id';

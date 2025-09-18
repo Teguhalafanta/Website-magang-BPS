@@ -1,5 +1,4 @@
 @extends('kerangka.master')
-
 @section('title', 'Profile')
 
 @section('content')
@@ -8,8 +7,7 @@
         {{-- Alert Sukses --}}
         @if (session('success'))
             <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <i class="fas fa-check-circle me-2"></i>
-                {{ session('success') }}
+                <i class="fas fa-check-circle me-2"></i> {{ session('success') }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         @endif
@@ -31,7 +29,6 @@
         {{-- Card Profil --}}
         <div class="card shadow-sm border-0 p-4">
             <h4 class="fw-bold mb-4">Profil Mahasiswa Magang</h4>
-
             <div class="row">
                 <!-- Foto Profil -->
                 <div class="col-md-3 text-center">
@@ -66,16 +63,28 @@
                                 <td>{{ $user->role === 'pelajar' ? optional($user->pelajar)->nama : $user->name }}</td>
                             </tr>
                             <tr>
-                                <td class="fw-bold">Email</td>
-                                <td>{{ $user->role === 'pelajar' ? optional($user->pelajar)->email : $user->email }}</td>
+                                <td class="fw-bold">NIM / NISN</td>
+                                <td>{{ optional($user->pelajar)->nim_nisn ?? '-' }}</td>
+                            </tr>
+                            <tr>
+                                <td class="fw-bold">Fakultas</td>
+                                <td>{{ optional($user->pelajar)->fakultas ?? '-' }}</td>
+                            </tr>
+                            <tr>
+                                <td class="fw-bold">Jurusan</td>
+                                <td>{{ optional($user->pelajar)->jurusan ?? '-' }}</td>
+                            </tr>
+                            <tr>
+                                <td class="fw-bold">Asal Institusi</td>
+                                <td>{{ optional($user->pelajar)->asal_institusi ?? '-' }}</td>
                             </tr>
                             <tr>
                                 <td class="fw-bold">Telepon</td>
                                 <td>{{ $user->role === 'pelajar' ? optional($user->pelajar)->telepon : $user->phone }}</td>
                             </tr>
                             <tr>
-                                <td class="fw-bold">Role</td>
-                                <td>{{ ucfirst($user->role) }}</td>
+                                <td class="fw-bold">Email</td>
+                                <td>{{ $user->email }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -85,48 +94,41 @@
             <hr>
 
             <!-- Informasi Magang -->
-            @if ($user->role === 'pelajar')
-                <hr>
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h5 class="fw-bold">Informasi Magang</h5>
-                    <button class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#editMagangModal">
-                        <i class="fas fa-pen"></i>
-                    </button>
-                </div>
-                <div class="card shadow-sm mb-3" style="background-color: #f0f8ff;">
-                    <div class="card-body">
-                        <div class="row mb-2">
-                            <div class="col-md-4 fw-bold">Tanggal Mulai</div>
-                            <div class="col-md-8">{{ optional($user->pelajar)->rencana_mulai ?? '-' }}</div>
-                        </div>
-                        <div class="row mb-2">
-                            <div class="col-md-4 fw-bold">Tanggal Selesai</div>
-                            <div class="col-md-8">{{ optional($user->pelajar)->rencana_selesai ?? '-' }}</div>
-                        </div>
-                        <div class="row mb-2">
-                            <div class="col-md-4 fw-bold">Pembimbing</div>
-                            <div class="col-md-8">{{ optional($user->pelajar)->mentor ?? '-' }}</div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4 fw-bold">Status Magang</div>
-                            <div class="col-md-8">
-                                @php $status = optional($user->pelajar)->status; @endphp
-                                @if ($status === 'aktif')
-                                    <span class="badge bg-success">Aktif</span>
-                                @elseif ($status === 'tidak')
-                                    <span class="badge bg-secondary">Tidak Aktif</span>
-                                @else
-                                    <span class="badge bg-warning text-dark">Belum Ditentukan</span>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @endif
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="fw-bold">Informasi Magang</h5>
+                <button class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#editMagangModal">
+                    <i class="fas fa-pen"></i>
+                </button>
+            </div>
+            <table class="table table-borderless">
+                <tbody>
+                    <tr>
+                        <td class="fw-bold">Tanggal Mulai & Selesai</td>
+                        <td>{{ optional($user->pelajar)->rencana_mulai ?? '-' }} -
+                            {{ optional($user->pelajar)->rencana_selesai ?? '-' }}</td>
+                    </tr>
+                    <tr>
+                        <td class="fw-bold">Pembimbing / Mentor</td>
+                        <td>{{ optional($user->pelajar)->mentor ?? '-' }}</td>
+                    </tr>
+                    <tr>
+                        <td class="fw-bold">Status Magang</td>
+                        <td>
+                            @if (optional($user->pelajar)->status === 'aktif')
+                                <span class="badge bg-success">Aktif</span>
+                            @elseif(optional($user->pelajar)->status === 'tidak aktif')
+                                <span class="badge bg-secondary">Tidak Aktif</span>
+                            @else
+                                <span class="badge bg-warning">Belum Ada Data</span>
+                            @endif
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 
-    <!-- Modal Edit Data Pribadi -->
+    {{-- ==================== MODAL EDIT DATA PRIBADI ==================== --}}
     <div class="modal fade" id="editPribadiModal" tabindex="-1" aria-labelledby="editPribadiLabel" aria-hidden="true">
         <div class="modal-dialog">
             <form action="{{ route('profile.update') }}" method="POST">
@@ -140,17 +142,32 @@
                     <div class="modal-body">
                         <div class="mb-3">
                             <label class="form-label">Nama</label>
-                            <input type="text" class="form-control" name="nama"
+                            <input type="text" name="nama" class="form-control"
                                 value="{{ optional($user->pelajar)->nama }}">
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Email</label>
-                            <input type="email" class="form-control" name="email"
-                                value="{{ optional($user->pelajar)->email }}">
+                            <label class="form-label">NIM / NISN</label>
+                            <input type="text" name="nim_nisn" class="form-control"
+                                value="{{ optional($user->pelajar)->nim_nisn }}">
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">Telepon</label>
-                            <input type="text" class="form-control" name="telepon"
+                            <label class="form-label">Fakultas</label>
+                            <input type="text" name="fakultas" class="form-control"
+                                value="{{ optional($user->pelajar)->fakultas }}">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Jurusan</label>
+                            <input type="text" name="jurusan" class="form-control"
+                                value="{{ optional($user->pelajar)->jurusan }}">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Asal Institusi</label>
+                            <input type="text" name="asal_institusi" class="form-control"
+                                value="{{ optional($user->pelajar)->asal_institusi }}">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">No HP</label>
+                            <input type="text" name="telepon" class="form-control"
                                 value="{{ optional($user->pelajar)->telepon }}">
                         </div>
                     </div>
@@ -163,49 +180,42 @@
         </div>
     </div>
 
-    @if ($user->role === 'pelajar')
-        <!-- Modal Edit Informasi Magang -->
-        <div class="modal fade" id="editMagangModal" tabindex="-1" aria-labelledby="editMagangLabel"
-            aria-hidden="true">
-            <div class="modal-dialog">
-                <form action="{{ route('magang.update') }}" method="POST">
-                    @csrf
-                    @method('PUT')
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title fw-bold" id="editMagangLabel">Edit Informasi Magang</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    {{-- ==================== MODAL EDIT DATA MAGANG ==================== --}}
+    <div class="modal fade" id="editMagangModal" tabindex="-1" aria-labelledby="editMagangLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form action="{{ route('magang.update') }}" method="POST">
+                @csrf
+                @method('PUT')
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title fw-bold" id="editMagangLabel">Edit Informasi Magang</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label class="form-label">Tanggal Mulai</label>
+                            <input type="date" name="rencana_mulai" class="form-control"
+                                value="{{ optional($user->pelajar)->rencana_mulai }}">
                         </div>
-                        <div class="modal-body">
-                            <div class="mb-3">
-                                <label class="form-label">Tanggal Mulai</label>
-                                <input type="date" class="form-control" name="start_date"
-                                    value="{{ optional($user->pelajar)->rencana_mulai }}">
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Tanggal Selesai</label>
-                                <input type="date" class="form-control" name="end_date"
-                                    value="{{ optional($user->pelajar)->rencana_selesai }}">
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Pembimbing</label>
-                                <input type="text" class="form-control" name="mentor"
-                                    value="{{ optional($user->pelajar)->mentor }}">
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Status Magang</label>
-                                <select name="status" class="form-select">
-                                    <option value="aktif"
-                                        {{ optional($user->pelajar)->status === 'aktif' ? 'selected' : '' }}>Aktif</option>
-                                    <option value="tidak"
-                                        {{ optional($user->pelajar)->status === 'tidak' ? 'selected' : '' }}>Tidak Aktif
-                                    </option>
-                                </select>
-                            </div>
+                        <div class="mb-3">
+                            <label class="form-label">Tanggal Selesai</label>
+                            <input type="date" name="rencana_selesai" class="form-control"
+                                value="{{ optional($user->pelajar)->rencana_selesai }}">
                         </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                            <button type="submit" class="btn btn-primary">Simpan</button>
+                        <div class="mb-3">
+                            <label class="form-label">Pembimbing / Mentor</label>
+                            <input type="text" name="mentor" class="form-control"
+                                value="{{ optional($user->pelajar)->mentor }}">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Status Magang</label>
+                            <select name="status" class="form-select">
+                                <option value="aktif"
+                                    {{ optional($user->pelajar)->status === 'aktif' ? 'selected' : '' }}>Aktif</option>
+                                <option value="tidak aktif"
+                                    {{ optional($user->pelajar)->status === 'tidak aktif' ? 'selected' : '' }}>Tidak Aktif
+                                </option>
+                            </select>
                         </div>
                     </div>
                 </form>
@@ -213,7 +223,7 @@
         </div>
     @endif
 
-    <!-- Modal Ubah Foto -->
+    {{-- ==================== MODAL UBAH FOTO ==================== --}}
     <div class="modal fade" id="ubahFotoModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <form action="{{ route('profile.updateFoto') }}" method="POST" enctype="multipart/form-data"
@@ -225,7 +235,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <input type="file" name="foto" class="form-control" required>
+                    <input type="file" name="foto" class="form-control" accept="image/*" required>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
@@ -235,42 +245,33 @@
         </div>
     </div>
 
+    {{-- Efek Fade Out --}}
     <style>
-        /* Efek fade-out */
         .fade-out {
             opacity: 0;
             transition: opacity 0.8s ease;
         }
     </style>
-
     <script>
-        // Fungsi fade out + close
         function fadeOutAndClose(alertNode) {
             alertNode.classList.add('fade-out');
             setTimeout(() => {
                 let bsAlert = new bootstrap.Alert(alertNode);
                 bsAlert.close();
-            }, 800); // sesuai durasi transition
+            }, 800);
         }
 
-        // Auto-close alert sukses setelah 3 detik
         setTimeout(() => {
-            document.querySelectorAll('.alert-success').forEach(alertNode => {
-                fadeOutAndClose(alertNode);
-            });
+            document.querySelectorAll('.alert-success').forEach(alertNode => fadeOutAndClose(alertNode));
         }, 3000);
 
-        // Auto-close alert error setelah 6 detik
         setTimeout(() => {
-            document.querySelectorAll('.alert-danger').forEach(alertNode => {
-                fadeOutAndClose(alertNode);
-            });
+            document.querySelectorAll('.alert-danger').forEach(alertNode => fadeOutAndClose(alertNode));
         }, 6000);
 
-        // Override tombol close manual biar tetap fade dulu
         document.querySelectorAll('.alert .btn-close').forEach(btn => {
             btn.addEventListener('click', function(e) {
-                e.preventDefault(); // cegah langsung hilang
+                e.preventDefault();
                 let alertNode = this.closest('.alert');
                 fadeOutAndClose(alertNode);
             });

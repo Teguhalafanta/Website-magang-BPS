@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Pelajar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class PelajarController extends Controller
 {
@@ -31,7 +32,6 @@ class PelajarController extends Controller
             'tanggal_lahir'   => 'required|date',
             'alamat'          => 'required|string',
             'telepon'         => 'nullable|string|max:20',
-            'email'           => 'required|email|unique:pelajars,email',
             'nim_nisn'        => 'required|string|unique:pelajars,nim_nisn',
             'asal_institusi'  => 'required|string|max:255',
             'fakultas'        => 'nullable|string|max:255',
@@ -55,7 +55,7 @@ class PelajarController extends Controller
             'tanggal_lahir'   => $request->tanggal_lahir,
             'alamat'          => $request->alamat,
             'telepon'         => $request->telepon,
-            'email'           => $request->email,
+            'email'           => Auth::user()->email,
             'nim_nisn'        => $request->nim_nisn,
             'asal_institusi'  => $request->asal_institusi,
             'fakultas'        => $request->fakultas,
@@ -80,6 +80,63 @@ class PelajarController extends Controller
             ->get();
 
         return view('pelajar.daftar_pengajuan', compact('pengajuans'));
+    }
+
+    // pelajar edit data pengajuan
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'nama' => 'required|string|max:255',
+            'jenis_kelamin' => 'required',
+            'tempat_lahir' => 'nullable|string|max:100',
+            'tanggal_lahir' => 'nullable|date',
+            'alamat' => 'nullable|string',
+            'telepon' => 'nullable|string|max:20',
+            'email' => 'nullable|email',
+            'nim_nisn' => 'nullable|string|max:50',
+            'asal_institusi' => 'nullable|string|max:255',
+            'fakultas' => 'nullable|string|max:255',
+            'jurusan' => 'nullable|string|max:255',
+            'rencana_mulai' => 'nullable|date',
+            'rencana_selesai' => 'nullable|date',
+            'proposal' => 'nullable|mimes:pdf,doc,docx|max:2048',
+            'surat_pengajuan' => 'nullable|mimes:pdf,doc,docx|max:2048',
+        ]);
+
+        $pengajuan = \App\Models\Pelajar::findOrFail($id);
+
+        $pengajuan->fill($request->except(['proposal', 'surat_pengajuan']));
+
+        if ($request->hasFile('proposal')) {
+            $pengajuan->proposal = $request->file('proposal')->store('proposal', 'public');
+        }
+
+        if ($request->hasFile('surat_pengajuan')) {
+            $pengajuan->surat_pengajuan = $request->file('surat_pengajuan')->store('surat_pengajuan', 'public');
+        }
+
+        $pengajuan->save();
+
+        return redirect()->route('pelajar.pengajuan.index')->with('success', 'Pengajuan berhasil diperbarui.');
+    }
+
+    // pelajar hapus data pengajuan
+    public function destroy($id)
+    {
+        $pengajuan = Pelajar::findOrFail($id);
+
+        // hapus file (jika ada)
+        if ($pengajuan->proposal) {
+            Storage::delete($pengajuan->proposal);
+        }
+        if ($pengajuan->surat_pengajuan) {
+            Storage::delete($pengajuan->surat_pengajuan);
+        }
+
+        $pengajuan->delete();
+
+        return redirect()->route('pelajar.pengajuan.index')
+            ->with('success', 'Pengajuan berhasil dihapus.');
     }
 
     // Admin update status & alasan

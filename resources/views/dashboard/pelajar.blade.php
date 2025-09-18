@@ -32,6 +32,7 @@
                             <i class="bi bi-list-task fs-2"></i>
                         </div>
                     </div>
+                </a>
             </div>
 
             {{-- Ajukan Magang --}}

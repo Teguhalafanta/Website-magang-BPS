@@ -40,7 +40,7 @@
                             @php
                                 $target = $kegiatan->target ?? 0;
                                 $realisasi = $kegiatan->realisasi ?? 0;
-                                $persen = ($target > 0) ? round(($realisasi / $target) * 100, 2) : 0;
+                                $persen = $target > 0 ? round(($realisasi / $target) * 100, 2) : 0;
                             @endphp
                             {{ $persen }}%
                         </td>
@@ -50,6 +50,14 @@
                                 class="btn btn-sm btn-outline-primary" title="Edit">
                                 ✏️
                             </a>
+                            <form action="{{ route('pelajar.kegiatan.destroy', $kegiatan->id) }}" method="POST"
+                                style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus kegiatan ini?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Hapus">
+                                    🗑️
+                                </button>
+                            </form>
                         </td>
                     </tr>
                 @empty

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
@@ -79,21 +80,27 @@ class ProfileController extends Controller
     /**
      * Update foto profil
      */
-    public function updatePhoto(Request $request)
+    public function updateFoto(Request $request)
     {
+        $user = Auth::user();
+
         $request->validate([
             'foto' => 'required|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        $user = User::with('pelajar')->findOrFail(Auth::id());
+        $modelUser = $user instanceof \Illuminate\Database\Eloquent\Model
+            ? $user
+            : User::findOrFail($user->id ?? $user->id_user);
 
-        if ($user->pelajar) {
-            $path = $request->file('photo')->store('foto_mahasiswa', 'public');
-            $user->pelajar->update([
-                'foto' => $path,
-            ]);
+        // hapus foto lama kalau ada
+        if ($modelUser->foto && Storage::disk('public')->exists($modelUser->foto)) {
+            Storage::disk('public')->delete($modelUser->foto);
         }
 
-        return back()->with('success', 'Foto profil berhasil diperbarui.');
+        $path = $request->file('foto')->store('avatars', 'public');
+
+        $modelUser->update(['foto' => $path]);
+
+        return redirect()->route('profile.show')->with('success', 'Foto profil berhasil diperbarui!');
     }
 }

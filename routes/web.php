@@ -29,7 +29,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
     Route::put('/profile/magang/update', [ProfileController::class, 'updateMagang'])->name('magang.update');
-    Route::put('/profile/photo', [ProfileController::class, 'updatePhoto'])->name('profile.updatePhoto');
+    Route::put('/profile/foto', [ProfileController::class, 'updateFoto'])->name('profile.updateFoto');
 
     // -------- ADMIN --------
     Route::prefix('admin')->middleware('role:admin')->name('admin.')->group(function () {

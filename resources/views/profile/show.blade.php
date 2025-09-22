@@ -1,4 +1,5 @@
 @extends('kerangka.master')
+
 @section('title', 'Profile')
 
 @section('content')
@@ -60,7 +61,7 @@
                         <tbody>
                             <tr>
                                 <td class="fw-bold">Nama</td>
-                                <td>{{ $user->role === 'pelajar' ? optional($user->pelajar)->nama : $user->name }}</td>
+                                <td>{{ optional($user->pelajar)->nama ?? '-' }}</td>
                             </tr>
                             <tr>
                                 <td class="fw-bold">NIM / NISN</td>
@@ -80,7 +81,7 @@
                             </tr>
                             <tr>
                                 <td class="fw-bold">Telepon</td>
-                                <td>{{ $user->role === 'pelajar' ? optional($user->pelajar)->telepon : $user->phone }}</td>
+                                <td>{{ optional($user->pelajar)->telepon ?? '-' }}</td>
                             </tr>
                             <tr>
                                 <td class="fw-bold">Email</td>
@@ -103,9 +104,12 @@
             <table class="table table-borderless">
                 <tbody>
                     <tr>
-                        <td class="fw-bold">Tanggal Mulai & Selesai</td>
-                        <td>{{ optional($user->pelajar)->rencana_mulai ?? '-' }} -
-                            {{ optional($user->pelajar)->rencana_selesai ?? '-' }}</td>
+                        <td class="fw-bold">Tanggal Mulai</td>
+                        <td>{{ optional($user->pelajar)->rencana_mulai ?? '-' }}</td>
+                    </tr>
+                    <tr>
+                        <td class="fw-bold">Tanggal Selesai</td>
+                        <td>{{ optional($user->pelajar)->rencana_selesai ?? '-' }}</td>
                     </tr>
                     <tr>
                         <td class="fw-bold">Pembimbing / Mentor</td>
@@ -166,7 +170,7 @@
                                 value="{{ optional($user->pelajar)->asal_institusi }}">
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">No HP</label>
+                            <label class="form-label">Telepon</label>
                             <input type="text" name="telepon" class="form-control"
                                 value="{{ optional($user->pelajar)->telepon }}">
                         </div>
@@ -180,7 +184,7 @@
         </div>
     </div>
 
-    {{-- ==================== MODAL EDIT DATA MAGANG ==================== --}}
+    {{-- ==================== MODAL EDIT INFORMASI MAGANG ==================== --}}
     <div class="modal fade" id="editMagangModal" tabindex="-1" aria-labelledby="editMagangLabel" aria-hidden="true">
         <div class="modal-dialog">
             <form action="{{ route('magang.update') }}" method="POST">
@@ -218,10 +222,14 @@
                             </select>
                         </div>
                     </div>
-                </form>
-            </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary">Simpan</button>
+                    </div>
+                </div>
+            </form>
         </div>
-    @endif
+    </div>
 
     {{-- ==================== MODAL UBAH FOTO ==================== --}}
     <div class="modal fade" id="ubahFotoModal" tabindex="-1" aria-hidden="true">
@@ -252,6 +260,7 @@
             transition: opacity 0.8s ease;
         }
     </style>
+    
     <script>
         function fadeOutAndClose(alertNode) {
             alertNode.classList.add('fade-out');

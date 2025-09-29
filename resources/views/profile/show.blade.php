@@ -95,40 +95,43 @@
             <hr>
 
             <!-- Informasi Magang -->
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <h5 class="fw-bold">Informasi Magang</h5>
-                <button class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#editMagangModal">
-                    <i class="fas fa-pen"></i>
-                </button>
-            </div>
-            <table class="table table-borderless">
-                <tbody>
-                    <tr>
-                        <td class="fw-bold">Tanggal Mulai</td>
-                        <td>{{ optional($user->pelajar)->rencana_mulai ?? '-' }}</td>
-                    </tr>
-                    <tr>
-                        <td class="fw-bold">Tanggal Selesai</td>
-                        <td>{{ optional($user->pelajar)->rencana_selesai ?? '-' }}</td>
-                    </tr>
-                    <tr>
-                        <td class="fw-bold">Pembimbing / Mentor</td>
-                        <td>{{ optional($user->pelajar)->mentor ?? '-' }}</td>
-                    </tr>
-                    <tr>
-                        <td class="fw-bold">Status Magang</td>
-                        <td>
-                            @if (optional($user->pelajar)->status === 'aktif')
-                                <span class="badge bg-success">Aktif</span>
-                            @elseif(optional($user->pelajar)->status === 'tidak aktif')
-                                <span class="badge bg-secondary">Tidak Aktif</span>
-                            @else
-                                <span class="badge bg-warning">Belum Ada Data</span>
-                            @endif
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            @if ($user->role === 'pelajar')
+                <hr>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold">Informasi Magang</h5>
+                    <button class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#editMagangModal">
+                        <i class="fas fa-pen"></i>
+                    </button>
+                </div>
+                <table class="table table-borderless">
+                    <tbody>
+                        <tr>
+                            <td class="fw-bold">Tanggal Mulai</td>
+                            <td>{{ optional($user->pelajar)->rencana_mulai ?? '-' }}</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">Tanggal Selesai</td>
+                            <td>{{ optional($user->pelajar)->rencana_selesai ?? '-' }}</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">Pembimbing / Mentor</td>
+                            <td>{{ optional($user->pelajar)->mentor ?? '-' }}</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">Status Magang</td>
+                            <td>
+                                @if (optional($user->pelajar)->status === 'aktif')
+                                    <span class="badge bg-success">Aktif</span>
+                                @elseif(optional($user->pelajar)->status === 'tidak aktif')
+                                    <span class="badge bg-secondary">Tidak Aktif</span>
+                                @else
+                                    <span class="badge bg-warning">Belum Ditentukan</span>
+                                @endif
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            @endif
         </div>
     </div>
 
@@ -260,7 +263,7 @@
             transition: opacity 0.8s ease;
         }
     </style>
-    
+
     <script>
         function fadeOutAndClose(alertNode) {
             alertNode.classList.add('fade-out');

@@ -59,7 +59,7 @@ class ProfileController extends Controller
             'end_date'   => 'nullable|date',
             'division'   => 'nullable|string|max:100',
             'mentor'     => 'nullable|string|max:100',
-            'status'     => 'required|in:aktif,tidak',
+            'status'     => 'required|in:aktif,tidak aktif',
         ]);
 
         $user = User::with('pelajar')->findOrFail(Auth::id());

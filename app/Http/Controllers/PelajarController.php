@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Pelajar;
+use App\Notifications\NotifikasiBaru;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -66,6 +68,15 @@ class PelajarController extends Controller
             'surat_pengajuan' => $suratPath,
             'status'          => 'diajukan',
         ]);
+
+        // === Kirim notifikasi ke admin ===
+        $admins = User::where('role', 'admin')->get();
+        foreach ($admins as $admin) {
+            $admin->notify(new NotifikasiBaru(
+                'Ada pengajuan magang baru dari ' . $request->nama,
+                route('admin.pengajuan.index') // sesuaikan dengan route daftar pengajuan admin kamu
+            ));
+        }
 
         return redirect()->route('pelajar.pengajuan.index')
             ->with('success', 'Pengajuan magang berhasil dikirim.');

@@ -29,9 +29,23 @@ class PengajuanController extends Controller
         $pengajuan->alasan = $request->alasan;
         $pengajuan->save();
 
+        // 🔔 Kirim notifikasi ke pelajar
+        if ($pengajuan->user) {
+            if ($request->status === 'disetujui') {
+                $pesan = "Pengajuan magang kamu telah disetujui.";
+            } else {
+                $pesan = "Pengajuan magang kamu ditolak." .
+                    ($request->alasan ? " Alasan: " . $request->alasan : "");
+            }
+
+            $pengajuan->user->notify(new \App\Notifications\NotifikasiBaru(
+                $pesan,
+                route('pelajar.pengajuan.index') // arahkan ke halaman daftar pengajuan pelajar
+            ));
+        }
+
         return redirect()->route('admin.pengajuan.index')->with('success', 'Status pengajuan berhasil diperbarui.');
     }
-
 
     public function update(Request $request, $id)
     {
@@ -88,7 +102,6 @@ class PengajuanController extends Controller
 
         return redirect()->route('admin.pengajuan.index')->with('success', 'Data pengajuan berhasil diperbarui.');
     }
-
 
     public function destroy($id)
     {

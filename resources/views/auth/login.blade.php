@@ -4,97 +4,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Login - BPS Provinsi Aceh</title>
+    <link rel="shortcut icon" href="assets/images/logo/favicon.png" type="image/png">
 
-    <!-- {{-- css login --}} -->
-    <link rel="stylesheet" href="{{ asset('assets/css/main/app.css') }}">
-    <link rel="stylesheet" href="{{ asset('assets/css/main/app-dark.css') }}">
-    <link rel="shortcut icon" href="{{ asset('assets/images/logo/favicon.svg') }}" type="image/x-icon">
-    <link rel="shortcut icon" href="{{ asset('assets/images/logo/favicon.png') }}" type="image/png">
-    <link rel="stylesheet" href="{{ asset('assets/css/shared/iconly.css') }}">
+    <!-- Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <link rel="stylesheet" href="{{ asset('assets/css/pages/auth.css') }}">
 
 </head>
 
 <body>
-    <div id="auth">
-        <div class="row h-100">
-            <div class="col-lg-5 col-12">
-                <div id="auth-left">
-                    <div class="auth-logo d-flex align-items-center justify-content-center mb-4">
-                        <a href="index.html" class="d-flex align-items-center text-decoration-none">
-                            <img src="{{ asset('assets/images/logo/pngegg.png') }}" alt="Logo"
-                                style="width: 80px; height: auto; margin-right: 15px;">
-                            <span style="font-size: 20px; font-weight: bold; color: #333;">
-                                Badan Pusat Statistik Provinsi Aceh
-                            </span>
-                        </a>
-                    </div>
+    <!-- Header Bar -->
+    <div class="header-bar">
+        <div class="nav-tabs">
+            <a href="{{ route('login') }}" class="nav-tab {{ request()->routeIs('login') ? 'active' : '' }}">
+                <i class="bi bi-box-arrow-in-right"></i>
+                Login
+            </a>
+            <a href="{{ route('register') }}" class="nav-tab {{ request()->routeIs('register') ? 'active' : '' }}">
+                <i class="bi bi-person-plus"></i>
+                Register
+            </a>
+        </div>
+    </div>
 
-                    <h1 class="auth-title">Log in.</h1>
-                    <p class="auth-subtitle mb-5">Silakan masuk menggunakan akun yang telah didaftarkan untuk program
-                        magang BPS Provinsi Aceh.</p>
+    <!-- Animated Background -->
+    <div class="background">
+        <div class="floating-shapes">
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+        </div>
+    </div>
 
-                    <form method="POST" action="{{ route('login.store') }}">
-                        @csrf
-                        <div class="form-group position-relative has-icon-left mb-4">
-                            <input type="text" id="email" name="email"
-                                class="form-control @error('email') is invalid
-                            @enderror form-control-xl"
-                                placeholder="Email">
-                            <div class="form-control-icon">
-                                <i class="bi bi-person"></i>
-                            </div>
-                            @error('email')
-                            <small class="btn btn-danger">{{ $message }}</small>
-                            @enderror
-                        </div>
-
-                        <div class="form-group position-relative has-icon-left mb-4">
-                            <input type="password" id="password" name="password"
-                                class="form-control @error('password') is invalid
-                            @enderror form-control-xl"
-                                placeholder="Password">
-                            <div class="form-control-icon">
-                                <i class="bi bi-shield-lock"></i>
-                            </div>
-                            @error('password')
-                            <small class="btn btn-danger">{{ $message }}</small>
-                            @enderror
-                        </div>
-
-                        <div class="form-check form-check-lg d-flex align-items-end">
-                            <input class="form-check-input me-2" type="checkbox" value="" id="flexCheckDefault">
-                            <label class="form-check-label text-gray-600" for="flexCheckDefault">
-                                Keep me logged in
-                            </label>
-                        </div>
-                        <button class="btn btn-primary btn-block btn-lg shadow-lg mt-5">Log in</button>
-
-                        <a href="{{ route('login.sso') }}"
-                            class="btn btn-outline-primary btn-block btn-lg shadow-lg mt-3">
-                            Log in SSO
-                        </a>
-
-                    </form>
-                    <div class="text-center mt-5 text-lg fs-4">
-                        <p class="text-gray-600">Don't have an account?
-                            <a href="{{ route('register') }}" class="font-bold">Sign up</a>.
-                        </p>
-                        <p><a class="font-bold" href="auth-forgot-password.html">Forgot password?</a>.</p>
-                    </div>
-                </div>
+    <!-- Main Container -->
+    <div class="main-container">
+        <div class="login-card">
+            <!-- Logo Section -->
+            <div class="logo-section">
+                <h1>Aplikasi Magang</h1>
+                <img src="{{ asset('assets/images/logo/pngegg.png') }}" alt="Logo"
+                    style="width: 70px; margin-bottom: 10px;">
+                <h1>Badan Pusat Statistik Provinsi Aceh</h1>
             </div>
-            <div class="col-lg-7 d-none d-lg-block">
-                <div id="auth-right">
 
-                </div>
+            <!-- Login Form -->
+            <div id="login-form">
+                <form method="POST" action="{{ route('login.store') }}">
+                    @csrf
+                    <div class="form-group">
+                        <div class="input-container">
+                            <input type="email" id="email" name="email" placeholder="Email"
+                                value="{{ old('email') }}" required autofocus>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-container">
+                            <input type="password" id="password" name="password" placeholder="Password" required>
+                        </div>
+                    </div>
+
+                    <div class="form-check">
+                        <input type="checkbox" id="remember" name="remember">
+                        <label for="remember">Keep me logged in</label>
+                    </div>
+
+                    <button type="submit" class="btn-primary">
+                        Log In
+                        <div class="loading"></div>
+                    </button>
+
+                    <a href="{{ route('login.sso') }}" class="btn-sso">
+                        <i class="bi bi-shield-check"></i>
+                        Log in with SSO
+                    </a>
+                </form>
+            </div>
+
+
+
+            <div class="divider">
+                <span id="divider-text">Belum punya akun?</span>
+            </div>
+
+            <div class="footer-links">
+                <p><a href="{{ route('register') }}">Sign up</a></p>
+                <p><a href="#">Forgot Password?</a></p>
             </div>
         </div>
-
     </div>
+
+    <script src="{{ asset('assets/js/pages/auth.js') }}"></script>
+
 </body>
 
 </html>

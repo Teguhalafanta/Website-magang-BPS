@@ -9,6 +9,7 @@ use App\Http\Controllers\PelajarController;
 use App\Http\Controllers\Admin\PengajuanController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PembimbingController;
 
 // ================== GUEST ==================
 Route::middleware('guest')->group(function () {
@@ -50,6 +51,35 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('absensi', AbsensiController::class)->names('absensi');
     });
 
+    // -------- PEMBIMBING --------
+    Route::prefix('pembimbing')->middleware('role:pembimbing')->name('pembimbing.')->group(function () {
+
+        // Dashboard Pembimbing
+        Route::get('/dashboard', [\App\Http\Controllers\DashboardController::class, 'pembimbing'])
+            ->name('dashboard');
+
+        // Kegiatan (sementara copy dari pelajar)
+        Route::get('/kegiatan', [\App\Http\Controllers\KegiatanController::class, 'index'])->name('kegiatan.index');
+        Route::get('/kegiatan/create', [\App\Http\Controllers\KegiatanController::class, 'create'])->name('kegiatan.create');
+        Route::post('/kegiatan', [\App\Http\Controllers\KegiatanController::class, 'store'])->name('kegiatan.store');
+        Route::get('/kegiatan/{kegiatan}/edit', [\App\Http\Controllers\KegiatanController::class, 'edit'])->name('kegiatan.edit');
+        Route::put('/kegiatan/{kegiatan}', [\App\Http\Controllers\KegiatanController::class, 'update'])->name('kegiatan.update');
+        Route::delete('/kegiatan/{kegiatan}', [\App\Http\Controllers\KegiatanController::class, 'destroy'])->name('kegiatan.destroy');
+
+        // Kegiatan Harian & Bulanan
+        Route::get('/kegiatan/harian', [\App\Http\Controllers\KegiatanController::class, 'harian'])->name('kegiatan.harian');
+        Route::get('/kegiatan/bulanan', [\App\Http\Controllers\KegiatanController::class, 'kegiatanBulanan'])->name('kegiatan.bulanan');
+
+        // Pengajuan (sementara copy dari pelajar)
+        Route::get('/pengajuan', [\App\Http\Controllers\PelajarController::class, 'index'])->name('pengajuan.index');
+
+        // Daftar Bimbingan (baru ditambahkan)
+        Route::get('/bimbingan', [\App\Http\Controllers\PembimbingController::class, 'index'])
+            ->name('bimbingan.index');
+    });
+
+
+
     // -------- PELAJAR --------
     Route::prefix('pelajar')->middleware('role:pelajar')->name('pelajar.')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'pelajar'])->name('dashboard');
@@ -77,6 +107,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/kegiatan/harian', [KegiatanController::class, 'harian'])->name('kegiatan.harian');
         Route::get('/kegiatan/bulanan', [KegiatanController::class, 'kegiatanBulanan'])->name('kegiatan.bulanan');
     });
+
 
     // -------- ABSENSI (pelajar) --------
     Route::resource('absensi', AbsensiController::class)

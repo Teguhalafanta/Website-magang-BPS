@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\AbsensiController;
+use App\Http\Controllers\PresensiController;
 use App\Http\Controllers\KegiatanController;
 use App\Http\Controllers\PelajarController;
 use App\Http\Controllers\Admin\PengajuanController;
@@ -46,8 +46,8 @@ Route::middleware(['auth'])->group(function () {
         // CRUD Kegiatan (admin bisa kelola semua kegiatan)
         Route::resource('kegiatan', KegiatanController::class)->names('kegiatan');
 
-        // CRUD Absensi
-        Route::resource('absensi', AbsensiController::class)->names('absensi');
+        // CRUD Presensi
+        Route::resource('presensi', PresensiController::class)->names('presensi');
     });
 
     // -------- PELAJAR --------
@@ -78,9 +78,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/kegiatan/bulanan', [KegiatanController::class, 'kegiatanBulanan'])->name('kegiatan.bulanan');
     });
 
-    // -------- ABSENSI (pelajar) --------
-    Route::resource('absensi', AbsensiController::class)
-        ->names('absensi')
+    // -------- Presensi (pelajar) --------
+    Route::resource('presensi', PresensiController::class)
+        ->names('presensi')
         ->middleware('role:pelajar');
 
     // -------- NOTIFIKASI --------

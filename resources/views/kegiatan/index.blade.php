@@ -48,10 +48,9 @@
 
                             <div class="col-md-3">
                                 <label class="form-label">Tanggal <span class="text-danger">*</span></label>
-                                <input type="date" name="tanggal" class="form-control" value="{{ date('Y-m-d') }}"
-                                    required>
+                                <input type="date" name="tanggal" class="form-control"
+                                    value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}" readonly required>
                             </div>
-
                             <div class="col-md-3">
                                 <label class="form-label">Status Penyelesaian <span class="text-danger">*</span></label>
                                 <select name="status_penyelesaian" class="form-select" required>
@@ -234,7 +233,8 @@
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label">Tanggal <span class="text-danger">*</span></label>
-                                <input type="date" name="tanggal" id="edit-tanggal" class="form-control" required>
+                                <input type="date" name="tanggal" id="edit-tanggal" class="form-control"
+                                    value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}" readonly required>
                                 <small class="text-danger" id="error-edit-tanggal"></small>
                             </div>
                             <div class="col-md-12">

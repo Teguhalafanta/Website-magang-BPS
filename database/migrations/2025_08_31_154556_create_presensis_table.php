@@ -4,25 +4,26 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAbsensisTable extends Migration
+class CreatePresensisTable extends Migration
 {
     public function up()
     {
-        Schema::create('absensis', function (Blueprint $table) {
+        Schema::create('presensis', function (Blueprint $table) {
             $table->id();
 
-            // Relasi ke tabel users
+            // Kolom user_id
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 
-            // Relasi ke tabel pelajars
+            // Kolom pelajar_id
             $table->unsignedBigInteger('pelajar_id');
             $table->foreign('pelajar_id')->references('id')->on('pelajars')->onDelete('cascade');
 
-            $table->string('nama_pelajar')->nullable();
-            $table->date('tanggal');
-            $table->enum('status', ['Hadir', 'Izin', 'Sakit', 'Alfa']);
-            $table->string('keterangan')->nullable();
+            // Data presensi
+            $table->date('tanggal');                     // tanggal presensi
+            $table->time('waktu_datang')->nullable();    // waktu datang
+            $table->time('waktu_pulang')->nullable();    // waktu pulang
+            $table->enum('status', ['Tepat Waktu', 'Terlambat'])->nullable(); // status otomatis
 
             $table->timestamps();
         });
@@ -30,6 +31,6 @@ class CreateAbsensisTable extends Migration
 
     public function down()
     {
-        Schema::dropIfExists('absensis');
+        Schema::dropIfExists('presensis');
     }
 }

@@ -94,11 +94,11 @@
                             </a>
                         </li>
 
-                        {{-- Absensi --}}
-                        <li class="sidebar-item {{ request()->routeIs('admin.absensi.*') ? 'active' : '' }}">
-                            <a href="{{ route('admin.absensi.index') }}" class="sidebar-link">
+                        {{-- Presensi --}}
+                        <li class="sidebar-item {{ request()->routeIs('admin.presensi.*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.presensi.index') }}" class="sidebar-link">
                                 <i class="bi bi-calendar-check"></i>
-                                <span>Absensi</span>
+                                <span>Presensi</span>
                             </a>
                         </li>
                     @elseif(auth()->user()->role == 'pelajar')
@@ -110,11 +110,11 @@
                             </a>
                         </li>
 
-                        {{-- Menu Absensi --}}
-                        <li class="sidebar-item {{ request()->routeIs('absensi.*') ? 'active' : '' }}">
-                            <a href="{{ route('absensi.index') }}" class="sidebar-link">
+                        {{-- Menu Presensi --}}
+                        <li class="sidebar-item {{ request()->routeIs('presensi.*') ? 'active' : '' }}">
+                            <a href="{{ route('presensi.index') }}" class="sidebar-link">
                                 <i class="bi bi-calendar-check"></i>
-                                <span>Absensi</span>
+                                <span>Presensi</span>
                             </a>
                         </li>
 

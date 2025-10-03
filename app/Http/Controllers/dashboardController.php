@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Pelajar;
 use App\Models\Kegiatan;
-use App\Models\Absensi;
+use App\Models\Presensi;
 use Carbon\Carbon;
 use App\Http\Controllers\PengajuanController;
 
@@ -36,23 +36,23 @@ class DashboardController extends Controller
     public function admin()
     {
         $jumlahPelajar = Pelajar::count();
-        $jumlahAbsensiHariIni = Absensi::whereDate('created_at', now())->count();
+        $jumlahPresensiHariIni = Presensi::whereDate('created_at', now())->count();
         $jumlahKegiatan = Kegiatan::count();
 
         return view('dashboard.admin', compact(
             'jumlahPelajar',
-            'jumlahAbsensiHariIni',
+            'jumlahPresensiHariIni',
             'jumlahKegiatan'
         ));
     }
 
     public function pelajar()
     {
-        $jumlahAbsensiHariIni = Absensi::whereDate('created_at', now())->count();
+        $jumlahPresensiHariIni = Presensi::whereDate('created_at', now())->count();
         $jumlahKegiatan = Kegiatan::count();
 
         return view('dashboard.pelajar', compact(
-            'jumlahAbsensiHariIni',
+            'jumlahPresensiHariIni',
             'jumlahKegiatan'
         ));
     }

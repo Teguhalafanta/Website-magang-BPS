@@ -33,6 +33,10 @@ class User extends Authenticatable
         return $this->hasOne(Pelajar::class, 'user_id', 'id');
     }
 
+    public function presensis()
+    {
+        return $this->hasMany(Presensi::class);
+    }
 
     public function getAuthIdentifierName()
     {

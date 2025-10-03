@@ -20,14 +20,14 @@
                 </a>
             </div>
 
-            {{-- Absensi Hari Ini  --}}
+            {{-- Presensi Hari Ini  --}}
             <div class="col-md-3 mb-3">
-                <a href="{{ route('absensi.index', ['today' => true]) }}" class="text-decoration-none">
+                <a href="{{ route('presensi.index', ['today' => true]) }}" class="text-decoration-none">
                     <div class="card bg-warning text-white shadow">
                         <div class="card-body d-flex justify-content-between align-items-center">
                             <div>
-                                <h5>Absensi Hari Ini</h5>
-                                <h3>{{ $jumlahAbsensiHariIni }}</h3>
+                                <h5>Presensi Hari Ini</h5>
+                                <h3>{{ $jumlahPresensiHariIni }}</h3>
                             </div>
                             <i class="bi bi-calendar-check fs-2"></i>
                         </div>
@@ -66,7 +66,7 @@
         {{-- Grafik --}}
         <div class="row mt-4">
             <div class="col-md-6">
-                <canvas id="grafikAbsensi"></canvas>
+                <canvas id="grafikPresensi"></canvas>
             </div>
             <div class="col-md-6">
                 <canvas id="grafikJurusan"></canvas>
@@ -78,13 +78,13 @@
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        const ctx1 = document.getElementById('grafikAbsensi');
+        const ctx1 = document.getElementById('grafikPresensi');
         new Chart(ctx1, {
             type: 'bar',
             data: {
                 labels: ['Sen', 'Sel', 'Rab', 'Kam', 'Jum'],
                 datasets: [{
-                    label: 'Absensi',
+                    label: 'Presensi',
                     data: [12, 19, 3, 5, 2],
                     backgroundColor: '#007bff'
                 }]

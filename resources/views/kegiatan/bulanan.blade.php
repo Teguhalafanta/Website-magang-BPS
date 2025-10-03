@@ -20,6 +20,7 @@
                 <tr>
                     <th>No</th>
                     <th>Uraian Kegiatan</th>
+                    <th>Deskripsi</th>
                     <th>Satuan</th>
                     <th>Aksi</th>
                 </tr>
@@ -29,6 +30,7 @@
                     <tr>
                         <td>{{ $i + 1 }}</td>
                         <td>{{ $kegiatan->nama_kegiatan ?? '-' }}</td>
+                        <td>{{ $kegiatan->deskripsi }}</td>
                         <td>{{ $kegiatan->satuan ?? '-' }}</td>
                         <td>
                             <a href="{{ route('pelajar.kegiatan.edit', $kegiatan->id) }}"

@@ -15,7 +15,7 @@ class PresensiController extends Controller
         $user = Auth::user();
 
         if ($user->role === 'pelajar') {
-            $presensis = Presensi::where('user_id', $user->id)
+            $presensis = Presensi::where('pelajar_id', $user->id) // ubah user_id ke pelajar_id sesuai konteks
                 ->orderBy('tanggal', 'desc')
                 ->orderBy('waktu_datang', 'desc')
                 ->get();
@@ -34,7 +34,7 @@ class PresensiController extends Controller
         $user = Auth::user();
         $today = Carbon::today()->toDateString();
 
-        $sudah = Presensi::where('user_id', $user->id)
+        $sudah = Presensi::where('pelajar_id', $user->id) // juga ubah di sini
             ->where('tanggal', $today)
             ->exists();
 
@@ -52,26 +52,27 @@ class PresensiController extends Controller
         $now = Carbon::now();
         $today = $now->toDateString();
 
-        // Cek apakah sudah presensi
-        $exists = Presensi::where('user_id', $user->id)
+        // Cek apakah sudah presensi hari ini
+        $exists = Presensi::where('pelajar_id', $user->id)
             ->where('tanggal', $today)
             ->exists();
+
         if ($exists) {
             return redirect()->route('presensi.index')
                 ->with('error', 'Anda sudah melakukan presensi hari ini!');
         }
 
-        // Validasi (tergantung apakah ada input tambahan)
-        $request->validate([
-            'keterangan' => 'nullable|string|max:500',
-        ]);
+        // Validasi input keterangan jika ada
+        $request->validate([]);
 
         // Tentukan status otomatis berdasarkan jam
         $jamDatang = $now->format('H:i:s');
         $batas = '07:35:00';
         $status = $jamDatang > $batas ? 'Terlambat' : 'Tepat Waktu';
 
+        // Simpan data presensi
         Presensi::create([
+            'pelajar_id' => $user->id,
             'tanggal' => $today,
             'waktu_datang' => $jamDatang,
             'status' => $status,
@@ -85,7 +86,7 @@ class PresensiController extends Controller
     {
         $presensi = Presensi::with('user')->findOrFail($id);
 
-        if (Auth::user()->role === 'pelajar' && $presensi->user_id !== Auth::id()) {
+        if (Auth::user()->role === 'pelajar' && $presensi->pelajar_id !== Auth::id()) {
             abort(403);
         }
 
@@ -113,7 +114,6 @@ class PresensiController extends Controller
             'waktu_datang' => 'required|date_format:H:i:s',
             'waktu_pulang' => 'nullable|date_format:H:i:s',
             'status' => ['required', Rule::in(['Tepat Waktu', 'Terlambat', 'Izin', 'Sakit', 'Alfa'])],
-            'keterangan' => 'nullable|string|max:500',
         ]);
 
         $presensi = Presensi::findOrFail($id);
@@ -122,7 +122,6 @@ class PresensiController extends Controller
             'waktu_datang' => $request->waktu_datang,
             'waktu_pulang' => $request->waktu_pulang,
             'status' => $request->status,
-            'keterangan' => $request->keterangan,
         ]);
 
         return redirect()->route('presensi.index')
@@ -137,6 +136,7 @@ class PresensiController extends Controller
 
         $presensi = Presensi::findOrFail($id);
         $presensi->delete();
+
         return redirect()->route('presensi.index')
             ->with('success', 'Presensi berhasil dihapus.');
     }
@@ -151,7 +151,7 @@ class PresensiController extends Controller
             ->whereMonth('tanggal', $carbon->month);
 
         if ($user->role === 'pelajar') {
-            $query->where('user_id', $user->id);
+            $query->where('pelajar_id', $user->id);
         } else {
             $query->with('user');
         }
@@ -167,5 +167,6 @@ class PresensiController extends Controller
             'alfa' => $presensis->where('status', 'Alfa')->count(),
         ];
 
+        return view('presensi.rekap', compact('presensis', 'statistik', 'bulanParam'));
     }
 }

@@ -24,8 +24,9 @@ return new class extends Migration {
             $table->string('pemberi_tugas')->nullable();
             $table->string('tim_kerja')->nullable();
 
-            $table->enum('status_penyelesaian', ['Belum', 'Proses', 'Selesai'])
-                ->default('Belum');
+            // ✅ ENUM dan default value diperbaiki
+            $table->enum('status_penyelesaian', ['Belum Dimulai', 'Proses', 'Selesai'])
+                  ->default('Belum Dimulai');
 
             $table->timestamps();
         });

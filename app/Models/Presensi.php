@@ -16,7 +16,6 @@ class Presensi extends Model
         'waktu_datang',
         'waktu_pulang',
         'status',
-        'keterangan',
     ];
 
     // Relasi ke User

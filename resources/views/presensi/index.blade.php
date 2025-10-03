@@ -12,7 +12,6 @@
                 <th>Waktu Datang</th>
                 <th>Waktu Pulang</th>
                 <th>Status</th>
-                <th>Aksi</th>
             </tr>
         </thead>
         <tbody>
@@ -21,7 +20,6 @@
                     <td>{{ $p->tanggal }}</td>
                     <td>{{ $p->waktu_datang }}</td>
                     <td>{{ $p->waktu_pulang ?? '-' }}</td>
-                    <td>{{ $p->status }}</td>
                     <td>
                         @if(!$p->waktu_pulang)
                             <form action="{{ route('presensi.update', $p->id) }}" method="POST">

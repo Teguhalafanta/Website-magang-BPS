@@ -56,4 +56,9 @@ class DashboardController extends Controller
             'jumlahKegiatan'
         ));
     }
+
+    public function pembimbing()
+    {
+        return view('dashboard.pembimbing');
+    }
 }

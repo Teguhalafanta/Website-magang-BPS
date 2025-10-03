@@ -1,6 +1,8 @@
 {{-- sidebar.blade.php --}}
 <div id="sidebar" class="active">
     <div class="sidebar-wrapper active">
+
+        {{-- Sidebar Header --}}
         <div class="sidebar-header position-relative">
             <div class="logo text-center my-3">
                 @php
@@ -56,6 +58,7 @@
                 @endif
             </div>
 
+            {{-- Tombol Close Sidebar --}}
             <div class="absolute top-4 right-4 z-50">
                 <a href="#" class="sidebar-hide" id="sidebar-close"
                     style="position:absolute; top:15px; right:15px; font-size:28px; color:#0d6efd; cursor:pointer;">
@@ -64,13 +67,14 @@
             </div>
         </div>
 
+        {{-- Sidebar Menu --}}
         <div class="sidebar-menu">
             <ul class="menu">
                 <li class="sidebar-title">Menu</li>
 
                 @auth
+                    {{-- Role: Admin --}}
                     @if (auth()->user()->role == 'admin')
-                        {{-- Admin Dashboard --}}
                         <li class="sidebar-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                             <a href="{{ route('admin.dashboard') }}" class="sidebar-link">
                                 <i class="bi bi-speedometer2"></i>
@@ -78,7 +82,6 @@
                             </a>
                         </li>
 
-                        {{-- Pengajuan --}}
                         <li class="sidebar-item {{ request()->routeIs('admin.pengajuan.index') ? 'active' : '' }}">
                             <a href="{{ route('admin.pengajuan.index') }}" class="sidebar-link">
                                 <i class="bi bi-file-earmark-text"></i>
@@ -86,7 +89,6 @@
                             </a>
                         </li>
 
-                        {{-- Kegiatan --}}
                         <li class="sidebar-item {{ request()->routeIs('admin.kegiatan.*') ? 'active' : '' }}">
                             <a href="{{ route('admin.kegiatan.index') }}" class="sidebar-link">
                                 <i class="bi bi-journal-text"></i>
@@ -94,15 +96,15 @@
                             </a>
                         </li>
 
-                        {{-- Presensi --}}
                         <li class="sidebar-item {{ request()->routeIs('admin.presensi.*') ? 'active' : '' }}">
                             <a href="{{ route('admin.presensi.index') }}" class="sidebar-link">
                                 <i class="bi bi-calendar-check"></i>
                                 <span>Presensi</span>
                             </a>
                         </li>
+
+                        {{-- Role: Pelajar --}}
                     @elseif(auth()->user()->role == 'pelajar')
-                        {{-- Pelajar Dashboard --}}
                         <li class="sidebar-item {{ request()->routeIs('pelajar.dashboard') ? 'active' : '' }}">
                             <a href="{{ route('pelajar.dashboard') }}" class="sidebar-link">
                                 <i class="bi bi-speedometer2"></i>
@@ -110,7 +112,6 @@
                             </a>
                         </li>
 
-                        {{-- Menu Presensi --}}
                         <li class="sidebar-item {{ request()->routeIs('presensi.*') ? 'active' : '' }}">
                             <a href="{{ route('presensi.index') }}" class="sidebar-link">
                                 <i class="bi bi-calendar-check"></i>
@@ -118,15 +119,13 @@
                             </a>
                         </li>
 
-                        {{-- Kegiatan --}}
                         <li class="sidebar-item has-sub {{ request()->routeIs('pelajar.kegiatan.*') ? 'active' : '' }}">
-                            {{-- Parent menu klik tidak langsung ke index, karena ada submenu --}}
                             <a href="{{ route('pelajar.kegiatan.index') }}" class="sidebar-link">
                                 <i class="bi bi-journal-text"></i>
                                 <span>Kegiatan</span>
                             </a>
                             <ul class="submenu"
-                                style="{{ request()->routeIs('pelajar.kegiatan.*') ? 'display: block;' : 'display: none;' }}">
+                                style="{{ request()->routeIs('pelajar.kegiatan.*') ? 'display:block;' : 'display:none;' }}">
                                 <li
                                     class="submenu-item {{ request()->routeIs('pelajar.kegiatan.harian') ? 'active' : '' }}">
                                     <a href="{{ route('pelajar.kegiatan.harian') }}">Kegiatan Harian</a>
@@ -138,15 +137,56 @@
                             </ul>
                         </li>
 
-                        {{-- Daftar Pengajuan --}}
                         <li class="sidebar-item {{ request()->routeIs('pelajar.pengajuan.index') ? 'active' : '' }}">
                             <a href="{{ route('pelajar.pengajuan.index') }}" class="sidebar-link">
                                 <i class="bi bi-file-earmark-text"></i>
                                 <span>Daftar Pengajuan</span>
                             </a>
                         </li>
+
+                        {{-- Role: Pembimbing --}}
+                    @elseif(auth()->user()->role == 'pembimbing')
+                        <li class="sidebar-item {{ request()->routeIs('pembimbing.dashboard') ? 'active' : '' }}">
+                            <a href="{{ route('pembimbing.dashboard') }}" class="sidebar-link">
+                                <i class="bi bi-speedometer2"></i>
+                                <span>Dashboard</span>
+                            </a>
+                        </li>
+
+                        <li class="sidebar-item {{ request()->routeIs('presensi.*') ? 'active' : '' }}">
+                            <a href="{{ route('presensi.index') }}" class="sidebar-link">
+                                <i class="bi bi-calendar-check"></i>
+                                <span>Presensi</span>
+                            </a>
+                        </li>
+
+                        <li class="sidebar-item has-sub {{ request()->routeIs('pembimbing.kegiatan.*') ? 'active' : '' }}">
+                            <a href="{{ route('pembimbing.kegiatan.index') }}" class="sidebar-link">
+                                <i class="bi bi-journal-text"></i>
+                                <span>Kegiatan</span>
+                            </a>
+                            <ul class="submenu"
+                                style="{{ request()->routeIs('pembimbing.kegiatan.*') ? 'display:block;' : 'display:none;' }}">
+                                <li
+                                    class="submenu-item {{ request()->routeIs('pembimbing.kegiatan.harian') ? 'active' : '' }}">
+                                    <a href="{{ route('pembimbing.kegiatan.harian') }}">Kegiatan Harian</a>
+                                </li>
+                                <li
+                                    class="submenu-item {{ request()->routeIs('pembimbing.kegiatan.bulanan') ? 'active' : '' }}">
+                                    <a href="{{ route('pembimbing.kegiatan.bulanan') }}">Kegiatan Bulanan</a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class="sidebar-item {{ request()->routeIs('pembimbing.pengajuan.index') ? 'active' : '' }}">
+                            <a href="{{ route('pembimbing.pengajuan.index') }}" class="sidebar-link">
+                                <i class="bi bi-file-earmark-text"></i>
+                                <span>Daftar Pengajuan</span>
+                            </a>
+                        </li>
+
+                        {{-- Role Lain --}}
                     @else
-                        {{-- Menu untuk role lain atau tidak dikenal --}}
                         <li class="sidebar-item">
                             <a href="{{ url('/') }}" class="sidebar-link">
                                 <i class="bi bi-house"></i>
@@ -155,7 +195,7 @@
                         </li>
                     @endif
                 @else
-                    {{-- Menu untuk Guest --}}
+                    {{-- Guest --}}
                     <li class="sidebar-item">
                         <a href="{{ route('login') }}" class="sidebar-link">
                             <i class="bi bi-box-arrow-in-right"></i>

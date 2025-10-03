@@ -16,6 +16,7 @@ class PelajarController extends Controller
     {
         return view('pelajar.pengajuan_pelajar');
     }
+    
 
     // Simpan pengajuan baru
     public function store(Request $request)

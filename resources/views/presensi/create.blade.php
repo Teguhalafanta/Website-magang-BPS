@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container mt-4">
-    <h3 class="text-center mb-4">Form Presensi Masuk</h3>
+    <h3 class="text-center mb-4">Form Presensi</h3>
 
     <form action="{{ route('presensi.store') }}" method="POST">
         @csrf
@@ -22,6 +22,11 @@
                     $jamMasuk = \Carbon\Carbon::createFromTime(7, 30);
                     $status = $now->gt($jamMasuk) ? 'Terlambat' : 'Tepat Waktu';
                 @endphp
+                @php
+                    $now = now();
+                    $jamPulang = \Carbon\Carbon::createFromTime(16, 00);
+                    $status = $now->gt($jamPulang) ? 'Terlambat' : 'Tepat Waktu';
+                @endphp
                 <tr>
                     <td>{{ $now->toDateString() }}</td>
                     <td>{{ $now->format('H:i:s') }}</td>
@@ -37,7 +42,7 @@
         <input type="hidden" name="status" value="{{ $status }}">
 
         <div class="text-center mt-4">
-            <button type="submit" class="btn btn-primary">Absen Masuk</button>
+            <button type="submit" class="btn btn-primary">Absen</button>
             <a href="{{ route('dashboard') }}" class="btn btn-secondary">Batal</a>
         </div>
     </form>

@@ -2,7 +2,9 @@
 
 @section('content')
     <div class="container py-4">
-        <h3 class="mb-3">📌 Daftar Notifikasi</h3>
+        <h2 class="fw-bold mb-3">
+            <i class="bi bi-pin-angle-fill text-danger"></i> Daftar Notifikasi
+        </h2>
 
         {{-- Alert Flash Message --}}
         @if (session('success'))
@@ -14,11 +16,12 @@
         {{-- Tombol Tandai Semua Dibaca --}}
         <form action="{{ route('notifications.readAll') }}" method="POST" class="mb-3">
             @csrf
-            <button type="submit" class="btn btn-sm btn-success">
-                ✅ Tandai Semua Dibaca
+            <button type="submit" class="btn btn-success btn-sm">
+                <i class="bi bi-check2-square"></i> Tandai Semua Dibaca
             </button>
         </form>
 
+        {{-- Tabel Notifikasi --}}
         <div class="card shadow-sm">
             <div class="card-body p-0">
                 <table class="table table-striped mb-0 align-middle">
@@ -33,7 +36,7 @@
                     </thead>
                     <tbody>
                         @forelse($allNotif as $index => $notif)
-                            <tr>
+                            <tr class="{{ is_null($notif->read_at) ? 'fw-bold table-light' : '' }}">
                                 <td>{{ $index + 1 }}</td>
                                 <td>{{ $notif->data['pesan'] ?? 'Pesan kosong' }}</td>
                                 <td>
@@ -45,9 +48,21 @@
                                 </td>
                                 <td>{{ $notif->created_at->format('d M Y H:i') }}</td>
                                 <td>
-                                    <a href="{{ route('notifications.read', $notif->id) }}" class="btn btn-sm btn-primary">
-                                        Lihat
-                                    </a>
+                                    @php
+                                        // Cek apakah notifikasi punya link tujuan
+                                        $link = $notif->data['url'] ?? null;
+                                    @endphp
+
+                                    @if ($link)
+                                        <a href="{{ route('notifications.read', $notif->id) }}"
+                                            class="btn btn-sm btn-primary">
+                                            Lihat
+                                        </a>
+                                    @else
+                                        <button class="btn btn-sm btn-secondary" disabled>
+                                            Tidak ada link
+                                        </button>
+                                    @endif
                                 </td>
                             </tr>
                         @empty

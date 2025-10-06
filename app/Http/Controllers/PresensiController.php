@@ -41,7 +41,7 @@ class PresensiController extends Controller
         $user = Auth::user();
         $today = Carbon::today()->toDateString();
 
-        $sudah = Presensi::where('pelajar_id', $user->id) // juga ubah di sini
+        $sudah = Presensi::where('pelajar_id', $user->pelajar->id)
             ->where('tanggal', $today)
             ->exists();
 
@@ -61,7 +61,7 @@ class PresensiController extends Controller
 
         // Cek apakah sudah presensi hari ini
         $pelajar = $user->pelajar; // Ambil pelajar
-        $exists = Presensi::where('pelajar_id', $pelajar->id)
+        $exists = Presensi::where('pelajar_id', $user->pelajar->id)
             ->where('tanggal', $today)
             ->exists();
 
@@ -80,11 +80,14 @@ class PresensiController extends Controller
 
         // Simpan data presensi
         Presensi::create([
-            'pelajar_id' => $pelajar->id,
+            'pelajar_id' => $user->pelajar->id,
+            'user_id' => $user->id,             
             'tanggal' => $today,
             'waktu_datang' => $jamDatang,
             'status' => $status,
         ]);
+
+
 
         return redirect()->route('presensi.index')
             ->with('success', 'Presensi berhasil disimpan. Status: ' . $status);

@@ -103,6 +103,13 @@
                             </a>
                         </li>
 
+                        <li class="sidebar-item {{ request()->routeIs('admin.assignpembimbing.*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.assignpembimbing.view') }}" class="sidebar-link">
+                                <i class="bi bi-person-check"></i>
+                                <span>Assign Pembimbing</span>
+                            </a>
+                        </li>
+
                         {{-- Role: Pelajar --}}
                     @elseif(auth()->user()->role == 'pelajar')
                         <li class="sidebar-item {{ request()->routeIs('pelajar.dashboard') ? 'active' : '' }}">
@@ -153,37 +160,34 @@
                             </a>
                         </li>
 
-                        <li class="sidebar-item {{ request()->routeIs('absensi.*') ? 'active' : '' }}">
-                            <a href="{{ route('absensi.index') }}" class="sidebar-link">
-                                <i class="bi bi-calendar-check"></i>
-                                <span>Absensi</span>
+                        <li class="sidebar-item {{ request()->routeIs('pembimbing.bimbingan') ? 'active' : '' }}">
+                            <a href="{{ route('pembimbing.bimbingan') }}" class="sidebar-link">
+                                <i class="bi bi-people"></i>
+                                <span>Data Bimbingan</span>
                             </a>
                         </li>
 
-                        <li class="sidebar-item has-sub {{ request()->routeIs('pembimbing.kegiatan.*') ? 'active' : '' }}">
-                            <a href="{{ route('pembimbing.kegiatan.index') }}" class="sidebar-link">
+                        <li class="sidebar-item {{ request()->routeIs('pembimbing.kegiatan') ? 'active' : '' }}">
+                            <a href="{{ route('pembimbing.kegiatan') }}" class="sidebar-link">
                                 <i class="bi bi-journal-text"></i>
-                                <span>Kegiatan</span>
+                                <span>Laporan Kegiatan</span>
                             </a>
-                            <ul class="submenu"
-                                style="{{ request()->routeIs('pembimbing.kegiatan.*') ? 'display:block;' : 'display:none;' }}">
-                                <li
-                                    class="submenu-item {{ request()->routeIs('pembimbing.kegiatan.harian') ? 'active' : '' }}">
-                                    <a href="{{ route('pembimbing.kegiatan.harian') }}">Kegiatan Harian</a>
-                                </li>
-                                <li
-                                    class="submenu-item {{ request()->routeIs('pembimbing.kegiatan.bulanan') ? 'active' : '' }}">
-                                    <a href="{{ route('pembimbing.kegiatan.bulanan') }}">Kegiatan Bulanan</a>
-                                </li>
-                            </ul>
                         </li>
 
-                        <li class="sidebar-item {{ request()->routeIs('pembimbing.pengajuan.index') ? 'active' : '' }}">
-                            <a href="{{ route('pembimbing.pengajuan.index') }}" class="sidebar-link">
-                                <i class="bi bi-file-earmark-text"></i>
-                                <span>Daftar Pengajuan</span>
+                        <li class="sidebar-item {{ request()->routeIs('pembimbing.penilaian') ? 'active' : '' }}">
+                            <a href="{{ route('pembimbing.penilaian') }}" class="sidebar-link">
+                                <i class="bi bi-clipboard-check"></i>
+                                <span>Penilaian Magang</span>
                             </a>
                         </li>
+
+                        <li class="sidebar-item {{ request()->routeIs('pembimbing.presensi') ? 'active' : '' }}">
+                            <a href="{{ route('pembimbing.presensi') }}" class="sidebar-link">
+                                <i class="bi bi-clipboard-check"></i>
+                                <span>Presensi</span>
+                            </a>
+                        </li>
+
 
                         {{-- Role Lain --}}
                     @else

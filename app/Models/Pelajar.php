@@ -44,12 +44,29 @@ class Pelajar extends Model
     // relasi ke Absensi
     public function absensis()
     {
-        return $this->hasMany(Absensi::class, 'pelajar_id', 'id');
+        return $this->hasMany(Presensi::class, 'pelajar_id', 'id');
     }
 
     // accessor untuk format tanggal lahir
     public function getTanggalLahirFormattedAttribute()
     {
         return \Carbon\Carbon::parse($this->tanggal_lahir)->translatedFormat('d F Y');
+    }
+
+    //relasi ke pembimbing
+    public function pembimbing()
+    {
+        return $this->belongsTo(User::class, 'pembimbing_id');
+    }
+
+    public function kegiatans()
+    {
+        return $this->hasMany(Kegiatan::class);
+    }
+
+    // Relasi ke presensi
+    public function presensis()
+    {
+        return $this->hasMany(Presensi::class);
     }
 }

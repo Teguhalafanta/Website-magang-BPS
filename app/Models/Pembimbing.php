@@ -5,10 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-/**
- * @property \App\Models\User $user
- * @property \Illuminate\Database\Eloquent\Collection|\App\Models\Pelajar[] $pelajars
- */
 class Pembimbing extends Model
 {
     use HasFactory;
@@ -31,6 +27,7 @@ class Pembimbing extends Model
         return $this->belongsTo(User::class);
     }
 
+    // Relasi ke pelajar (opsional, jika ingin melihat pelajar yang dibimbing)
     public function pelajars()
     {
         return $this->hasMany(Pelajar::class);

@@ -1,8 +1,8 @@
 @extends('kerangka.master')
 
 @section('content')
-    <div class="container">
-        <h1>Dashboard Pembimbing</h1>
-        <p>Selamat datang di dashboard pembimbing.</p>
+    <div class="container mt-4">
+        <h4>Dashboard Pembimbing</h4>
+        <p>Selamat datang, {{ Auth::user()->name }} 👋</p>
     </div>
 @endsection

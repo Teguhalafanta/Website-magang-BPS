@@ -14,18 +14,23 @@
                 data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="bi bi-bell fs-4"></i>
                 @if (Auth::user()->unreadNotifications->count() > 0)
-                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    <span id="notifBadge"
+                        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                         {{ Auth::user()->unreadNotifications->count() }}
                     </span>
                 @endif
             </a>
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationDropdown">
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationDropdown"
+                style="min-width: 300px;">
                 <li>
                     <h6 class="dropdown-header">Notifikasi</h6>
                 </li>
+
                 @forelse($notifikasi as $notif)
                     <li>
-                        <a href="{{ $notif->data['url'] ?? '#' }}" class="dropdown-item">
+                        <a href="#"
+                            class="dropdown-item notif-item {{ is_null($notif->read_at) ? 'fw-bold' : '' }}"
+                            data-id="{{ $notif->id }}" data-url="{{ $notif->data['url'] ?? '#' }}">
                             {{ $notif->data['pesan'] }}
                             <br>
                             <small class="text-muted">{{ $notif->created_at->diffForHumans() }}</small>
@@ -79,4 +84,49 @@
             </ul>
         </div>
     </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const notifItems = document.querySelectorAll(".notif-item");
+            const notifBadge = document.getElementById("notifBadge");
+
+            notifItems.forEach(item => {
+                item.addEventListener("click", async (e) => {
+                    e.preventDefault();
+                    const notifId = item.dataset.id;
+                    const url = item.dataset.url;
+
+                    try {
+                        const response = await fetch(`/notifications/${notifId}/read`, {
+                            headers: {
+                                "X-Requested-With": "XMLHttpRequest"
+                            }
+                        });
+
+                        if (response.ok) {
+                            // Ubah teks jadi normal (tidak bold)
+                            item.classList.remove("fw-bold");
+
+                            // Kurangi badge angka
+                            if (notifBadge) {
+                                let count = parseInt(notifBadge.textContent);
+                                if (count > 1) {
+                                    notifBadge.textContent = count - 1;
+                                } else {
+                                    notifBadge.remove();
+                                }
+                            }
+
+                            // Buka URL jika ada
+                            if (url && url !== "#") {
+                                window.location.href = url;
+                            }
+                        }
+                    } catch (err) {
+                        console.error("Gagal menandai notifikasi:", err);
+                    }
+                });
+            });
+        });
+    </script>
 </nav>

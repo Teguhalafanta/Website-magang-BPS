@@ -116,18 +116,27 @@
                             <td class="fw-bold">Status Magang</td>
                             <td>
                                 @php
-                                    $statusMagang = optional($user->pelajar)->status_magang ?? 'belum ditentukan';
+                                    // ambil status dari tabel pelajars (kolom 'status')
+                                    $statusMagang = optional($user->pelajar)->status ?? 'belum ditentukan';
+
+                                    // ubah status 'menunggu' supaya tampilannya jadi 'diajukan'
+                                    if ($statusMagang === 'menunggu') {
+                                        $statusMagang = 'diajukan';
+                                    }
+
                                     $badgeClass =
                                         [
+                                            'diajukan' =>
+                                                'bg-warning-subtle text-warning fw-semibold px-3 py-1 rounded-pill',
+                                            'disetujui' =>
+                                                'bg-primary-subtle text-primary fw-semibold px-3 py-1 rounded-pill',
                                             'aktif' =>
                                                 'bg-success-subtle text-success fw-semibold px-3 py-1 rounded-pill',
                                             'selesai' => 'bg-info-subtle text-info fw-semibold px-3 py-1 rounded-pill',
-                                            'disetujui' =>
-                                                'bg-primary-subtle text-primary fw-semibold px-3 py-1 rounded-pill',
                                             'ditolak' =>
                                                 'bg-danger-subtle text-danger fw-semibold px-3 py-1 rounded-pill',
                                             'belum ditentukan' =>
-                                                'bg-warning-subtle text-warning fw-semibold px-3 py-1 rounded-pill',
+                                                'bg-secondary-subtle text-secondary fw-semibold px-3 py-1 rounded-pill',
                                         ][$statusMagang] ??
                                         'bg-secondary-subtle text-secondary fw-semibold px-3 py-1 rounded-pill';
                                 @endphp

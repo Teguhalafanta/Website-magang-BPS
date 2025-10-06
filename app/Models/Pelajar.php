@@ -52,4 +52,21 @@ class Pelajar extends Model
     {
         return \Carbon\Carbon::parse($this->tanggal_lahir)->translatedFormat('d F Y');
     }
+
+    //relasi ke pembimbing
+    public function pembimbing()
+    {
+        return $this->belongsTo(User::class, 'pembimbing_id');
+    }
+
+    public function kegiatans()
+    {
+        return $this->hasMany(Kegiatan::class);
+    }
+
+    // Relasi ke presensi
+    public function presensis()
+    {
+        return $this->hasMany(Presensi::class);
+    }
 }

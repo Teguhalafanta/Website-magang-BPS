@@ -4,19 +4,49 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Kegiatan;
+use App\Models\Pelajar;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 
 class KegiatanController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $kegiatans = Kegiatan::paginate(10);
-        return view('kegiatan.index', compact('kegiatans'));
+        $user = Auth::user();
+
+        // ✅ Jika role pelajar → tampilkan kegiatannya sendiri
+        if ($user->role == 'pelajar') {
+            $kegiatans = Kegiatan::where('user_id', $user->id)
+                ->latest()
+                ->paginate(10);
+
+            return view('kegiatan.index', compact('kegiatans'));
+        }
+
+        // ✅ Jika role pembimbing → tampilkan kegiatan semua pelajar bimbingannya
+        if ($user->role == 'pembimbing') {
+            // Ambil semua pelajar yang dibimbing
+            $pelajarIds = Pelajar::where('pembimbing_id', $user->id)->pluck('user_id');
+
+            // Filter kegiatan berdasarkan pelajar bimbingan
+            $kegiatans = Kegiatan::whereIn('user_id', $pelajarIds)
+                ->when($request->search, function ($query) use ($request) {
+                    $query->where('nama_kegiatan', 'like', "%{$request->search}%")
+                        ->orWhereHas('user', function ($q) use ($request) {
+                            $q->where('name', 'like', "%{$request->search}%");
+                        });
+                })
+                ->latest()
+                ->paginate(10);
+
+            return view('pembimbing.kegiatan', compact('kegiatans'));
+        }
+
+        // Jika bukan pelajar/pembimbing
+        abort(403, 'Akses tidak diizinkan');
     }
 
-    // Tampilkan kegiatan harian user (tanggal hari ini)
     public function harian()
     {
         $today = now()->format('Y-m-d');
@@ -28,7 +58,6 @@ class KegiatanController extends Controller
         return view('kegiatan.harian', compact('kegiatans'));
     }
 
-    // Tampilkan kegiatan bulanan user (bulan & tahun sekarang)
     public function kegiatanBulanan(Request $request)
     {
         $bulan = $request->input('bulan', Carbon::now()->format('Y-m'));
@@ -42,7 +71,6 @@ class KegiatanController extends Controller
         return view('kegiatan.bulanan', compact('kegiatans', 'bulan'));
     }
 
-    // Simpan data kegiatan baru
     public function store(Request $request)
     {
         $validated = $request->validate([
@@ -71,17 +99,29 @@ class KegiatanController extends Controller
         return redirect()->route('pelajar.kegiatan.harian')->with('success', 'Kegiatan berhasil ditambahkan.');
     }
 
-    // Detail kegiatan
     public function show($id)
     {
         $kegiatan = Kegiatan::findOrFail($id);
+
+        // ✅ Pembimbing hanya bisa lihat kegiatan dari pelajar bimbingannya
+        if (Auth::user()->role == 'pembimbing') {
+            $pelajarIds = Pelajar::where('pembimbing_id', Auth::id())->pluck('user_id');
+            if (!$pelajarIds->contains($kegiatan->user_id)) {
+                abort(403, 'Anda tidak memiliki akses ke kegiatan ini');
+            }
+        }
+
         return view('kegiatan.show', compact('kegiatan'));
     }
 
-    // Form edit
     public function edit($id)
     {
         $kegiatan = Kegiatan::findOrFail($id);
+
+        if (Auth::id() != $kegiatan->user_id) {
+            abort(403, 'Tidak diizinkan mengedit kegiatan ini');
+        }
+
         return view('kegiatan.edit', compact('kegiatan'));
     }
 
@@ -102,17 +142,18 @@ class KegiatanController extends Controller
 
         $kegiatan = Kegiatan::findOrFail($id);
 
-        // ✅ Mapping dari status form (Belum, Proses, Selesai) ke status_penyelesaian DB
+        if (Auth::id() != $kegiatan->user_id) {
+            abort(403, 'Tidak diizinkan mengedit kegiatan ini');
+        }
+
         $statusMap = [
             'Belum' => 'Belum Dimulai',
             'Proses' => 'Dalam Proses',
             'Selesai' => 'Selesai',
         ];
         $validated['status_penyelesaian'] = $statusMap[$validated['status']] ?? 'Belum Dimulai';
+        unset($validated['status']);
 
-        unset($validated['status']); // Jangan simpan kolom 'status' karena tidak ada di DB
-
-        // ✅ Handle file upload
         if ($request->hasFile('bukti_dukung')) {
             if ($kegiatan->bukti_dukung && Storage::disk('public')->exists($kegiatan->bukti_dukung)) {
                 Storage::disk('public')->delete($kegiatan->bukti_dukung);
@@ -120,17 +161,18 @@ class KegiatanController extends Controller
             $validated['bukti_dukung'] = $request->file('bukti_dukung')->store('bukti', 'public');
         }
 
-        // ✅ Update ke DB
         $kegiatan->update($validated);
 
-        return redirect()->route('pelajar.kegiatan.harian')->with('success', 'Kegiatan berhasil diperbarui.');
+        return redirect()->route('pelajar.kegiatan.harian')->with('success', 'Kegiatan berhasil diperbarui!');
     }
 
-
-    // Hapus kegiatan
     public function destroy($id)
     {
         $kegiatan = Kegiatan::findOrFail($id);
+
+        if (Auth::id() != $kegiatan->user_id) {
+            abort(403, 'Tidak diizinkan menghapus kegiatan ini');
+        }
 
         if ($kegiatan->bukti_dukung && Storage::disk('public')->exists($kegiatan->bukti_dukung)) {
             Storage::disk('public')->delete($kegiatan->bukti_dukung);

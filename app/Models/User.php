@@ -3,9 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Laravel\Sanctum\HasApiTokens;
 
+/**
+ * @property \App\Models\Pembimbing $pembimbing
+ */
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
@@ -46,5 +50,15 @@ class User extends Authenticatable
     public function getKeyName()
     {
         return 'id';
+    }
+
+    public function pelajarsBimbingan()
+    {
+        return $this->hasMany(Pelajar::class, 'pembimbing_id');
+    }
+
+    public function pembimbing()
+    {
+        return $this->hasOne(Pembimbing::class);
     }
 }

@@ -10,6 +10,18 @@ class Presensi extends Model
     use HasFactory;
 
     protected $fillable = [
+<<<<<<< HEAD
+        'pelajar_id',
+        'tanggal',
+        'status',
+        'keterangan',
+        'shift',
+    ];
+
+    public function pelajar()
+    {
+        return $this->belongsTo(Pelajar::class, 'pelajar_id', 'id');
+=======
         'user_id',
         'pelajar_id',
         'tanggal',
@@ -28,5 +40,6 @@ class Presensi extends Model
     public function pelajar()
     {
         return $this->belongsTo(Pelajar::class);
+>>>>>>> a36833fb672c39bf3ab77ca99d1e51fea78edddd
     }
 }

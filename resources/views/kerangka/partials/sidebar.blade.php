@@ -160,10 +160,10 @@
                             </a>
                         </li>
 
-                        <li class="sidebar-item {{ request()->routeIs('presensi.*') ? 'active' : '' }}">
-                            <a href="{{ route('presensi.index') }}" class="sidebar-link">
-                                <i class="bi bi-calendar-check"></i>
-                                <span>Presensi</span>
+                        <li class="sidebar-item {{ request()->routeIs('pembimbing.bimbingan') ? 'active' : '' }}">
+                            <a href="{{ route('pembimbing.bimbingan') }}" class="sidebar-link">
+                                <i class="bi bi-people"></i>
+                                <span>Bimbingan</span>
                             </a>
                         </li>
 
@@ -174,13 +174,6 @@
                             </a>
                         </li>
 
-                        <li class="sidebar-item {{ request()->routeIs('pembimbing.penilaian') ? 'active' : '' }}">
-                            <a href="{{ route('pembimbing.penilaian') }}" class="sidebar-link">
-                                <i class="bi bi-clipboard-check"></i>
-                                <span>Penilaian Magang</span>
-                            </a>
-                        </li>
-
                         <li class="sidebar-item {{ request()->routeIs('pembimbing.presensi') ? 'active' : '' }}">
                             <a href="{{ route('pembimbing.presensi') }}" class="sidebar-link">
                                 <i class="bi bi-clipboard-check"></i>
@@ -188,6 +181,12 @@
                             </a>
                         </li>
 
+                        <li class="sidebar-item {{ request()->routeIs('pembimbing.penilaian') ? 'active' : '' }}">
+                            <a href="{{ route('pembimbing.penilaian') }}" class="sidebar-link">
+                                <i class="bi bi-clipboard-check"></i>
+                                <span>Penilaian Magang</span>
+                            </a>
+                        </li>
 
                         {{-- Role Lain --}}
                     @else

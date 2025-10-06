@@ -5,7 +5,6 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PresensiController;
 use App\Http\Controllers\KegiatanController;
-use App\Http\Controllers\PresensiController;
 use App\Http\Controllers\PelajarController;
 use App\Http\Controllers\Admin\PengajuanController;
 use App\Http\Controllers\NotificationController;

@@ -1,10 +1,10 @@
 @extends('kerangka.master')
 
-@section('title', 'Daftar Presensi Mahasiswa')
+@section('title', 'Presensi Bimbingan')
 
 @section('content')
     <div class="container my-4">
-        <h3>Daftar Presensi Mahasiswa</h3>
+        <h3>Daftar Presensi Pelajar Bimbingan</h3>
 
         {{-- Flash message --}}
         @if (session('success'))
@@ -20,54 +20,57 @@
             </div>
         @endif
 
-        {{-- Tabel Presensi --}}
-        <div class="card shadow-sm">
-            <div class="card-header bg-secondary text-white fw-bold">
-                <i class="fas fa-table me-2"></i>Presensi Pelajar
+        {{-- Cek jika data kosong --}}
+        @if ($presensis->isEmpty())
+            <div class="text-center py-5">
+                <i class="fas fa-inbox text-muted" style="font-size: 48px;"></i>
+                <p class="text-muted mt-2 mb-0">Belum ada data presensi.</p>
             </div>
-            <div class="card-body p-0">
-                <div class="table-responsive">
-                    <table class="table table-bordered table-hover mb-0">
-                        <thead class="table-light text-center">
-                            <tr>
-                                <th>No</th>
-                                <th>Nama Pelajar</th>
-                                <th>Tanggal</th>
-                                <th>Status</th>
-                                <th>Keterangan</th>
-                                <th>Shift</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse ($presensis as $index => $presensi)
-                                <tr>
-                                    <td class="text-center">{{ $index + 1 }}</td>
-                                    <td>{{ $presensi->pelajar->nama ?? '-' }}</td>
-                                    <td class="text-center">{{ \Carbon\Carbon::parse($presensi->tanggal)->format('d-m-Y') }}
-                                    </td>
-                                    <td class="text-center">{{ $presensi->status }}</td>
-                                    <td>{{ $presensi->keterangan ?? '-' }}</td>
-                                    <td class="text-center">{{ ucfirst($presensi->shift) }}</td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="6" class="text-center py-4">
-                                        <i class="fas fa-inbox text-muted" style="font-size: 48px;"></i>
-                                        <p class="text-muted mt-2 mb-0">Belum ada data presensi.</p>
-                                    </td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+        @else
+            @php
+                // Kelompokkan data presensi berdasarkan nama pelajar
+                $grouped = $presensis->groupBy(function ($item) {
+                    return $item->pelajar->nama ?? 'Tanpa Nama';
+                });
+            @endphp
 
-            @if ($presensis->hasPages())
-                <div class="card-footer d-flex justify-content-center">
-                    {{ $presensis->links() }}
+            {{-- Tampilkan presensi per pelajar --}}
+            @foreach ($grouped as $nama => $list)
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header bg-secondary text-white fw-bold">
+                        <i class="fas fa-user me-2"></i>{{ $nama }}
+                    </div>
+                    <div class="card-body p-0">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover mb-0">
+                                <thead class="table-light text-center">
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Tanggal</th>
+                                        <th>Status</th>
+                                        <th>Keterangan</th>
+                                        <th>Shift</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($list as $index => $presensi)
+                                        <tr>
+                                            <td class="text-center">{{ $index + 1 }}</td>
+                                            <td class="text-center">
+                                                {{ \Carbon\Carbon::parse($presensi->tanggal)->format('d-m-Y') }}
+                                            </td>
+                                            <td class="text-center">{{ ucfirst($presensi->status) }}</td>
+                                            <td>{{ $presensi->keterangan ?? '-' }}</td>
+                                            <td class="text-center">{{ ucfirst($presensi->shift) }}</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
-            @endif
-        </div>
+            @endforeach
+        @endif
     </div>
 @endsection
 

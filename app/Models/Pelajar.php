@@ -63,10 +63,4 @@ class Pelajar extends Model
     {
         return $this->hasMany(Kegiatan::class);
     }
-
-    // Relasi ke presensi
-    public function presensis()
-    {
-        return $this->hasMany(Presensi::class);
-    }
 }

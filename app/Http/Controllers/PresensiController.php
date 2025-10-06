@@ -15,18 +15,25 @@ class PresensiController extends Controller
         $user = Auth::user();
 
         if ($user->role === 'pelajar') {
-            $presensis = Presensi::where('pelajar_id', $user->id) // ubah user_id ke pelajar_id sesuai konteks
+            $presensis = Presensi::where('pelajar_id', $user->id)
                 ->orderBy('tanggal', 'desc')
                 ->orderBy('waktu_datang', 'desc')
                 ->get();
-        } else {
-            $presensis = Presensi::with('user')
-                ->orderBy('tanggal', 'desc')
-                ->orderBy('waktu_datang', 'desc')
-                ->get();
-        }
 
-        return view('presensi.index', compact('presensis'));
+            return view('presensi.index', compact('presensis')); // view untuk pelajar
+        } elseif ($user->role === 'pembimbing') {
+            $presensis = Presensi::with('pelajar')
+                ->whereHas('pelajar', function ($query) use ($user) {
+                    $query->where('pembimbing_id', $user->id); // asumsi tiap pelajar punya kolom pembimbing_id
+                })
+                ->orderBy('pelajar_id') // bisa urut berdasarkan nama
+                ->orderBy('tanggal', 'desc')
+                ->get();
+
+            return view('pembimbing.presensi', compact('presensis')); // view untuk pembimbing
+        } else {
+            abort(403); // role lain tidak bisa mengakses
+        }
     }
 
     public function create()
@@ -53,7 +60,8 @@ class PresensiController extends Controller
         $today = $now->toDateString();
 
         // Cek apakah sudah presensi hari ini
-        $exists = Presensi::where('pelajar_id', $user->id)
+        $pelajar = $user->pelajar; // Ambil pelajar
+        $exists = Presensi::where('pelajar_id', $pelajar->id)
             ->where('tanggal', $today)
             ->exists();
 
@@ -72,7 +80,7 @@ class PresensiController extends Controller
 
         // Simpan data presensi
         Presensi::create([
-            'pelajar_id' => $user->id,
+            'pelajar_id' => $pelajar->id,
             'tanggal' => $today,
             'waktu_datang' => $jamDatang,
             'status' => $status,
@@ -81,6 +89,7 @@ class PresensiController extends Controller
         return redirect()->route('presensi.index')
             ->with('success', 'Presensi berhasil disimpan. Status: ' . $status);
     }
+
 
     public function show($id)
     {

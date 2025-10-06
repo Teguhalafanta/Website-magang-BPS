@@ -31,21 +31,19 @@
         <div class="card shadow-sm border-0 p-4">
             <h4 class="fw-bold mb-4">Profil Mahasiswa Magang</h4>
             <div class="row">
-                <!-- Foto Profil -->
                 <div class="col-md-3 text-center">
                     {{-- Tampilkan foto profil --}}
-                    @if (Auth::user()->foto)
-                        <img src="{{ $user->foto ? asset('storage/' . $user->foto) : asset('images/default-avatar.png') }}"
-                            alt="Foto Profil" class="rounded-circle"
+                    @if ($user->foto && Storage::disk('public')->exists($user->foto))
+                        <img src="{{ Storage::url($user->foto) }}" alt="Foto Profil" class="rounded-circle border mb-2"
                             style="width: 150px; height: 150px; object-fit: cover;">
                     @else
-                        <img src="{{ asset('images/default-avatar.png') }}" alt="Default Foto" class="rounded-circle border"
-                            width="150" height="150">
+                        <img src="{{ asset('images/default-avatar.png') }}" alt="Default Foto"
+                            class="rounded-circle border mb-2" style="width: 150px; height: 150px; object-fit: cover;">
                     @endif
                     <br>
                     <!-- Tombol Ubah Foto -->
                     <button class="btn btn-sm btn-secondary mt-2" data-bs-toggle="modal" data-bs-target="#ubahFotoModal">
-                        Ubah Foto
+                        <i class="bi bi-camera me-1"></i> Ubah Foto
                     </button>
                 </div>
 
@@ -99,9 +97,6 @@
                 <hr>
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h5 class="fw-bold">Informasi Magang</h5>
-                    <button class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#editMagangModal">
-                        <i class="fas fa-pen"></i>
-                    </button>
                 </div>
                 <table class="table table-borderless">
                     <tbody>
@@ -120,13 +115,26 @@
                         <tr>
                             <td class="fw-bold">Status Magang</td>
                             <td>
-                                @if (optional($user->pelajar)->status === 'aktif')
-                                    <span class="badge bg-success">Aktif</span>
-                                @elseif(optional($user->pelajar)->status === 'tidak aktif')
-                                    <span class="badge bg-secondary">Tidak Aktif</span>
-                                @else
-                                    <span class="badge bg-warning">Belum Ditentukan</span>
-                                @endif
+                                @php
+                                    $statusMagang = optional($user->pelajar)->status_magang ?? 'belum ditentukan';
+                                    $badgeClass =
+                                        [
+                                            'aktif' =>
+                                                'bg-success-subtle text-success fw-semibold px-3 py-1 rounded-pill',
+                                            'selesai' => 'bg-info-subtle text-info fw-semibold px-3 py-1 rounded-pill',
+                                            'disetujui' =>
+                                                'bg-primary-subtle text-primary fw-semibold px-3 py-1 rounded-pill',
+                                            'ditolak' =>
+                                                'bg-danger-subtle text-danger fw-semibold px-3 py-1 rounded-pill',
+                                            'belum ditentukan' =>
+                                                'bg-warning-subtle text-warning fw-semibold px-3 py-1 rounded-pill',
+                                        ][$statusMagang] ??
+                                        'bg-secondary-subtle text-secondary fw-semibold px-3 py-1 rounded-pill';
+                                @endphp
+
+                                <span class="{{ $badgeClass }}">
+                                    {{ ucfirst($statusMagang) }}
+                                </span>
                             </td>
                         </tr>
                     </tbody>
@@ -150,7 +158,7 @@
                         <div class="mb-3">
                             <label class="form-label">Nama</label>
                             <input type="text" name="nama" class="form-control"
-                                value="{{ optional($user->pelajar)->nama }}">
+                                value="{{ optional($user->pelajar)->nama }}" required>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">NIM / NISN</label>
@@ -176,6 +184,11 @@
                             <label class="form-label">Telepon</label>
                             <input type="text" name="telepon" class="form-control"
                                 value="{{ optional($user->pelajar)->telepon }}">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" name="email" class="form-control bg-light"
+                                value="{{ $user->email }}" readonly>
                         </div>
                     </div>
                     <div class="modal-footer">

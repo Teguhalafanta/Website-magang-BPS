@@ -29,33 +29,23 @@ class DashboardController extends Controller
     public function admin()
     {
         $jumlahPelajar = Pelajar::count();
-        $jumlahAbsensiHariIni = Presensi::whereDate('created_at', now())->count();
+        $jumlahPresensiHariIni = Presensi::whereDate('created_at', now())->count();
         $jumlahKegiatan = Kegiatan::count();
 
         return view('dashboard.admin', compact(
             'jumlahPelajar',
-            'jumlahAbsensiHariIni',
+            'jumlahPresensiHariIni',
             'jumlahKegiatan'
         ));
     }
 
     public function pelajar()
     {
-        $tanggalHariIni = Carbon::today()->toDateString();
-
-        // Ambil kegiatan hari ini
-        $kegiatanHariIni = Kegiatan::where('tanggal', $tanggalHariIni)->get();
-
-        // Total kegiatan
-        $totalKegiatan = Kegiatan::count();
-
-        $jumlahAbsensiHariIni = Presensi::whereDate('created_at', now())->count();
+        $jumlahPresensiHariIni = Presensi::whereDate('created_at', now())->count();
         $jumlahKegiatan = Kegiatan::count();
 
         return view('dashboard.pelajar', compact(
-            'kegiatanHariIni',
-            'totalKegiatan',
-            'jumlahAbsensiHariIni',
+            'jumlahPresensiHariIni',
             'jumlahKegiatan'
         ));
     }

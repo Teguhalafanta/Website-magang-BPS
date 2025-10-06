@@ -2,201 +2,171 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use App\Models\Presensi;
-use App\Models\Kegiatan;
-use App\Models\Pelajar;
 use Illuminate\Http\Request;
+use App\Models\Presensi;
 use Illuminate\Support\Facades\Auth;
-use App\Notifications\NotifikasiBaru;
-use Illuminate\Pagination\LengthAwarePaginator;
+use Carbon\Carbon;
+use Illuminate\Validation\Rule;
 
 class PresensiController extends Controller
 {
-    /**
-     * ===============================
-     *  BAGIAN UNTUK PELAJAR
-     * ===============================
-     */
-
-    /**
-     * Tampilkan daftar presensi pelajar yang login.
-     */
-    public function index(Request $request)
+    public function index()
     {
         $user = Auth::user();
 
-        if (!$user) {
-            abort(403, 'Unauthorized');
-        }
-
-        // Jika user adalah pembimbing, arahkan ke fungsi khusus pembimbing
-        if ($user->role === 'pembimbing') {
-            return $this->indexPembimbing($request);
-        }
-
-        // Ambil pelajar via relasi User -> Pelajar
-        $pelajar = $user->pelajar;
-
-        if (!$pelajar) {
-            // fallback agar tidak error di Blade
-            $presensis = new LengthAwarePaginator([], 0, 10);
-            $pelajar_id = null;
+        if ($user->role === 'pelajar') {
+            $presensis = Presensi::where('pelajar_id', $user->id) // ubah user_id ke pelajar_id sesuai konteks
+                ->orderBy('tanggal', 'desc')
+                ->orderBy('waktu_datang', 'desc')
+                ->get();
         } else {
-            $pelajar_id = $pelajar->id;
-
-            $query = Presensi::with('pelajar')->where('pelajar_id', $pelajar_id);
-
-            if ($request->has('today')) {
-                $query->whereDate('tanggal', date('Y-m-d'));
-            }
-
-            $presensis = $query->orderBy('tanggal', 'desc')->paginate(10);
+            $presensis = Presensi::with('user')
+                ->orderBy('tanggal', 'desc')
+                ->orderBy('waktu_datang', 'desc')
+                ->get();
         }
 
-        // Data tambahan (opsional)
-        $jumlahPelajar = Pelajar::count();
-        $jumlahKegiatan = Kegiatan::count();
-        $jumlahPresensiHariIni = Presensi::whereDate('tanggal', date('Y-m-d'))->count();
-
-        $pelajars = Pelajar::all();
-
-        $presensiHariIni = $pelajar_id
-            ? Presensi::where('pelajar_id', $pelajar_id)
-            ->whereDate('tanggal', date('Y-m-d'))
-            ->exists()
-            : false;
-
-        return view('presensi.index', compact(
-            'presensis',
-            'pelajars',
-            'presensiHariIni',
-            'jumlahPelajar',
-            'jumlahKegiatan',
-            'jumlahPresensiHariIni'
-        ));
+        return view('presensi.index', compact('presensis'));
     }
 
-    /**
-     * Simpan data presensi baru (pelajar).
-     */
+    public function create()
+    {
+        $user = Auth::user();
+        $today = Carbon::today()->toDateString();
+
+        $sudah = Presensi::where('pelajar_id', $user->id) // juga ubah di sini
+            ->where('tanggal', $today)
+            ->exists();
+
+        if ($sudah) {
+            return redirect()->route('presensi.index')
+                ->with('warning', 'Anda sudah melakukan presensi hari ini!');
+        }
+
+        return view('presensi.create');
+    }
+
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'pelajar_id' => 'required|exists:pelajars,id',
-            'tanggal'    => 'required|date',
-            'status'     => 'required|in:Hadir,Izin,Sakit,Alpha',
-            'shift'      => 'required|in:Pagi,Siang',
-            'keterangan' => 'nullable|string|max:255',
-        ]);
+        $user = Auth::user();
+        $now = Carbon::now();
+        $today = $now->toDateString();
 
-        // Cek duplikasi
-        $exists = Presensi::where('pelajar_id', $validated['pelajar_id'])
-            ->where('tanggal', $validated['tanggal'])
-            ->where('shift', $validated['shift'])
+        // Cek apakah sudah presensi hari ini
+        $exists = Presensi::where('pelajar_id', $user->id)
+            ->where('tanggal', $today)
             ->exists();
 
         if ($exists) {
-            return back()->withErrors(['shift' => 'Presensi untuk shift ini sudah ada di tanggal tersebut.'])->withInput();
+            return redirect()->route('presensi.index')
+                ->with('error', 'Anda sudah melakukan presensi hari ini!');
         }
 
-        $presensi = Presensi::create($validated);
+        // Validasi input keterangan jika ada
+        $request->validate([]);
 
-        // Kirim notifikasi ke admin
-        $admins = User::where('role', 'admin')->get();
-        foreach ($admins as $admin) {
-            $admin->notify(new NotifikasiBaru(
-                'Ada presensi baru masuk dari pelajar ID: ' . $presensi->pelajar_id,
-                route('presensi.index')
-            ));
-        }
+        // Tentukan status otomatis berdasarkan jam
+        $jamDatang = $now->format('H:i:s');
+        $batas = '07:35:00';
+        $status = $jamDatang > $batas ? 'Terlambat' : 'Tepat Waktu';
 
-        // Kirim notifikasi ke user (pelajar) yang login
-        $user = Auth::user();
-        if ($user) {
-            $user->notify(new NotifikasiBaru(
-                'Presensi kamu berhasil disimpan!',
-                route('presensi.index')
-            ));
-        }
+        // Simpan data presensi
+        Presensi::create([
+            'pelajar_id' => $user->id,
+            'tanggal' => $today,
+            'waktu_datang' => $jamDatang,
+            'status' => $status,
+        ]);
 
-        return redirect()->route('presensi.index')->with('success', 'Data presensi berhasil ditambahkan.');
+        return redirect()->route('presensi.index')
+            ->with('success', 'Presensi berhasil disimpan. Status: ' . $status);
     }
 
-    /**
-     * Form edit presensi.
-     */
+    public function show($id)
+    {
+        $presensi = Presensi::with('user')->findOrFail($id);
+
+        if (Auth::user()->role === 'pelajar' && $presensi->pelajar_id !== Auth::id()) {
+            abort(403);
+        }
+
+        return view('presensi.show', compact('presensi'));
+    }
+
     public function edit($id)
     {
-        $presensi = Presensi::findOrFail($id);
-        $pelajars = Pelajar::all();
+        if (Auth::user()->role === 'pelajar') {
+            abort(403);
+        }
 
-        return view('presensi.edit', compact('presensi', 'pelajars'));
+        $presensi = Presensi::findOrFail($id);
+        return view('presensi.edit', compact('presensi'));
     }
 
-    /**
-     * Update data presensi (pelajar).
-     */
     public function update(Request $request, $id)
     {
-        $validated = $request->validate([
-            'pelajar_id' => 'required|exists:pelajars,id',
-            'tanggal'    => 'required|date',
-            'status'     => 'required|in:Hadir,Izin,Sakit,Alpha',
-            'keterangan' => 'nullable|string|max:255',
+        if (Auth::user()->role === 'pelajar') {
+            abort(403);
+        }
+
+        $request->validate([
+            'tanggal' => 'required|date',
+            'waktu_datang' => 'required|date_format:H:i:s',
+            'waktu_pulang' => 'nullable|date_format:H:i:s',
+            'status' => ['required', Rule::in(['Tepat Waktu', 'Terlambat', 'Izin', 'Sakit', 'Alfa'])],
         ]);
 
         $presensi = Presensi::findOrFail($id);
-        $presensi->update($validated);
+        $presensi->update([
+            'tanggal' => $request->tanggal,
+            'waktu_datang' => $request->waktu_datang,
+            'waktu_pulang' => $request->waktu_pulang,
+            'status' => $request->status,
+        ]);
 
-        return redirect()->route('presensi.index')->with('success', 'Data presensi berhasil diperbarui.');
+        return redirect()->route('presensi.index')
+            ->with('success', 'Presensi berhasil diperbarui.');
     }
 
-    /**
-     * Hapus data presensi.
-     */
     public function destroy($id)
     {
+        if (Auth::user()->role === 'pelajar') {
+            abort(403);
+        }
+
         $presensi = Presensi::findOrFail($id);
         $presensi->delete();
 
-        return redirect()->route('presensi.index')->with('success', 'Data presensi berhasil dihapus.');
+        return redirect()->route('presensi.index')
+            ->with('success', 'Presensi berhasil dihapus.');
     }
 
-
-    /**
-     * ===============================
-     *  BAGIAN UNTUK PEMBIMBING
-     * ===============================
-     */
-
-    /**
-     * Tampilkan daftar presensi pelajar yang dibimbing pembimbing yang login.
-     */
-    public function indexPembimbing(Request $request)
+    public function rekap(Request $request)
     {
         $user = Auth::user();
+        $bulanParam = $request->input('bulan', Carbon::now()->format('Y-m'));
+        $carbon = Carbon::parse($bulanParam);
 
-        $pembimbing = $user->pembimbing;
+        $query = Presensi::whereYear('tanggal', $carbon->year)
+            ->whereMonth('tanggal', $carbon->month);
 
-        if (!$pembimbing) {
-            return redirect()->route('dashboard')->with('error', 'Anda tidak memiliki pelajar yang dibimbing.');
+        if ($user->role === 'pelajar') {
+            $query->where('pelajar_id', $user->id);
+        } else {
+            $query->with('user');
         }
 
-        // Ambil presensi pelajar yang dibimbing pembimbing
-        $presensis = Presensi::whereHas('pelajar', function ($query) use ($pembimbing) {
-            $query->where('pembimbing_id', $pembimbing->id);
-        })->orderBy('tanggal', 'desc')->paginate(10);
+        $presensis = $query->orderBy('tanggal', 'asc')->get();
 
-        return view('pembimbing.presensi', compact('presensis'));
-    }
+        $statistik = [
+            'total' => $presensis->count(),
+            'tepat_waktu' => $presensis->where('status', 'Tepat Waktu')->count(),
+            'terlambat' => $presensis->where('status', 'Terlambat')->count(),
+            'izin' => $presensis->where('status', 'Izin')->count(),
+            'sakit' => $presensis->where('status', 'Sakit')->count(),
+            'alfa' => $presensis->where('status', 'Alfa')->count(),
+        ];
 
-    /**
-     * Tampilkan detail presensi (opsional untuk pembimbing).
-     */
-    public function showPembimbing($id)
-    {
-        $presensi = Presensi::findOrFail($id);
-        return view('pembimbing.presensi.show', compact('presensi'));
+        return view('presensi.rekap', compact('presensis', 'statistik', 'bulanParam'));
     }
 }

@@ -41,8 +41,8 @@ class Pelajar extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-    // relasi ke Absensi
-    public function absensis()
+    // relasi ke Presensi
+    public function presensis()
     {
         return $this->hasMany(Presensi::class, 'pelajar_id', 'id');
     }

@@ -20,11 +20,8 @@
                 <tr>
                     <th>No</th>
                     <th>Uraian Kegiatan</th>
+                    <th>Deskripsi</th>
                     <th>Satuan</th>
-                    <th>Target</th>
-                    <th>Realisasi</th>
-                    <th>Persentase</th>
-                    <th>Tingkat</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
@@ -33,30 +30,17 @@
                     <tr>
                         <td>{{ $i + 1 }}</td>
                         <td>{{ $kegiatan->nama_kegiatan ?? '-' }}</td>
+                        <td>{{ $kegiatan->deskripsi }}</td>
                         <td>{{ $kegiatan->satuan ?? '-' }}</td>
-                        <td>{{ $kegiatan->target ?? 0 }}</td>
-                        <td>{{ $kegiatan->realisasi ?? 0 }}</td>
-                        <td>
-                            @php
-                                $target = $kegiatan->target ?? 0;
-                                $realisasi = $kegiatan->realisasi ?? 0;
-                                $persen = $target > 0 ? round(($realisasi / $target) * 100, 2) : 0;
-                            @endphp
-                            {{ $persen }}%
-                        </td>
-                        <td>{{ $kegiatan->tingkat ?? '-' }}</td>
                         <td>
                             <a href="{{ route('pelajar.kegiatan.edit', $kegiatan->id) }}"
-                                class="btn btn-sm btn-outline-primary" title="Edit">
-                                ✏️
-                            </a>
+                                class="btn btn-sm btn-warning">Edit</a>
                             <form action="{{ route('pelajar.kegiatan.destroy', $kegiatan->id) }}" method="POST"
                                 style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus kegiatan ini?');">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Hapus">
-                                    🗑️
-                                </button>
+                                <button class="btn btn-sm btn-danger"
+                                    onclick="return confirm('Yakin hapus?')">Hapus</button>
                             </form>
                         </td>
                     </tr>

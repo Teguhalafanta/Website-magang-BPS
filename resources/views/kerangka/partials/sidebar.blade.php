@@ -96,10 +96,10 @@
                             </a>
                         </li>
 
-                        <li class="sidebar-item {{ request()->routeIs('admin.absensi.*') ? 'active' : '' }}">
-                            <a href="{{ route('admin.absensi.index') }}" class="sidebar-link">
+                        <li class="sidebar-item {{ request()->routeIs('admin.presensi.*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.presensi.index') }}" class="sidebar-link">
                                 <i class="bi bi-calendar-check"></i>
-                                <span>Absensi</span>
+                                <span>Presensi</span>
                             </a>
                         </li>
 
@@ -119,10 +119,10 @@
                             </a>
                         </li>
 
-                        <li class="sidebar-item {{ request()->routeIs('absensi.*') ? 'active' : '' }}">
-                            <a href="{{ route('absensi.index') }}" class="sidebar-link">
+                        <li class="sidebar-item {{ request()->routeIs('presensi.*') ? 'active' : '' }}">
+                            <a href="{{ route('presensi.index') }}" class="sidebar-link">
                                 <i class="bi bi-calendar-check"></i>
-                                <span>Absensi</span>
+                                <span>Presensi</span>
                             </a>
                         </li>
 
@@ -160,10 +160,10 @@
                             </a>
                         </li>
 
-                        <li class="sidebar-item {{ request()->routeIs('pembimbing.bimbingan') ? 'active' : '' }}">
-                            <a href="{{ route('pembimbing.bimbingan') }}" class="sidebar-link">
-                                <i class="bi bi-people"></i>
-                                <span>Data Bimbingan</span>
+                        <li class="sidebar-item {{ request()->routeIs('presensi.*') ? 'active' : '' }}">
+                            <a href="{{ route('presensi.index') }}" class="sidebar-link">
+                                <i class="bi bi-calendar-check"></i>
+                                <span>Presensi</span>
                             </a>
                         </li>
 

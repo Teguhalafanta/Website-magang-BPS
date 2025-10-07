@@ -13,7 +13,7 @@
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
-    <link rel="stylesheet" href="{{ asset('assets/css/pages/auth.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/auth.css') }}">
 
 </head>
 

@@ -212,12 +212,19 @@
         }
 
         .logo-section img {
-            width: 64px;
-            height: 64px;
+            width: auto;
+            /* biar lebar menyesuaikan */
+            height: 100px;
+            /* tinggi tetap agar proporsional */
+            max-height: 120px;
+            /* biar nggak kebesaran di layar besar */
             margin: 12px 0;
+            object-fit: contain;
+            /* pertahankan rasio asli */
             filter: brightness(1.1);
             transition: all 0.3s ease;
         }
+
 
         .logo-section img:hover {
             transform: scale(1.05);
@@ -556,5 +563,58 @@
             to {
                 transform: scale(4);
                 opacity: 0;
+            }
+        }
+
+        .input-container {
+            position: relative;
+        }
+
+        .input-container .input-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.75);
+            font-size: 1.2rem;
+            pointer-events: none;
+            transition: all 0.3s ease;
+            z-index: 3;
+        }
+
+        /* Supaya teks nggak nabrak ikon */
+        .input-container input {
+            padding-left: 45px !important;
+        }
+
+        /* Efek glowing pas fokus */
+        .input-container:focus-within .input-icon {
+            color: #ffffff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.9);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        /* Efek hover lembut */
+        .input-container:hover .input-icon {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        /* Mode terang */
+        @media (prefers-color-scheme: light) {
+            .input-container .input-icon {
+                color: rgba(0, 0, 0, 0.6);
+            }
+
+            .input-container:focus-within .input-icon {
+                color: #333;
+                text-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
+            }
+        }
+
+        /* Responsif: biar di HP tetap pas */
+        @media (max-width: 480px) {
+            .logo-section img {
+                height: 70px;
+                max-height: 80px;
             }
         }

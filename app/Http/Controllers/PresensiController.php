@@ -66,7 +66,7 @@ class PresensiController extends Controller
             ->exists();
 
         if ($exists) {
-            return redirect()->route('presensi.index')
+            return redirect()->route('pelajar.presensi.index')
                 ->with('error', 'Anda sudah melakukan presensi hari ini!');
         }
 
@@ -81,7 +81,7 @@ class PresensiController extends Controller
         // Simpan data presensi
         Presensi::create([
             'pelajar_id' => $user->pelajar->id,
-            'user_id' => $user->id,             
+            'user_id' => $user->id,
             'tanggal' => $today,
             'waktu_datang' => $jamDatang,
             'status' => $status,
@@ -89,7 +89,7 @@ class PresensiController extends Controller
 
 
 
-        return redirect()->route('presensi.index')
+        return redirect()->route('pelajar.presensi.index')
             ->with('success', 'Presensi berhasil disimpan. Status: ' . $status);
     }
 
@@ -117,10 +117,29 @@ class PresensiController extends Controller
 
     public function update(Request $request, $id)
     {
-        if (Auth::user()->role === 'pelajar') {
-            abort(403);
+        $user = Auth::user();
+        $presensi = Presensi::findOrFail($id);
+
+        // Jika pelajar yang sedang login, berarti dia melakukan presensi pulang
+        if ($user->role === 'pelajar') {
+            // Pastikan hanya bisa update miliknya sendiri
+            if ($presensi->pelajar_id != $user->pelajar->id) {
+                abort(403);
+            }
+
+            // Cegah double presensi pulang
+            if ($presensi->waktu_pulang) {
+                return redirect()->back()->with('warning', 'Anda sudah melakukan presensi pulang hari ini!');
+            }
+
+            $presensi->update([
+                'waktu_pulang' => now()->format('H:i:s'),
+            ]);
+
+            return redirect()->back()->with('success', 'Presensi pulang berhasil disimpan.');
         }
 
+        // Jika admin atau pembimbing, tetap pakai validasi edit manual
         $request->validate([
             'tanggal' => 'required|date',
             'waktu_datang' => 'required|date_format:H:i:s',
@@ -128,7 +147,6 @@ class PresensiController extends Controller
             'status' => ['required', Rule::in(['Tepat Waktu', 'Terlambat', 'Izin', 'Sakit', 'Alfa'])],
         ]);
 
-        $presensi = Presensi::findOrFail($id);
         $presensi->update([
             'tanggal' => $request->tanggal,
             'waktu_datang' => $request->waktu_datang,
@@ -139,6 +157,7 @@ class PresensiController extends Controller
         return redirect()->route('presensi.index')
             ->with('success', 'Presensi berhasil diperbarui.');
     }
+
 
     public function destroy($id)
     {

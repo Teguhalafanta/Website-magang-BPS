@@ -105,13 +105,12 @@ Route::middleware(['auth'])->group(function () {
         // Filter kegiatan
         Route::get('/kegiatan/harian', [KegiatanController::class, 'harian'])->name('kegiatan.harian');
         Route::get('/kegiatan/bulanan', [KegiatanController::class, 'kegiatanBulanan'])->name('kegiatan.bulanan');
+
+        // Presensi (khusus pelajar)
+        Route::get('/presensi', [PresensiController::class, 'index'])->name('presensi.index');
+        Route::post('/presensi', [PresensiController::class, 'store'])->name('presensi.store');
+        Route::put('/presensi/{id}', [PresensiController::class, 'update'])->name('presensi.update');
     });
-
-
-    // -------- ABSENSI (pelajar) --------
-    Route::resource('presensi', PresensiController::class)
-        ->names('presensi')
-        ->middleware('role:pelajar');
 
     // -------- NOTIFIKASI --------
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');

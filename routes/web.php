@@ -57,6 +57,9 @@ Route::middleware(['auth'])->group(function () {
         // Assign Pembimbing
         Route::get('/assign-pembimbing', [AssignPembimbingController::class, 'index'])
             ->name('assignpembimbing.view');
+
+        Route::post('/assign-pembimbing', [AssignPembimbingController::class, 'assign'])
+            ->name('assignpembimbing.assign');
     });
 
 

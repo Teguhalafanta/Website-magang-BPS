@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Carbon\Carbon;
 
 class Pelajar extends Model
 {
@@ -62,5 +63,48 @@ class Pelajar extends Model
     public function kegiatans()
     {
         return $this->hasMany(Kegiatan::class);
+    }
+
+    // Accessor: status magang otomatis untuk tampilan
+    public function getStatusMagangOtomatisAttribute()
+    {
+        $status = $this->status ?? 'belum ditentukan';
+
+        // ubah 'menunggu' jadi 'diajukan'
+        if ($status === 'menunggu') {
+            $status = 'diajukan';
+        }
+
+        // hanya ubah ke aktif/selesai jika admin sudah menyetujui
+        if ($status === 'disetujui') {
+            $today = Carbon::today();
+            $mulai = $this->rencana_mulai ? Carbon::parse($this->rencana_mulai) : null;
+            $selesai = $this->rencana_selesai ? Carbon::parse($this->rencana_selesai) : null;
+
+            if ($mulai && $today->gte($mulai) && (!$selesai || $today->lte($selesai))) {
+                $status = 'aktif';
+            }
+
+            if ($selesai && $today->gt($selesai)) {
+                $status = 'selesai';
+            }
+        }
+
+        return $status;
+    }
+
+    // Accessor: badge class otomatis
+    public function getBadgeClassAttribute()
+    {
+        $status = $this->statusMagangOtomatis;
+
+        return [
+            'diajukan' => 'bg-warning-subtle text-warning fw-semibold px-3 py-1 rounded-pill',
+            'disetujui' => 'bg-primary-subtle text-primary fw-semibold px-3 py-1 rounded-pill',
+            'aktif' => 'bg-success-subtle text-success fw-semibold px-3 py-1 rounded-pill',
+            'selesai' => 'bg-info-subtle text-info fw-semibold px-3 py-1 rounded-pill',
+            'ditolak' => 'bg-danger-subtle text-danger fw-semibold px-3 py-1 rounded-pill',
+            'belum ditentukan' => 'bg-secondary-subtle text-secondary fw-semibold px-3 py-1 rounded-pill',
+        ][$status] ?? 'bg-secondary-subtle text-secondary fw-semibold px-3 py-1 rounded-pill';
     }
 }

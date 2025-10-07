@@ -9,9 +9,17 @@ class NotificationController extends Controller
 {
     public function index()
     {
-        $allNotif = Auth::user()->notifications;
-        return view('notifications.index', compact('allNotif'));
+        $allNotif = Auth::user()->notifications->map(function ($notif) {
+            if (Auth::user()->role === 'pelajar') {
+                // Pastikan notifikasi pelajar punya URL ke daftar pengajuan
+                $notif->data['url'] = route('pelajar.pengajuan.index');
+            }
+            return $notif;
+        });
+
+        return view('pelajar.daftar.pengajuan', compact('allNotif'));
     }
+
 
     public function markAsRead($id)
     {
@@ -20,18 +28,18 @@ class NotificationController extends Controller
         if ($notification) {
             $notification->markAsRead();
 
-            if (isset($notification->data['url']) && $notification->data['url'] !== '#') {
-                return redirect($notification->data['url']);
+            // Jika URL tersedia, kembalikan URL untuk redirect via JS
+            $url = $notification->data['url'] ?? null;
+
+            if (request()->ajax()) {
+                return response()->json(['success' => true, 'url' => $url]);
             }
+
+            return $url ? redirect($url) : back();
         }
 
-        if (request()->ajax()) {
-            return response()->json(['success' => true]);
-        }
-
-        return back();
+        return response()->json(['success' => false], 404);
     }
-
 
     public function markAllAsRead()
     {

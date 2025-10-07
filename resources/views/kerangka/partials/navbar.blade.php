@@ -50,6 +50,7 @@
         <div class="form-check form-switch m-0">
             <input class="form-check-input theme-switch" type="checkbox" id="toggle-dark">
             <label class="form-check-label" for="toggle-dark"></label>
+
         </div>
 
         {{-- Profile Dropdown --}}

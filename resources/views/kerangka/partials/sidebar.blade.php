@@ -120,7 +120,7 @@
                         </li>
 
                         <li class="sidebar-item {{ request()->routeIs('presensi.*') ? 'active' : '' }}">
-                            <a href="{{ route('presensi.index') }}" class="sidebar-link">
+                            <a href="{{ route('pelajar.presensi.index') }}" class="sidebar-link">
                                 <i class="bi bi-calendar-check"></i>
                                 <span>Presensi</span>
                             </a>

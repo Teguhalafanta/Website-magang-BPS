@@ -13,7 +13,7 @@
     <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
-    <link rel="stylesheet" href="{{ asset('assets/css/pages/auth.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/auth.css') }}">
 
 </head>
 
@@ -49,8 +49,7 @@
             <!-- Logo Section -->
             <div class="logo-section">
                 <h1>Aplikasi Magang</h1>
-                <img src="{{ asset('assets/images/logo/pngegg.png') }}" alt="Logo"
-                    style="width: 70px; margin-bottom: 10px;">
+                <img src="{{ asset('assets/images/logo/pngegg.png') }}" alt="Logo BPS">
                 <h1>Badan Pusat Statistik Provinsi Aceh</h1>
             </div>
 
@@ -58,16 +57,24 @@
             <div id="login-form">
                 <form method="POST" action="{{ route('login.store') }}">
                     @csrf
+                    <!-- Email -->
                     <div class="form-group">
                         <div class="input-container">
                             <input type="email" id="email" name="email" placeholder="Email"
                                 value="{{ old('email') }}" required autofocus>
+                            <div class="input-icon">
+                                <i class="bi bi-envelope"></i>
+                            </div>
                         </div>
                     </div>
 
+                    <!-- Password -->
                     <div class="form-group">
                         <div class="input-container">
                             <input type="password" id="password" name="password" placeholder="Password" required>
+                            <div class="input-icon">
+                                <i class="bi bi-shield-lock"></i>
+                            </div>
                         </div>
                     </div>
 

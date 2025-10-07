@@ -7,7 +7,7 @@
         <div class="row">
             {{-- Presensi Hari Ini --}}
             <div class="col-md-4 mb-3">
-                <a href="{{ route('presensi.index', ['today' => true]) }}" class="text-decoration-none">
+                <a href="{{ route('pelajar.presensi.index', ['today' => true]) }}" class="text-decoration-none">
                     <div class="card bg-warning text-white shadow">
                         <div class="card-body d-flex justify-content-between align-items-center">
                             <div>

@@ -116,33 +116,15 @@
                             <td class="fw-bold">Status Magang</td>
                             <td>
                                 @php
-                                    // ambil status dari tabel pelajars (kolom 'status')
-                                    $statusMagang = optional($user->pelajar)->status ?? 'belum ditentukan';
-
-                                    // ubah status 'menunggu' supaya tampilannya jadi 'diajukan'
-                                    if ($statusMagang === 'menunggu') {
-                                        $statusMagang = 'diajukan';
-                                    }
-
-                                    $badgeClass =
-                                        [
-                                            'diajukan' =>
-                                                'bg-warning-subtle text-warning fw-semibold px-3 py-1 rounded-pill',
-                                            'disetujui' =>
-                                                'bg-primary-subtle text-primary fw-semibold px-3 py-1 rounded-pill',
-                                            'aktif' =>
-                                                'bg-success-subtle text-success fw-semibold px-3 py-1 rounded-pill',
-                                            'selesai' => 'bg-info-subtle text-info fw-semibold px-3 py-1 rounded-pill',
-                                            'ditolak' =>
-                                                'bg-danger-subtle text-danger fw-semibold px-3 py-1 rounded-pill',
-                                            'belum ditentukan' =>
-                                                'bg-secondary-subtle text-secondary fw-semibold px-3 py-1 rounded-pill',
-                                        ][$statusMagang] ??
+                                    $pelajar = $user->pelajar;
+                                    $status = $pelajar->statusMagangOtomatis ?? 'belum ditentukan';
+                                    $badge =
+                                        $pelajar->badgeClass ??
                                         'bg-secondary-subtle text-secondary fw-semibold px-3 py-1 rounded-pill';
                                 @endphp
 
-                                <span class="{{ $badgeClass }}">
-                                    {{ ucfirst($statusMagang) }}
+                                <span class="{{ $badge }}">
+                                    {{ ucfirst($status) }}
                                 </span>
                             </td>
                         </tr>
@@ -287,28 +269,39 @@
     </style>
 
     <script>
-        function fadeOutAndClose(alertNode) {
-            alertNode.classList.add('fade-out');
-            setTimeout(() => {
-                let bsAlert = new bootstrap.Alert(alertNode);
-                bsAlert.close();
-            }, 800);
-        }
+        <script script >
+            document.addEventListener("DOMContentLoaded", function() {
+                const notifLinks = document.querySelectorAll('.notif-link');
+                notifLinks.forEach(link => {
+                    link.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const id = this.dataset.id;
 
-        setTimeout(() => {
-            document.querySelectorAll('.alert-success').forEach(alertNode => fadeOutAndClose(alertNode));
-        }, 3000);
+                        fetch(`/notifications/${id}/read`, {
+                                headers: {
+                                    'X-Requested-With': 'XMLHttpRequest'
+                                }
+                            })
+                            .then(res => res.json())
+                            .then(data => {
+                                if (data.success) {
+                                    // Hapus bold & update badge
+                                    const li = this.closest('.notif-item');
+                                    li.classList.remove('fw-bold');
 
-        setTimeout(() => {
-            document.querySelectorAll('.alert-danger').forEach(alertNode => fadeOutAndClose(alertNode));
-        }, 6000);
+                                    const badge = document.querySelector('.bi-bell + span');
+                                    if (badge) {
+                                        let count = parseInt(badge.textContent) - 1;
+                                        if (count > 0) badge.textContent = count;
+                                        else badge.remove();
+                                    }
 
-        document.querySelectorAll('.alert .btn-close').forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                e.preventDefault();
-                let alertNode = this.closest('.alert');
-                fadeOutAndClose(alertNode);
+                                    // Redirect ke URL jika tersedia
+                                    if (data.url) window.location.href = data.url;
+                                }
+                            });
+                    });
+                });
             });
-        });
     </script>
 @endsection

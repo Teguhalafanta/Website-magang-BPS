@@ -20,18 +20,18 @@ class NotificationController extends Controller
         if ($notification) {
             $notification->markAsRead();
 
-            if (isset($notification->data['url']) && $notification->data['url'] !== '#') {
-                return redirect($notification->data['url']);
+            // Jika URL tersedia, kembalikan URL untuk redirect via JS
+            $url = $notification->data['url'] ?? null;
+
+            if (request()->ajax()) {
+                return response()->json(['success' => true, 'url' => $url]);
             }
+
+            return $url ? redirect($url) : back();
         }
 
-        if (request()->ajax()) {
-            return response()->json(['success' => true]);
-        }
-
-        return back();
+        return response()->json(['success' => false], 404);
     }
-
 
     public function markAllAsRead()
     {

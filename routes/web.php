@@ -12,6 +12,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Pembimbing\BimbinganController;
 use App\Http\Controllers\Pembimbing\PenilaianController;
 use App\Http\Controllers\Admin\PelajarController as AdminPelajarController;
+use App\Http\Controllers\Admin\AssignPembimbingController;
 use App\Models\Presensi;
 
 // ================== GUEST ==================
@@ -36,7 +37,7 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/profile/foto', [ProfileController::class, 'updateFoto'])->name('profile.updateFoto');
 
     // -------- ADMIN --------
-    Route::prefix('admin')->middleware('role:admin')->name('admin.')->group(function () {
+    Route::prefix('admin')->middleware(['auth', 'role:admin'])->name('admin.')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'admin'])->name('dashboard');
 
         // Pengajuan
@@ -51,12 +52,13 @@ Route::middleware(['auth'])->group(function () {
         // Presensi
         Route::resource('presensi', PresensiController::class)->names('presensi');
 
-        // ✅ Assign Pembimbing
-        Route::get('/assign-pembimbing', [AdminPelajarController::class, 'assignView'])->name('assignpembimbing.view');
-        Route::post('/assign-pembimbing/{id}', [AdminPelajarController::class, 'assignPembimbing'])->name('assignpembimbing.assign');
+        // Assign Pembimbing
+        Route::get('/assign-pembimbing', [AssignPembimbingController::class, 'index'])
+            ->name('assignpembimbing.view');
+
+        Route::post('/assign-pembimbing', [AssignPembimbingController::class, 'assign'])
+            ->name('assignpembimbing.assign');
     });
-
-
 
     // -------- PEMBIMBING --------
     Route::prefix('pembimbing')->middleware(['auth', 'role:pembimbing'])->name('pembimbing.')->group(function () {

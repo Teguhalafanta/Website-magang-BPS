@@ -29,7 +29,7 @@
 
         {{-- Card Profil --}}
         <div class="card shadow-sm border-0 p-4">
-            <h4 class="fw-bold mb-4">Profil Mahasiswa Magang</h4>
+            <h4 class="fw-bold mb-4">Profil {{ ucfirst($user->role) }}</h4>
             <div class="row">
                 <div class="col-md-3 text-center">
                     {{-- Tampilkan foto profil --}}
@@ -55,8 +55,10 @@
                             <i class="fas fa-pen"></i>
                         </button>
                     </div>
-                    <table class="table table-borderless">
-                        <tbody>
+
+                    {{-- Data Pribadi Berdasarkan Role --}}
+                    @if ($user->role === 'pelajar')
+                        <table class="table table-borderless">
                             <tr>
                                 <td class="fw-bold">Nama</td>
                                 <td>{{ optional($user->pelajar)->nama ?? '-' }}</td>
@@ -85,52 +87,64 @@
                                 <td class="fw-bold">Email</td>
                                 <td>{{ $user->email }}</td>
                             </tr>
-                        </tbody>
-                    </table>
+                        </table>
                 </div>
-            </div>
-
-            <hr>
-
-            <!-- Informasi Magang -->
-            @if ($user->role === 'pelajar')
                 <hr>
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h5 class="fw-bold">Informasi Magang</h5>
-                </div>
-                <table class="table table-borderless">
-                    <tbody>
-                        <tr>
-                            <td class="fw-bold">Tanggal Mulai</td>
-                            <td>{{ optional($user->pelajar)->rencana_mulai ?? '-' }}</td>
-                        </tr>
-                        <tr>
-                            <td class="fw-bold">Tanggal Selesai</td>
-                            <td>{{ optional($user->pelajar)->rencana_selesai ?? '-' }}</td>
-                        </tr>
-                        <tr>
-                            <td class="fw-bold">Pembimbing / Mentor</td>
-                            <td>{{ optional($user->pelajar)->mentor ?? '-' }}</td>
-                        </tr>
-                        <tr>
-                            <td class="fw-bold">Status Magang</td>
-                            <td>
-                                @php
-                                    $pelajar = $user->pelajar;
-                                    $status = $pelajar->statusMagangOtomatis ?? 'belum ditentukan';
-                                    $badge =
-                                        $pelajar->badgeClass ??
-                                        'bg-secondary-subtle text-secondary fw-semibold px-3 py-1 rounded-pill';
-                                @endphp
 
-                                <span class="{{ $badge }}">
-                                    {{ ucfirst($status) }}
-                                </span>
-                            </td>
-                        </tr>
-                    </tbody>
+                {{-- Informasi Magang --}}
+                <h5 class="fw-bold mb-3">Informasi Magang</h5>
+                <table class="table table-borderless">
+                    <tr>
+                        <td class="fw-bold">Tanggal Mulai</td>
+                        <td>{{ optional($user->pelajar)->rencana_mulai ?? '-' }}</td>
+                    </tr>
+                    <tr>
+                        <td class="fw-bold">Tanggal Selesai</td>
+                        <td>{{ optional($user->pelajar)->rencana_selesai ?? '-' }}</td>
+                    </tr>
+                    <tr>
+                        <td class="fw-bold">Pembimbing / Mentor</td>
+                        <td>{{ optional($user->pelajar)->mentor ?? '-' }}</td>
+                    </tr>
+                    <tr>
+                        <td class="fw-bold">Status Magang</td>
+                        <td>
+                            @php
+                                $pelajar = $user->pelajar;
+                                $status = $pelajar->statusMagangOtomatis ?? 'belum ditentukan';
+                                $badge =
+                                    $pelajar->badgeClass ??
+                                    'bg-secondary-subtle text-secondary fw-semibold px-3 py-1 rounded-pill';
+                            @endphp
+                            <span class="{{ $badge }}">{{ ucfirst($status) }}</span>
+                        </td>
+                    </tr>
                 </table>
-            @endif
+            @elseif($user->role === 'pembimbing')
+                <table class="table table-borderless">
+                    <tr>
+                        <td class="fw-bold">Nama</td>
+                        <td>{{ $user->username ?? '-' }}</td>
+                    </tr>
+                    <tr>
+                        <td class="fw-bold">Email</td>
+                        <td>{{ $user->email ?? '-' }}</td>
+                    </tr>
+                </table>
+            @else
+                {{-- Untuk Admin --}}
+                <table class="table table-borderless">
+                    <tr>
+                        <td class="fw-bold">Nama</td>
+                        <td>{{ $user->username ?? '-' }}</td>
+                    </tr>
+                    <tr>
+                        <td class="fw-bold">Email</td>
+                        <td>{{ $user->email ?? '-' }}</td>
+                    </tr>
+                </table>
+                @endif
+            </div>
         </div>
     </div>
 
@@ -222,9 +236,11 @@
                             <label class="form-label">Status Magang</label>
                             <select name="status" class="form-select">
                                 <option value="aktif"
-                                    {{ optional($user->pelajar)->status === 'aktif' ? 'selected' : '' }}>Aktif</option>
+                                    {{ optional($user->pelajar)->status === 'aktif' ? 'selected' : '' }}>Aktif
+                                </option>
                                 <option value="tidak aktif"
-                                    {{ optional($user->pelajar)->status === 'tidak aktif' ? 'selected' : '' }}>Tidak Aktif
+                                    {{ optional($user->pelajar)->status === 'tidak aktif' ? 'selected' : '' }}>
+                                    Tidak Aktif
                                 </option>
                             </select>
                         </div>
@@ -269,39 +285,38 @@
     </style>
 
     <script>
-        <script script >
-            document.addEventListener("DOMContentLoaded", function() {
-                const notifLinks = document.querySelectorAll('.notif-link');
-                notifLinks.forEach(link => {
-                    link.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        const id = this.dataset.id;
+        document.addEventListener("DOMContentLoaded", function() {
+            const notifLinks = document.querySelectorAll('.notif-link');
+            notifLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const id = this.dataset.id;
 
-                        fetch(`/notifications/${id}/read`, {
-                                headers: {
-                                    'X-Requested-With': 'XMLHttpRequest'
+                    fetch(`/notifications/${id}/read`, {
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest'
+                            }
+                        })
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.success) {
+                                // Hapus bold & update badge
+                                const li = this.closest('.notif-item');
+                                li.classList.remove('fw-bold');
+
+                                const badge = document.querySelector('.bi-bell + span');
+                                if (badge) {
+                                    let count = parseInt(badge.textContent) - 1;
+                                    if (count > 0) badge.textContent = count;
+                                    else badge.remove();
                                 }
-                            })
-                            .then(res => res.json())
-                            .then(data => {
-                                if (data.success) {
-                                    // Hapus bold & update badge
-                                    const li = this.closest('.notif-item');
-                                    li.classList.remove('fw-bold');
 
-                                    const badge = document.querySelector('.bi-bell + span');
-                                    if (badge) {
-                                        let count = parseInt(badge.textContent) - 1;
-                                        if (count > 0) badge.textContent = count;
-                                        else badge.remove();
-                                    }
-
-                                    // Redirect ke URL jika tersedia
-                                    if (data.url) window.location.href = data.url;
-                                }
-                            });
-                    });
+                                // Redirect ke URL jika tersedia
+                                if (data.url) window.location.href = data.url;
+                            }
+                        });
                 });
             });
+        });
     </script>
 @endsection

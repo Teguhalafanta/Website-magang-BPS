@@ -14,10 +14,22 @@ class ProfileController extends Controller
      */
     public function show()
     {
-        $user = User::with(['pelajar'])
-            ->findOrFail(Auth::id());
+        // ambil user dari database lengkap dengan relasi pelajar
+        $user = \App\Models\User::with('pelajar')->findOrFail(Auth::id());
 
-        return view('profile.show', compact('user'));
+        $data = null;
+
+        // jika role pelajar
+        if ($user->role === 'pelajar') {
+            $data = $user->pelajar;
+        }
+
+        // jika pembimbing atau admin
+        if (in_array($user->role, ['pembimbing', 'admin'])) {
+            $data = $user;
+        }
+
+        return view('profile.show', compact('user', 'data'));
     }
 
     /**

@@ -1,7 +1,12 @@
 <nav class="navbar navbar-expand-lg shadow px-4">
-    {{-- Tombol Hamburger --}}
+    <!-- Tombol Burger Light -->
     <button class="btn border-0 me-3 burger-btn" type="button">
         <i class="bi bi-justify fs-3 text-primary"></i>
+    </button>
+
+    <!-- Tombol Burger Dark -->
+    <button class="btn border-0 me-3 burger-btn-night d-none" type="button">
+        <i class="bi bi-justify fs-3 text-light"></i>
     </button>
 
     {{-- Logo / Brand --}}
@@ -128,6 +133,48 @@
                     }
                 });
             });
+        });
+    </script>
+
+    <!-- === Script Toggle Burger Light/Dark === -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const toggleDark = document.getElementById("toggle-dark");
+            const burgerLight = document.querySelector(".burger-btn");
+            const burgerDark = document.querySelector(".burger-btn-night");
+            const sidebar = document.querySelector("#sidebar");
+
+            // Cek preferensi tema yang tersimpan
+            const savedTheme = localStorage.getItem("theme");
+            if (savedTheme === "dark") {
+                document.body.classList.add("dark-mode");
+                toggleDark.checked = true;
+                burgerLight.classList.add("d-none");
+                burgerDark.classList.remove("d-none");
+            }
+
+            // Saat toggle diubah
+            toggleDark.addEventListener("change", () => {
+                if (toggleDark.checked) {
+                    document.body.classList.add("dark-mode");
+                    localStorage.setItem("theme", "dark");
+                    burgerLight.classList.add("d-none");
+                    burgerDark.classList.remove("d-none");
+                } else {
+                    document.body.classList.remove("dark-mode");
+                    localStorage.setItem("theme", "light");
+                    burgerLight.classList.remove("d-none");
+                    burgerDark.classList.add("d-none");
+                }
+            });
+
+            // Fungsi buka/tutup sidebar
+            const toggleSidebar = () => {
+                sidebar.classList.toggle("active");
+            };
+
+            if (burgerLight) burgerLight.addEventListener("click", toggleSidebar);
+            if (burgerDark) burgerDark.addEventListener("click", toggleSidebar);
         });
     </script>
 </nav>

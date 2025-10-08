@@ -9,17 +9,9 @@ class NotificationController extends Controller
 {
     public function index()
     {
-        $allNotif = Auth::user()->notifications->map(function ($notif) {
-            if (Auth::user()->role === 'pelajar') {
-                // Pastikan notifikasi pelajar punya URL ke daftar pengajuan
-                $notif->data['url'] = route('pelajar.pengajuan.index');
-            }
-            return $notif;
-        });
-
-        return view('pelajar.daftar.pengajuan', compact('allNotif'));
+        $allNotif = Auth::user()->notifications;
+        return view('notifications.index', compact('allNotif'));
     }
-
 
     public function markAsRead($id)
     {

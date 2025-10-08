@@ -40,18 +40,16 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('admin')->middleware(['auth', 'role:admin'])->name('admin.')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'admin'])->name('dashboard');
 
-        // Pengajuan (lihat semua pengajuan pelajar)
+        // Pengajuan
         Route::get('/pengajuan', [PengajuanController::class, 'index'])->name('pengajuan.index');
         Route::put('/pengajuan/{id}/update-status', [PengajuanController::class, 'updateStatus'])->name('pengajuan.updateStatus');
-
-        // CRUD Pengajuan
         Route::put('/pengajuan/{id}', [PengajuanController::class, 'update'])->name('pengajuan.update');
         Route::delete('/pengajuan/{id}', [PengajuanController::class, 'destroy'])->name('pengajuan.destroy');
 
-        // CRUD Kegiatan (admin bisa kelola semua kegiatan)
+        // Kegiatan
         Route::resource('kegiatan', KegiatanController::class)->names('kegiatan');
 
-        // CRUD Presensi
+        // Presensi
         Route::resource('presensi', PresensiController::class)->names('presensi');
 
         // Assign Pembimbing
@@ -61,9 +59,6 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/assign-pembimbing', [AssignPembimbingController::class, 'assign'])
             ->name('assignpembimbing.assign');
     });
-
-
-
 
     // -------- PEMBIMBING --------
     Route::prefix('pembimbing')->middleware(['auth', 'role:pembimbing'])->name('pembimbing.')->group(function () {

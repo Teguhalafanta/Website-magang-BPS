@@ -98,31 +98,40 @@ class DashboardController extends Controller
             ->filter()
             ->toArray();
 
-        // Jika tidak ada pelajar, gunakan array kosong
         if (empty($userIds)) {
-            $userIds = [0]; // ID yang tidak ada untuk menghindari error
+            $userIds = [0];
         }
 
-        // Statistik untuk kartu dashboard
+        // Statistik utama
         $totalMahasiswa = Pelajar::where('pembimbing_id', $user->id)->count();
-
-        // Kegiatan yang belum dimulai atau dalam proses (pending)
         $pendingBimbingan = Kegiatan::whereIn('user_id', $userIds)
             ->whereIn('status_penyelesaian', ['Belum Dimulai', 'Dalam Proses'])
             ->count();
-
-        // Kegiatan selesai bulan ini
         $selesaiBimbingan = Kegiatan::whereIn('user_id', $userIds)
             ->where('status_penyelesaian', 'Selesai')
             ->whereMonth('created_at', now()->month)
             ->count();
-
-        // Jadwal hari ini
         $jadwalHariIni = Kegiatan::whereIn('user_id', $userIds)
             ->whereDate('tanggal', today())
             ->count();
 
-        // Data untuk panel bimbingan pending
+        // Data kegiatan yang diambil dari controller Kegiatan
+        $laporanTerbaru = Kegiatan::with(['user.pelajar'])
+            ->whereIn('user_id', $userIds)
+            ->orderBy('created_at', 'desc')
+            ->take(5)
+            ->get()
+            ->map(function ($kegiatan) {
+                $kegiatan->mahasiswa = (object)[
+                    'nama' => $kegiatan->user->pelajar->nama ?? $kegiatan->user->name ?? 'N/A'
+                ];
+                $kegiatan->topik = $kegiatan->nama_kegiatan;
+                $kegiatan->status = $kegiatan->status_penyelesaian;
+                $kegiatan->waktu = Carbon::parse($kegiatan->tanggal)->translatedFormat('d F Y');
+                return $kegiatan;
+            });
+
+        // Data bimbingan pending
         $bimbinganPending = Kegiatan::with(['user.pelajar'])
             ->whereIn('user_id', $userIds)
             ->whereIn('status_penyelesaian', ['Belum Dimulai', 'Dalam Proses'])
@@ -130,7 +139,6 @@ class DashboardController extends Controller
             ->take(5)
             ->get()
             ->map(function ($kegiatan) {
-                // Tambahkan properti mahasiswa untuk kompatibilitas dengan view
                 $kegiatan->mahasiswa = (object)[
                     'nama' => $kegiatan->user->pelajar->nama ?? $kegiatan->user->name ?? 'N/A'
                 ];
@@ -138,7 +146,7 @@ class DashboardController extends Controller
                 return $kegiatan;
             });
 
-        // Data untuk jadwal hari ini
+        // Data jadwal hari ini
         $jadwalToday = Kegiatan::with(['user.pelajar'])
             ->whereIn('user_id', $userIds)
             ->whereDate('tanggal', today())
@@ -154,18 +162,16 @@ class DashboardController extends Controller
                 return $kegiatan;
             });
 
-        // Daftar mahasiswa bimbingan dengan progress
+        // Progress mahasiswa
         $mahasiswaBimbingan = Pelajar::where('pembimbing_id', $user->id)
             ->with('user')
             ->get()
             ->map(function ($pelajar) {
-                // Hitung total kegiatan dan yang selesai
                 $totalKegiatan = Kegiatan::where('user_id', $pelajar->user_id)->count();
                 $kegiatanSelesai = Kegiatan::where('user_id', $pelajar->user_id)
                     ->where('status_penyelesaian', 'Selesai')
                     ->count();
 
-                // Progress berdasarkan kegiatan selesai vs total
                 $pelajar->progress = $totalKegiatan > 0
                     ? round(($kegiatanSelesai / $totalKegiatan) * 100)
                     : 0;
@@ -177,6 +183,17 @@ class DashboardController extends Controller
                 return $pelajar;
             });
 
+        // Total mahasiswa yang dibimbing
+        $totalMahasiswa = Pelajar::where('pembimbing_id', $user->id)->count();
+
+        // Jumlah kegiatan mahasiswa bimbingan
+        $jumlahKegiatan = Kegiatan::whereIn('user_id', $userIds)->count();
+
+        // Jumlah presensi hari ini dari mahasiswa bimbingan
+        $presensiHariIni = Presensi::whereIn('user_id', $userIds)
+            ->whereDate('created_at', today())
+            ->count();
+
         return view('pembimbing.dashboard', compact(
             'totalMahasiswa',
             'pendingBimbingan',
@@ -184,7 +201,10 @@ class DashboardController extends Controller
             'jadwalHariIni',
             'bimbinganPending',
             'jadwalToday',
-            'mahasiswaBimbingan'
+            'mahasiswaBimbingan',
+            'laporanTerbaru',
+            'jumlahKegiatan',
+            'presensiHariIni'
         ));
     }
 }

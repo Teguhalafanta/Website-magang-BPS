@@ -15,7 +15,6 @@ class KegiatanController extends Controller
     {
         $user = Auth::user();
 
-        // ✅ Jika role pelajar → tampilkan kegiatannya sendiri
         if ($user->role == 'pelajar') {
             $kegiatans = Kegiatan::where('user_id', $user->id)
                 ->latest()
@@ -24,7 +23,6 @@ class KegiatanController extends Controller
             return view('kegiatan.index', compact('kegiatans'));
         }
 
-        // ✅ Jika role pembimbing → tampilkan kegiatan semua pelajar bimbingannya
         if ($user->role == 'pembimbing') {
             // Ambil semua pelajar yang dibimbing
             $pelajarIds = Pelajar::where('pembimbing_id', $user->id)->pluck('user_id');
@@ -103,7 +101,6 @@ class KegiatanController extends Controller
     {
         $kegiatan = Kegiatan::findOrFail($id);
 
-        // ✅ Pembimbing hanya bisa lihat kegiatan dari pelajar bimbingannya
         if (Auth::user()->role == 'pembimbing') {
             $pelajarIds = Pelajar::where('pembimbing_id', Auth::id())->pluck('user_id');
             if (!$pelajarIds->contains($kegiatan->user_id)) {

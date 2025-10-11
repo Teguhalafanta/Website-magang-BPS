@@ -41,7 +41,22 @@ class KegiatanController extends Controller
             return view('pembimbing.kegiatan', compact('kegiatans'));
         }
 
-        // Jika bukan pelajar/pembimbing
+        if ($user->role == 'admin') {
+            // Admin bisa melihat semua kegiatan
+            $kegiatans = Kegiatan::with('user')
+                ->when($request->search, function ($query) use ($request) {
+                    $query->where('nama_kegiatan', 'like', "%{$request->search}%")
+                        ->orWhereHas('user', function ($q) use ($request) {
+                            $q->where('name', 'like', "%{$request->search}%");
+                        });
+                })
+                ->latest()
+                ->paginate(10);
+
+            return view('admin.kegiatan.index', compact('kegiatans'));
+        }
+
+        // Jika bukan pelajar/pembimbing/admin
         abort(403, 'Akses tidak diizinkan');
     }
 

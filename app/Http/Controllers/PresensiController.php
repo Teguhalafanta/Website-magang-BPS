@@ -24,13 +24,21 @@ class PresensiController extends Controller
         } elseif ($user->role === 'pembimbing') {
             $presensis = Presensi::with('pelajar')
                 ->whereHas('pelajar', function ($query) use ($user) {
-                    $query->where('pembimbing_id', $user->id); // asumsi tiap pelajar punya kolom pembimbing_id
+                    $query->where('pembimbing_id', $user->id);
                 })
-                ->orderBy('pelajar_id') // bisa urut berdasarkan nama
+                ->orderBy('pelajar_id')
                 ->orderBy('tanggal', 'desc')
                 ->get();
 
             return view('pembimbing.presensi', compact('presensis')); // view untuk pembimbing
+        } elseif ($user->role === 'admin') {
+            // TAMBAHAN: Admin bisa melihat semua presensi
+            $presensis = Presensi::with('pelajar')
+                ->orderBy('tanggal', 'desc')
+                ->orderBy('waktu_datang', 'desc')
+                ->get();
+
+            return view('admin.presensi.index', compact('presensis')); // view untuk admin
         } else {
             abort(403); // role lain tidak bisa mengakses
         }

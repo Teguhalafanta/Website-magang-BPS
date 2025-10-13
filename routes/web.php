@@ -56,7 +56,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/assign-pembimbing', [AssignPembimbingController::class, 'index'])
             ->name('assignpembimbing.view');
 
-        Route::post('/assign-pembimbing', [AssignPembimbingController::class, 'assign'])
+        Route::post('/assign-pembimbing/{id}', [AssignPembimbingController::class, 'assign'])
             ->name('assignpembimbing.assign');
     });
 

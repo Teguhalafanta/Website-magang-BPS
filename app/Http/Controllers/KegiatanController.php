@@ -37,6 +37,7 @@ class KegiatanController extends Controller
                 })
                 ->latest()
                 ->paginate(10);
+                
 
             return view('pembimbing.kegiatan', compact('kegiatans'));
         }

@@ -33,8 +33,8 @@
                                 {{ $pelajar->pembimbing ? $pelajar->pembimbing->nama . ' (' . $pelajar->pembimbing->tim . ')' : 'Belum Ditentukan' }}
                             </td>
                             <td>
-                                <form action="{{ route('admin.assignpembimbing.assign', $pelajar->id) }}" method="POST"
-                                    class="d-flex align-items-center">
+                                <form action="{{ route('admin.assignpembimbing.assign', ['id' => $pelajar->id]) }}"
+                                    method="POST" class="d-flex align-items-center">
                                     @csrf
                                     <select name="pembimbing_id" class="form-select me-2" required>
                                         <option value="">-- Pilih Pembimbing --</option>

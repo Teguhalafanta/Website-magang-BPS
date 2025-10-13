@@ -13,6 +13,7 @@ class Kegiatan extends Model
     protected $table = 'kegiatans';
 
     protected $fillable = [
+        'pelajar_id',
         'user_id',
         'tanggal',
         'nama_kegiatan',
@@ -36,7 +37,7 @@ class Kegiatan extends Model
      */
     public function pelajar()
     {
-        return $this->belongsTo(Pelajar::class, 'pelajar_id', 'id');
+        return $this->belongsTo(Pelajar::class, 'user_id', 'user_id');
     }
 
     /**

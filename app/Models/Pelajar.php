@@ -57,8 +57,9 @@ class Pelajar extends Model
     //relasi ke pembimbing
     public function pembimbing()
     {
-        return $this->belongsTo(User::class, 'pembimbing_id');
+        return $this->belongsTo(Pembimbing::class, 'pembimbing_id');
     }
+
 
     public function kegiatans()
     {

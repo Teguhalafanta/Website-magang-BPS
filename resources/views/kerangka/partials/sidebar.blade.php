@@ -1,4 +1,4 @@
-{{-- sidebar.blade.php --}}
+{{-- sidebar.blade.php - MODIFIED VERSION --}}
 <div id="sidebar" class="active">
     <div class="sidebar-wrapper active">
 
@@ -22,16 +22,29 @@
                             </div>
                         </a>
                     @elseif(auth()->user()->role == 'pelajar')
-                        <a href="{{ route('pelajar.dashboard') }}" class="text-decoration-none d-block">
-                            <img src="{{ $logoUrl }}" alt="Logo"
-                                style="width:120px; height:auto; display:block; margin:0 auto;">
-                            <div
-                                style="font-size:20px; font-weight:bold; white-space:nowrap; margin-top:8px; text-align:center; font-family:'Poppins', sans-serif;">
-                                <span style="color:#007bff;">Badan</span>
-                                <span style="color:#28a745;">Pusat</span>
-                                <span style="color:#fd7e14;">Statistik</span>
-                            </div>
-                        </a>
+                        @if (auth()->user()->isApproved())
+                            <a href="{{ route('pelajar.dashboard') }}" class="text-decoration-none d-block">
+                                <img src="{{ $logoUrl }}" alt="Logo"
+                                    style="width:120px; height:auto; display:block; margin:0 auto;">
+                                <div
+                                    style="font-size:20px; font-weight:bold; white-space:nowrap; margin-top:8px; text-align:center; font-family:'Poppins', sans-serif;">
+                                    <span style="color:#007bff;">Badan</span>
+                                    <span style="color:#28a745;">Pusat</span>
+                                    <span style="color:#fd7e14;">Statistik</span>
+                                </div>
+                            </a>
+                        @else
+                            <a href="{{ route('pelajar.pengajuan.index') }}" class="text-decoration-none d-block">
+                                <img src="{{ $logoUrl }}" alt="Logo"
+                                    style="width:120px; height:auto; display:block; margin:0 auto;">
+                                <div
+                                    style="font-size:20px; font-weight:bold; white-space:nowrap; margin-top:8px; text-align:center; font-family:'Poppins', sans-serif;">
+                                    <span style="color:#007bff;">Badan</span>
+                                    <span style="color:#28a745;">Pusat</span>
+                                    <span style="color:#fd7e14;">Statistik</span>
+                                </div>
+                            </a>
+                        @endif
                     @else
                         <a href="{{ url('/') }}" class="text-decoration-none d-block">
                             <img src="{{ $logoUrl }}" alt="Logo"
@@ -82,7 +95,7 @@
                             </a>
                         </li>
 
-                        <li class="sidebar-item {{ request()->routeIs('admin.pengajuan.index') ? 'active' : '' }}">
+                        <li class="sidebar-item {{ request()->routeIs('admin.pengajuan.*') ? 'active' : '' }}">
                             <a href="{{ route('admin.pengajuan.index') }}" class="sidebar-link">
                                 <i class="bi bi-file-earmark-text"></i>
                                 <span>Pengajuan Magang</span>
@@ -112,44 +125,113 @@
 
                         {{-- Role: Pelajar --}}
                     @elseif(auth()->user()->role == 'pelajar')
-                        <li class="sidebar-item {{ request()->routeIs('pelajar.dashboard') ? 'active' : '' }}">
-                            <a href="{{ route('pelajar.dashboard') }}" class="sidebar-link">
-                                <i class="bi bi-speedometer2"></i>
-                                <span>Dashboard</span>
-                            </a>
-                        </li>
+                        {{-- MENU UNTUK PELAJAR YANG SUDAH DISETUJUI --}}
+                        @if (auth()->user()->isApproved())
+                            <li class="sidebar-item {{ request()->routeIs('pelajar.dashboard') ? 'active' : '' }}">
+                                <a href="{{ route('pelajar.dashboard') }}" class="sidebar-link">
+                                    <i class="bi bi-speedometer2"></i>
+                                    <span>Dashboard</span>
+                                </a>
+                            </li>
 
-                        <li class="sidebar-item {{ request()->routeIs('presensi.*') ? 'active' : '' }}">
-                            <a href="{{ route('pelajar.presensi.index') }}" class="sidebar-link">
-                                <i class="bi bi-calendar-check"></i>
-                                <span>Presensi</span>
-                            </a>
-                        </li>
+                            <li class="sidebar-item {{ request()->routeIs('presensi.*') ? 'active' : '' }}">
+                                <a href="{{ route('pelajar.presensi.index') }}" class="sidebar-link">
+                                    <i class="bi bi-calendar-check"></i>
+                                    <span>Presensi</span>
+                                </a>
+                            </li>
 
-                        <li class="sidebar-item has-sub {{ request()->routeIs('pelajar.kegiatan.*') ? 'active' : '' }}">
-                            <a href="{{ route('pelajar.kegiatan.index') }}" class="sidebar-link">
-                                <i class="bi bi-journal-text"></i>
-                                <span>Kegiatan</span>
-                            </a>
-                            <ul class="submenu"
-                                style="{{ request()->routeIs('pelajar.kegiatan.*') ? 'display:block;' : 'display:none;' }}">
-                                <li
-                                    class="submenu-item {{ request()->routeIs('pelajar.kegiatan.harian') ? 'active' : '' }}">
-                                    <a href="{{ route('pelajar.kegiatan.harian') }}">Kegiatan Harian</a>
-                                </li>
-                                <li
-                                    class="submenu-item {{ request()->routeIs('pelajar.kegiatan.bulanan') ? 'active' : '' }}">
-                                    <a href="{{ route('pelajar.kegiatan.bulanan') }}">Kegiatan Bulanan</a>
-                                </li>
-                            </ul>
-                        </li>
+                            <li
+                                class="sidebar-item has-sub {{ request()->routeIs('pelajar.kegiatan.*') ? 'active' : '' }}">
+                                <a href="{{ route('pelajar.kegiatan.index') }}" class="sidebar-link">
+                                    <i class="bi bi-journal-text"></i>
+                                    <span>Kegiatan</span>
+                                </a>
+                                <ul class="submenu"
+                                    style="{{ request()->routeIs('pelajar.kegiatan.*') ? 'display:block;' : 'display:none;' }}">
+                                    <li
+                                        class="submenu-item {{ request()->routeIs('pelajar.kegiatan.harian') ? 'active' : '' }}">
+                                        <a href="{{ route('pelajar.kegiatan.harian') }}">Kegiatan Harian</a>
+                                    </li>
+                                    <li
+                                        class="submenu-item {{ request()->routeIs('pelajar.kegiatan.bulanan') ? 'active' : '' }}">
+                                        <a href="{{ route('pelajar.kegiatan.bulanan') }}">Kegiatan Bulanan</a>
+                                    </li>
+                                </ul>
+                            </li>
 
-                        <li class="sidebar-item {{ request()->routeIs('pelajar.pengajuan.index') ? 'active' : '' }}">
-                            <a href="{{ route('pelajar.pengajuan.index') }}" class="sidebar-link">
-                                <i class="bi bi-file-earmark-text"></i>
-                                <span>Daftar Pengajuan</span>
-                            </a>
-                        </li>
+                            <li class="sidebar-item {{ request()->routeIs('pelajar.pengajuan.*') ? 'active' : '' }}">
+                                <a href="{{ route('pelajar.pengajuan.index') }}" class="sidebar-link">
+                                    <i class="bi bi-file-earmark-text"></i>
+                                    <span>Daftar Pengajuan</span>
+                                    <span class="badge bg-success ms-auto" style="font-size: 10px;">Disetujui</span>
+                                </a>
+                            </li>
+
+                            {{-- MENU UNTUK PELAJAR YANG BELUM DISETUJUI --}}
+                        @else
+                            <li class="sidebar-item {{ request()->routeIs('pelajar.pengajuan.*') ? 'active' : '' }}">
+                                <a href="{{ route('pelajar.pengajuan.index') }}" class="sidebar-link">
+                                    <i class="bi bi-file-earmark-text"></i>
+                                    <span>Daftar Pengajuan</span>
+                                    @if (auth()->user()->pelajar)
+                                        @if (auth()->user()->pelajar->status === 'menunggu')
+                                            <span class="badge bg-warning text-dark ms-auto"
+                                                style="font-size: 10px;">Diajukan</span>
+                                        @elseif(auth()->user()->pelajar->status === 'ditolak')
+                                            <span class="badge bg-danger ms-auto" style="font-size: 10px;">Ditolak</span>
+                                        @else
+                                            <span class="badge bg-secondary ms-auto" style="font-size: 10px;">Draft</span>
+                                        @endif
+                                    @else
+                                        <span class="badge bg-secondary ms-auto" style="font-size: 10px;">Belum</span>
+                                    @endif
+                                </a>
+                            </li>
+
+                            {{-- Info Message untuk Pelajar yang belum disetujui --}}
+                            <li class="sidebar-item" style="pointer-events: none;">
+                                <div class="p-3 mt-3"
+                                    style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);">
+                                    <div class="text-center mb-2">
+                                        <i class="bi bi-lock-fill" style="font-size: 32px; color: #fff;"></i>
+                                    </div>
+                                    <p class="text-white text-center mb-1"
+                                        style="font-size: 12px; font-weight: 600; line-height: 1.4;">
+                                        Menu Terkunci
+                                    </p>
+                                    <p class="text-white text-center mb-0"
+                                        style="font-size: 10px; line-height: 1.3; opacity: 0.9;">
+                                        Selesaikan pengajuan dan dapatkan persetujuan untuk mengakses fitur lengkap
+                                    </p>
+                                </div>
+                            </li>
+
+                            {{-- Menu yang di-disable (ditampilkan tapi tidak bisa diklik) --}}
+                            <li class="sidebar-item disabled" style="opacity: 0.5; pointer-events: none;">
+                                <a href="#" class="sidebar-link">
+                                    <i class="bi bi-speedometer2"></i>
+                                    <span>Dashboard</span>
+                                    <i class="bi bi-lock-fill ms-auto" style="font-size: 14px;"></i>
+                                </a>
+                            </li>
+
+                            <li class="sidebar-item disabled" style="opacity: 0.5; pointer-events: none;">
+                                <a href="#" class="sidebar-link">
+                                    <i class="bi bi-calendar-check"></i>
+                                    <span>Presensi</span>
+                                    <i class="bi bi-lock-fill ms-auto" style="font-size: 14px;"></i>
+                                </a>
+                            </li>
+
+                            <li class="sidebar-item disabled" style="opacity: 0.5; pointer-events: none;">
+                                <a href="#" class="sidebar-link">
+                                    <i class="bi bi-journal-text"></i>
+                                    <span>Kegiatan</span>
+                                    <i class="bi bi-lock-fill ms-auto" style="font-size: 14px;"></i>
+                                </a>
+                            </li>
+                        @endif
 
                         {{-- Role: Pembimbing --}}
                     @elseif(auth()->user()->role == 'pembimbing')
@@ -216,3 +298,38 @@
         </div>
     </div>
 </div>
+
+<style>
+    /* Style untuk badge status */
+    .sidebar-link .badge {
+        padding: 2px 8px;
+        border-radius: 10px;
+        font-weight: 600;
+    }
+
+    /* Style untuk menu yang disabled */
+    .sidebar-item.disabled {
+        cursor: not-allowed;
+    }
+
+    .sidebar-item.disabled .sidebar-link {
+        color: #6c757d !important;
+    }
+
+    /* Animation untuk info box */
+    @keyframes pulse {
+
+        0%,
+        100% {
+            transform: scale(1);
+        }
+
+        50% {
+            transform: scale(1.02);
+        }
+    }
+
+    .sidebar-item [style*="background: linear-gradient"] {
+        animation: pulse 3s ease-in-out infinite;
+    }
+</style>

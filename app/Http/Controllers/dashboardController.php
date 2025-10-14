@@ -41,12 +41,50 @@ class DashboardController extends Controller
 
     public function pelajar()
     {
-        $jumlahPresensiHariIni = Presensi::whereDate('created_at', now())->count();
-        $jumlahKegiatan = Kegiatan::count();
+        // PERBAIKAN: Ambil user yang sedang login
+        $user = Auth::user();
+        
+        // PERBAIKAN: Filter presensi berdasarkan user_id yang login
+        // Pastikan tabel presensi memiliki kolom user_id
+        $jumlahPresensiHariIni = Presensi::where('user_id', $user->id)
+            ->whereDate('created_at', now())
+            ->count();
+        
+        // PERBAIKAN: Filter kegiatan berdasarkan user_id yang login
+        // Pastikan tabel kegiatan memiliki kolom user_id
+        $jumlahKegiatan = Kegiatan::where('user_id', $user->id)
+            ->count();
+
+        // TAMBAHAN: Data detail untuk dashboard pelajar
+        // Daftar kegiatan terbaru milik pelajar ini
+        $kegiatanTerbaru = Kegiatan::where('user_id', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->take(5)
+            ->get();
+        
+        // Presensi terbaru milik pelajar ini
+        $presensiTerbaru = Presensi::where('user_id', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->take(5)
+            ->get();
+        
+        // Statistik tambahan
+        $totalPresensi = Presensi::where('user_id', $user->id)->count();
+        $kegiatanSelesai = Kegiatan::where('user_id', $user->id)
+            ->where('status_penyelesaian', 'Selesai')
+            ->count();
+        $kegiatanProses = Kegiatan::where('user_id', $user->id)
+            ->whereIn('status_penyelesaian', ['Belum Dimulai', 'Dalam Proses'])
+            ->count();
 
         return view('dashboard.pelajar', compact(
             'jumlahPresensiHariIni',
-            'jumlahKegiatan'
+            'jumlahKegiatan',
+            'kegiatanTerbaru',
+            'presensiTerbaru',
+            'totalPresensi',
+            'kegiatanSelesai',
+            'kegiatanProses'
         ));
     }
 

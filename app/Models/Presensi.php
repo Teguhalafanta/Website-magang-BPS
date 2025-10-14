@@ -17,6 +17,11 @@ class Presensi extends Model
         'waktu_pulang',
         'status',
     ];
+    public function kegiatan()
+    {
+        return $this->belongsTo(Kegiatan::class, 'kegiatan_id', 'id');
+    }
+
 
     // Relasi ke User
     public function user()

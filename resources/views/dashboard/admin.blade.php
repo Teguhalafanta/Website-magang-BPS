@@ -36,7 +36,7 @@
 
             {{-- Presensi Hari Ini --}}
             <div class="col-md-4 mb-2">
-                <a href="{{ route('pelajar.presensi.index', ['today' => true]) }}" class="text-decoration-none">
+                <a href="{{ route('admin.presensi.index', ['today' => true]) }}" class="text-decoration-none">
                     <div class="card bg-warning text-white shadow border-0 h-100">
                         <div class="card-body p-3">
                             <div class="d-flex justify-content-between align-items-start mb-2">
@@ -60,23 +60,25 @@
 
             {{-- Total Kegiatan --}}
             <div class="col-md-4 mb-2">
-                <div class="card text-white bg-success shadow border-0 h-100">
-                    <div class="card-body p-3">
-                        <div class="d-flex justify-content-between align-items-start mb-2">
-                            <div>
-                                <h6 class="text-white-50 mb-1 text-uppercase" style="font-size: 0.7rem;">Total Kegiatan</h6>
-                                <h3 class="fw-bold mb-0">{{ $jumlahKegiatan }}</h3>
+                <a href="{{ route('admin.kegiatan.index') }}" class="text-decoration-none">
+                    <div class="card text-white bg-success shadow border-0 h-100">
+                        <div class="card-body p-3">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div>
+                                    <h6 class="text-white-50 mb-1 text-uppercase" style="font-size: 0.7rem;">Total Kegiatan</h6>
+                                    <h3 class="fw-bold mb-0">{{ $jumlahKegiatan }}</h3>
+                                </div>
+                                <div class="bg-white bg-opacity-25 rounded-3 p-2">
+                                    <i class="bi bi-list-task fs-4"></i>
+                                </div>
                             </div>
-                            <div class="bg-white bg-opacity-25 rounded-3 p-2">
-                                <i class="bi bi-list-task fs-4"></i>
+                            <div class="d-flex align-items-center">
+                                <small class="text-white-50" style="font-size: 0.75rem;">Lihat Detail</small>
+                                <i class="bi bi-arrow-right ms-1" style="font-size: 0.75rem;"></i>
                             </div>
-                        </div>
-                        <div class="d-flex align-items-center">
-                            <small class="text-white-50" style="font-size: 0.75rem;">Kegiatan Aktif</small>
-                            <i class="bi bi-check-circle-fill ms-1" style="font-size: 0.75rem;"></i>
                         </div>
                     </div>
-                </div>
+                </a>
             </div>
         </div>
 

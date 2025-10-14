@@ -13,7 +13,15 @@
             </div>
         @endif
 
-        {{-- Alert Error --}}
+        {{-- Alert Error dari Controller (misal username sudah dipakai) --}}
+        @if (session('error'))
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="fas fa-exclamation-circle me-2"></i> {{ session('error') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        @endif
+
+        {{-- Alert Error Validasi --}}
         @if ($errors->any())
             <div class="alert alert-danger alert-dismissible fade show" role="alert">
                 <i class="fas fa-exclamation-circle me-2"></i>
@@ -51,8 +59,9 @@
                 <div class="col-md-9">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h5 class="fw-bold">Data Pribadi</h5>
-                        <button class="btn btn-sm btn-light" data-bs-toggle="modal" data-bs-target="#editPribadiModal">
-                            <i class="fas fa-pen"></i>
+                        <button class="btn btn-sm btn-dark rounded-circle" data-bs-toggle="modal"
+                            data-bs-target="#editPribadiModal" title="Edit Data Pribadi">
+                            <i class="bi bi-person-lines-fill fs-6 text-white"></i>
                         </button>
                     </div>
 
@@ -151,54 +160,119 @@
     {{-- ==================== MODAL EDIT DATA PRIBADI ==================== --}}
     <div class="modal fade" id="editPribadiModal" tabindex="-1" aria-labelledby="editPribadiLabel" aria-hidden="true">
         <div class="modal-dialog">
-            <form action="{{ route('profile.update') }}" method="POST">
+            <form action="{{ route('profile.update') }}" method="POST" class="w-100">
                 @csrf
                 @method('PUT')
                 <div class="modal-content">
-                    <div class="modal-header">
+                    <div class="modal-header bg-primary text-white">
                         <h5 class="modal-title fw-bold" id="editPribadiLabel">Edit Data Pribadi</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                     </div>
                     <div class="modal-body">
-                        <div class="mb-3">
-                            <label class="form-label">Nama</label>
-                            <input type="text" name="nama" class="form-control"
-                                value="{{ optional($user->pelajar)->nama }}" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">NIM / NISN</label>
-                            <input type="text" name="nim_nisn" class="form-control"
-                                value="{{ optional($user->pelajar)->nim_nisn }}">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Fakultas</label>
-                            <input type="text" name="fakultas" class="form-control"
-                                value="{{ optional($user->pelajar)->fakultas }}">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Jurusan</label>
-                            <input type="text" name="jurusan" class="form-control"
-                                value="{{ optional($user->pelajar)->jurusan }}">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Asal Institusi</label>
-                            <input type="text" name="asal_institusi" class="form-control"
-                                value="{{ optional($user->pelajar)->asal_institusi }}">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Telepon</label>
-                            <input type="text" name="telepon" class="form-control"
-                                value="{{ optional($user->pelajar)->telepon }}">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Email</label>
-                            <input type="email" name="email" class="form-control bg-light"
-                                value="{{ $user->email }}" readonly>
+                        <div class="row">
+                            {{-- ===== Field Nama (semua role punya) ===== --}}
+                            <div class="mb-3">
+                                <div class="form-group has-icon-left">
+                                    <label for="nama">Nama</label>
+                                    <div class="position-relative">
+                                        <input type="text" id="nama" name="nama" class="form-control"
+                                            value="{{ $user->role === 'pelajar' ? optional($user->pelajar)->nama : $user->username }}"
+                                            required>
+                                        <div class="form-control-icon">
+                                            <i class="bi bi-person"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {{-- ===== Field khusus Pelajar ===== --}}
+                            @if ($user->role === 'pelajar')
+                                <div class="mb-3">
+                                    <div class="form-group has-icon-left">
+                                        <label for="nim_nisn">NIM / NISN</label>
+                                        <div class="position-relative">
+                                            <input type="text" id="nim_nisn" name="nim_nisn" class="form-control"
+                                                value="{{ optional($user->pelajar)->nim_nisn }}">
+                                            <div class="form-control-icon">
+                                                <i class="bi bi-card-text"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <div class="form-group has-icon-left">
+                                        <label for="fakultas">Fakultas</label>
+                                        <div class="position-relative">
+                                            <input type="text" id="fakultas" name="fakultas" class="form-control"
+                                                value="{{ optional($user->pelajar)->fakultas }}">
+                                            <div class="form-control-icon">
+                                                <i class="bi bi-building"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <div class="form-group has-icon-left">
+                                        <label for="jurusan">Jurusan</label>
+                                        <div class="position-relative">
+                                            <input type="text" id="jurusan" name="jurusan" class="form-control"
+                                                value="{{ optional($user->pelajar)->jurusan }}">
+                                            <div class="form-control-icon">
+                                                <i class="bi bi-book"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <div class="form-group has-icon-left">
+                                        <label for="asal_institusi">Asal Institusi</label>
+                                        <div class="position-relative">
+                                            <input type="text" id="asal_institusi" name="asal_institusi"
+                                                class="form-control"
+                                                value="{{ optional($user->pelajar)->asal_institusi }}">
+                                            <div class="form-control-icon">
+                                                <i class="bi bi-bank"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <div class="form-group has-icon-left">
+                                        <label for="telepon">Telepon</label>
+                                        <div class="position-relative">
+                                            <input type="text" id="telepon" name="telepon" class="form-control"
+                                                value="{{ optional($user->pelajar)->telepon }}">
+                                            <div class="form-control-icon">
+                                                <i class="bi bi-telephone"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+
+                            {{-- ===== Email (readonly) ===== --}}
+                            <div class="mb-3">
+                                <div class="form-group has-icon-left">
+                                    <label for="email">Email</label>
+                                    <div class="position-relative">
+                                        <input type="email" id="email" name="email"
+                                            class="form-control bg-light" value="{{ $user->email }}" readonly>
+                                        <div class="form-control-icon">
+                                            <i class="bi bi-envelope"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                        <button type="submit" class="btn btn-primary">Simpan</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i
+                                class="bi bi-x-circle me-1"></i>Batal</button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-save me-1"></i>Simpan Perubahan</button>
                     </div>
                 </div>
             </form>

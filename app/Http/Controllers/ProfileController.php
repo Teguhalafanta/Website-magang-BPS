@@ -37,6 +37,9 @@ class ProfileController extends Controller
      */
     public function update(Request $request)
     {
+        $user = User::with('pelajar')->findOrFail(Auth::id());
+
+        // Validasi umum (berlaku untuk semua role)
         $request->validate([
             'nama' => 'required|string|max:255',
             'nim_nisn' => 'nullable|string|max:50',
@@ -44,14 +47,10 @@ class ProfileController extends Controller
             'jurusan' => 'nullable|string|max:255',
             'asal_institusi' => 'nullable|string|max:255',
             'telepon' => 'nullable|string|max:20',
-            'email' => 'email',
         ]);
 
-        $user = User::with(['pelajar'])
-            ->findOrFail(Auth::id());
-
-        // ⚙️ Update data pelajar (karena semua data pribadi disimpan di tabel pelajar)
-        if ($user->role == 'pelajar' && $user->pelajar) {
+        // Jika user adalah pelajar → update tabel pelajar
+        if ($user->role === 'pelajar' && $user->pelajar) {
             $user->pelajar->update([
                 'nama' => $request->nama,
                 'nim_nisn' => $request->nim_nisn,
@@ -62,7 +61,31 @@ class ProfileController extends Controller
             ]);
         }
 
-        return redirect()->route('profile.show')->with('success', 'Data pribadi berhasil diperbarui.');
+        // Jika user adalah admin atau pembimbing → update data langsung di tabel users
+        if (in_array($user->role, ['pembimbing', 'admin'])) {
+            // Cek dulu apakah username sudah dipakai oleh user lain
+            if (User::where('username', $request->nama)
+                ->where('id', '!=', $user->id)
+                ->exists()
+            ) {
+                return back()->with('error', 'Username sudah digunakan oleh pengguna lain.');
+            }
+
+            // Jika aman, lanjut update
+            $user->update([
+                'username' => $request->nama, // gunakan field 'username' untuk nama
+            ]);
+        }
+
+        // Pesan sukses berdasarkan role
+        $pesan = match ($user->role) {
+            'pelajar' => 'Data pribadi pelajar berhasil diperbarui.',
+            'pembimbing' => 'Profil pembimbing berhasil diperbarui.',
+            'admin' => 'Profil admin berhasil diperbarui.',
+            default => 'Data pribadi berhasil diperbarui.'
+        };
+
+        return redirect()->route('profile.show')->with('success', $pesan);
     }
 
     /**

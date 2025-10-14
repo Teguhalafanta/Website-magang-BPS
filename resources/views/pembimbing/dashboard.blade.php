@@ -10,76 +10,83 @@
                     Selamat datang kembali,
                     <strong>{{ Auth::user()->pembimbing->nama ?? Auth::user()->username }}</strong>
                 </p>
-
             </div>
         </div>
 
         {{-- Stats Row --}}
         <div class="row g-3 mb-4">
+            {{-- Card 1: Total Mahasiswa --}}
             <div class="col-sm-6 col-lg-3">
-                <div class="card text-white bg-primary shadow-sm border-0 h-100">
-                    <div class="card-body p-3">
-                        <div class="d-flex justify-content-between align-items-start">
-                            <div>
-                                <p class="text-uppercase fw-semibold mb-2 opacity-75" style="font-size: 0.75rem;">Total
-                                    Mahasiswa</p>
-                                <h2 class="fw-bold mb-0 display-6">{{ $totalMahasiswa ?? 0 }}</h2>
+                <a href="{{ route('pembimbing.bimbingan') }}" class="text-decoration-none">
+                    <div class="card text-white bg-primary shadow-sm border-0 h-100 clickable-card">
+                        <div class="card-body p-3">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <p class="text-uppercase fw-semibold mb-2 opacity-75" style="font-size: 0.75rem;">Total
+                                        Mahasiswa</p>
+                                    <h2 class="fw-bold mb-0 display-6">{{ $totalMahasiswa ?? 0 }}</h2>
+                                </div>
+                                <i class="bi bi-people-fill opacity-50" style="font-size: 2.5rem;"></i>
                             </div>
-                            <i class="bi bi-people-fill opacity-50" style="font-size: 2.5rem;"></i>
+                        </div>
+                        <div class="card-footer border-0 bg-white bg-opacity-10 py-2">
+                            <span class="text-white text-decoration-none small fw-semibold d-flex align-items-center">
+                                <span>Lihat Detail</span>
+                                <i class="bi bi-arrow-right ms-auto"></i>
+                            </span>
                         </div>
                     </div>
-                    <div class="card-footer border-0 bg-white bg-opacity-10 py-2">
-                        <a href="{{ route('pembimbing.bimbingan') }}"
-                            class="text-white text-decoration-none small fw-semibold d-flex align-items-center">
-                            <span>Lihat Detail</span>
-                            <i class="bi bi-arrow-right ms-auto"></i>
-                        </a>
-                    </div>
-                </div>
+                </a>
             </div>
 
+            {{-- Card 2: Kegiatan --}}
             <div class="col-sm-6 col-lg-3">
-                <div class="card text-white bg-danger shadow-sm border-0 h-100">
-                    <div class="card-body p-3">
-                        <div class="d-flex justify-content-between align-items-start">
-                            <div>
-                                <p class="text-uppercase fw-semibold mb-2 opacity-75" style="font-size: 0.75rem;">Kegiatan
-                                </p>
-                                <h2 class="fw-bold mb-0 display-6">{{ $jumlahKegiatan ?? 0 }}</h2>
+                <a href="{{ route('pembimbing.kegiatan') }}" class="text-decoration-none">
+                    <div class="card text-white bg-danger shadow-sm border-0 h-100 clickable-card">
+                        <div class="card-body p-3">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <p class="text-uppercase fw-semibold mb-2 opacity-75" style="font-size: 0.75rem;">
+                                        Kegiatan
+                                    </p>
+                                    <h2 class="fw-bold mb-0 display-6">{{ $jumlahKegiatan ?? 0 }}</h2>
+                                </div>
+                                <i class="bi bi-journal-text opacity-50" style="font-size: 2.5rem;"></i>
                             </div>
-                            <i class="bi bi-journal-text opacity-50" style="font-size: 2.5rem;"></i>
+                        </div>
+                        <div class="card-footer border-0 bg-white bg-opacity-10 py-2">
+                            <span class="text-white text-decoration-none small fw-semibold d-flex align-items-center">
+                                <span>Lihat Detail</span>
+                                <i class="bi bi-arrow-right ms-auto"></i>
+                            </span>
                         </div>
                     </div>
-                    <div class="card-footer border-0 bg-white bg-opacity-10 py-2">
-                        <a href="{{ route('pembimbing.kegiatan') }}"
-                            class="text-white text-decoration-none small fw-semibold d-flex align-items-center">
-                            <span>Lihat Detail</span>
-                            <i class="bi bi-arrow-right ms-auto"></i>
-                        </a>
-                    </div>
-                </div>
+                </a>
             </div>
 
+            {{-- Card 3: Presensi Hari Ini --}}
             <div class="col-sm-6 col-lg-3">
-                <div class="card text-white bg-info shadow-sm border-0 h-100">
-                    <div class="card-body p-3">
-                        <div class="d-flex justify-content-between align-items-start">
-                            <div>
-                                <p class="text-uppercase fw-semibold mb-2 opacity-75" style="font-size: 0.75rem;">Presensi
-                                    Hari Ini</p>
-                                <h2 class="fw-bold mb-0 display-6">{{ $presensiHariIni ?? 0 }}</h2>
+                <a href="{{ route('pembimbing.presensi') }}" class="text-decoration-none">
+                    <div class="card text-white bg-info shadow-sm border-0 h-100 clickable-card">
+                        <div class="card-body p-3">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <p class="text-uppercase fw-semibold mb-2 opacity-75" style="font-size: 0.75rem;">
+                                        Presensi
+                                        Hari Ini</p>
+                                    <h2 class="fw-bold mb-0 display-6">{{ $presensiHariIni ?? 0 }}</h2>
+                                </div>
+                                <i class="bi bi-clipboard-check opacity-50" style="font-size: 2.5rem;"></i>
                             </div>
-                            <i class="bi bi-clipboard-check opacity-50" style="font-size: 2.5rem;"></i>
+                        </div>
+                        <div class="card-footer border-0 bg-white bg-opacity-10 py-2">
+                            <span class="text-white text-decoration-none small fw-semibold d-flex align-items-center">
+                                <span>Lihat Detail</span>
+                                <i class="bi bi-arrow-right ms-auto"></i>
+                            </span>
                         </div>
                     </div>
-                    <div class="card-footer border-0 bg-white bg-opacity-10 py-2">
-                        <a href="{{ route('pembimbing.presensi') }}"
-                            class="text-white text-decoration-none small fw-semibold d-flex align-items-center">
-                            <span>Lihat Detail</span>
-                            <i class="bi bi-arrow-right ms-auto"></i>
-                        </a>
-                    </div>
-                </div>
+                </a>
             </div>
         </div>
 
@@ -183,4 +190,33 @@
             </div>
         </div>
     </div>
+
+    {{-- Custom CSS untuk Hover Effect --}}
+    <style>
+        .clickable-card {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .clickable-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.2) !important;
+        }
+
+        .clickable-card:active {
+            transform: translateY(-2px);
+        }
+
+        /* Smooth transition for all cards */
+        .clickable-card .card-body,
+        .clickable-card .card-footer {
+            transition: all 0.3s ease;
+        }
+
+        /* Optional: Add subtle scale effect on hover */
+        .clickable-card:hover .bi {
+            transform: scale(1.1);
+            transition: transform 0.3s ease;
+        }
+    </style>
 @endsection

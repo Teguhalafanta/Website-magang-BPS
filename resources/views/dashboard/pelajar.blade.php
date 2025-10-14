@@ -35,19 +35,50 @@
                 </a>
             </div>
 
-            {{-- Ajukan Magang --}}
-            <div class="col-md-4 mb-3">
-                <a href="{{ route('pelajar.pengajuan.create') }}" class="text-decoration-none">
-                    <div class="card text-white bg-info shadow">
-                        <div class="card-body d-flex justify-content-between align-items-center">
-                            <div>
-                                <h5>Ajukan Magang</h5>
+            {{-- Ajukan Magang (Hanya tampil jika belum disetujui) --}}
+            @if(!auth()->user()->isApproved())
+                <div class="col-md-4 mb-3">
+                    <a href="{{ route('pelajar.pengajuan.create') }}" class="text-decoration-none">
+                        <div class="card text-white bg-info shadow">
+                            <div class="card-body d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h5>Ajukan Magang</h5>
+                                </div>
+                                <i class="bi bi-file-earmark-text fs-2"></i>
                             </div>
-                            <i class="bi bi-file-earmark-text fs-2"></i>
+                        </div>
+                    </a>
+                </div>
+            @endif
+        </div>
+
+        {{-- Informasi Status Pengajuan (Hanya tampil jika belum disetujui) --}}
+        @if(!auth()->user()->isApproved())
+            <div class="row mt-4">
+                <div class="col-12">
+                    <div class="alert alert-info d-flex align-items-center" role="alert">
+                        <i class="bi bi-info-circle-fill fs-4 me-3"></i>
+                        <div>
+                            <strong>Informasi:</strong> 
+                            @if(auth()->user()->pelajar)
+                                @if(auth()->user()->pelajar->status === 'menunggu')
+                                    Pengajuan magang Anda sedang dalam proses review. Silakan tunggu persetujuan dari admin.
+                                @elseif(auth()->user()->pelajar->status === 'ditolak')
+                                    Pengajuan magang Anda ditolak. 
+                                    @if(auth()->user()->pelajar->alasan)
+                                        <br><strong>Alasan:</strong> {{ auth()->user()->pelajar->alasan }}
+                                    @endif
+                                    <br>Anda dapat mengajukan kembali dengan memperbaiki data pengajuan.
+                                @else
+                                    Silakan lengkapi pengajuan magang Anda untuk mengakses semua fitur.
+                                @endif
+                            @else
+                                Silakan ajukan magang terlebih dahulu untuk mengakses semua fitur dashboard.
+                            @endif
                         </div>
                     </div>
-                </a>
+                </div>
             </div>
-        </div>
+        @endif
     </div>
 @endsection

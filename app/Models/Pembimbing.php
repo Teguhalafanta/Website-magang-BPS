@@ -26,8 +26,7 @@ class Pembimbing extends Model
     {
         return $this->belongsTo(User::class);
     }
-
-    // Relasi ke pelajar (opsional, jika ingin melihat pelajar yang dibimbing)
+    
     public function pelajars()
     {
         return $this->hasMany(Pelajar::class);

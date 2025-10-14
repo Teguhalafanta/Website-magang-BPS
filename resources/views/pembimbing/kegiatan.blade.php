@@ -8,14 +8,8 @@
         <div class="row mb-4">
             <div class="col-12">
                 <div class="d-flex align-items-center mb-3">
-                    <div class="bg-primary rounded-circle p-3 me-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="white" viewBox="0 0 16 16">
-                            <path
-                                d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3z" />
-                        </svg>
-                    </div>
                     <div>
-                        <h2 class="mb-1 fw-bold text-dark">Daftar Kegiatan Pelajar</h2>
+                        <h2 class="mb-1 fw-bold text-dark">Daftar Kegiatan Peserta Bimbingan</h2>
                         <p class="text-muted mb-0">Laporan aktivitas dan progress pelajar bimbingan Anda</p>
                     </div>
                 </div>
@@ -44,25 +38,44 @@
                 style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
                 <div class="d-flex justify-content-between align-items-center">
                     <h5 class="mb-0 fw-bold text-black">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                            class="me-2 mb-1" viewBox="0 0 16 16">
-                            <path
-                                d="M14 1a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z" />
-                            <path
-                                d="M5 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 5 8zm0-2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm0 5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zm-1-5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0zM4 8a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0zm0 2.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0z" />
-                        </svg>
                         Tabel Kegiatan
                     </h5>
-                    <span class="badge bg-black ext-primary px-3 py-2 rounded-pill fw-semibold">
-                        Total: {{ $kegiatans->total() }} Kegiatan
-                    </span>
+                </div>
+            </div>
+
+            <!-- Search Section -->
+            <div class="card-body bg-light border-bottom">
+                <div class="row g-3 align-items-center">
+                    <div class="col-md-6">
+                        <label for="searchInput" class="form-label fw-semibold mb-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="me-1" viewBox="0 0 16 16">
+                                <path
+                                    d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                            </svg>
+                            Cari Kegiatan
+                        </label>
+                        <input type="text" id="searchInput" class="form-control form-control-lg border-2"
+                            placeholder="Ketik untuk mencari...">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="lengthMenu" class="form-label fw-semibold mb-2">
+                            Tampilkan Data
+                        </label>
+                        <select id="lengthMenu" class="form-select form-select-lg border-2">
+                            <option value="10">10 data</option>
+                            <option value="25">25 data</option>
+                            <option value="50">50 data</option>
+                            <option value="100">100 data</option>
+                        </select>
+                    </div>
                 </div>
             </div>
 
             <!-- Card Body -->
             <div class="card-body p-0">
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0">
+                    <table id="kegiatanTable" class="table table-hover align-middle mb-0">
                         <thead class="bg-light">
                             <tr class="text-center">
                                 <th class="py-3 px-3 fw-semibold text-secondary" style="width: 50px;">No</th>
@@ -125,7 +138,8 @@
                                         </span>
                                     </td>
                                     <td class="text-center px-3">
-                                        <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1"
+                                        <button type="button"
+                                            class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1"
                                             data-bs-toggle="modal" data-bs-target="#detailModal{{ $kegiatan->id }}">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12"
                                                 fill="currentColor" class="me-1 mb-1" viewBox="0 0 16 16">
@@ -283,6 +297,16 @@
                         </tbody>
                     </table>
                 </div>
+
+                <!-- Pagination Info -->
+                <div class="d-flex justify-content-between align-items-center p-3 bg-light border-top">
+                    <div class="text-muted small" id="tableInfo">
+                        Menampilkan data
+                    </div>
+                    <nav id="paginationNav">
+                        <!-- Pagination will be inserted here by DataTables -->
+                    </nav>
+                </div>
             </div>
         </div>
     </div>
@@ -291,33 +315,59 @@
 @push('scripts')
     <script>
         $(document).ready(function() {
-            const table = $('table').DataTable({
+            const table = $('#kegiatanTable').DataTable({
                 paging: true,
                 searching: true,
                 ordering: true,
                 pageLength: 10,
                 language: {
-                    search: "Cari:",
-                    lengthMenu: "Tampilkan _MENU_ data",
+                    search: "",
+                    searchPlaceholder: "Cari data...",
+                    lengthMenu: "Tampilkan _MENU_ data per halaman",
                     info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
+                    infoEmpty: "Menampilkan 0 sampai 0 dari 0 data",
+                    infoFiltered: "(difilter dari _MAX_ total data)",
                     paginate: {
                         first: "Pertama",
                         last: "Terakhir",
                         next: "›",
                         previous: "‹"
                     },
-                    zeroRecords: "Tidak ada data yang cocok"
+                    zeroRecords: "Tidak ada data yang cocok dengan pencarian"
                 },
-                dom: '<"top"f>rt<"bottom"lp><"clear">',
+                dom: 't',
                 scrollX: false,
-                autoWidth: false
+                autoWidth: false,
+                order: [
+                    [3, 'desc']
+                ]
             });
 
-            // Filter berdasarkan nama pelajar
-            $('#filterNama').on('change', function() {
-                const nama = $(this).val();
-                table.column(1).search(nama).draw();
+            // Custom search input
+            $('#searchInput').on('keyup', function() {
+                table.search(this.value).draw();
             });
+
+            // Custom length menu
+            $('#lengthMenu').on('change', function() {
+                table.page.len(parseInt(this.value)).draw();
+            });
+
+            // Update info display
+            table.on('draw', function() {
+                const info = table.page.info();
+                $('#tableInfo').html(
+                    'Menampilkan ' + (info.start + 1) + ' sampai ' + info.end + ' dari ' + info
+                    .recordsTotal + ' data'
+                );
+            });
+
+            // Initial info display
+            const info = table.page.info();
+            $('#tableInfo').html(
+                'Menampilkan ' + (info.start + 1) + ' sampai ' + info.end + ' dari ' + info.recordsTotal +
+                ' data'
+            );
         });
     </script>
 @endpush

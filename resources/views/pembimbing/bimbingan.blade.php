@@ -3,10 +3,14 @@
 @section('content')
     <div class="container-fluid px-4 py-4">
         <!-- Header Section -->
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <div>
-                <h3 class="fw-bold text-primary mb-1">Daftar Peserta Bimbingan</h3>
-                <p class="text-muted mb-0">Kelola dan lihat detail peserta bimbingan</p>
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="d-flex align-items-center mb-3">
+                    <div>
+                        <h2 class="mb-1 fw-bold text-dark">Daftar Peserta Bimbingan</h2>
+                        <p class="text-muted mb-0">Kelola dan lihat detail peserta bimbingan</p>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -26,12 +30,39 @@
 
         <!-- Table Card -->
         <div class="card shadow-sm border-0">
-            <div class="card-header bg-white py-3">
+            <div class="card-header bg-grey py-3">
                 <h5 class="mb-0 text-dark fw-semibold">Data Peserta</h5>
             </div>
             <div class="card-body p-0">
+
+                <!-- Search & Filter Section -->
+                <div class="card-body bg-light border-bottom">
+                    <div class="row g-3 align-items-center">
+                        <div class="col-md-6">
+                            <label for="searchInputBimbingan" class="form-label fw-semibold mb-2">
+                                <i class="bi bi-search me-1"></i> Cari Peserta
+                            </label>
+                            <input type="text" id="searchInputBimbingan" class="form-control form-control-lg border-2"
+                                placeholder="Ketik nama, institusi, atau jurusan...">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="lengthMenuBimbingan" class="form-label fw-semibold mb-2">
+                                <i class="bi bi-list-nested me-1"></i> Tampilkan Data
+                            </label>
+                            <select id="lengthMenuBimbingan" class="form-select form-select-lg border-2">
+                                <option value="10">10 data</option>
+                                <option value="25">25 data</option>
+                                <option value="50">50 data</option>
+                                <option value="100">100 data</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0">
+                    <table id="bimbinganTable" class="table table-hover align-middle mb-0">
+
                         <thead class="bg-light">
                             <tr>
                                 <th class="text-center py-3" style="width: 60px;">No</th>
@@ -307,4 +338,44 @@
             </div>
         </div>
     </div>
+
+    @push('scripts')
+        <script>
+            $(document).ready(function() {
+                const bimbinganTable = $('#bimbinganTable').DataTable({
+                    paging: true,
+                    searching: true,
+                    ordering: true,
+                    pageLength: 10,
+                    language: {
+                        search: "",
+                        searchPlaceholder: "Cari peserta...",
+                        lengthMenu: "Tampilkan _MENU_ data per halaman",
+                        info: "Menampilkan _START_ - _END_ dari _TOTAL_ data",
+                        infoEmpty: "Menampilkan 0 - 0 dari 0 data",
+                        infoFiltered: "(difilter dari _MAX_ total data)",
+                        zeroRecords: "Tidak ada data yang cocok",
+                        paginate: {
+                            first: "Pertama",
+                            last: "Terakhir",
+                            next: "›",
+                            previous: "‹"
+                        },
+                    },
+                    dom: 't',
+                    autoWidth: false,
+                });
+
+                // Input pencarian custom
+                $('#searchInputBimbingan').on('keyup', function() {
+                    bimbinganTable.search(this.value).draw();
+                });
+
+                // Dropdown jumlah data per halaman
+                $('#lengthMenuBimbingan').on('change', function() {
+                    bimbinganTable.page.len(parseInt(this.value)).draw();
+                });
+            });
+        </script>
+    @endpush
 @endsection

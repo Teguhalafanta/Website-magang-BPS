@@ -16,7 +16,8 @@ class Pelajar extends Model
     protected $keyType = 'int';
 
     protected $fillable = [
-        'user_id',   // 
+        'user_id',
+        'pembimbing_id',
         'nama',
         'jenis_kelamin',
         'tempat_lahir',

@@ -181,13 +181,6 @@
                             </a>
                         </li>
 
-                        <li class="sidebar-item {{ request()->routeIs('pembimbing.penilaian') ? 'active' : '' }}">
-                            <a href="{{ route('pembimbing.penilaian') }}" class="sidebar-link">
-                                <i class="bi bi-clipboard-check"></i>
-                                <span>Penilaian Magang</span>
-                            </a>
-                        </li>
-
                         {{-- Role Lain --}}
                     @else
                         <li class="sidebar-item">

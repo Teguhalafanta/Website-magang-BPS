@@ -24,10 +24,16 @@ class KegiatanController extends Controller
         }
 
         if ($user->role == 'pembimbing') {
-            // Ambil semua pelajar yang dibimbing
-            $pelajarIds = Pelajar::where('pembimbing_id', $user->id)->pluck('user_id');
+            // Ambil ID pembimbing dari tabel pembimbings
+            $pembimbing = $user->pembimbing ?? null;
+            if (!$pembimbing) {
+                return view('pembimbing.kegiatan', ['kegiatans' => collect()]);
+            }
 
-            // Filter kegiatan berdasarkan pelajar bimbingan
+            // Ambil semua pelajar yang dibimbing oleh pembimbing ini
+            $pelajarIds = Pelajar::where('pembimbing_id', $pembimbing->id)->pluck('user_id');
+
+            // Ambil kegiatan yang dimiliki oleh pelajar-pelajar tersebut
             $kegiatans = Kegiatan::whereIn('user_id', $pelajarIds)
                 ->when($request->search, function ($query) use ($request) {
                     $query->where('nama_kegiatan', 'like', "%{$request->search}%")
@@ -35,12 +41,13 @@ class KegiatanController extends Controller
                             $q->where('name', 'like', "%{$request->search}%");
                         });
                 })
+                ->with('pelajar')
                 ->latest()
                 ->paginate(10);
-                
 
             return view('pembimbing.kegiatan', compact('kegiatans'));
         }
+
 
         // Jika bukan pelajar/pembimbing
         abort(403, 'Akses tidak diizinkan');

@@ -10,8 +10,9 @@ class BimbinganController extends Controller
 {
     public function index()
     {
-        $pembimbingId = Auth::user()->id;
+        $pembimbingId = Auth::user()->pembimbing->id;
         $pelajars = Pelajar::where('pembimbing_id', $pembimbingId)->get();
+
 
         return view('pembimbing.bimbingan', compact('pelajars'));
     }

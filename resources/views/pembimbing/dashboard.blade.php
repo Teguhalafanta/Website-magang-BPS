@@ -81,28 +81,6 @@
                     </div>
                 </div>
             </div>
-
-            <div class="col-sm-6 col-lg-3">
-                <div class="card text-white bg-warning shadow-sm border-0 h-100">
-                    <div class="card-body p-3">
-                        <div class="d-flex justify-content-between align-items-start">
-                            <div>
-                                <p class="text-uppercase fw-semibold mb-2 opacity-75" style="font-size: 0.75rem;">Belum
-                                    Dinilai</p>
-                                <h2 class="fw-bold mb-0 display-6">{{ $belumDinilai ?? 0 }}</h2>
-                            </div>
-                            <i class="bi bi-star-fill opacity-50" style="font-size: 2.5rem;"></i>
-                        </div>
-                    </div>
-                    <div class="card-footer border-0 bg-white bg-opacity-10 py-2">
-                        <a href="{{ route('pembimbing.penilaian') }}"
-                            class="text-white text-decoration-none small fw-semibold d-flex align-items-center">
-                            <span>Lihat Detail</span>
-                            <i class="bi bi-arrow-right ms-auto"></i>
-                        </a>
-                    </div>
-                </div>
-            </div>
         </div>
 
         {{-- Content --}}
@@ -198,9 +176,6 @@
                             </a>
                             <a href="{{ route('pembimbing.presensi') }}" class="btn btn-outline-info">
                                 <i class="bi bi-clipboard-check me-2"></i>Kelola Presensi
-                            </a>
-                            <a href="{{ route('pembimbing.penilaian') }}" class="btn btn-outline-warning">
-                                <i class="bi bi-star me-2"></i>Kelola Penilaian
                             </a>
                         </div>
                     </div>

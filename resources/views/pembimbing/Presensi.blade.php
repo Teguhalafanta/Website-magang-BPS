@@ -5,11 +5,13 @@
 @section('content')
     <div class="container my-5">
         <div class="row mb-4">
-            <div class="col">
-                <h2 class="fw-bold text-black mb-2">
-                    <i class="fas fa-clipboard-check me-2"></i>Daftar Presensi Pelajar Bimbingan
-                </h2>
-                <p class="text-muted">Monitoring kehadiran dan aktivitas bimbingan pelajar</p>
+            <div class="col-12">
+                <div class="d-flex align-items-center mb-3">
+                    <div>
+                        <h2 class="mb-1 fw-bold text-dark">Daftar Presensi Peserta Bimbingan</h2>
+                        <p class="text-muted mb-0">Monitoring kehadiran dan aktivitas bimbingan pelajar</p>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -28,6 +30,41 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
+
+        <!-- Search Section -->
+        <div class="card mb-4 border-0 shadow-sm">
+            <div class="card-body bg-light">
+                <div class="row g-3 align-items-center">
+                    <div class="col-md-6">
+                        <label for="searchPresensi" class="form-label fw-semibold mb-1 text-muted">
+                            <i class="fas fa-search me-2"></i>Cari Presensi
+                        </label>
+                        <input type="text" id="searchPresensi" class="form-control form-control-lg border-2"
+                            placeholder="Cari tanggal, status, atau keterangan...">
+                    </div>
+                    <div class="col-md-6">
+                        <form method="GET" action="{{ route('pembimbing.presensi') }}" class="d-flex flex-column">
+                            <label for="pelajar_id" class="form-label fw-semibold mb-1 text-muted">
+                                <i class="fas fa-user-graduate me-2"></i>Filter Berdasarkan Pelajar
+                            </label>
+                            <select name="pelajar_id" id="pelajar_id" class="form-select form-select-lg border-2"
+                                onchange="this.form.submit()">
+                                <option value="">Semua Pelajar</option>
+                                @foreach ($pelajars as $pelajar)
+                                    <option value="{{ $pelajar->id }}"
+                                        {{ isset($selectedPelajarId) && $selectedPelajarId == $pelajar->id ? 'selected' : '' }}>
+                                        {{ $pelajar->nama }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
 
         {{-- Cek jika data kosong --}}
         @if ($presensis->isEmpty())
@@ -64,7 +101,8 @@
                     </div>
                     <div class="card-body p-0">
                         <div class="table-responsive">
-                            <table class="table table-hover align-middle mb-0">
+                            <table id="presensiTable_{{ Str::slug($nama, '_') }}"
+                                class="table table-hover align-middle mb-0">
                                 <thead class="bg-light">
                                     <tr>
                                         <th class="text-center border-0 py-3" style="width: 60px;">
@@ -150,6 +188,41 @@
             @endforeach
         @endif
     </div>
+
+    @push('scripts')
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const searchInput = document.getElementById('searchPresensi');
+                const filterPelajar = document.getElementById('filterPelajar');
+                const cards = document.querySelectorAll('.presensi-card');
+
+                // Fungsi untuk filter berdasarkan search dan pelajar
+                function filterPresensi() {
+                    const searchText = searchInput.value.toLowerCase();
+                    const selectedPelajar = filterPelajar.value;
+
+                    cards.forEach(card => {
+                        const namaPelajar = card.dataset.nama;
+                        const cardText = card.innerText.toLowerCase();
+
+                        const matchPelajar = !selectedPelajar || namaPelajar === selectedPelajar;
+                        const matchSearch = !searchText || cardText.includes(searchText);
+
+                        if (matchPelajar && matchSearch) {
+                            card.style.display = '';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                }
+
+                // Event listener untuk search dan filter
+                searchInput.addEventListener('input', filterPresensi);
+                filterPelajar.addEventListener('change', filterPresensi);
+            });
+        </script>
+    @endpush
+
 @endsection
 
 @push('styles')

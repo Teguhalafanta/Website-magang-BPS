@@ -15,22 +15,39 @@ class PresensiController extends Controller
         $user = Auth::user();
 
         if ($user->role === 'pelajar') {
-            $presensis = Presensi::where('pelajar_id', $user->id)
+            $presensis = Presensi::where('pelajar_id', $user->pelajar->id)
                 ->orderBy('tanggal', 'desc')
                 ->orderBy('waktu_datang', 'desc')
                 ->get();
 
-            return view('presensi.index', compact('presensis')); // view untuk pelajar
+            return view('presensi.index', compact('presensis'));
         } elseif ($user->role === 'pembimbing') {
-            $presensis = Presensi::with('pelajar')
-                ->whereHas('pelajar', function ($query) use ($user) {
-                    $query->where('pembimbing_id', $user->id); // asumsi tiap pelajar punya kolom pembimbing_id
-                })
-                ->orderBy('pelajar_id') // bisa urut berdasarkan nama
-                ->orderBy('tanggal', 'desc')
-                ->get();
+            $pembimbing = $user->pembimbing;
 
-            return view('pembimbing.presensi', compact('presensis')); // view untuk pembimbing
+            if (!$pembimbing) {
+                return view('pembimbing.presensi', [
+                    'presensis' => collect(),
+                    'pelajars' => collect(),
+                ]);
+            }
+
+            $pelajars = \App\Models\Pelajar::where('pembimbing_id', $pembimbing->id)->get();
+
+            // Tangkap filter dari request
+            $selectedPelajarId = request('pelajar_id');
+
+            $presensisQuery = \App\Models\Presensi::with('pelajar')
+                ->whereIn('pelajar_id', $pelajars->pluck('id'))
+                ->orderBy('tanggal', 'desc')
+                ->orderBy('waktu_datang', 'desc');
+
+            if ($selectedPelajarId) {
+                $presensisQuery->where('pelajar_id', $selectedPelajarId);
+            }
+
+            $presensis = $presensisQuery->get();
+
+            return view('pembimbing.presensi', compact('presensis', 'pelajars', 'selectedPelajarId'));
         } else {
             abort(403); // role lain tidak bisa mengakses
         }

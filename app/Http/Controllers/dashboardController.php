@@ -54,30 +54,33 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
 
-        // Ambil user_id dari pelajar yang dibimbing
-        $userIds = Pelajar::where('pembimbing_id', $user->id)
+        // Ambil semua user_id dari pelajar yang dibimbing pembimbing ini
+        $userIds = Pelajar::where('pembimbing_id', $user->pembimbing->id ?? null)
             ->pluck('user_id')
             ->filter()
             ->toArray();
 
         if (empty($userIds)) {
-            $userIds = [0];
+            $userIds = [0]; // supaya query tidak error ketika kosong
         }
 
         // Statistik utama
-        $totalMahasiswa = Pelajar::where('pembimbing_id', $user->id)->count();
+        $totalMahasiswa = Pelajar::where('pembimbing_id', $user->pembimbing->id ?? null)->count();
+
         $pendingBimbingan = Kegiatan::whereIn('user_id', $userIds)
             ->whereIn('status_penyelesaian', ['Belum Dimulai', 'Dalam Proses'])
             ->count();
+
         $selesaiBimbingan = Kegiatan::whereIn('user_id', $userIds)
             ->where('status_penyelesaian', 'Selesai')
             ->whereMonth('created_at', now()->month)
             ->count();
+
         $jadwalHariIni = Kegiatan::whereIn('user_id', $userIds)
             ->whereDate('tanggal', today())
             ->count();
 
-        // Data kegiatan yang diambil dari controller Kegiatan
+        // Laporan kegiatan terbaru
         $laporanTerbaru = Kegiatan::with(['user.pelajar'])
             ->whereIn('user_id', $userIds)
             ->orderBy('created_at', 'desc')
@@ -108,7 +111,7 @@ class DashboardController extends Controller
                 return $kegiatan;
             });
 
-        // Data jadwal hari ini
+        // Jadwal hari ini
         $jadwalToday = Kegiatan::with(['user.pelajar'])
             ->whereIn('user_id', $userIds)
             ->whereDate('tanggal', today())
@@ -124,8 +127,8 @@ class DashboardController extends Controller
                 return $kegiatan;
             });
 
-        // Progress mahasiswa
-        $mahasiswaBimbingan = Pelajar::where('pembimbing_id', $user->id)
+        // Progress mahasiswa bimbingan
+        $mahasiswaBimbingan = Pelajar::where('pembimbing_id', $user->pembimbing->id ?? null)
             ->with('user')
             ->get()
             ->map(function ($pelajar) {
@@ -145,13 +148,9 @@ class DashboardController extends Controller
                 return $pelajar;
             });
 
-        // Total mahasiswa yang dibimbing
-        $totalMahasiswa = Pelajar::where('pembimbing_id', $user->id)->count();
-
-        // Jumlah kegiatan mahasiswa bimbingan
+        // Jumlah kegiatan & presensi
         $jumlahKegiatan = Kegiatan::whereIn('user_id', $userIds)->count();
 
-        // Jumlah presensi hari ini dari mahasiswa bimbingan
         $presensiHariIni = Presensi::whereIn('user_id', $userIds)
             ->whereDate('created_at', today())
             ->count();

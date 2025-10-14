@@ -63,6 +63,15 @@ class ProfileController extends Controller
 
         // Jika user adalah admin atau pembimbing → update data langsung di tabel users
         if (in_array($user->role, ['pembimbing', 'admin'])) {
+            // Cek dulu apakah username sudah dipakai oleh user lain
+            if (User::where('username', $request->nama)
+                ->where('id', '!=', $user->id)
+                ->exists()
+            ) {
+                return back()->with('error', 'Username sudah digunakan oleh pengguna lain.');
+            }
+
+            // Jika aman, lanjut update
             $user->update([
                 'username' => $request->nama, // gunakan field 'username' untuk nama
             ]);

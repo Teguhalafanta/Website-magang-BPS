@@ -53,6 +53,27 @@ class KegiatanController extends Controller
         abort(403, 'Akses tidak diizinkan');
     }
 
+    public function adminIndex(Request $request)
+    {
+        $user = Auth::user();
+
+        if ($user->role != 'admin') {
+            abort(403, 'Akses tidak diizinkan');
+        }
+
+        $kegiatans = Kegiatan::with('pelajar')
+            ->when($request->search, function ($query) use ($request) {
+                $query->where('nama_kegiatan', 'like', "%{$request->search}%")
+                    ->orWhereHas('user', function ($q) use ($request) {
+                        $q->where('name', 'like', "%{$request->search}%");
+                    });
+            })
+            ->latest()
+            ->paginate(10);
+
+        return view('admin.kegiatan.index', compact('kegiatans'));
+    }
+
     public function harian()
     {
         $today = now()->format('Y-m-d');

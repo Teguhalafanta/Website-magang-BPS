@@ -48,6 +48,14 @@ class PresensiController extends Controller
             $presensis = $presensisQuery->get();
 
             return view('pembimbing.presensi', compact('presensis', 'pelajars', 'selectedPelajarId'));
+        } elseif ($user->role === 'admin') {
+            // Admin bisa lihat semua presensi dengan nama pelajar
+            $presensis = \App\Models\Presensi::with('pelajar')
+                ->orderBy('tanggal', 'desc')
+                ->orderBy('waktu_datang', 'desc')
+                ->get();
+
+            return view('admin.presensi.index', compact('presensis'));
         } else {
             abort(403); // role lain tidak bisa mengakses
         }

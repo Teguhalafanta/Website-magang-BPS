@@ -65,7 +65,7 @@
                                                 </div>
                                                 <div style="min-width: 0;">
                                                     <div class="fw-semibold text-truncate" style="font-size: 0.875rem;">
-                                                        {{ $kegiatan->user->name ?? 'N/A' }}
+                                                        {{ $kegiatan->pelajar->nama ?? 'N/A' }}
                                                     </div>
                                                     <small
                                                         class="text-muted text-truncate d-block">{{ $kegiatan->user->email ?? '' }}</small>

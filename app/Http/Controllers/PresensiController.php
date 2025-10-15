@@ -96,7 +96,7 @@ class PresensiController extends Controller
 
         // Ambil jam dari client, jika kosong pakai server
         $jamDatang = $request->jam_client ?? Carbon::now()->format('H:i:s');
-        $batas = '07:35:00';
+        $batas = '07:45:00';
         $status = $jamDatang > $batas ? 'Terlambat' : 'Tepat Waktu';
 
         Presensi::create([

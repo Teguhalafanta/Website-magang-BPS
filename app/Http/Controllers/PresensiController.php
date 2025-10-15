@@ -48,6 +48,14 @@ class PresensiController extends Controller
             $presensis = $presensisQuery->get();
 
             return view('pembimbing.presensi', compact('presensis', 'pelajars', 'selectedPelajarId'));
+        } elseif ($user->role === 'admin') {
+            // Admin bisa lihat semua presensi dengan nama pelajar
+            $presensis = \App\Models\Presensi::with('pelajar')
+                ->orderBy('tanggal', 'desc')
+                ->orderBy('waktu_datang', 'desc')
+                ->get();
+
+            return view('admin.presensi.index', compact('presensis'));
         } else {
             abort(403); // role lain tidak bisa mengakses
         }
@@ -88,7 +96,7 @@ class PresensiController extends Controller
 
         // Ambil jam dari client, jika kosong pakai server
         $jamDatang = $request->jam_client ?? Carbon::now()->format('H:i:s');
-        $batas = '07:35:00';
+        $batas = '07:45:00';
         $status = $jamDatang > $batas ? 'Terlambat' : 'Tepat Waktu';
 
         Presensi::create([

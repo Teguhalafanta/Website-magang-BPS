@@ -140,7 +140,7 @@
                                                         <div style="min-width: 0;">
                                                             <div class="fw-semibold text-truncate"
                                                                 style="font-size: 0.875rem;">
-                                                                {{ $presensi->user->name ?? 'N/A' }}
+                                                                {{ $presensi->pelajar->nama ?? 'N/A' }}
                                                             </div>
                                                             <small class="text-muted text-truncate d-block">
                                                                 {{ $presensi->user->email ?? '' }}
@@ -212,7 +212,7 @@
                                                             <div class="mb-3">
                                                                 <label class="text-muted small mb-1">Nama Pelajar</label>
                                                                 <p class="fw-semibold mb-0">
-                                                                    {{ $presensi->user->name ?? 'N/A' }}</p>
+                                                                    {{ $presensi->pelajar->nama ?? 'N/A' }}</p>
                                                             </div>
                                                             <div class="mb-3">
                                                                 <label class="text-muted small mb-1">Email</label>
@@ -319,11 +319,11 @@
             {{-- Tab 2: Per Pelajar --}}
             <div class="tab-pane fade" id="perpelajar" role="tabpanel">
                 @php
-                    // Group presensi by user
-                    $presensiPerPelajar = $presensis->groupBy('user_id')->map(function ($items) {
-                        $user = $items->first()->user;
+                    // Group presensi by pelajar
+                    $presensiPerPelajar = $presensis->groupBy('pelajar_id')->map(function ($items) {
+                        $pelajar = $items->first()->pelajar;
                         return [
-                            'user' => $user,
+                            'pelajar' => $pelajar,
                             'total' => $items->count(),
                             'tepat_waktu' => $items->where('status', 'Tepat Waktu')->count(),
                             'terlambat' => $items->where('status', 'Terlambat')->count(),
@@ -369,8 +369,10 @@
                                                             <i class="bi bi-person-fill text-primary"></i>
                                                         </div>
                                                         <div>
-                                                            <div class="fw-semibold">{{ $data['user']->name }}</div>
-                                                            <small class="text-muted">{{ $data['user']->email }}</small>
+                                                            <div class="fw-semibold">{{ $data['pelajar']->nama ?? 'N/A' }}
+                                                            </div>
+                                                            <small
+                                                                class="text-muted">{{ $data['pelajar']->email ?? '-' }}</small>
                                                         </div>
                                                     </div>
                                                 </td>
@@ -405,7 +407,7 @@
                                             <tr class="collapse" id="collapse{{ $index }}">
                                                 <td colspan="9" class="p-0">
                                                     <div class="bg-light p-3">
-                                                        <h6 class="mb-3">Riwayat Presensi {{ $data['user']->name }}</h6>
+                                                        <h6 class="mb-3">Riwayat Presensi {{ $data['pelajar']->nama }}</h6>
                                                         <div class="table-responsive">
                                                             <table class="table table-sm table-bordered mb-0">
                                                                 <thead class="table-secondary">

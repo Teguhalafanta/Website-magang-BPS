@@ -47,10 +47,10 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/pengajuan/{id}', [PengajuanController::class, 'destroy'])->name('pengajuan.destroy');
 
         // Kegiatan
-        Route::resource('kegiatan', KegiatanController::class)->names('kegiatan');
+        Route::get('/kegiatan', [KegiatanController::class, 'adminIndex'])->name('kegiatan.index');
 
         // Presensi
-        Route::resource('presensi', PresensiController::class)->names('presensi');
+        Route::get('/presensi', [App\Http\Controllers\PresensiController::class, 'index'])->name('presensi.index');
 
         // Assign Pembimbing
         Route::get('/assign-pembimbing', [AssignPembimbingController::class, 'index'])

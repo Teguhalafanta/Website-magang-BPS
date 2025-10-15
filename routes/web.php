@@ -87,6 +87,9 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('pelajar')->middleware('role:pelajar')->name('pelajar.')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'pelajar'])->name('dashboard');
 
+        // Route profil pelajar
+        Route::get('/profile', [ProfileController::class, 'show'])->name('pelajar.profile.show');
+
         // Pengajuan Magang (khusus pelajar)
         Route::get('/pengajuan', [PelajarController::class, 'index'])->name('pengajuan.index');
         Route::get('/pengajuan/create', [PelajarController::class, 'create'])->name('pengajuan.create');

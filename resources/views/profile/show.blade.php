@@ -113,7 +113,7 @@
                     </tr>
                     <tr>
                         <td class="fw-bold">Pembimbing / Mentor</td>
-                        <td>{{ optional($user->pelajar)->mentor ?? '-' }}</td>
+                        <td>{{ optional(optional($user->pelajar)->pembimbing)->nama ?? '-' }}</td>
                     </tr>
                     <tr>
                         <td class="fw-bold">Status Magang</td>

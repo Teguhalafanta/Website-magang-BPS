@@ -49,11 +49,18 @@ class PresensiController extends Controller
 
             return view('pembimbing.presensi', compact('presensis', 'pelajars', 'selectedPelajarId'));
         } elseif ($user->role === 'admin') {
-            // Admin bisa lihat semua presensi dengan nama pelajar
-            $presensis = \App\Models\Presensi::with('pelajar')
+            // Ambil query dasar
+            $query = \App\Models\Presensi::with('pelajar')
                 ->orderBy('tanggal', 'desc')
-                ->orderBy('waktu_datang', 'desc')
-                ->get();
+                ->orderBy('waktu_datang', 'desc');
+
+            // Cek apakah ada filter ?today=1
+            if (request()->has('today')) {
+                $today = Carbon::today()->toDateString();
+                $query->whereDate('tanggal', $today);
+            }
+
+            $presensis = $query->get();
 
             return view('admin.presensi.index', compact('presensis'));
         } else {

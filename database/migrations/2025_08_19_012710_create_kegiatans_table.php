@@ -25,8 +25,8 @@ return new class extends Migration {
             $table->string('tim_kerja')->nullable();
 
             // ✅ ENUM dan default value diperbaiki
-            $table->enum('status_penyelesaian', ['Belum Dimulai', 'Proses', 'Selesai'])
-                  ->default('Belum Dimulai');
+            $table->enum('status_penyelesaian', ['Belum Dimulai', 'Dalam Proses', 'Selesai'])
+                ->default('Belum Dimulai');
 
             $table->timestamps();
         });

@@ -16,9 +16,7 @@
                                 style="width:120px; height:auto; display:block; margin:0 auto;">
                             <div
                                 style="font-size:20px; font-weight:bold; white-space:nowrap; margin-top:8px; text-align:center; font-family:'Poppins', sans-serif;">
-                                <span style="color:#007bff;">Badan</span>
-                                <span style="color:#28a745;">Pusat</span>
-                                <span style="color:#fd7e14;">Statistik</span>
+                                <span style="color:#007DC3;">Badan Pusat Statistik</span>
                             </div>
                         </a>
                     @elseif(auth()->user()->role == 'pelajar')
@@ -28,9 +26,7 @@
                                     style="width:120px; height:auto; display:block; margin:0 auto;">
                                 <div
                                     style="font-size:20px; font-weight:bold; white-space:nowrap; margin-top:8px; text-align:center; font-family:'Poppins', sans-serif;">
-                                    <span style="color:#007bff;">Badan</span>
-                                    <span style="color:#28a745;">Pusat</span>
-                                    <span style="color:#fd7e14;">Statistik</span>
+                                    <span style="color:#007DC3;">Badan Pusat Statistik</span>
                                 </div>
                             </a>
                         @else
@@ -39,9 +35,7 @@
                                     style="width:120px; height:auto; display:block; margin:0 auto;">
                                 <div
                                     style="font-size:20px; font-weight:bold; white-space:nowrap; margin-top:8px; text-align:center; font-family:'Poppins', sans-serif;">
-                                    <span style="color:#007bff;">Badan</span>
-                                    <span style="color:#28a745;">Pusat</span>
-                                    <span style="color:#fd7e14;">Statistik</span>
+                                    <span style="color:#007DC3;">Badan Pusat Statistik</span>
                                 </div>
                             </a>
                         @endif
@@ -51,9 +45,7 @@
                                 style="width:120px; height:auto; display:block; margin:0 auto;">
                             <div
                                 style="font-size:20px; font-weight:bold; white-space:nowrap; margin-top:8px; text-align:center; font-family:'Poppins', sans-serif;">
-                                <span style="color:#007bff;">Badan</span>
-                                <span style="color:#28a745;">Pusat</span>
-                                <span style="color:#fd7e14;">Statistik</span>
+                                <span style="color:#007DC3;">Badan Pusat Statistik</span>
                             </div>
                         </a>
                     @endif
@@ -63,9 +55,7 @@
                             style="width:120px; height:auto; display:block; margin:0 auto;">
                         <div
                             style="font-size:20px; font-weight:bold; white-space:nowrap; margin-top:8px; text-align:center; font-family:'Poppins', sans-serif;">
-                            <span style="color:#007bff;">Badan</span>
-                            <span style="color:#28a745;">Pusat</span>
-                            <span style="color:#fd7e14;">Statistik</span>
+                            <span style="color:#007DC3;">Badan Pusat Statistik</span>
                         </div>
                     </a>
                 @endif
@@ -134,7 +124,7 @@
                                 </a>
                             </li>
 
-                            <li class="sidebar-item {{ request()->routeIs('presensi.*') ? 'active' : '' }}">
+                            <li class="sidebar-item {{ request()->routeIs('pelajar.presensi.*') ? 'active' : '' }}">
                                 <a href="{{ route('pelajar.presensi.index') }}" class="sidebar-link">
                                     <i class="bi bi-calendar-check"></i>
                                     <span>Presensi</span>

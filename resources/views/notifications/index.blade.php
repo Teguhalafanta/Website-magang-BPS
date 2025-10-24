@@ -3,64 +3,67 @@
 @section('content')
     <div class="container py-4">
         <h2 class="fw-bold mb-3">
-            <i class="bi bi-pin-angle-fill text-danger"></i> Daftar Notifikasi
+            <i class="bi bi-bell-fill text-danger"></i> Daftar Notifikasi
         </h2>
 
         {{-- Alert Flash Message --}}
         @if (session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert" id="flash-alert">
+            <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm" role="alert" id="flash-alert">
+                <i class="bi bi-check-circle-fill me-2"></i>
                 {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
 
         {{-- Tombol Tandai Semua Dibaca --}}
         <form action="{{ route('notifications.readAll') }}" method="POST" class="mb-3">
             @csrf
-            <button type="submit" class="btn btn-success btn-sm">
-                <i class="bi bi-check2-square"></i> Tandai Semua Dibaca
+            <button type="submit" class="btn btn-success btn-sm shadow-sm">
+                <i class="bi bi-check2-all"></i> Tandai Semua Dibaca
             </button>
         </form>
 
         {{-- Tabel Notifikasi --}}
-        <div class="card shadow-sm">
-            <div class="card-body p-0">
-                <table class="table table-striped mb-0 align-middle">
-                    <thead class="table-dark">
+        <div class="shadow-sm rounded-3 overflow-hidden">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover mb-0 align-middle">
+                    <thead class="table-secondary">
                         <tr>
-                            <th scope="col">No</th>
-                            <th scope="col">Pesan</th>
-                            <th scope="col">Status</th>
-                            <th scope="col">Tanggal</th>
-                            <th scope="col">Aksi</th>
+                            <th class="py-2 px-3 text-center" style="width: 5%;">No</th>
+                            <th class="py-2 px-3 text-center" style="width: 50%;">Pesan</th>
+                            <th class="py-2 px-3 text-center" style="width: 15%;">Status</th>
+                            <th class="py-2 px-3 text-center" style="width: 20%;">Tanggal</th>
+                            <th class="py-2 px-3 text-center" style="width: 10%;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($allNotif as $index => $notif)
                             <tr class="{{ is_null($notif->read_at) ? 'fw-bold table-light' : '' }}">
-                                <td>{{ $index + 1 }}</td>
+                                <td class="px-3 text-center">{{ $index + 1 }}</td>
                                 <td>{{ $notif->data['pesan'] ?? 'Pesan kosong' }}</td>
-                                <td>
+                                <td class="px-3 text-center">
                                     @if (is_null($notif->read_at))
-                                        <span class="badge bg-danger">Baru</span>
+                                        <span class="badge bg-danger bg-gradient"></i>Baru</span>
                                     @else
-                                        <span class="badge bg-success">Dibaca</span>
+                                        <span class="badge bg-secondary bg-opacity-50">
+                                            <i class="bi bi-check2 me-1"></i>Dibaca
+                                        </span>
                                     @endif
                                 </td>
-                                <td>{{ $notif->created_at->format('d M Y H:i') }}</td>
-                                <td>
+                                <td class="px-3 text-center">{{ $notif->created_at->format('d M Y H:i') }}</td>
+                                <td class="px-3 text-center">
                                     @php
-                                        // Cek apakah notifikasi punya link tujuan
                                         $link = $notif->data['url'] ?? null;
                                     @endphp
 
                                     @if ($link)
                                         <a href="{{ route('notifications.read', $notif->id) }}"
-                                            class="btn btn-sm btn-primary">
-                                            Lihat
+                                            class="btn btn-sm btn-primary shadow-sm">
+                                            <i class="bi bi-eye"></i> Lihat
                                         </a>
                                     @else
-                                        <button class="btn btn-sm btn-secondary" disabled>
-                                            Tidak ada link
+                                        <button class="btn btn-sm btn-outline-secondary" disabled>
+                                            <i class="bi bi-x-circle"></i> Tidak ada
                                         </button>
                                     @endif
                                 </td>
@@ -83,8 +86,8 @@
             if (alert) {
                 setTimeout(() => {
                     alert.classList.remove("show");
-                    alert.classList.add("fade");
-                }, 3000); // 3 detik
+                    setTimeout(() => alert.remove(), 150);
+                }, 3000);
             }
         });
     </script>

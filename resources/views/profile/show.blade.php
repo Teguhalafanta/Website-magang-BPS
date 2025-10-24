@@ -3,28 +3,28 @@
 @section('title', 'Profile')
 
 @section('content')
-    <div class="container mt-4">
+    <div class="container mt-3 mb-4">
 
         {{-- Alert Sukses --}}
         @if (session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
-                <i class="fas fa-check-circle me-2"></i> {{ session('success') }}
+            <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i> {{ session('success') }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         @endif
 
         {{-- Alert Error dari Controller (misal username sudah dipakai) --}}
         @if (session('error'))
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <i class="fas fa-exclamation-circle me-2"></i> {{ session('error') }}
+            <div class="alert alert-danger alert-dismissible fade show border-0 shadow-sm" role="alert">
+                <i class="bi bi-exclamation-circle-fill me-2"></i> {{ session('error') }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         @endif
 
         {{-- Alert Error Validasi --}}
         @if ($errors->any())
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                <i class="fas fa-exclamation-circle me-2"></i>
+            <div class="alert alert-danger alert-dismissible fade show border-0 shadow-sm" role="alert">
+                <i class="bi bi-exclamation-circle-fill me-2"></i>
                 <strong>Terjadi kesalahan!</strong>
                 <ul class="mb-0 mt-2">
                     @foreach ($errors->all() as $error)
@@ -59,9 +59,9 @@
                 <div class="col-md-9">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h5 class="fw-bold">Data Pribadi</h5>
-                        <button class="btn btn-sm btn-dark rounded-circle" data-bs-toggle="modal"
+                        <button class="btn btn-sm btn-outline-primary rounded-pill" data-bs-toggle="modal"
                             data-bs-target="#editPribadiModal" title="Edit Data Pribadi">
-                            <i class="bi bi-person-lines-fill fs-6 text-white"></i>
+                            <i class="bi bi-pencil-square me-1"></i>Edit
                         </button>
                     </div>
 
@@ -101,34 +101,40 @@
                 <hr>
 
                 {{-- Informasi Magang --}}
-                <h5 class="fw-bold mb-3">Informasi Magang</h5>
-                <table class="table table-borderless">
-                    <tr>
-                        <td class="fw-bold">Tanggal Mulai</td>
-                        <td>{{ optional($user->pelajar)->rencana_mulai ?? '-' }}</td>
-                    </tr>
-                    <tr>
-                        <td class="fw-bold">Tanggal Selesai</td>
-                        <td>{{ optional($user->pelajar)->rencana_selesai ?? '-' }}</td>
-                    </tr>
-                    <tr>
-                        <td class="fw-bold">Pembimbing / Mentor</td>
-                        <td>{{ optional(optional($user->pelajar)->pembimbing)->nama ?? '-' }}</td>
-                    </tr>
-                    <tr>
-                        <td class="fw-bold">Status Magang</td>
-                        <td>
-                            @php
-                                $pelajar = $user->pelajar;
-                                $status = $pelajar->statusMagangOtomatis ?? 'belum ditentukan';
-                                $badge =
-                                    $pelajar->badgeClass ??
-                                    'bg-secondary-subtle text-secondary fw-semibold px-3 py-1 rounded-pill';
-                            @endphp
-                            <span class="{{ $badge }}">{{ ucfirst($status) }}</span>
-                        </td>
-                    </tr>
-                </table>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold text-dark mb-0">
+                        <i class="bi bi-briefcase me-2"></i>Informasi Magang
+                    </h5>
+                </div>
+                <div class="ms-4">
+                    <table class="table table-borderless mb-0" style="width: 67%;">
+                        <tr>
+                            <td class="fw-bold">Tanggal Mulai</td>
+                            <td>{{ optional($user->pelajar)->rencana_mulai ?? '-' }}</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">Tanggal Selesai</td>
+                            <td>{{ optional($user->pelajar)->rencana_selesai ?? '-' }}</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">Pembimbing / Mentor</td>
+                            <td>{{ optional(optional($user->pelajar)->pembimbing)->nama ?? '-' }}</td>
+                        </tr>
+                        <tr>
+                            <td class="fw-bold">Status Magang</td>
+                            <td>
+                                @php
+                                    $pelajar = $user->pelajar;
+                                    $status = $pelajar->statusMagangOtomatis ?? 'belum ditentukan';
+                                    $badge =
+                                        $pelajar->badgeClass ??
+                                        'bg-secondary-subtle text-secondary fw-semibold px-3 py-1 rounded-pill';
+                                @endphp
+                                <span class="{{ $badge }}">{{ ucfirst($status) }}</span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
             @elseif($user->role === 'pembimbing')
                 <table class="table table-borderless">
                     <tr>
@@ -155,6 +161,7 @@
                 @endif
             </div>
         </div>
+    </div>
     </div>
 
     {{-- ==================== MODAL EDIT DATA PRIBADI ==================== --}}
@@ -269,8 +276,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i
-                                class="bi bi-x-circle me-1"></i>Batal</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
                         <button type="submit" class="btn btn-primary">
                             <i class="bi bi-save me-1"></i>Simpan Perubahan</button>
                     </div>
@@ -335,16 +341,16 @@
                 class="modal-content">
                 @csrf
                 @method('PUT')
-                <div class="modal-header">
+                <div class="modal-header bg-primary text-white">
                     <h5 class="modal-title fw-bold">Ubah Foto Profil</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
                     <input type="file" name="foto" class="form-control" accept="image/*" required>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                    <button type="submit" class="btn btn-primary">Simpan</button>
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-upload me-1"></i>Upload</button>
                 </div>
             </form>
         </div>
@@ -385,12 +391,24 @@
                                     else badge.remove();
                                 }
 
-                                // Redirect ke URL jika tersedia
                                 if (data.url) window.location.href = data.url;
                             }
                         });
                 });
             });
+
+            // Auto-dismiss alerts
+            setTimeout(() => {
+                const alerts = document.querySelectorAll('.alert');
+                alerts.forEach(alert => {
+                    alert.classList.add('fade-out');
+
+                    setTimeout(() => {
+                        const bsAlert = new bootstrap.Alert(alert);
+                        bsAlert.close();
+                    }, 800);
+                });
+            }, 5000);
         });
     </script>
 @endsection

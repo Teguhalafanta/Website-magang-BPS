@@ -9,8 +9,16 @@
         <i class="bi bi-justify fs-3 text-light"></i>
     </button>
 
+    {{-- Logo / Brand 
+    @php
+        $logoUrl = asset('assets/images/logo/logo.png');
+    @endphp
+    <a class="navbar-brand fw-bold d-flex align-items-center" href="#">
+        <img src="{{ $logoUrl }}" alt="Logo BPS" width="40" height="40" class="me-2">
+        <span class="text-primary" style="font-family:'Poppins',sans-serif;">Badan Pusat Statistik</span>
+    </a> --}}
     {{-- Logo / Brand --}}
-    <a class="navbar-brand fw-bold" href="#">Badan Pusat Statistik</a>
+    <a class="navbar-brand fw-bold text-primary" href="#">Badan Pusat Statistik</a>
 
     <div class="ms-auto d-flex align-items-center">
         {{-- Notifikasi Dropdown --}}
@@ -25,10 +33,13 @@
                     </span>
                 @endif
             </a>
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationDropdown"
+            <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="notificationDropdown"
                 style="min-width: 300px;">
                 <li>
-                    <h6 class="dropdown-header">Notifikasi</h6>
+                    <h6 class="dropdown-header fw-semibold text-primary">Notifikasi</h6>
+                </li>
+                <li>
+                    <hr class="dropdown-divider">
                 </li>
 
                 @forelse($notifikasi as $notif)
@@ -42,12 +53,13 @@
                         </a>
                     </li>
                 @empty
-                    <li><span class="dropdown-item">Tidak ada notifikasi</span></li>
+                    <li><span class="dropdown-item text-muted text-center py-2">Tidak ada notifikasi</span></li>
                 @endforelse
                 <li>
                     <hr class="dropdown-divider">
                 </li>
-                <li><a href="{{ route('notifications.index') }}" class="dropdown-item text-center">Lihat semua</a></li>
+                <li><a href="{{ route('notifications.index') }}"
+                        class="dropdown-item text-center fw-semibold text-primary">Lihat semua</a></li>
             </ul>
         </div>
 

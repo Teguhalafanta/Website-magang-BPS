@@ -113,10 +113,25 @@
                             </a>
                         </li>
 
+                        <li class="sidebar-item {{ request()->routeIs('pelajar.laporan.index') ? 'active' : '' }}">
+                            <a href="{{ route('pelajar.laporan.index') }}" class="sidebar-link">
+                                <i class="bi bi-file-earmark-text"></i> <!-- icon laporan -->
+                                <span>Laporan Akhir</span>
+                            </a>
+                        </li>
+
+                        {{-- FITUR BARU: Upload Sertifikat --}}
+                        <li class="sidebar-item {{ request()->routeIs('admin.sertifikat.*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.sertifikat.index') }}" class="sidebar-link">
+                                <i class="bi bi-award-fill"></i>
+                                <span>Upload Sertifikat Magang</span>
+                            </a>
+                        </li>
+
                         {{-- Role: Pelajar --}}
                     @elseif(auth()->user()->role == 'pelajar')
-                        {{-- MENU UNTUK PELAJAR YANG SUDAH DISETUJUI --}}
                         @if (auth()->user()->isApproved())
+                            {{-- MENU UNTUK PELAJAR YANG SUDAH DISETUJUI --}}
                             <li class="sidebar-item {{ request()->routeIs('pelajar.dashboard') ? 'active' : '' }}">
                                 <a href="{{ route('pelajar.dashboard') }}" class="sidebar-link">
                                     <i class="bi bi-speedometer2"></i>
@@ -133,7 +148,7 @@
 
                             <li
                                 class="sidebar-item has-sub {{ request()->routeIs('pelajar.kegiatan.*') ? 'active' : '' }}">
-                                <a href="{{ route('pelajar.kegiatan.index') }}" class="sidebar-link">
+                                <a href="#" class="sidebar-link">
                                     <i class="bi bi-journal-text"></i>
                                     <span>Kegiatan</span>
                                 </a>
@@ -150,6 +165,13 @@
                                 </ul>
                             </li>
 
+                            <li class="sidebar-item {{ request()->routeIs('pelajar.laporan.*') ? 'active' : '' }}">
+                                <a href="{{ route('pelajar.laporan.index') }}" class="sidebar-link">
+                                    <i class="bi bi-upload"></i>
+                                    <span>Upload Laporan Akhir</span>
+                                </a>
+                            </li>
+
                             <li class="sidebar-item {{ request()->routeIs('pelajar.pengajuan.*') ? 'active' : '' }}">
                                 <a href="{{ route('pelajar.pengajuan.index') }}" class="sidebar-link">
                                     <i class="bi bi-file-earmark-text"></i>
@@ -157,9 +179,8 @@
                                     <span class="badge bg-success ms-auto" style="font-size: 10px;">Disetujui</span>
                                 </a>
                             </li>
-
-                            {{-- MENU UNTUK PELAJAR YANG BELUM DISETUJUI --}}
                         @else
+                            {{-- MENU UNTUK PELAJAR YANG BELUM DISETUJUI --}}
                             <li class="sidebar-item {{ request()->routeIs('pelajar.pengajuan.*') ? 'active' : '' }}">
                                 <a href="{{ route('pelajar.pengajuan.index') }}" class="sidebar-link">
                                     <i class="bi bi-file-earmark-text"></i>
@@ -179,10 +200,11 @@
                                 </a>
                             </li>
 
-                            {{-- Info Message untuk Pelajar yang belum disetujui --}}
                             <li class="sidebar-item" style="pointer-events: none;">
                                 <div class="p-3 mt-3"
-                                    style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);">
+                                    style="background: linear-gradient(135deg, #007DC3 0%, #004D7A 100%);
+                           border-radius: 12px;
+                           box-shadow: 0 4px 15px rgba(0, 125, 195, 0.4);">
                                     <div class="text-center mb-2">
                                         <i class="bi bi-lock-fill" style="font-size: 32px; color: #fff;"></i>
                                     </div>
@@ -197,27 +219,11 @@
                                 </div>
                             </li>
 
-                            {{-- Menu yang di-disable (ditampilkan tapi tidak bisa diklik) --}}
+                            {{-- Menu yang dikunci --}}
                             <li class="sidebar-item disabled" style="opacity: 0.5; pointer-events: none;">
                                 <a href="#" class="sidebar-link">
                                     <i class="bi bi-speedometer2"></i>
                                     <span>Dashboard</span>
-                                    <i class="bi bi-lock-fill ms-auto" style="font-size: 14px;"></i>
-                                </a>
-                            </li>
-
-                            <li class="sidebar-item disabled" style="opacity: 0.5; pointer-events: none;">
-                                <a href="#" class="sidebar-link">
-                                    <i class="bi bi-calendar-check"></i>
-                                    <span>Presensi</span>
-                                    <i class="bi bi-lock-fill ms-auto" style="font-size: 14px;"></i>
-                                </a>
-                            </li>
-
-                            <li class="sidebar-item disabled" style="opacity: 0.5; pointer-events: none;">
-                                <a href="#" class="sidebar-link">
-                                    <i class="bi bi-journal-text"></i>
-                                    <span>Kegiatan</span>
                                     <i class="bi bi-lock-fill ms-auto" style="font-size: 14px;"></i>
                                 </a>
                             </li>

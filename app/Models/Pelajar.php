@@ -33,6 +33,7 @@ class Pelajar extends Model
         'rencana_selesai',
         'proposal',
         'surat_pengajuan',
+        'surat_penerimaan',
         'status',
         'alasan',
     ];

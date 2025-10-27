@@ -92,7 +92,8 @@
                     {{-- Rencana Mulai --}}
                     <div class="mb-3">
                         <label class="form-label">Rencana Mulai</label>
-                        <input type="date" name="rencana_mulai" class="form-control" value="{{ old('rencana_mulai') }}"
+                        <input type="date" name="rencana_mulai" class="form-control"
+                            min="{{ \Carbon\Carbon::now()->format('Y-m-d') }}" value="{{ old('rencana_mulai') }}"
                             required>
                     </div>
 
@@ -100,8 +101,10 @@
                     <div class="mb-3">
                         <label class="form-label">Rencana Selesai</label>
                         <input type="date" name="rencana_selesai" class="form-control"
-                            value="{{ old('rencana_selesai') }}" required>
+                            min="{{ \Carbon\Carbon::now()->format('Y-m-d') }}" value="{{ old('rencana_selesai') }}"
+                            required>
                     </div>
+
 
                     {{-- Upload Proposal --}}
                     <div class="mb-3">

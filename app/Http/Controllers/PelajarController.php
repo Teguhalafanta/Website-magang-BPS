@@ -16,7 +16,7 @@ class PelajarController extends Controller
     {
         return view('pelajar.pengajuan_pelajar');
     }
-    
+
 
     // Simpan pengajuan baru
     public function store(Request $request)
@@ -39,7 +39,7 @@ class PelajarController extends Controller
             'asal_institusi'  => 'required|string|max:255',
             'fakultas'        => 'nullable|string|max:255',
             'jurusan'         => 'required|string|max:255',
-            'rencana_mulai'   => 'required|date',
+            'rencana_mulai'   => 'required|date|after_or_equal:today',
             'rencana_selesai' => 'required|date|after_or_equal:rencana_mulai',
             'proposal'        => 'required|mimes:pdf,doc,docx|max:2048',
             'surat_pengajuan' => 'required|mimes:pdf,doc,docx|max:2048',

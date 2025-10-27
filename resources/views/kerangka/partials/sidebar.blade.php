@@ -106,6 +106,14 @@
                             </a>
                         </li>
 
+                        <li class="sidebar-item {{ request()->routeIs('admin.produk.*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.produk.index') }}" class="sidebar-link">
+                                <i class="bi bi-archive"></i>
+                                <span>Produk Magang</span>
+                            </a>
+                        </li>
+
+
                         <li class="sidebar-item {{ request()->routeIs('admin.assignpembimbing.*') ? 'active' : '' }}">
                             <a href="{{ route('admin.assignpembimbing.view') }}" class="sidebar-link">
                                 <i class="bi bi-person-check"></i>
@@ -165,6 +173,14 @@
                                 </ul>
                             </li>
 
+                            <li class="sidebar-item {{ request()->routeIs('pelajar.produk.*') ? 'active' : '' }}">
+                                <a href="{{ route('pelajar.produk.index') }}" class="sidebar-link">
+                                    <i class="bi bi-archive"></i>
+                                    <span>Produk Magang</span>
+                                </a>
+                            </li>
+
+
                             <li class="sidebar-item {{ request()->routeIs('pelajar.laporan.*') ? 'active' : '' }}">
                                 <a href="{{ route('pelajar.laporan.index') }}" class="sidebar-link">
                                     <i class="bi bi-upload"></i>
@@ -202,9 +218,7 @@
 
                             <li class="sidebar-item" style="pointer-events: none;">
                                 <div class="p-3 mt-3"
-                                    style="background: linear-gradient(135deg, #007DC3 0%, #004D7A 100%);
-                           border-radius: 12px;
-                           box-shadow: 0 4px 15px rgba(0, 125, 195, 0.4);">
+                                    style="background: linear-gradient(135deg, #007DC3 0%, #004D7A 100%); border-radius: 12px; box-shadow: 0 4px 15px rgba(0, 125, 195, 0.4);">
                                     <div class="text-center mb-2">
                                         <i class="bi bi-lock-fill" style="font-size: 32px; color: #fff;"></i>
                                     </div>
@@ -258,6 +272,14 @@
                                 <span>Presensi</span>
                             </a>
                         </li>
+
+                        <li class="sidebar-item {{ request()->routeIs('pembimbing.produk.*') ? 'active' : '' }}">
+                            <a href="{{ route('pembimbing.produk.index') }}" class="sidebar-link">
+                                <i class="bi bi-archive"></i>
+                                <span>Produk Magang</span>
+                            </a>
+                        </li>
+
 
                         {{-- Role Lain --}}
                     @else

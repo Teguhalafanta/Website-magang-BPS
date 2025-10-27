@@ -119,7 +119,7 @@
                                         </div>
                                     </div>
                                     <hr>
-                                    <form action="{{ route('admin.pengajuan.updateStatus', $p->id) }}" method="POST">
+                                    <form action="{{ route('admin.pengajuan.updateStatus', $p->id) }}" method="POST" enctype="multipart/form-data">
                                         @csrf
                                         @method('PUT')
                                         <div class="mb-2">
@@ -133,6 +133,13 @@
                                                 <option value="ditolak" {{ $p->status == 'ditolak' ? 'selected' : '' }}>❌
                                                     Ditolak</option>
                                             </select>
+                                        </div>
+                                        <div class="mb-2 upload-surat" style="display: none;">
+                                            <label class="form-label fw-bold text-success">
+                                                Upload Surat Penerimaan (PDF) <span class="text-danger">*</span>
+                                            </label>
+                                            <input type="file" name="surat_penerimaan" class="form-control"
+                                                accept="application/pdf">
                                         </div>
                                         <div class="mb-2">
                                             <label class="form-label">Alasan (jika ditolak)</label>
@@ -261,6 +268,44 @@
             </tbody>
         </table>
     </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const modals = document.querySelectorAll(".modal");
+
+            modals.forEach(modal => {
+                modal.addEventListener("shown.bs.modal", function() {
+
+                    const statusSelect = modal.querySelector(".status-select");
+                    const uploadSurat = modal.querySelector(".upload-surat");
+                    const alasanField = modal.querySelector("textarea[name='alasan']");
+
+                    if (!statusSelect) return;
+
+                    function toggleFields() {
+                        if (statusSelect.value === "disetujui") {
+                            uploadSurat.style.display = "block";
+                            uploadSurat.querySelector("input").required = true;
+
+                            alasanField.value = "";
+                            alasanField.closest(".mb-2").style.display = "none";
+                        } else if (statusSelect.value === "ditolak") {
+                            uploadSurat.style.display = "none";
+                            uploadSurat.querySelector("input").required = false;
+
+                            alasanField.closest(".mb-2").style.display = "block";
+                        } else {
+                            uploadSurat.style.display = "none";
+                            alasField.closest(".mb-2").style.display = "none";
+                        }
+                    }
+
+                    toggleFields();
+                    statusSelect.addEventListener("change", toggleFields);
+                });
+            });
+        });
+    </script>
 
     {{-- ======= STYLE TAMBAHAN UNTUK MODE GELAP & TERANG ======= --}}
     <style>

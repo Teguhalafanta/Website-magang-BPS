@@ -93,7 +93,7 @@ Route::middleware(['auth'])->group(function () {
 
 
     // -------- PELAJAR --------
-    Route::prefix('pelajar')->middleware('role:pelajar')->name('pelajar.')->group(function () {
+    Route::prefix('pelajar')->middleware(['auth'])->name('pelajar.')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'pelajar'])->name('dashboard');
 
         // Route profil pelajar

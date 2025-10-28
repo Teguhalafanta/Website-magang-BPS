@@ -10,7 +10,8 @@ class LaporanAdminController extends Controller
 {
     public function index()
     {
-        $laporans = Laporan::with('user')->latest()->get();
+        $laporans = Laporan::with('user')->get();
         return view('admin.laporan.index', compact('laporans'));
     }
 }
+

@@ -156,6 +156,17 @@
                                             <small><strong>Alasan:</strong> {{ $p->alasan }}</small>
                                         @endif
                                     </div>
+
+                                    <div class="mt-3">
+                                        <strong>Surat Penerimaan:</strong>
+                                        @if ($p->status == 'disetujui' && $p->surat_penerimaan)
+                                            <a href="{{ asset('storage/' . $p->surat_penerimaan) }}"
+                                                class="btn btn-success btn-sm" target="_blank">Download Surat Penerimaan</a>
+                                        @else
+                                            <span class="text-muted">Belum tersedia</span>
+                                        @endif
+                                    </div>
+
                                 </div>
 
                                 <div class="modal-footer">

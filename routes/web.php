@@ -16,6 +16,7 @@ use App\Http\Controllers\Admin\LaporanController as AdminLaporanController;
 use App\Http\Controllers\Admin\AssignPembimbingController;
 use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\Admin\LaporanAdminController;
+use App\Http\Controllers\ProdukMagangController;
 use App\Models\Presensi;
 
 // ================== GUEST ==================
@@ -67,6 +68,16 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/sertifikat', function () {
             return view('admin.sertifikat.index');
         })->name('sertifikat.index');
+
+        // PRODUK MAGANG
+        Route::resource('produk', App\Http\Controllers\ProdukMagangController::class)->names([
+            'index' => 'produk.index',
+            'create' => 'produk.create',
+            'store' => 'produk.store',
+            'edit' => 'produk.edit',
+            'update' => 'produk.update',
+            'destroy' => 'produk.destroy'
+        ]);
     });
 
     // -------- PEMBIMBING --------
@@ -89,6 +100,9 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/assign-pembimbing', [AdminPelajarController::class, 'assignView'])->name('assignpembimbing.view');
         Route::post('/assign-pembimbing/{id}', [AdminPelajarController::class, 'assignPembimbing'])->name('assignpembimbing.assign');
+
+        // PRODUK MAGANG
+        Route::get('/produk', [ProdukMagangController::class, 'index'])->name('produk.index');
     });
 
 
@@ -129,6 +143,16 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
         Route::post('/laporan', [LaporanController::class, 'store'])->name('laporan.store');
+
+        // PRODUK MAGANG
+        Route::resource('produk', App\Http\Controllers\ProdukMagangController::class)->names([
+            'index' => 'produk.index',
+            'create' => 'produk.create',
+            'store' => 'produk.store',
+            'edit' => 'produk.edit',
+            'update' => 'produk.update',
+            'destroy' => 'produk.destroy'
+        ]);
     });
 
     // -------- NOTIFIKASI --------

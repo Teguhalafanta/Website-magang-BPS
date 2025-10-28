@@ -22,27 +22,26 @@ class PengajuanController extends Controller
         $request->validate([
             'status' => 'required|in:disetujui,ditolak',
             'alasan' => 'nullable|string',
+            'surat_penerimaan' => 'nullable|file|mimes:pdf|max:2048'
         ]);
 
         $pengajuan = Pelajar::findOrFail($id);
+
         $pengajuan->status = $request->status;
         $pengajuan->alasan = $request->alasan;
-        $pengajuan->save();
 
-        // 🔔 Kirim notifikasi ke pelajar
-        if ($pengajuan->user) {
-            if ($request->status === 'disetujui') {
-                $pesan = "Pengajuan magang kamu telah disetujui.";
-            } else {
-                $pesan = "Pengajuan magang kamu ditolak." .
-                    ($request->alasan ? " Alasan: " . $request->alasan : "");
+        // Simpan file surat penerimaan jika status disetujui dan file dikirim
+        if ($request->status === 'disetujui' && $request->hasFile('surat_penerimaan')) {
+            // Hapus file lama bila ada
+            if ($pengajuan->surat_penerimaan) {
+                Storage::delete('public/' . $pengajuan->surat_penerimaan);
             }
 
-            $pengajuan->user->notify(new \App\Notifications\NotifikasiBaru(
-                $pesan,
-                route('pelajar.pengajuan.index') // arahkan ke halaman daftar pengajuan pelajar
-            ));
+            $filePath = $request->file('surat_penerimaan')->store('surat_penerimaan', 'public');
+            $pengajuan->surat_penerimaan = $filePath;
         }
+
+        $pengajuan->save();
 
         return redirect()->route('admin.pengajuan.index')->with('success', 'Status pengajuan berhasil diperbarui.');
     }

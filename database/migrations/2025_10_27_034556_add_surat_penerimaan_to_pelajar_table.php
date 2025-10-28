@@ -9,19 +9,17 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
         Schema::table('pelajars', function (Blueprint $table) {
-            $table->unsignedBigInteger('pembimbing_id')->nullable()->after('user_id');
-            $table->foreign('pembimbing_id')->references('id')->on('pembimbings')->onDelete('set null');
+            $table->string('surat_penerimaan')->nullable()->after('surat_pengajuan');
         });
     }
 
-    public function down(): void
+    public function down()
     {
         Schema::table('pelajars', function (Blueprint $table) {
-            $table->dropForeign(['pembimbing_id']);
-            $table->dropColumn('pembimbing_id');
+            $table->dropColumn('surat_penerimaan');
         });
     }
 };

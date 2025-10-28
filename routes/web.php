@@ -1,23 +1,23 @@
 <?php
 
+use App\Models\Presensi;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\PresensiController;
-use App\Http\Controllers\KegiatanController;
+use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\PelajarController;
-use App\Http\Controllers\Admin\PengajuanController;
-use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\KegiatanController;
+use App\Http\Controllers\PresensiController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\ProdukMagangController;
+use App\Http\Controllers\Admin\PengajuanController;
+use App\Http\Controllers\Admin\LaporanAdminController;
 use App\Http\Controllers\Pembimbing\BimbinganController;
 use App\Http\Controllers\Pembimbing\PenilaianController;
-use App\Http\Controllers\Admin\PelajarController as AdminPelajarController;
-use App\Http\Controllers\Admin\LaporanController as AdminLaporanController;
 use App\Http\Controllers\Admin\AssignPembimbingController;
-use App\Http\Controllers\LaporanController;
-use App\Http\Controllers\Admin\LaporanAdminController;
-use App\Http\Controllers\ProdukMagangController;
-use App\Models\Presensi;
+use App\Http\Controllers\Admin\LaporanController as AdminLaporanController;
+use App\Http\Controllers\Admin\PelajarController as AdminPelajarController;
 
 // ================== GUEST ==================
 Route::middleware('guest')->group(function () {
@@ -33,6 +33,8 @@ Route::middleware(['auth'])->group(function () {
 
     // Dashboard umum → redirect sesuai role
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+    Route::get('/laporan/download/{id}', [App\Http\Controllers\LaporanController::class, 'download'])->name('laporan.download');
 
     // -------- PROFILE --------
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
@@ -63,7 +65,9 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/assign-pembimbing/{id}', [AssignPembimbingController::class, 'assign'])
             ->name('assignpembimbing.assign');
 
-        Route::get('/laporan', [LaporanAdminController::class, 'index'])->name('laporan.index');
+        // LAPORAN AKHIR
+        Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
+        Route::get('/laporan/download/{id}', [LaporanController::class, 'download'])->name('laporan.download');
 
         Route::get('/sertifikat', function () {
             return view('admin.sertifikat.index');
@@ -100,6 +104,10 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/assign-pembimbing', [AdminPelajarController::class, 'assignView'])->name('assignpembimbing.view');
         Route::post('/assign-pembimbing/{id}', [AdminPelajarController::class, 'assignPembimbing'])->name('assignpembimbing.assign');
+
+        // LAPORAN AKHIR
+        Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
+        Route::get('/laporan/download/{id}', [LaporanController::class, 'download'])->name('laporan.download');
 
         // PRODUK MAGANG
         Route::get('/produk', [ProdukMagangController::class, 'index'])->name('produk.index');
@@ -141,8 +149,9 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/presensi', [PresensiController::class, 'store'])->name('presensi.store');
         Route::put('/presensi/{id}', [PresensiController::class, 'update'])->name('presensi.update');
 
+        // LAPORAN AKHIR
         Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
-        Route::post('/laporan', [LaporanController::class, 'store'])->name('laporan.store');
+        Route::post('/laporan/upload', [LaporanController::class, 'store'])->name('laporan.store');
 
         // PRODUK MAGANG
         Route::resource('produk', App\Http\Controllers\ProdukMagangController::class)->names([

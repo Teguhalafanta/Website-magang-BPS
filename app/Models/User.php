@@ -61,7 +61,7 @@ class User extends Authenticatable
     {
         return $this->hasOne(Pembimbing::class);
     }
-    
+
     public function isApproved()
     {
         // Cek apakah user punya data pelajar dan statusnya disetujui
@@ -69,5 +69,10 @@ class User extends Authenticatable
             return $this->pelajar->status === 'disetujui';
         }
         return false;
+    }
+
+    public function laporan()
+    {
+        return $this->hasOne(Laporan::class, 'user_id');
     }
 }

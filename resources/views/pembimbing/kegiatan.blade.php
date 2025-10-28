@@ -138,8 +138,7 @@
                                         </span>
                                     </td>
                                     <td class="text-center px-3">
-                                        <button type="button"
-                                            class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1"
+                                        <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1"
                                             data-bs-toggle="modal" data-bs-target="#detailModal{{ $kegiatan->id }}">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12"
                                                 fill="currentColor" class="me-1 mb-1" viewBox="0 0 16 16">
@@ -214,30 +213,6 @@
                                                             class="fw-semibold text-secondary small mb-1">Deskripsi</label>
                                                         <div class="p-3 bg-light rounded">
                                                             <p class="mb-0 text-dark">{{ $kegiatan->deskripsi }}</p>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <label class="fw-semibold text-secondary small mb-1">Volume</label>
-                                                        <div class="p-2 bg-light rounded text-center">
-                                                            <span
-                                                                class="fw-semibold text-dark">{{ $kegiatan->volume ?? '-' }}</span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <label class="fw-semibold text-secondary small mb-1">Satuan</label>
-                                                        <div class="p-2 bg-light rounded text-center">
-                                                            <span class="text-dark">{{ $kegiatan->satuan ?? '-' }}</span>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-4">
-                                                        <label class="fw-semibold text-secondary small mb-1">Durasi</label>
-                                                        <div class="p-2 bg-light rounded text-center">
-                                                            @if ($kegiatan->durasi)
-                                                                <span class="badge bg-secondary">{{ $kegiatan->durasi }}
-                                                                    menit</span>
-                                                            @else
-                                                                <span class="text-muted">-</span>
-                                                            @endif
                                                         </div>
                                                     </div>
                                                     <div class="col-md-6">

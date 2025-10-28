@@ -18,11 +18,11 @@
         <table class="table table-bordered table-striped">
             <thead>
                 <tr>
-                    <th>No</th>
-                    <th>Uraian Kegiatan</th>
-                    <th>Deskripsi</th>
-                    <th>Satuan</th>
-                    <th>Aksi</th>
+                    <th class="text-center">No</th>
+                    <th class="text-center">Uraian Kegiatan</th>
+                    <th class="text-center">Deskripsi</th>
+                    <th class="text-center">Satuan</th>
+                    <th class="text-center">Aksi</th>
                 </tr>
             </thead>
             <tbody>

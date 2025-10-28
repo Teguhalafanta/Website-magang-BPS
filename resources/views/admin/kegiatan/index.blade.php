@@ -47,8 +47,6 @@
                                     <th style="width: 15%;">Pelajar</th>
                                     <th style="width: 10%;">Tanggal</th>
                                     <th style="width: 20%;">Nama Kegiatan</th>
-                                    <th style="width: 8%;">Volume</th>
-                                    <th style="width: 8%;">Durasi</th>
                                     <th style="width: 12%;">Status</th>
                                     <th style="width: 10%;" class="text-center">Aksi</th>
                                 </tr>
@@ -81,20 +79,7 @@
                                                 {{ $kegiatan->nama_kegiatan }}
                                             </div>
                                         </td>
-                                        <td>
-                                            @if ($kegiatan->volume)
-                                                {{ $kegiatan->volume }} {{ $kegiatan->satuan ?? '' }}
-                                            @else
-                                                <span class="text-muted">-</span>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            @if ($kegiatan->durasi)
-                                                {{ $kegiatan->durasi }} mnt
-                                            @else
-                                                <span class="text-muted">-</span>
-                                            @endif
-                                        </td>
+
                                         <td>
                                             @php
                                                 $statusClass = match ($kegiatan->status_penyelesaian) {
@@ -154,15 +139,6 @@
                                                     <hr>
                                                     <div class="row mb-3">
                                                         <div class="col-md-4">
-                                                            <label class="text-muted small mb-1">Volume</label>
-                                                            <p class="mb-0">{{ $kegiatan->volume ?? '-' }}
-                                                                {{ $kegiatan->satuan ?? '' }}</p>
-                                                        </div>
-                                                        <div class="col-md-4">
-                                                            <label class="text-muted small mb-1">Durasi</label>
-                                                            <p class="mb-0">{{ $kegiatan->durasi ?? '-' }} menit</p>
-                                                        </div>
-                                                        <div class="col-md-4">
                                                             <label class="text-muted small mb-1">Status</label>
                                                             <p class="mb-0">
                                                                 <span class="badge bg-{{ $statusClass }}">
@@ -181,19 +157,18 @@
                                                             <p class="mb-0">{{ $kegiatan->tim_kerja ?? '-' }}</p>
                                                         </div>
                                                     </div>
-                                                    @if ($kegiatan->bukti_dukung)
-                                                        <hr>
-                                                        <div class="mb-3">
-                                                            <label class="text-muted small mb-1">Bukti Dukung</label>
-                                                            <p class="mb-0">
-                                                                <a href="{{ asset('storage/' . $kegiatan->bukti_dukung) }}"
-                                                                    target="_blank"
-                                                                    class="btn btn-sm btn-outline-primary">
-                                                                    <i class="bi bi-download me-1"></i>Unduh File
-                                                                </a>
-                                                            </p>
-                                                        </div>
-                                                    @endif
+                                                    <td class="text-center align-middle">
+                                                        @if ($kegiatan->bukti_dukung)
+                                                            <a href="{{ asset('storage/' . $kegiatan->bukti_dukung) }}"
+                                                                target="_blank"
+                                                                class="text-decoration-none text-primary fw-semibold">
+                                                                Lihat Bukti
+                                                            </a>
+                                                        @else
+                                                            <span class="text-muted">-</span>
+                                                        @endif
+                                                    </td>
+
                                                     <hr>
                                                     <div class="row">
                                                         <div class="col-md-6">

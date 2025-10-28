@@ -18,9 +18,6 @@ return new class extends Migration {
             $table->string('nama_kegiatan');
             $table->text('deskripsi')->nullable();
             $table->string('bukti_dukung')->nullable();
-            $table->integer('volume')->nullable();
-            $table->string('satuan')->nullable();
-            $table->integer('durasi')->nullable();
             $table->string('pemberi_tugas')->nullable();
             $table->string('tim_kerja')->nullable();
 

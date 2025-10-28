@@ -22,103 +22,6 @@
 
         <div id="flash-message"></div>
 
-        <div class="col-12 text-end mt-3">
-            <button class="btn btn-primary fw-bold" type="button" data-bs-toggle="collapse"
-                data-bs-target="#formTambahKegiatanWrapper" aria-expanded="false" aria-controls="formTambahKegiatanWrapper">
-                <i class="fas fa-plus-circle me-1"></i> Tambah Kegiatan
-            </button>
-        </div>
-
-        {{-- Form tambah kegiatan (Collapse) --}}
-        <div class="collapse mt-3" id="formTambahKegiatanWrapper">
-            <div class="card mb-4 shadow-sm">
-                <div class="card-header bg-info text-white fw-bold">
-                    <i class="fas fa-plus-circle me-2"></i>Tambah Kegiatan Baru
-                </div>
-                <div class="card-body">
-                    <form id="formTambahKegiatan" enctype="multipart/form-data" method="POST"
-                        action="{{ route('pelajar.kegiatan.store') }}">
-                        @csrf
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label class="form-label">Nama Kegiatan <span class="text-danger">*</span></label>
-                                <input type="text" name="nama_kegiatan" class="form-control"
-                                    placeholder="Masukkan nama kegiatan" required>
-                            </div>
-
-                            <div class="col-md-3">
-                                <label class="form-label">Tanggal <span class="text-danger">*</span></label>
-                                <input type="date" name="tanggal" class="form-control"
-                                    value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}" readonly required>
-                            </div>
-                            <div class="col-md-3">
-                                <label class="form-label">Status Penyelesaian <span class="text-danger">*</span></label>
-                                <select name="status_penyelesaian" class="form-select" required>
-                                    <option value="Belum Dimulai">Belum Dimulai</option>
-                                    <option value="Dalam Proses">Dalam Proses</option>
-                                    <option value="Selesai" selected>Selesai</option>
-                                </select>
-                            </div>
-
-                            <div class="col-md-12">
-                                <label class="form-label">Deskripsi <span class="text-danger">*</span></label>
-                                <textarea name="deskripsi" class="form-control" rows="2" placeholder="Jelaskan kegiatan yang dilakukan" required></textarea>
-                            </div>
-
-                            <div class="col-md-3">
-                                <label class="form-label">Volume</label>
-                                <input type="text" name="volume" class="form-control" placeholder="Contoh: 5">
-                            </div>
-
-                            <div class="col-md-3">
-                                <label class="form-label">Satuan</label>
-                                <select name="satuan" class="form-select">
-                                    <option value="">Pilih Satuan</option>
-                                    <option value="Dokumen">Dokumen</option>
-                                    <option value="Lembar">Lembar</option>
-                                    <option value="Unit">Unit</option>
-                                    <option value="Paket">Paket</option>
-                                    <option value="Buah">Buah</option>
-                                    <option value="Set">Set</option>
-                                    <option value="File">File</option>
-                                </select>
-                            </div>
-
-                            <div class="col-md-3">
-                                <label class="form-label">Durasi (menit)</label>
-                                <input type="number" name="durasi" class="form-control" min="1"
-                                    placeholder="Contoh: 120">
-                            </div>
-
-                            <div class="col-md-3">
-                                <label class="form-label">Pemberi Tugas</label>
-                                <input type="text" name="pemberi_tugas" class="form-control"
-                                    placeholder="Nama pemberi tugas">
-                            </div>
-
-                            <div class="col-md-12">
-                                <label class="form-label">Tim Kerja</label>
-                                <input type="text" name="tim_kerja" class="form-control"
-                                    placeholder="Anggota tim yang terlibat">
-                            </div>
-
-                            {{-- Upload Bukti Dukung --}}
-                            <div class="mb-3">
-                                <label class="form-label">Bukti Dukung</label>
-                                <input type="file" name="bukti_dukung" class="form-control"
-                                    accept=".pdf,.doc,.docx,.img,.jpg,.png" required>
-                            </div>
-
-                            <div class="col-12 text-end">
-                                <button type="submit" class="btn btn-success fw-bold">
-                                    <i class="fas fa-save me-1"></i> Simpan Kegiatan
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
 
 
         {{-- Tabel kegiatan --}}
@@ -135,9 +38,6 @@
                                 <th>Nama Kegiatan</th>
                                 <th width="110">Tanggal</th>
                                 <th>Deskripsi</th>
-                                <th width="80">Volume</th>
-                                <th width="80">Satuan</th>
-                                <th width="90">Durasi</th>
                                 <th width="120">Status</th>
                                 <th width="120">Bukti Dukung</th>
                                 <th width="120">Aksi</th>
@@ -151,10 +51,6 @@
                                     <td class="tanggal text-center">
                                         {{ \Carbon\Carbon::parse($kegiatan->tanggal)->format('d-m-Y') }}</td>
                                     <td class="deskripsi">{{ Str::limit($kegiatan->deskripsi, 50) }}</td>
-                                    <td class="text-center volume">{{ $kegiatan->volume ?? '-' }}</td>
-                                    <td class="text-center satuan">{{ $kegiatan->satuan ?? '-' }}</td>
-                                    <td class="text-center durasi">
-                                        {{ $kegiatan->durasi ? $kegiatan->durasi . ' mnt' : '-' }}</td>
                                     <td class="text-center status">
                                         <span
                                             class="badge bg-{{ $kegiatan->status_penyelesaian == 'Selesai' ? 'success' : ($kegiatan->status_penyelesaian == 'Dalam Proses' ? 'warning' : 'secondary') }}">
@@ -243,11 +139,6 @@
                                 <small class="text-danger" id="error-edit-deskripsi"></small>
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label">Volume</label>
-                                <input type="text" name="volume" id="edit-volume" class="form-control">
-                                <small class="text-danger" id="error-edit-volume"></small>
-                            </div>
-                            <div class="col-md-4">
                                 <label class="form-label">Satuan</label>
                                 <select name="satuan" id="edit-satuan" class="form-select">
                                     <option value="">Pilih Satuan</option>
@@ -331,7 +222,7 @@
 
             // Helper function untuk clear error messages
             function clearErrors(prefix = '') {
-                const fields = ['nama_kegiatan', 'tanggal', 'deskripsi', 'volume', 'satuan', 'durasi',
+                const fields = ['nama_kegiatan', 'tanggal', 'deskripsi',
                     'pemberi_tugas', 'tim_kerja', 'status_penyelesaian'
                 ];
                 fields.forEach(field => {
@@ -416,9 +307,6 @@
                         <td class="nama">${res.kegiatan.nama_kegiatan}</td>
                         <td class="tanggal text-center">${res.kegiatan.tanggal_formatted || res.kegiatan.tanggal}</td>
                         <td class="deskripsi">${res.kegiatan.deskripsi.length > 50 ? res.kegiatan.deskripsi.substring(0, 50) + '...' : res.kegiatan.deskripsi}</td>
-                        <td class="text-center volume">${res.kegiatan.volume || '-'}</td>
-                        <td class="text-center satuan">${res.kegiatan.satuan || '-'}</td>
-                        <td class="text-center durasi">${res.kegiatan.durasi ? res.kegiatan.durasi + ' mnt' : '-'}</td>
                         <td class="text-center status">
                             <span class="badge bg-${statusBadgeClass}">${res.kegiatan.status_penyelesaian}</span>
                         </td>
@@ -472,9 +360,6 @@
                             document.getElementById('edit-nama_kegiatan').value = k.nama_kegiatan || '';
                             document.getElementById('edit-tanggal').value = k.tanggal || '';
                             document.getElementById('edit-deskripsi').value = k.deskripsi || '';
-                            document.getElementById('edit-volume').value = k.volume || '';
-                            document.getElementById('edit-satuan').value = k.satuan || '';
-                            document.getElementById('edit-durasi').value = k.durasi || '';
                             document.getElementById('edit-pemberi_tugas').value = k.pemberi_tugas || '';
                             document.getElementById('edit-tim_kerja').value = k.tim_kerja || '';
                             document.getElementById('edit-status_penyelesaian').value = k
@@ -599,10 +484,6 @@
                                     .length > 50 ?
                                     res.kegiatan.deskripsi.substring(0, 50) + '...' : res.kegiatan
                                     .deskripsi;
-                                tr.querySelector('.volume').innerText = res.kegiatan.volume || '-';
-                                tr.querySelector('.satuan').innerText = res.kegiatan.satuan || '-';
-                                tr.querySelector('.durasi').innerText = res.kegiatan.durasi ? res
-                                    .kegiatan.durasi + ' mnt' : '-';
                                 tr.querySelector('.status').innerHTML =
                                     `<span class="badge bg-${statusBadgeClass}">${res.kegiatan.status_penyelesaian}</span>`;
                             }

@@ -13,16 +13,13 @@
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th>No</th>
-                    <th>Nama Kegiatan</th>
-                    <th>Tanggal</th>
-                    <th>Deskripsi</th>
-                    <th>Volume</th>
-                    <th>Satuan</th>
-                    <th>Durasi</th>
-                    <th>Status</th>
-                    <th>Bukti Dukung</th>
-                    <th>Aksi</th>
+                    <th class="text-center">No</th>
+                    <th class="text-center">Nama Kegiatan</th>
+                    <th class="text-center">Tanggal</th>
+                    <th class="text-center">Deskripsi</th>
+                    <th class="text-center">Status</th>
+                    <th class="text-center">Bukti Dukung</th>
+                    <th class="text-center">Aksi</th>
                 </tr>
             </thead>
             <tbody>
@@ -32,9 +29,6 @@
                         <td>{{ $kegiatan->nama_kegiatan }}</td>
                         <td>{{ \Carbon\Carbon::parse($kegiatan->tanggal)->format('d-m-Y') }}</td>
                         <td>{{ $kegiatan->deskripsi }}</td>
-                        <td>{{ $kegiatan->volume ?? 0 }}</td>
-                        <td>{{ $kegiatan->satuan ?? '-' }}</td>
-                        <td>{{ $kegiatan->durasi }} mnt</td>
                         <td>
                             @if ($kegiatan->status_penyelesaian === 'Selesai')
                                 <span class="badge bg-success">Selesai</span>
@@ -55,11 +49,14 @@
                             @endif
                         </td>
                         <td>
-                            <a href="{{ route('pelajar.kegiatan.edit', $kegiatan->id) }}" class="btn btn-sm btn-warning">Edit</a>
-                            <form action="{{ route('pelajar.kegiatan.destroy', $kegiatan->id) }}" method="POST" style="display:inline;">
+                            <a href="{{ route('pelajar.kegiatan.edit', $kegiatan->id) }}"
+                                class="btn btn-sm btn-warning">Edit</a>
+                            <form action="{{ route('pelajar.kegiatan.destroy', $kegiatan->id) }}" method="POST"
+                                style="display:inline;">
                                 @csrf
                                 @method('DELETE')
-                                <button class="btn btn-sm btn-danger" onclick="return confirm('Yakin hapus?')">Hapus</button>
+                                <button class="btn btn-sm btn-danger"
+                                    onclick="return confirm('Yakin hapus?')">Hapus</button>
                             </form>
                         </td>
                     </tr>
@@ -100,21 +97,6 @@
                         <div class="mb-3">
                             <label for="deskripsi" class="form-label">Deskripsi</label>
                             <textarea class="form-control" id="deskripsi" name="deskripsi" rows="3" required></textarea>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="volume" class="form-label">Volume</label>
-                            <input type="number" class="form-control" id="volume" name="volume" min="0" value="0" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="satuan" class="form-label">Satuan</label>
-                            <input type="text" class="form-control" id="satuan" name="satuan">
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="durasi" class="form-label">Durasi (menit)</label>
-                            <input type="number" class="form-control" id="durasi" name="durasi" min="0">
                         </div>
 
                         <div class="mb-3">

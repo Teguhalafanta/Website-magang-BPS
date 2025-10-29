@@ -113,20 +113,34 @@
                                                         data-bs-dismiss="modal"></button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <div class="row mb-3">
+                                                    <div class="row g-3 mb-3">
                                                         <div class="col-md-6">
                                                             <label class="text-muted small mb-1">Pelajar</label>
                                                             <p class="fw-semibold mb-0">
-                                                                {{ $kegiatan->user->name ?? 'N/A' }}</p>
+                                                                {{ $kegiatan->pelajar->nama ?? 'N/A' }}</p>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <label class="text-muted small mb-1">Email</label>
+                                                            <p class="mb-0">{{ $kegiatan->user->email ?? '-' }}</p>
                                                         </div>
                                                         <div class="col-md-6">
                                                             <label class="text-muted small mb-1">Tanggal</label>
-                                                            <p class="fw-semibold mb-0">
+                                                            <p class="mb-0">
                                                                 {{ \Carbon\Carbon::parse($kegiatan->tanggal)->format('d F Y') }}
                                                             </p>
                                                         </div>
+                                                        <div class="col-md-6">
+                                                            <label class="text-muted small mb-1">Status Penyelesaian</label>
+                                                            <p class="mb-0">
+                                                                <span class="badge bg-{{ $statusClass }}">
+                                                                    {{ $kegiatan->status_penyelesaian ?? 'Belum Dimulai' }}
+                                                                </span>
+                                                            </p>
+                                                        </div>
                                                     </div>
+
                                                     <hr>
+
                                                     <div class="mb-3">
                                                         <label class="text-muted small mb-1">Nama Kegiatan</label>
                                                         <p class="fw-semibold mb-0">{{ $kegiatan->nama_kegiatan }}</p>
@@ -136,18 +150,10 @@
                                                         <p class="mb-0" style="white-space: pre-wrap;">
                                                             {{ $kegiatan->deskripsi ?? '-' }}</p>
                                                     </div>
+
                                                     <hr>
-                                                    <div class="row mb-3">
-                                                        <div class="col-md-4">
-                                                            <label class="text-muted small mb-1">Status</label>
-                                                            <p class="mb-0">
-                                                                <span class="badge bg-{{ $statusClass }}">
-                                                                    {{ $kegiatan->status_penyelesaian ?? 'Belum Dimulai' }}
-                                                                </span>
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                    <div class="row mb-3">
+
+                                                    <div class="row g-3 mb-3">
                                                         <div class="col-md-6">
                                                             <label class="text-muted small mb-1">Pemberi Tugas</label>
                                                             <p class="mb-0">{{ $kegiatan->pemberi_tugas ?? '-' }}</p>
@@ -156,21 +162,27 @@
                                                             <label class="text-muted small mb-1">Tim Kerja</label>
                                                             <p class="mb-0">{{ $kegiatan->tim_kerja ?? '-' }}</p>
                                                         </div>
+                                                        <div class="col-12">
+                                                            <label class="text-muted small mb-1">Bukti Dukung</label>
+                                                            <p class="mb-0">
+                                                                @if ($kegiatan->bukti_dukung)
+                                                                    <a href="{{ asset('storage/' . $kegiatan->bukti_dukung) }}"
+                                                                        target="_blank"
+                                                                        class="btn btn-sm btn-outline-primary">
+                                                                        <i
+                                                                            class="bi bi-file-earmark-arrow-down me-1"></i>Lihat
+                                                                        Bukti
+                                                                    </a>
+                                                                @else
+                                                                    <span class="text-muted">Tidak ada bukti dukung</span>
+                                                                @endif
+                                                            </p>
+                                                        </div>
                                                     </div>
-                                                    <td class="text-center align-middle">
-                                                        @if ($kegiatan->bukti_dukung)
-                                                            <a href="{{ asset('storage/' . $kegiatan->bukti_dukung) }}"
-                                                                target="_blank"
-                                                                class="text-decoration-none text-primary fw-semibold">
-                                                                Lihat Bukti
-                                                            </a>
-                                                        @else
-                                                            <span class="text-muted">-</span>
-                                                        @endif
-                                                    </td>
 
                                                     <hr>
-                                                    <div class="row">
+
+                                                    <div class="row g-3">
                                                         <div class="col-md-6">
                                                             <label class="text-muted small mb-1">Dibuat</label>
                                                             <p class="mb-0 small">

@@ -109,12 +109,12 @@
                     {{-- Upload Proposal --}}
                     <div class="mb-3">
                         <label class="form-label">Upload Proposal (PDF/DOC)</label>
-                        <input type="file" name="proposal" class="form-control" accept=".pdf,.doc,.docx">
+                        <input type="file" name="proposal" class="form-control" accept=".pdf,.doc,.docx" required>
                     </div>
 
                     {{-- Upload Surat Pengajuan --}}
                     <div class="mb-3">
-                        <label class="form-label">Upload Surat Pengajuan (PDF/DOC)</label>
+                        <label class="form-label">Upload Surat Pengajuan / CV (PDF/DOC)</label>
                         <input type="file" name="surat_pengajuan" class="form-control" accept=".pdf,.doc,.docx">
                     </div>
                 </div>

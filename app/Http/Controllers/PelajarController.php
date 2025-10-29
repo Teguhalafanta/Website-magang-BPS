@@ -41,13 +41,21 @@ class PelajarController extends Controller
             'jurusan'         => 'required|string|max:255',
             'rencana_mulai'   => 'required|date|after_or_equal:today',
             'rencana_selesai' => 'required|date|after_or_equal:rencana_mulai',
-            'proposal'        => 'required|mimes:pdf,doc,docx|max:2048',
-            'surat_pengajuan' => 'required|mimes:pdf,doc,docx|max:2048',
+            'proposal'        => 'nullable|mimes:pdf,doc,docx|max:2048',
+            'surat_pengajuan' => 'nullable|mimes:pdf,doc,docx|max:2048',
         ]);
 
         // Simpan file
-        $proposalPath = $request->file('proposal')->store('proposals', 'public');
-        $suratPath    = $request->file('surat_pengajuan')->store('surat_pengajuan', 'public');
+        $proposalPath = null;
+        $suratPath = null;
+
+        if ($request->hasFile('proposal')) {
+            $proposalPath = $request->file('proposal')->store('proposals', 'public');
+        }
+
+        if ($request->hasFile('surat_pengajuan')) {
+            $suratPath = $request->file('surat_pengajuan')->store('surat_pengajuan', 'public');
+        }
 
         // Simpan data pelajar
         Pelajar::create([

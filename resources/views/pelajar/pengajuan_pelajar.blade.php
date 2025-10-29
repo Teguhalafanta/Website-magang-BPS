@@ -92,7 +92,7 @@
                     {{-- Rencana Mulai --}}
                     <div class="mb-3">
                         <label class="form-label">Rencana Mulai</label>
-                        <input type="date" name="rencana_mulai" class="form-control"
+                        <input type="date" name="rencana_mulai" class   ="form-control"
                             min="{{ \Carbon\Carbon::now()->format('Y-m-d') }}" value="{{ old('rencana_mulai') }}"
                             required>
                     </div>
@@ -109,13 +109,13 @@
                     {{-- Upload Proposal --}}
                     <div class="mb-3">
                         <label class="form-label">Upload Proposal (PDF/DOC)</label>
-                        <input type="file" name="proposal" class="form-control" accept=".pdf,.doc,.docx" required>
+                        <input type="file" name="proposal" class="form-control" accept=".pdf,.doc,.docx">
                     </div>
 
                     {{-- Upload Surat Pengajuan --}}
                     <div class="mb-3">
                         <label class="form-label">Upload Surat Pengajuan (PDF/DOC)</label>
-                        <input type="file" name="surat_pengajuan" class="form-control" accept=".pdf,.doc,.docx" required>
+                        <input type="file" name="surat_pengajuan" class="form-control" accept=".pdf,.doc,.docx">
                     </div>
                 </div>
             </div>

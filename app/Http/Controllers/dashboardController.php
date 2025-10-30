@@ -138,50 +138,111 @@ class DashboardController extends Controller
 
     public function pelajar()
     {
-        // PERBAIKAN: Ambil user yang sedang login
         $user = Auth::user();
+        $pelajar = $user->pelajar;
 
-        // PERBAIKAN: Filter presensi berdasarkan user_id yang login
-        // Pastikan tabel presensi memiliki kolom user_id
+        // Cek apakah pelajar sudah terdaftar
+        if (!$pelajar) {
+            return redirect()->route('pelajar.profil')->with('warning', 'Silakan lengkapi data profil terlebih dahulu');
+        }
+
+        // **PENTING: Cek status magang**
+        $isMagangSelesai = $pelajar->status_magang === 'selesai';
+        $statusMagang = $pelajar->status;
+
+        // Hitung durasi dan sisa hari magang
+        $durasi = null;
+        $sisaHari = null;
+        $persentaseWaktu = 0;
+
+        if ($pelajar->rencana_mulai && $pelajar->rencana_selesai) {
+            $mulai = Carbon::parse($pelajar->rencana_mulai);
+            $selesai = Carbon::parse($pelajar->rencana_selesai);
+            $today = Carbon::today();
+
+            $durasi = $mulai->diffInDays($selesai);
+
+            if ($today->lt($selesai)) {
+                $sisaHari = $today->diffInDays($selesai);
+            } else {
+                $sisaHari = 0;
+            }
+
+            if ($durasi > 0) {
+                $hariTerlalui = $mulai->diffInDays($today);
+                $persentaseWaktu = min(round(($hariTerlalui / $durasi) * 100), 100);
+            }
+        }
+
+        // Statistik Presensi
         $jumlahPresensiHariIni = Presensi::where('user_id', $user->id)
-            ->whereDate('created_at', now())
+            ->whereDate('created_at', today())
             ->count();
 
-        // PERBAIKAN: Filter kegiatan berdasarkan user_id yang login
-        // Pastikan tabel kegiatan memiliki kolom user_id
-        $jumlahKegiatan = Kegiatan::where('user_id', $user->id)
+        $totalPresensi = Presensi::where('user_id', $user->id)->count();
+
+        // Statistik Kegiatan
+        $jumlahKegiatan = Kegiatan::where('user_id', $user->id)->count();
+
+        $kegiatanSelesai = Kegiatan::where('user_id', $user->id)
+            ->where('status_penyelesaian', 'Selesai')
             ->count();
 
-        // TAMBAHAN: Data detail untuk dashboard pelajar
-        // Daftar kegiatan terbaru milik pelajar ini
+        $kegiatanProses = Kegiatan::where('user_id', $user->id)
+            ->whereIn('status_penyelesaian', ['Belum Dimulai', 'Dalam Proses'])
+            ->count();
+
+        $persentaseKegiatan = $jumlahKegiatan > 0
+            ? round(($kegiatanSelesai / $jumlahKegiatan) * 100)
+            : 0;
+
+        // Kegiatan terbaru (5 terakhir)
         $kegiatanTerbaru = Kegiatan::where('user_id', $user->id)
             ->orderBy('created_at', 'desc')
             ->take(5)
             ->get();
 
-        // Presensi terbaru milik pelajar ini
+        // Presensi terbaru (5 terakhir)
         $presensiTerbaru = Presensi::where('user_id', $user->id)
             ->orderBy('created_at', 'desc')
             ->take(5)
             ->get();
 
-        // Statistik tambahan
-        $totalPresensi = Presensi::where('user_id', $user->id)->count();
-        $kegiatanSelesai = Kegiatan::where('user_id', $user->id)
-            ->where('status_penyelesaian', 'Selesai')
+        // Kegiatan hari ini
+        $kegiatanHariIni = Kegiatan::where('user_id', $user->id)
+            ->whereDate('tanggal', today())
+            ->orderBy('tanggal', 'asc')
+            ->get();
+
+        // Kegiatan minggu ini
+        $kegiatanMingguIni = Kegiatan::where('user_id', $user->id)
+            ->whereBetween('tanggal', [
+                Carbon::now()->startOfWeek(),
+                Carbon::now()->endOfWeek()
+            ])
             ->count();
-        $kegiatanProses = Kegiatan::where('user_id', $user->id)
-            ->whereIn('status_penyelesaian', ['Belum Dimulai', 'Dalam Proses'])
-            ->count();
+
+        // Informasi pembimbing
+        $pembimbing = $pelajar->pembimbing;
 
         return view('dashboard.pelajar', compact(
             'jumlahPresensiHariIni',
             'jumlahKegiatan',
-            'kegiatanTerbaru',
-            'presensiTerbaru',
             'totalPresensi',
             'kegiatanSelesai',
-            'kegiatanProses'
+            'kegiatanProses',
+            'persentaseKegiatan',
+            'kegiatanTerbaru',
+            'presensiTerbaru',
+            'kegiatanHariIni',
+            'kegiatanMingguIni',
+            'isMagangSelesai',
+            'statusMagang',
+            'durasi',
+            'sisaHari',
+            'persentaseWaktu',
+            'pembimbing',
+            'pelajar'
         ));
     }
 

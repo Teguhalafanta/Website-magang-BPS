@@ -9,7 +9,7 @@
         @else
             <table class="table table-bordered table-striped">
                 <thead>
-                    <tr>
+                    <tr class="text-center">
                         <th>Nama Pelajar</th>
                         <th>Judul Laporan</th>
                         <th>Tanggal Upload</th>
@@ -19,9 +19,9 @@
                 <tbody>
                     @foreach ($laporans as $laporan)
                         <tr>
-                            <td>{{ $laporan->pelajar->nama ?? '-' }}</td>
-                            <td>{{ $laporan->judul ?? 'Laporan Magang' }}</td>
-                            <td>{{ $laporan->created_at->format('d-m-Y') }}</td>
+                            <td class="text-center">{{ $laporan->pelajar->nama ?? '-' }}</td>
+                            <td class="text-center">{{ $laporan->judul ?? 'Laporan Magang' }}</td>
+                            <td class="text-center">{{ $laporan->created_at->format('d-m-Y') }}</td>
                             <td class="text-center">
                                 {{-- Tombol lihat file --}}
                                 <a href="{{ asset('storage/' . $laporan->file) }}" target="_blank"

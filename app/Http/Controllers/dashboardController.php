@@ -29,18 +29,20 @@ class DashboardController extends Controller
 
     public function admin(Request $request)
     {
-        $jumlahPelajar = Pelajar::count();
+        $jumlahPelajar = Pelajar::whereIn('status', ['disetujui', 'selesai'])->count();
         $jumlahPresensiHariIni = Presensi::whereDate('created_at', now())->count();
         $jumlahKegiatan = Kegiatan::count();
 
         $tahun = $request->get('tahun', date('Y'));
 
+        // --- DAFTAR TAHUN ---
         $daftarTahun = Pelajar::select(DB::raw('YEAR(rencana_mulai) as tahun'))
             ->whereNotNull('rencana_mulai')
             ->distinct()
             ->orderByDesc('tahun')
             ->pluck('tahun');
 
+        // --- GRAFIK JUMLAH PESERTA MAGANG PER BULAN ---
         $data = Pelajar::select(
             DB::raw('MONTH(rencana_mulai) as bulan'),
             DB::raw('COUNT(*) as total')
@@ -123,6 +125,13 @@ class DashboardController extends Controller
             'totals' => array_values($dataMagangPerTahun),
         ];
 
+        // --- GRAFIK TIMELINE PESERTA MAGANG (PERIODE MULAI - SELESAI) ---
+        $dataMagangTimeline = Pelajar::whereIn('status', ['disetujui', 'selesai'])
+            ->whereYear('rencana_mulai', $tahun)
+            ->select('nama', 'rencana_mulai', 'rencana_selesai')
+            ->orderBy('rencana_mulai', 'asc')
+            ->get();
+
         return view('dashboard.admin', compact(
             'jumlahPelajar',
             'jumlahPresensiHariIni',
@@ -132,7 +141,8 @@ class DashboardController extends Controller
             'tahun',
             'dataPresensiHarian',
             'instansi',
-            'grafikMagangPerTahun'
+            'grafikMagangPerTahun',
+            'dataMagangTimeline'
         ));
     }
 

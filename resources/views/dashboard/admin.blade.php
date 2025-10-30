@@ -122,7 +122,7 @@
                             <div>
                                 <h5 class="fw-bold mb-1" style="color: #1a202c; font-size: 1.1rem;">
                                     <i class="bi bi-pie-chart-fill text-success me-2"></i>
-                                    Distribusi Absensi Harian
+                                    Distribusi Presensi Harian
                                 </h5>
                             </div>
                         </div>
@@ -180,47 +180,53 @@
             </div>
         </div>
 
-        {{-- Kalender --}}
         <div class="row mt-3 g-3">
-            <div class="col-md-12">
-                <div class="card shadow-sm border-0">
-                    <div class="card-header bg-white border-0 pt-3 pb-2">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h6 class="fw-bold mb-0">
-                                <i class="bi bi-calendar-event text-success me-2"></i>
-                                Kalender Kegiatan
-                            </h6>
-                            <div class="d-flex align-items-center">
-                                <button class="btn btn-sm btn-outline-secondary" id="prevMonth"
-                                    style="padding: 0.25rem 0.5rem;">
-                                    <i class="bi bi-chevron-left" style="font-size: 0.8rem;"></i>
-                                </button>
-                                <span class="fw-bold mx-3" style="font-size: 0.85rem;" id="currentMonth"></span>
-                                <button class="btn btn-sm btn-outline-secondary" id="nextMonth"
-                                    style="padding: 0.25rem 0.5rem;">
-                                    <i class="bi bi-chevron-right" style="font-size: 0.8rem;"></i>
-                                </button>
+            <div class="col-md-6">
+                <div class="card border-0"
+                    style="box-shadow: 0 2px 8px rgba(0,0,0,0.08); border-radius: 12px; background: #ffffff;">
+                    <div class="card-header bg-transparent border-0 pt-4 px-4 pb-3">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h5 class="fw-bold mb-1" style="color: #1a202c; font-size: 1.1rem;">
+                                    <i class="bi bi-calendar-week text-primary me-2"></i>
+                                    Grafik Periode Magang Setiap Peserta
+                                </h5>
+                            </div>
+                            <form action="{{ route('admin.dashboard') }}" method="GET" class="d-flex">
+                                <select name="tahun" class="form-select border-0 bg-light"
+                                    style="font-size: 0.875rem; padding: 0.5rem 2rem 0.5rem 0.75rem; border-radius: 8px; font-weight: 500; color: #4a5568; cursor: pointer; min-width: 90px;"
+                                    onchange="this.form.submit()">
+                                    @foreach ($daftarTahun as $th)
+                                        <option value="{{ $th }}" {{ $th == $tahun ? 'selected' : '' }}>
+                                            {{ $th }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="card-body px-4 pb-4 pt-2" style="height: 400px;">
+                        <canvas id="chartMagangTimeline"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card border-0 text-center"
+                    style="box-shadow: 0 2px 8px rgba(0,0,0,0.08); border-radius: 12px; background: #ffffff;">
+                    <div class="card-header bg-transparent border-0 pt-4 px-4 pb-3">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <h5 class="fw-bold mb-1" style="color: #1a202c; font-size: 1.1rem;">
+                                    <i class="bi bi-people-fill text-primary me-2"></i>
+                                    Total Keseluruhan Peserta Magang
+                                </h5>
                             </div>
                         </div>
                     </div>
-                    <div class="card-body p-2">
-                        <div class="table-responsive">
-                            <table class="table table-sm table-bordered text-center mb-0" style="font-size: 0.8rem;">
-                                <thead>
-                                    <tr class="bg-light">
-                                        <th class="text-danger py-1 px-1" style="width: 14.28%;">Min</th>
-                                        <th class="py-1 px-1" style="width: 14.28%;">Sen</th>
-                                        <th class="py-1 px-1" style="width: 14.28%;">Sel</th>
-                                        <th class="py-1 px-1" style="width: 14.28%;">Rab</th>
-                                        <th class="py-1 px-1" style="width: 14.28%;">Kam</th>
-                                        <th class="py-1 px-1" style="width: 14.28%;">Jum</th>
-                                        <th class="text-primary py-1 px-1" style="width: 14.28%;">Sab</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="calendarBody">
-                                </tbody>
-                            </table>
-                        </div>
+                    <div class="card-body d-flex flex-column justify-content-center align-items-center"
+                        style="height: 220px;">
+                        <h1 class="fw-bold text-success display-4">{{ $jumlahPelajar }}</h1>
+                        <p class="mb-0 text-secondary">Total Peserta Magang Terdaftar</p>
                     </div>
                 </div>
             </div>
@@ -230,6 +236,9 @@
 
 @push('scripts')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/luxon@3"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-luxon@1"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation@2"></script>
     <style>
         .hover-cell:hover {
             background-color: #f8f9fa !important;
@@ -425,76 +434,107 @@
             }
         });
 
-        // Kalender
-        let currentMonth = new Date().getMonth();
-        let currentYear = new Date().getFullYear();
+        const ctxTimeline = document.getElementById('chartMagangTimeline').getContext('2d');
+        const dataTimeline = @json($dataMagangTimeline);
 
-        function generateCalendar(month, year) {
-            const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
-                'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
-            ];
+        // Format data ke bentuk [start, end] untuk setiap peserta
+        const datasetTimeline = dataTimeline.map(item => ({
+            x: [item.rencana_mulai, item.rencana_selesai],
+            y: item.nama
+        }));
 
-            document.getElementById('currentMonth').textContent = `${months[month]} ${year}`;
+        // Buat garis vertikal untuk bulan sekarang
+        const today = new Date();
+        const bulanSekarang = today.toISOString().split('T')[0]; // format yyyy-mm-dd
 
-            const firstDay = new Date(year, month, 1).getDay();
-            const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-            let calendarHTML = '';
-            let day = 1;
-
-            // Hitung jumlah minggu yang dibutuhkan
-            const totalCells = Math.ceil((firstDay + daysInMonth) / 7) * 7;
-
-            for (let i = 0; i < totalCells; i++) {
-                if (i % 7 === 0) {
-                    calendarHTML += '<tr>';
+        const chartTimeline = new Chart(ctxTimeline, {
+            type: 'bar',
+            data: {
+                datasets: [{
+                    label: 'Periode Magang',
+                    data: datasetTimeline,
+                    backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                    borderColor: 'rgb(54, 162, 235)',
+                    borderWidth: 1,
+                    borderRadius: 6,
+                    barThickness: 20
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        type: 'time',
+                        position: 'top', // ini agar label bulan ada di ATAS seperti di gambar
+                        time: {
+                            unit: 'month',
+                            displayFormats: {
+                                month: 'MMM'
+                            }
+                        },
+                        min: '{{ $tahun }}-01-01',
+                        max: '{{ $tahun }}-12-31',
+                        title: {
+                            display: true,
+                            text: 'Bulan'
+                        },
+                        grid: {
+                            drawOnChartArea: false
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Nama Peserta'
+                        },
+                        grid: {
+                            drawBorder: false
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    annotation: {
+                        annotations: {
+                            garisSekarang: {
+                                type: 'line',
+                                xMin: bulanSekarang,
+                                xMax: bulanSekarang,
+                                borderColor: 'red',
+                                borderWidth: 2,
+                                label: {
+                                    display: true,
+                                    content: 'Sekarang',
+                                    position: 'start'
+                                }
+                            }
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                const [start, end] = context.raw.x;
+                                const startDate = new Date(start).toLocaleDateString('id-ID', {
+                                    day: '2-digit',
+                                    month: 'short',
+                                    year: 'numeric'
+                                });
+                                const endDate = new Date(end).toLocaleDateString('id-ID', {
+                                    day: '2-digit',
+                                    month: 'short',
+                                    year: 'numeric'
+                                });
+                                return `${context.raw.y}: ${startDate} - ${endDate}`;
+                            }
+                        }
+                    }
                 }
-
-                if (i < firstDay || day > daysInMonth) {
-                    calendarHTML += '<td class="text-muted p-0" style="height: 45px;"></td>';
-                } else {
-                    const today = new Date();
-                    const isToday = day === today.getDate() && month === today.getMonth() && year === today.getFullYear();
-                    const bgClass = isToday ? 'bg-primary text-white' : 'bg-white';
-                    const hoverClass = !isToday ? 'hover-cell' : '';
-
-                    calendarHTML += `
-                        <td style="height: 45px; vertical-align: middle; cursor: pointer;" class="${bgClass} ${hoverClass} p-0">
-                            <div class="d-flex align-items-center justify-content-center h-100">
-                                <span class="fw-${isToday ? 'bold' : 'normal'}" style="font-size: 0.75rem;">${day}</span>
-                            </div>
-                        </td>
-                    `;
-                    day++;
-                }
-
-                if (i % 7 === 6) {
-                    calendarHTML += '</tr>';
-                }
-            }
-
-            document.getElementById('calendarBody').innerHTML = calendarHTML;
-        }
-
-        document.getElementById('prevMonth').addEventListener('click', function() {
-            currentMonth--;
-            if (currentMonth < 0) {
-                currentMonth = 11;
-                currentYear--;
-            }
-            generateCalendar(currentMonth, currentYear);
+            },
+            plugins: [Chart.registry.getPlugin('annotation')]
         });
-
-        document.getElementById('nextMonth').addEventListener('click', function() {
-            currentMonth++;
-            if (currentMonth > 11) {
-                currentMonth = 0;
-                currentYear++;
-            }
-            generateCalendar(currentMonth, currentYear);
-        });
-
-        // Generate kalender pertama kali
-        generateCalendar(currentMonth, currentYear);
     </script>
 @endpush

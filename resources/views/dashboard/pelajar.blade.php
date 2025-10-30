@@ -126,39 +126,199 @@
 
             {{-- Jika pengajuan sudah disetujui, tampilkan dashboard normal --}}
         @else
+            @php
+                // Cek apakah pelajar sudah selesai magang
+                $isMagangSelesai = auth()->user()->pelajar->status_magang === 'selesai';
+            @endphp
+
             <h2 class="mb-4">Dashboard Pelajar</h2>
+
+            {{-- Alert jika magang sudah selesai --}}
+            @if($isMagangSelesai)
+                <div class="row mb-4">
+                    <div class="col-12">
+                        <div class="alert alert-success d-flex align-items-center border-0 shadow-sm" role="alert" style="border-left: 4px solid #28a745 !important;">
+                            <i class="bi bi-check-circle-fill fs-3 me-3"></i>
+                            <div>
+                                <h5 class="alert-heading mb-1"><strong>Selamat! Magang Anda Telah Selesai</strong></h5>
+                                <p class="mb-0">
+                                    Anda telah menyelesaikan program magang. Data Anda masih dapat dilihat, tetapi tidak dapat menambahkan presensi atau kegiatan baru.
+                                    <br><small class="text-muted">Terima kasih atas partisipasi Anda dalam program magang ini.</small>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
 
             <div class="row">
                 {{-- Presensi Hari Ini --}}
                 <div class="col-md-4 mb-3">
-                    <a href="{{ route('pelajar.presensi.index', ['today' => true]) }}" class="text-decoration-none">
-                        <div class="card bg-warning text-white shadow">
+                    @if($isMagangSelesai)
+                        {{-- Card read-only untuk magang selesai --}}
+                        <div class="card bg-warning text-white shadow position-relative">
                             <div class="card-body d-flex justify-content-between align-items-center">
                                 <div>
-                                    <h5 class="mb-2">Presensi Hari Ini</h5>
+                                    <h5 class="mb-2">
+                                        Presensi Hari Ini
+                                        <span class="badge bg-light text-warning ms-2" style="font-size: 0.65rem;">
+                                            <i class="bi bi-eye-fill"></i> View Only
+                                        </span>
+                                    </h5>
                                     <h3 class="mb-0 fw-bold">{{ $jumlahPresensiHariIni ?? 0 }}</h3>
+                                    <small class="opacity-75">Klik untuk melihat riwayat</small>
                                 </div>
-                                <i class="bi bi-calendar-check fs-1"></i>
+                                <i class="bi bi-calendar-check fs-1 opacity-75"></i>
                             </div>
+                            <a href="{{ route('pelajar.presensi.index') }}" class="stretched-link"></a>
                         </div>
-                    </a>
+                    @else
+                        {{-- Card normal untuk magang aktif --}}
+                        <a href="{{ route('pelajar.presensi.index', ['today' => true]) }}" class="text-decoration-none">
+                            <div class="card bg-warning text-white shadow">
+                                <div class="card-body d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h5 class="mb-2">Presensi Hari Ini</h5>
+                                        <h3 class="mb-0 fw-bold">{{ $jumlahPresensiHariIni ?? 0 }}</h3>
+                                    </div>
+                                    <i class="bi bi-calendar-check fs-1"></i>
+                                </div>
+                            </div>
+                        </a>
+                    @endif
                 </div>
 
                 {{-- Total Kegiatan --}}
                 <div class="col-md-4 mb-3">
-                    <a href="{{ route('pelajar.kegiatan.index', ['today' => true]) }}" class="text-decoration-none">
-                        <div class="card text-white bg-success shadow">
+                    @if($isMagangSelesai)
+                        {{-- Card read-only untuk magang selesai --}}
+                        <div class="card text-white bg-success shadow position-relative">
                             <div class="card-body d-flex justify-content-between align-items-center">
                                 <div>
-                                    <h5 class="mb-2">Total Kegiatan</h5>
+                                    <h5 class="mb-2">
+                                        Total Kegiatan
+                                        <span class="badge bg-light text-success ms-2" style="font-size: 0.65rem;">
+                                            <i class="bi bi-eye-fill"></i> View Only
+                                        </span>
+                                    </h5>
                                     <h3 class="mb-0 fw-bold">{{ $jumlahKegiatan ?? 0 }}</h3>
+                                    <small class="opacity-75">Klik untuk melihat riwayat</small>
                                 </div>
-                                <i class="bi bi-list-task fs-1"></i>
+                                <i class="bi bi-list-task fs-1 opacity-75"></i>
                             </div>
+                            <a href="{{ route('pelajar.kegiatan.index') }}" class="stretched-link"></a>
                         </div>
-                    </a>
+                    @else
+                        {{-- Card normal untuk magang aktif --}}
+                        <a href="{{ route('pelajar.kegiatan.index', ['today' => true]) }}" class="text-decoration-none">
+                            <div class="card text-white bg-success shadow">
+                                <div class="card-body d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h5 class="mb-2">Total Kegiatan</h5>
+                                        <h3 class="mb-0 fw-bold">{{ $jumlahKegiatan ?? 0 }}</h3>
+                                    </div>
+                                    <i class="bi bi-list-task fs-1"></i>
+                                </div>
+                            </div>
+                        </a>
+                    @endif
                 </div>
             </div>
+
+            {{-- Informasi tambahan untuk magang selesai --}}
+            @if($isMagangSelesai)
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="card shadow-sm border-0">
+                            <div class="card-header bg-light border-0">
+                                <h5 class="mb-0">
+                                    <i class="bi bi-info-circle text-primary me-2"></i>
+                                    Informasi Akses
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <div class="d-flex align-items-start">
+                                            <i class="bi bi-check-circle-fill text-success fs-5 me-3 mt-1"></i>
+                                            <div>
+                                                <h6 class="mb-1">Yang Masih Bisa Diakses:</h6>
+                                                <ul class="mb-0 text-muted small">
+                                                    <li>Melihat riwayat presensi</li>
+                                                    <li>Melihat riwayat kegiatan</li>
+                                                    <li>Melihat data profil</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <div class="d-flex align-items-start">
+                                            <i class="bi bi-x-circle-fill text-danger fs-5 me-3 mt-1"></i>
+                                            <div>
+                                                <h6 class="mb-1">Yang Tidak Bisa Dilakukan:</h6>
+                                                <ul class="mb-0 text-muted small">
+                                                    <li>Menambah presensi baru</li>
+                                                    <li>Menambah/mengedit kegiatan</li>
+                                                    <li>Upload laporan baru</li>
+                                                    <li>Mengubah data pengajuan</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Statistik Ringkasan Magang --}}
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="card shadow-sm border-0">
+                            <div class="card-header bg-primary text-white">
+                                <h5 class="mb-0">
+                                    <i class="bi bi-bar-chart-fill me-2"></i>
+                                    Ringkasan Magang Anda
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row text-center">
+                                    <div class="col-md-3 mb-3">
+                                        <div class="p-3 bg-light rounded">
+                                            <i class="bi bi-calendar-check text-primary fs-1 mb-2"></i>
+                                            <h4 class="mb-0 fw-bold">{{ $totalPresensi ?? 0 }}</h4>
+                                            <small class="text-muted">Total Presensi</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <div class="p-3 bg-light rounded">
+                                            <i class="bi bi-list-task text-success fs-1 mb-2"></i>
+                                            <h4 class="mb-0 fw-bold">{{ $jumlahKegiatan ?? 0 }}</h4>
+                                            <small class="text-muted">Total Kegiatan</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <div class="p-3 bg-light rounded">
+                                            <i class="bi bi-clock-history text-warning fs-1 mb-2"></i>
+                                            <h4 class="mb-0 fw-bold">
+                                                {{ auth()->user()->pelajar->durasi_magang ?? '-' }}
+                                            </h4>
+                                            <small class="text-muted">Durasi (hari)</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 mb-3">
+                                        <div class="p-3 bg-light rounded">
+                                            <i class="bi bi-trophy-fill text-danger fs-1 mb-2"></i>
+                                            <h4 class="mb-0 fw-bold">100%</h4>
+                                            <small class="text-muted">Penyelesaian</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
         @endif
     </div>
 
@@ -173,6 +333,12 @@
         a .card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2) !important;
+        }
+
+        /* Styling khusus untuk card read-only */
+        .card.position-relative:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15) !important;
         }
 
         .alert {
@@ -190,6 +356,27 @@
         .btn-info:hover {
             transform: translateY(-3px);
             box-shadow: 0 10px 25px rgba(0, 188, 212, 0.4);
+        }
+
+        /* Badge styling */
+        .badge {
+            font-weight: 600;
+            padding: 0.35em 0.65em;
+        }
+
+        /* Info card styling */
+        .bg-light {
+            background-color: #f8f9fa !important;
+        }
+
+        /* Smooth transitions */
+        .card, .alert, .btn {
+            transition: all 0.3s ease;
+        }
+
+        /* Hover effect untuk stretched-link card */
+        .stretched-link::after {
+            z-index: 1;
         }
     </style>
 @endsection

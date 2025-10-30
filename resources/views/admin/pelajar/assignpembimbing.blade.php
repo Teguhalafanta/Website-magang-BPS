@@ -44,7 +44,7 @@
                     <div class="table-responsive">
                         <table class="table table-hover align-middle mb-0">
                             <thead class="bg-light">
-                                <tr>
+                                <tr class="text-center">
                                     <th class="fw-semibold text-center" style="width: 60px;">No</th>
                                     <th class="fw-semibold">Nama Pelajar</th>
                                     <th class="fw-semibold">Asal Institusi</th>

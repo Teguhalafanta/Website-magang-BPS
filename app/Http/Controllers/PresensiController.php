@@ -109,14 +109,13 @@ class PresensiController extends Controller
 
         $pelajar = $user->pelajar;
 
-        // VALIDASI: Cek apakah sudah ada presensi hari ini
         $exists = Presensi::where('pelajar_id', $pelajar->id)
             ->where('tanggal', $today)
             ->exists();
 
         if ($exists) {
             return redirect()->route('pelajar.presensi.index')
-                ->with('error', 'Anda sudah melakukan presensi masuk hari ini!');
+                ->with('error', 'Anda sudah melakukan presensi hari ini!');
         }
 
         // Ambil jam dari client, jika kosong pakai server
@@ -133,7 +132,7 @@ class PresensiController extends Controller
         ]);
 
         return redirect()->route('pelajar.presensi.index')
-            ->with('success', "✅ Presensi masuk berhasil dicatat pada pukul $jamDatang");
+            ->with('success', "Presensi masuk berhasil dicatat pada pukul $jamDatang");
     }
 
     public function show($id)
@@ -169,28 +168,22 @@ class PresensiController extends Controller
         
         $presensi = Presensi::findOrFail($id);
 
-        // ❌ HAPUS VALIDASI INI - Biarkan update berkali-kali
-        // TIDAK ADA LAGI PENGECEKAN if ($presensi->waktu_pulang)
-        // Sehingga bisa diupdate berkali-kali
+        if ($presensi->waktu_pulang) {
+            return redirect()->route('pelajar.presensi.index')
+                ->with('error', 'Anda sudah melakukan presensi pulang hari ini!');
+        }
 
         // Ambil waktu dari browser, fallback ke server
         $jamPulang = $request->jam_client ?? Carbon::now()->format('H:i:s');
-
-        // Cek apakah ini update atau insert pertama kali
-        $isUpdate = !is_null($presensi->waktu_pulang);
 
         $presensi->update([
             'waktu_pulang' => $jamPulang,
         ]);
 
-        // Pesan yang berbeda untuk create vs update
-        $message = $isUpdate 
-            ? "✅ Presensi pulang berhasil diperbarui menjadi pukul $jamPulang"
-            : "✅ Presensi pulang berhasil dicatat pada pukul $jamPulang";
-
         return redirect()->route('pelajar.presensi.index')
-            ->with('success', $message);
+            ->with('success', "Presensi pulang berhasil dicatat pada pukul $jamPulang");
     }
+
 
     public function destroy($id)
     {

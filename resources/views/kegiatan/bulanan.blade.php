@@ -21,17 +21,15 @@
                     <th class="text-center">No</th>
                     <th class="text-center">Uraian Kegiatan</th>
                     <th class="text-center">Deskripsi</th>
-                    <th class="text-center">Satuan</th>
                     <th class="text-center">Aksi</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse ($kegiatans as $i => $kegiatan)
-                    <tr>
+                    <tr class="text-center">
                         <td>{{ $i + 1 }}</td>
                         <td>{{ $kegiatan->nama_kegiatan ?? '-' }}</td>
                         <td>{{ $kegiatan->deskripsi }}</td>
-                        <td>{{ $kegiatan->satuan ?? '-' }}</td>
                         <td>
                             <a href="{{ route('pelajar.kegiatan.edit', $kegiatan->id) }}"
                                 class="btn btn-sm btn-warning">Edit</a>

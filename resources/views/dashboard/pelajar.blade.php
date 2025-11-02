@@ -155,7 +155,7 @@
                 {{-- Presensi Hari Ini --}}
                 <div class="col-md-4 mb-3">
                     @if($isMagangSelesai)
-                        {{-- Card read-only untuk magang selesai --}}
+                        {{-- Card read-only untuk magang selesai - hanya redirect ke index untuk melihat --}}
                         <div class="card bg-warning text-white shadow position-relative">
                             <div class="card-body d-flex justify-content-between align-items-center">
                                 <div>
@@ -191,7 +191,7 @@
                 {{-- Total Kegiatan --}}
                 <div class="col-md-4 mb-3">
                     @if($isMagangSelesai)
-                        {{-- Card read-only untuk magang selesai --}}
+                        {{-- Card read-only untuk magang selesai - hanya redirect ke index untuk melihat --}}
                         <div class="card text-white bg-success shadow position-relative">
                             <div class="card-body d-flex justify-content-between align-items-center">
                                 <div>

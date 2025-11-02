@@ -115,7 +115,7 @@ Route::middleware(['auth'])->group(function () {
 
 
     // -------- PELAJAR --------
-    Route::prefix('pelajar')->middleware(['auth'])->name('pelajar.')->group(function () {
+    Route::prefix('pelajar')->middleware(['auth', 'role:pelajar'])->name('pelajar.')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'pelajar'])->name('dashboard');
 
         // Route profil pelajar
@@ -132,9 +132,12 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/kegiatan', [KegiatanController::class, 'index'])->name('kegiatan.index');
         Route::get('/kegiatan/create', [KegiatanController::class, 'create'])->name('kegiatan.create');
         Route::post('/kegiatan', [KegiatanController::class, 'store'])->name('kegiatan.store');
+        Route::get('/kegiatan/harian', [KegiatanController::class, 'harian'])->name('kegiatan.harian');
+        Route::get('/kegiatan/bulanan', [KegiatanController::class, 'kegiatanBulanan'])->name('kegiatan.bulanan');
         Route::get('/kegiatan/{kegiatan}/edit', [KegiatanController::class, 'edit'])->name('kegiatan.edit');
         Route::put('/kegiatan/{kegiatan}', [KegiatanController::class, 'update'])->name('kegiatan.update');
         Route::delete('/kegiatan/{kegiatan}', [KegiatanController::class, 'destroy'])->name('kegiatan.destroy');
+        Route::get('/kegiatan/{id}', [KegiatanController::class, 'show'])->name('kegiatan.show');
 
         // Upload Bukti Dukung
         Route::post('/kegiatan/{kegiatan}/bukti', [KegiatanController::class, 'uploadBukti'])->name('kegiatan.uploadBukti');

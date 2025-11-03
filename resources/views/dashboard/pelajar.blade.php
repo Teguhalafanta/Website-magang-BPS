@@ -198,7 +198,7 @@
                                         </div>
 
                                         <div class="col-md-4 mb-3">
-                                            <a href="{{ route('pelajar.kegiatan.index') }}"
+                                            <a href="{{ route('pelajar.kegiatan.bulanan') }}"
                                                 class="text-decoration-none text-dark">
                                                 <div class="p-3 bg-light rounded hover-card">
                                                     <i class="bi bi-list-task text-success fs-1 mb-2"></i>
@@ -224,82 +224,114 @@
 
                     </div>
                 </div>
-
-                <style>
-                    .presence-circle {
-                        width: 130px;
-                        height: 130px;
-                        border-radius: 50%;
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        margin: auto;
-                        color: white;
-                        transition: 0.3s;
-                        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-                    }
-
-                    .presence-circle.hadir {
-                        background: #28a745;
-                    }
-
-                    .presence-circle.belum {
-                        background: #dc3545;
-                    }
-
-                    .presence-circle:hover {
-                        transform: scale(1.07);
-                        cursor: pointer;
-                    }
-
-                    .hover-card {
-                        transition: 0.3s;
-                    }
-
-                    .hover-card:hover {
-                        transform: translateY(-5px);
-                        box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
-                    }
-                </style>
-
-
-                {{-- Total Kegiatan --}}
-                <div class="col-md-4 mb-3">
-                    @if ($isMagangSelesai)
-                        {{-- Card read-only untuk magang selesai - hanya redirect ke index untuk melihat --}}
-                        <div class="card text-white bg-success shadow position-relative">
-                            <div class="card-body d-flex justify-content-between align-items-center">
-                                <div>
-                                    <h5 class="mb-2">
-                                        Total Kegiatan
-                                        <span class="badge bg-light text-success ms-2" style="font-size: 0.65rem;">
-                                            <i class="bi bi-eye-fill"></i> View Only
-                                        </span>
-                                    </h5>
-                                    <h3 class="mb-0 fw-bold">{{ $jumlahKegiatan ?? 0 }}</h3>
-                                    <small class="opacity-75">Klik untuk melihat riwayat</small>
-                                </div>
-                                <i class="bi bi-list-task fs-1 opacity-75"></i>
-                            </div>
-                            <a href="{{ route('pelajar.kegiatan.index') }}" class="stretched-link"></a>
-                        </div>
-                    @else
-                    @endif
-                </div>
+                <<div class="card mt-4 shadow-sm" style="max-width: 420px; font-size: 14px;">
+                    <div
+                        class="card-header bg-secondary text-white py-2 d-flex justify-content-between align-items-center">
+                        <h6 class="mb-0"><i class="bi bi-list-task me-2"></i> Kegiatan Terbaru</h6>
+                    </div>
+                    <div class="card-body p-0">
+                        <table class="table table-bordered table-sm mb-0 text-center align-middle"
+                            style="font-size: 13px;">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th style="width: 10%">No</th>
+                                    <th style="width: 60%">Nama</th>
+                                    <th style="width: 30%">Tanggal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse ($kegiatanTerbaru as $index => $kegiatan)
+                                    <tr>
+                                        <td>{{ $index + 1 }}</td>
+                                        <td class="text-start">{{ $kegiatan->nama_kegiatan }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($kegiatan->tanggal)->format('d-m-Y') }}</td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="3" class="text-center text-muted py-2">
+                                            <i>Belum ada kegiatan</i>
+                                        </td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
             </div>
             <style>
+                .presence-circle {
+                    width: 130px;
+                    height: 130px;
+                    border-radius: 50%;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    margin: auto;
+                    color: white;
+                    transition: 0.3s;
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+                }
+
+                .presence-circle.hadir {
+                    background: #28a745;
+                }
+
+                .presence-circle.belum {
+                    background: #dc3545;
+                }
+
+                .presence-circle:hover {
+                    transform: scale(1.07);
+                    cursor: pointer;
+                }
+
                 .hover-card {
                     transition: 0.3s;
-                    cursor: pointer;
                 }
 
                 .hover-card:hover {
                     transform: translateY(-5px);
-                    background: #e9f3ff !important;
-                    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.15);
+                    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
                 }
             </style>
-        @endif
+
+
+            {{-- Total Kegiatan --}}
+            <div class="col-md-4 mb-3">
+                @if ($isMagangSelesai)
+                    {{-- Card read-only untuk magang selesai - hanya redirect ke index untuk melihat --}}
+                    <div class="card text-white bg-success shadow position-relative">
+                        <div class="card-body d-flex justify-content-between align-items-center">
+                            <div>
+                                <h5 class="mb-2">
+                                    Total Kegiatan
+                                    <span class="badge bg-light text-success ms-2" style="font-size: 0.65rem;">
+                                        <i class="bi bi-eye-fill"></i> View Only
+                                    </span>
+                                </h5>
+                                <h3 class="mb-0 fw-bold">{{ $jumlahKegiatan ?? 0 }}</h3>
+                                <small class="opacity-75">Klik untuk melihat riwayat</small>
+                            </div>
+                            <i class="bi bi-list-task fs-1 opacity-75"></i>
+                        </div>
+                        <a href="{{ route('pelajar.kegiatan.index') }}" class="stretched-link"></a>
+                    </div>
+                @else
+                @endif
+            </div>
+    </div>
+    <style>
+        .hover-card {
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .hover-card:hover {
+            transform: translateY(-5px);
+            background: #e9f3ff !important;
+            box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.15);
+        }
+    </style>
+    @endif
     </div>
 
     {{-- Custom CSS untuk mempercantik tampilan --}}

@@ -22,7 +22,6 @@ class Presensi extends Model
         return $this->belongsTo(Kegiatan::class, 'kegiatan_id', 'id');
     }
 
-
     // Relasi ke User
     public function user()
     {

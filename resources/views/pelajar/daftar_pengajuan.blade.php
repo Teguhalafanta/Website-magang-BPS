@@ -39,7 +39,7 @@
                             <thead class="table-light">
                                 <tr>
                                     <th class="ps-4" style="width: 5%;">No</th>
-                                    <th style="width: 20%;">Nama</th>
+                                    <th class="ps-4" style="width: 20%;">Nama</th>
                                     <th style="width: 25%;">Asal Institusi</th>
                                     <th style="width: 15%;">Jurusan</th>
                                     <th style="width: 12%;" class="text-center">Status</th>

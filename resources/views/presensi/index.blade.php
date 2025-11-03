@@ -118,7 +118,6 @@
                         <input type="hidden" name="jam_client" id="jamPulangInput">
                     </form>
                 @endif
-                @endif
             </div>
         </div>
 

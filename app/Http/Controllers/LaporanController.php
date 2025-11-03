@@ -64,9 +64,128 @@ class LaporanController extends Controller
         Laporan::create([
             'user_id' => $user->id,
             'file' => $path,
+            'status' => 'menunggu',
         ]);
 
         return redirect()->back()->with('success', 'Laporan berhasil diunggah!');
+    }
+    // Pembimbing menyetujui laporan
+    public function setujui($id)
+    {
+        $laporan = Laporan::findOrFail($id);
+
+        // hanya pembimbing pemilik yg boleh setujui
+        if (Auth::user()->id !== $laporan->user->pembimbing_id) {
+            abort(403, 'Tidak berwenang menyetujui laporan ini.');
+        }
+
+        $laporan->update([
+            'status' => 'disetujui'
+        ]);
+
+        return back()->with('success', 'Laporan telah disetujui dan dikirim ke admin.');
+    }
+
+    // Pembimbing menolak laporan
+    public function tolak($id)
+    {
+        $laporan = Laporan::findOrFail($id);
+
+        if (Auth::user()->id !== $laporan->user->pembimbing_id) {
+            abort(403, 'Tidak berwenang menolak laporan ini.');
+        }
+
+        $laporan->update([
+            'status' => 'ditolak'
+        ]);
+
+        return back()->with('error', 'Laporan ditolak. Pelajar harus upload ulang.');
+    }
+
+    public function halamanPembimbing()
+    {
+        $pembimbing = Auth::user()->pembimbing;
+
+        $laporans = Laporan::whereIn('user_id', function ($q) use ($pembimbing) {
+            $q->select('user_id')->from('pelajars')->where('pembimbing_id', $pembimbing->id);
+        })->get();
+
+        return view('pembimbing.laporan.index', compact('laporans'));
+    }
+
+
+    // Halaman Admin Kelola Sertifikat
+    public function adminSertifikat()
+    {
+        $laporans = Laporan::where('status', 'disetujui')->with('user')->get();
+
+        return view('admin.sertifikat.index', compact('laporans'));
+    }
+
+    // Admin upload sertifikat
+    public function uploadSertifikat(Request $request, $id)
+    {
+        // pastikan hanya admin
+        if (Auth::user()->role !== 'admin') {
+            abort(403, 'Hanya Admin yang dapat mengunggah sertifikat.');
+        }
+
+        $request->validate([
+            'file_sertifikat' => 'required|mimes:pdf|max:2048'
+        ], [
+            'file_sertifikat.required' => 'File sertifikat wajib diunggah.',
+            'file_sertifikat.mimes' => 'Sertifikat harus berupa file PDF.',
+            'file_sertifikat.max' => 'Ukuran sertifikat maksimal 2MB.'
+        ]);
+
+        $laporan = Laporan::findOrFail($id);
+
+        // Hapus sertifikat lama jika ada
+        if ($laporan->file_sertifikat) {
+            Storage::disk('public')->delete($laporan->file_sertifikat);
+        }
+
+        // Simpan sertifikat baru
+        $path = $request->file('file_sertifikat')->store('sertifikat', 'public');
+
+        $laporan->update([
+            'file_sertifikat' => $path,
+            'status' => 'selesai'
+        ]);
+
+        return redirect()->back()->with('success', 'Sertifikat berhasil diupload dan dikirim ke pelajar.');
+    }
+
+    // Pelajar download sertifikat
+    public function downloadSertifikat($id)
+    {
+        $laporan = Laporan::findOrFail($id);
+        $user = Auth::user();
+
+        // Pastikan hanya pemilik sertifikat yang bisa download
+        if ($user->role !== 'pelajar' || $laporan->user_id !== $user->id) {
+            abort(403, 'Kamu tidak diperbolehkan mengunduh sertifikat ini.');
+        }
+
+        // Sertifikat belum tersedia
+        if (!$laporan->file_sertifikat) {
+            return back()->with('error', 'Sertifikat belum tersedia.');
+        }
+
+        $filePath = storage_path('app/public/' . $laporan->file_sertifikat);
+
+        if (!file_exists($filePath)) {
+            abort(404, 'File sertifikat tidak ditemukan.');
+        }
+
+        return response()->download($filePath);
+    }
+    
+    public function downloadLaporan($id)
+    {
+        $laporan = \App\Models\Laporan::findOrFail($id);
+
+        return response()->download(storage_path('app/' . $laporan->file));
     }
 
     // Download laporan (admin & pembimbing bisa semua, pelajar hanya miliknya)

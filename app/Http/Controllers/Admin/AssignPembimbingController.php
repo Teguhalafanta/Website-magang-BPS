@@ -23,18 +23,20 @@ class AssignPembimbingController extends Controller
             'pembimbing_id' => 'required|exists:pembimbings,id',
         ]);
 
-        // Ambil pelajar dan pembimbing
+        // Ambil pelajar & pembimbing
         $pelajar = Pelajar::findOrFail($id);
         $pembimbing = Pembimbing::with('user')->findOrFail($request->pembimbing_id);
 
-        // Simpan relasi pembimbing ke pelajar
+        // Simpan relasi pembimbing ke pelajar (tabel pelajars)
         $pelajar->update([
             'pembimbing_id' => $pembimbing->id,
         ]);
 
-        // === Ambil user pelajar dan pembimbing ===
+        // === Simpan pembimbing_id ke table users (ini yang penting!) ===
         $userPelajar = $pelajar->user;
-        $userPembimbing = $pembimbing->user;
+        $userPelajar->update([
+            'pembimbing_id' => $pembimbing->user->id, // Sesuaikan jika kolomnya berbeda
+        ]);
 
         // === Kirim notifikasi ke pelajar ===
         $userPelajar->notify(new NotifikasiBaru(
@@ -43,6 +45,7 @@ class AssignPembimbingController extends Controller
         ));
 
         // === Kirim notifikasi ke pembimbing ===
+        $userPembimbing = $pembimbing->user;
         $userPembimbing->notify(new NotifikasiBaru(
             'Kamu telah ditugaskan membimbing pelajar: ' . $pelajar->nama,
             route('pembimbing.bimbingan')

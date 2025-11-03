@@ -24,20 +24,7 @@
         @php
             $isMagangSelesai = isset($isMagangSelesai) ? $isMagangSelesai : (auth()->user()->pelajar && auth()->user()->pelajar->status_magang === 'selesai');
         @endphp
-
-        {{-- ALERT JIKA MAGANG SUDAH SELESAI --}}
-        @if($isMagangSelesai)
-            <div class="alert alert-info border-0 shadow-sm mb-3" role="alert">
-                <div class="d-flex align-items-center">
-                    <i class="bi bi-info-circle-fill fs-4 me-3"></i>
-                    <div>
-                        <strong>Mode Tampilan Saja</strong><br>
-                        <small>Magang Anda sudah selesai. Anda hanya dapat melihat riwayat kegiatan.</small>
-                    </div>
-                </div>
-            </div>
-        @endif
-
+        
         {{-- Tombol tambah kegiatan - HANYA TAMPIL JIKA MAGANG BELUM SELESAI --}}
         @if(!$isMagangSelesai)
             <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#tambahKegiatanModal">
@@ -90,21 +77,6 @@
                                     data-bs-target="#detailModal{{ $kegiatan->id }}">
                                 <i class="bi bi-eye"></i> Detail
                             </button>
-
-                            {{-- HANYA TAMPILKAN TOMBOL EDIT & HAPUS JIKA MAGANG BELUM SELESAI --}}
-                            @if(!$isMagangSelesai)
-                                <a href="{{ route('pelajar.kegiatan.edit', $kegiatan->id) }}"
-                                    class="btn btn-sm btn-warning">Edit</a>
-                                <form action="{{ route('pelajar.kegiatan.destroy', $kegiatan->id) }}" method="POST"
-                                    style="display:inline;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button class="btn btn-sm btn-danger"
-                                        onclick="return confirm('Yakin hapus?')">Hapus</button>
-                                </form>
-                            @else
-                                <span class="text-muted small"><i class="bi bi-lock-fill"></i></span>
-                            @endif
                         </td>
                     </tr>
 
@@ -223,13 +195,7 @@
                 @empty
                     <tr>
                         <td colspan="7" class="text-center">
-                            Belum ada kegiatan hari ini.
-                            @if(!$isMagangSelesai)
-                                <br>
-                                <button class="btn btn-primary mt-2" data-bs-toggle="modal" data-bs-target="#tambahKegiatanModal">
-                                    Tambah Kegiatan Pertama
-                                </button>
-                            @endif
+                            Belum ada kegiatan hari ini
                         </td>
                     </tr>
                 @endforelse

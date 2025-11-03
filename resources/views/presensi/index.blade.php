@@ -17,27 +17,6 @@
             </div>
         @endif
 
-        {{-- CEK APAKAH MAGANG SUDAH SELESAI --}}
-        @php
-            $isMagangSelesai = auth()->user()->pelajar && auth()->user()->pelajar->status_magang === 'selesai';
-        @endphp
-
-        {{-- ALERT JIKA MAGANG SUDAH SELESAI --}}
-        @if ($isMagangSelesai)
-            <div class="alert alert-info border-0 shadow-sm mb-4" role="alert">
-                <div class="d-flex align-items-center">
-                    <i class="bi bi-info-circle-fill fs-3 me-3"></i>
-                    <div>
-                        <h5 class="alert-heading mb-1"><strong>Mode Tampilan Saja</strong></h5>
-                        <p class="mb-0">
-                            Magang Anda sudah selesai. Anda hanya dapat melihat riwayat presensi tanpa bisa menambah atau
-                            mengubah data.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        @endif
-
         {{-- LOGIKA PRESENSI --}}
         @php
             $pelajarPresensi = auth()->user()->pelajar->presensis ?? collect([]);
@@ -53,101 +32,92 @@
                     <p class="mb-2">Waktu Sekarang: <strong id="jamSekarang" class="fs-5 text-primary"></strong></p>
                 </div>
 
-                @if ($isMagangSelesai)
-                    {{-- JIKA MAGANG SUDAH SELESAI - TAMPILKAN INFO SAJA --}}
-                    <div class="alert alert-warning">
-                        <i class="bi bi-lock-fill fs-4"></i>
-                        <p class="mb-0 mt-2"><strong>Fitur presensi tidak tersedia</strong></p>
-                        <small>Magang Anda sudah selesai. Silakan lihat riwayat di bawah.</small>
+                {{-- JIKA MAGANG MASIH AKTIF - TAMPILKAN TOMBOL PRESENSI --}}
+                @if (!$presensiHariIni)
+                    {{-- Belum ada presensi hari ini --}}
+                    <div class="d-flex justify-content-center gap-3 mb-3">
+                        <button type="button" id="btnTapMasuk"
+                            class="btn-tap btn-tap-masuk d-flex flex-column align-items-center justify-content-center"
+                            onclick="tapMasuk()">
+                            <i class="bi bi-box-arrow-in-right fs-3 mb-2"></i>
+                            <span>Absen Masuk</span>
+                        </button>
                     </div>
+                    <form id="formMasuk" action="{{ route('pelajar.presensi.store') }}" method="POST" class="d-none">
+                        @csrf
+                        <input type="hidden" name="jam_client" id="jamMasukInput">
+                    </form>
+                @elseif($presensiHariIni && !$presensiHariIni->waktu_pulang)
+                    {{-- Sudah masuk, belum pulang --}}
+                    <div class="alert alert-success mb-3">
+                        <h6 class="mb-2"><i class="bi bi-check-circle-fill"></i> Sudah Absen Masuk</h6>
+                        <p class="mb-0">Jam Masuk: <strong>{{ $presensiHariIni->waktu_datang }}</strong></p>
+                    </div>
+                    <div class="d-flex justify-content-center gap-3 mb-3">
+                        <button type="button" id="btnTapPulang"
+                            class="btn-tap btn-tap-pulang d-flex flex-column align-items-center justify-content-center"
+                            onclick="tapPulang()">
+                            <i class="bi bi-box-arrow-right fs-3 mb-2"></i>
+                            <span>Absen Pulang</span>
+                        </button>
+                    </div>
+
+                    <form id="formPulang" action="{{ route('pelajar.presensi.update', $presensiHariIni->id) }}"
+                        method="POST" class="d-none">
+                        @csrf
+                        @method('PUT')
+                        <input type="hidden" name="jam_client" id="jamPulangInput">
+                    </form>
                 @else
-                    {{-- JIKA MAGANG MASIH AKTIF - TAMPILKAN TOMBOL PRESENSI --}}
-                    @if (!$presensiHariIni)
-                        {{-- Belum ada presensi hari ini --}}
-                        <div class="d-flex justify-content-center gap-3 mb-3">
-                            <button type="button" id="btnTapMasuk"
-                                class="btn-tap btn-tap-masuk d-flex flex-column align-items-center justify-content-center"
-                                onclick="tapMasuk()">
-                                <i class="bi bi-box-arrow-in-right fs-3 mb-2"></i>
-                                <span>Absen Masuk</span>
-                            </button>
+                    {{-- Sudah masuk dan pulang --}}
+                    <div class="alert alert-info">
+                        <h5 class="mb-3"><i class="bi bi-check-all"></i> Presensi Hari Ini Selesai</h5>
+                        <div class="row justify-content-center">
+                            <div class="col-md-5 mb-2">
+                                <div class="card bg-light">
+                                    <div class="card-body">
+                                        <h6 class="text-muted mb-1">Jam Masuk</h6>
+                                        <h4 class="text-success mb-0">{{ $presensiHariIni->waktu_datang }}</h4>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-5 mb-2">
+                                <div class="card bg-light">
+                                    <div class="card-body">
+                                        <h6 class="text-muted mb-1">Jam Pulang</h6>
+                                        <h4 class="text-primary mb-0">{{ $presensiHariIni->waktu_pulang }}</h4>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <form id="formMasuk" action="{{ route('pelajar.presensi.store') }}" method="POST" class="d-none">
-                            @csrf
-                            <input type="hidden" name="jam_client" id="jamMasukInput">
-                        </form>
-                    @elseif($presensiHariIni && !$presensiHariIni->waktu_pulang)
-                        {{-- Sudah masuk, belum pulang --}}
-                        <div class="alert alert-success mb-3">
-                            <h6 class="mb-2"><i class="bi bi-check-circle-fill"></i> Sudah Absen Masuk</h6>
-                            <p class="mb-0">Jam Masuk: <strong>{{ $presensiHariIni->waktu_datang }}</strong></p>
-                        </div>
-                        <div class="d-flex justify-content-center gap-3 mb-3">
-                            <button type="button" id="btnTapPulang"
-                                class="btn-tap btn-tap-pulang d-flex flex-column align-items-center justify-content-center"
-                                onclick="tapPulang()">
-                                <i class="bi bi-box-arrow-right fs-3 mb-2"></i>
-                                <span>Absen Pulang</span>
-                            </button>
+                        <div class="mt-3">
+                            @if ($presensiHariIni->status == 'Terlambat')
+                                <span class="badge bg-danger fs-6">{{ $presensiHariIni->status }}</span>
+                            @else
+                                <span class="badge bg-success fs-6">{{ $presensiHariIni->status }}</span>
+                            @endif
                         </div>
 
-                        <form id="formPulang" action="{{ route('pelajar.presensi.update', $presensiHariIni->id) }}"
-                            method="POST" class="d-none">
-                            @csrf
-                            @method('PUT')
-                            <input type="hidden" name="jam_client" id="jamPulangInput">
-                        </form>
-                    @else
-                        {{-- Sudah masuk dan pulang --}}
-                        <div class="alert alert-info">
-                            <h5 class="mb-3"><i class="bi bi-check-all"></i> Presensi Hari Ini Selesai</h5>
-                            <div class="row justify-content-center">
-                                <div class="col-md-5 mb-2">
-                                    <div class="card bg-light">
-                                        <div class="card-body">
-                                            <h6 class="text-muted mb-1">Jam Masuk</h6>
-                                            <h4 class="text-success mb-0">{{ $presensiHariIni->waktu_datang }}</h4>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-5 mb-2">
-                                    <div class="card bg-light">
-                                        <div class="card-body">
-                                            <h6 class="text-muted mb-1">Jam Pulang</h6>
-                                            <h4 class="text-primary mb-0">{{ $presensiHariIni->waktu_pulang }}</h4>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="mt-3">
-                                @if ($presensiHariIni->status == 'Terlambat')
-                                    <span class="badge bg-danger fs-6">{{ $presensiHariIni->status }}</span>
-                                @else
-                                    <span class="badge bg-success fs-6">{{ $presensiHariIni->status }}</span>
-                                @endif
-                            </div>
-                            
-                            {{-- TOMBOL UPDATE JAM PULANG --}}
-                            <div class="mt-4 pt-3 border-top">
-                                <p class="text-muted small mb-2">
-                                    <i class="bi bi-info-circle"></i> Perlu update jam pulang? Klik tombol di bawah
-                                </p>
-                                <button type="button" id="btnUpdatePulang"
-                                    class="btn btn-warning btn-sm px-4 py-2"
-                                    onclick="updateJamPulang()">
-                                    <i class="bi bi-arrow-clockwise me-1"></i> Update Jam Pulang
-                                </button>
-                            </div>
+                        {{-- TOMBOL UPDATE JAM PULANG --}}
+                        <div class="mt-4 pt-3 border-top">
+                            <p class="text-muted small mb-2">
+                                <i class="bi bi-info-circle"></i> Perlu update jam pulang? Klik tombol di bawah
+                            </p>
+                            <button type="button" id="btnUpdatePulang" class="btn btn-warning btn-sm px-4 py-2"
+                                onclick="updateJamPulang()">
+                                <i class="bi bi-arrow-clockwise me-1"></i> Update Jam Pulang
+                            </button>
                         </div>
-                        
-                        {{-- Form untuk update (tetap ada meskipun sudah selesai) --}}
-                        <form id="formPulang" action="{{ route('pelajar.presensi.update', $presensiHariIni->id) }}"
-                            method="POST" class="d-none">
-                            @csrf
-                            @method('PUT')
-                            <input type="hidden" name="jam_client" id="jamPulangInput">
-                        </form>
-                    @endif
+                    </div>
+
+                    {{-- Form untuk update (tetap ada meskipun sudah selesai) --}}
+                    <form id="formPulang" action="{{ route('pelajar.presensi.update', $presensiHariIni->id) }}"
+                        method="POST" class="d-none">
+                        @csrf
+                        @method('PUT')
+                        <input type="hidden" name="jam_client" id="jamPulangInput">
+                    </form>
+                @endif
                 @endif
             </div>
         </div>
@@ -435,18 +405,24 @@
         }
 
         @keyframes pulse {
-            0%, 100% {
+
+            0%,
+            100% {
                 box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
             }
+
             50% {
                 box-shadow: 0 4px 20px rgba(40, 167, 69, 0.5);
             }
         }
 
         @keyframes pulsePulang {
-            0%, 100% {
+
+            0%,
+            100% {
                 box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
             }
+
             50% {
                 box-shadow: 0 4px 20px rgba(255, 193, 7, 0.5);
             }
@@ -502,7 +478,8 @@
             if (confirm(`Konfirmasi Presensi Masuk\n\nWaktu: ${currentTime}\n\nLanjutkan?`)) {
                 sedangAbsenMasuk = true;
                 btnTap.classList.add('disabled');
-                btnTap.innerHTML = '<div class="d-flex flex-column align-items-center"><i class="bi bi-hourglass-split fs-3 mb-2"></i><span>Memproses...</span></div>';
+                btnTap.innerHTML =
+                    '<div class="d-flex flex-column align-items-center"><i class="bi bi-hourglass-split fs-3 mb-2"></i><span>Memproses...</span></div>';
 
                 document.getElementById('jamMasukInput').value = currentTime;
                 document.getElementById('formMasuk').submit();
@@ -511,21 +488,23 @@
 
         function tapPulang() {
             const btnTap = document.getElementById('btnTapPulang');
-            
+
             // TIDAK ADA PROTEKSI - Bisa diklik berkali-kali
             const currentTime = getCurrentTime();
-            
+
             // Pesan konfirmasi dengan info bahwa bisa diupdate
-            const confirmMessage = `Konfirmasi Presensi Pulang\n\nWaktu: ${currentTime}\n\n⚠️ Info: Jika Anda sudah absen pulang sebelumnya, waktu akan diperbarui ke waktu terbaru.\n\nLanjutkan?`;
-            
+            const confirmMessage =
+                `Konfirmasi Presensi Pulang\n\nWaktu: ${currentTime}\n\n⚠️ Info: Jika Anda sudah absen pulang sebelumnya, waktu akan diperbarui ke waktu terbaru.\n\nLanjutkan?`;
+
             if (confirm(confirmMessage)) {
                 // Tampilkan loading (tanpa disable permanent)
                 const originalContent = btnTap.innerHTML;
-                btnTap.innerHTML = '<div class="d-flex flex-column align-items-center"><i class="bi bi-hourglass-split fs-3 mb-2"></i><span>Memproses...</span></div>';
-                
+                btnTap.innerHTML =
+                    '<div class="d-flex flex-column align-items-center"><i class="bi bi-hourglass-split fs-3 mb-2"></i><span>Memproses...</span></div>';
+
                 document.getElementById('jamPulangInput').value = currentTime;
                 document.getElementById('formPulang').submit();
-                
+
                 // Reset button setelah 3 detik (antisipasi jika gagal submit)
                 setTimeout(() => {
                     btnTap.innerHTML = originalContent;
@@ -536,8 +515,10 @@
         // Fungsi untuk update jam pulang dari tombol update
         function updateJamPulang() {
             const currentTime = getCurrentTime();
-            
-            if (confirm(`Update Presensi Pulang\n\nWaktu baru: ${currentTime}\n\n⚠️ Waktu pulang sebelumnya akan diganti dengan waktu ini.\n\nLanjutkan?`)) {
+
+            if (confirm(
+                    `Update Presensi Pulang\n\nWaktu baru: ${currentTime}\n\n⚠️ Waktu pulang sebelumnya akan diganti dengan waktu ini.\n\nLanjutkan?`
+                    )) {
                 document.getElementById('jamPulangInput').value = currentTime;
                 document.getElementById('formPulang').submit();
             }

@@ -159,7 +159,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
         Route::post('/laporan/upload', [LaporanController::class, 'store'])->name('laporan.store');
         Route::get('/pelajar/laporan/upload', [LaporanController::class, 'create'])
-            ->name('pelajar.laporan.create')
+            ->name('pelajar.laporan.index')
             ->middleware(['auth', 'role:pelajar']);
 
         Route::post('/pelajar/laporan/upload', [LaporanController::class, 'store'])

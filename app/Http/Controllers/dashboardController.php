@@ -30,6 +30,7 @@ class DashboardController extends Controller
     public function admin(Request $request)
     {
         $jumlahPelajar = Pelajar::whereIn('status', ['disetujui', 'selesai'])->count();
+        $jumlahPresensiHariIni = Presensi::whereDate('created_at', now())->count();
         $jumlahKegiatan = Kegiatan::count();
 
         $tahun = $request->get('tahun', date('Y'));
@@ -41,8 +42,19 @@ class DashboardController extends Controller
             ->orderByDesc('tahun')
             ->pluck('tahun');
 
-        // --- GRAFIK JUMLAH PESERTA AKTIF PER BULAN ---
-        $data = [];
+        // --- GRAFIK JUMLAH PESERTA MAGANG PER BULAN ---
+        $data = Pelajar::select(
+            DB::raw('MONTH(rencana_mulai) as bulan'),
+            DB::raw('COUNT(*) as total')
+        )
+            ->whereNotNull('rencana_mulai')
+            ->whereYear('rencana_mulai', $tahun)
+            ->where('status', 'disetujui')
+            ->groupBy(DB::raw('MONTH(rencana_mulai)'))
+            ->pluck('total', 'bulan')
+            ->toArray();
+
+        $dataMagangPerBulan = [];
         $bulan = [
             1 => 'Januari',
             2 => 'Februari',
@@ -58,29 +70,13 @@ class DashboardController extends Controller
             12 => 'Desember'
         ];
 
-        $dataMagangPerBulan = ['labels' => [], 'totals' => []];
-
         foreach ($bulan as $i => $namaBulan) {
-            $awalBulan = Carbon::createFromDate($tahun, $i, 1)->startOfMonth();
-            $akhirBulan = Carbon::createFromDate($tahun, $i, 1)->endOfMonth();
-
-            // Hitung peserta yang masih aktif di bulan itu
-            $jumlah = Pelajar::where('status', 'disetujui')
-                ->whereDate('rencana_mulai', '<=', $akhirBulan)
-                ->whereDate('rencana_selesai', '>=', $awalBulan)
-                ->count();
-
             $dataMagangPerBulan['labels'][] = $namaBulan;
-            $dataMagangPerBulan['totals'][] = $jumlah;
+            $dataMagangPerBulan['totals'][] = $data[$i] ?? 0;
         }
 
         // --- GRAFIK PRESENSI HARIAN (DOUGHNUT) ---
         $hariIni = Carbon::today();
-
-        $jumlahPesertaAktif = Pelajar::where('status', 'disetujui')
-            ->whereDate('rencana_mulai', '<=', $hariIni)
-            ->whereDate('rencana_selesai', '>=', $hariIni)
-            ->count();
 
         if ($hariIni->isWeekend()) {
             $sudahPresensi = 0;
@@ -134,11 +130,11 @@ class DashboardController extends Controller
             ->whereYear('rencana_mulai', $tahun)
             ->select('nama', 'rencana_mulai', 'rencana_selesai')
             ->orderBy('rencana_mulai', 'asc')
-            ->paginate(10);
+            ->get();
 
         return view('dashboard.admin', compact(
             'jumlahPelajar',
-            'jumlahPesertaAktif',
+            'jumlahPresensiHariIni',
             'jumlahKegiatan',
             'dataMagangPerBulan',
             'daftarTahun',
@@ -157,7 +153,7 @@ class DashboardController extends Controller
 
         // Cek apakah pelajar sudah terdaftar
         if (!$pelajar) {
-            return redirect()->route('pelajar.profil')->with('warning', 'Silakan lengkapi data profil terlebih dahulu');
+            return view('pelajar.dashboard')->with('warning', 'Silakan lengkapi data profil terlebih dahulu');
         }
 
         // **PENTING: Cek status magang**
@@ -239,7 +235,7 @@ class DashboardController extends Controller
         // Informasi pembimbing
         $pembimbing = $pelajar->pembimbing;
 
-        return view('dashboard.pelajar', compact(
+        return view('pelajar.dashboard', compact(
             'jumlahPresensiHariIni',
             'jumlahKegiatan',
             'totalPresensi',

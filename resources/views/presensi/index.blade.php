@@ -24,32 +24,53 @@
             $presensiHariIni = $pelajarPresensi->where('tanggal', $hariIni)->first();
         @endphp
 
-        {{-- CARD PRESENSI DENGAN TOMBOL TAP --}} <div class="card mb-4 shadow border-0">
+        {{-- CARD PRESENSI DENGAN TOMBOL TAP --}}
+        <div class="card mb-4 shadow border-0">
             <div class="card-body text-center p-4">
                 <h5 class="mb-3">Presensi Hari Ini ({{ now()->format('d M Y') }})</h5>
                 <div class="mb-3">
                     <p class="mb-2">Waktu Sekarang: <strong id="jamSekarang" class="fs-5 text-primary"></strong></p>
                 </div>
+
+                {{-- JIKA MAGANG MASIH AKTIF - TAMPILKAN TOMBOL PRESENSI --}}
                 @if (!$presensiHariIni)
-                    {{-- Belum ada presensi hari ini --}} <div class="d-flex justify-content-center gap-3 mb-3"> <button type="button"
-                            id="btnTapMasuk" class="btn-tap btn-tap-masuk" onclick="tapMasuk()"> <i
-                                class="bi bi-box-arrow-in-right fs-4"></i> <span class="d-block mt-2">Absen Masuk</span>
-                        </button> </div>
-                    <form id="formMasuk" action="{{ route('pelajar.presensi.store') }}" method="POST" class="d-none"> @csrf
-                        <input type="hidden" name="jam_client" id="jamMasukInput"> </form>
+                    {{-- Belum ada presensi hari ini --}}
+                    <div class="d-flex justify-content-center gap-3 mb-3">
+                        <button type="button" id="btnTapMasuk"
+                            class="btn-tap btn-tap-masuk d-flex flex-column align-items-center justify-content-center"
+                            onclick="tapMasuk()">
+                            <i class="bi bi-box-arrow-in-right fs-3 mb-2"></i>
+                            <span>Absen Masuk</span>
+                        </button>
+                    </div>
+                    <form id="formMasuk" action="{{ route('pelajar.presensi.store') }}" method="POST" class="d-none">
+                        @csrf
+                        <input type="hidden" name="jam_client" id="jamMasukInput">
+                    </form>
                 @elseif($presensiHariIni && !$presensiHariIni->waktu_pulang)
-                    {{-- Sudah masuk, belum pulang --}} <div class="alert alert-success mb-3">
+                    {{-- Sudah masuk, belum pulang --}}
+                    <div class="alert alert-success mb-3">
                         <h6 class="mb-2"><i class="bi bi-check-circle-fill"></i> Sudah Absen Masuk</h6>
                         <p class="mb-0">Jam Masuk: <strong>{{ $presensiHariIni->waktu_datang }}</strong></p>
                     </div>
-                    <div class="d-flex justify-content-center gap-3 mb-3"> <button type="button" id="btnTapPulang"
-                            class="btn-tap btn-tap-pulang" onclick="tapPulang()"> <i class="bi bi-box-arrow-right fs-4"></i>
-                            <span class="d-block mt-2">Absen Pulang</span> </button> </div>
+                    <div class="d-flex justify-content-center gap-3 mb-3">
+                        <button type="button" id="btnTapPulang"
+                            class="btn-tap btn-tap-pulang d-flex flex-column align-items-center justify-content-center"
+                            onclick="tapPulang()">
+                            <i class="bi bi-box-arrow-right fs-3 mb-2"></i>
+                            <span>Absen Pulang</span>
+                        </button>
+                    </div>
+
                     <form id="formPulang" action="{{ route('pelajar.presensi.update', $presensiHariIni->id) }}"
-                        method="POST" class="d-none"> @csrf @method('PUT') <input type="hidden" name="jam_client"
-                            id="jamPulangInput"> </form>
+                        method="POST" class="d-none">
+                        @csrf
+                        @method('PUT')
+                        <input type="hidden" name="jam_client" id="jamPulangInput">
+                    </form>
                 @else
-                    {{-- Sudah masuk dan pulang --}} <div class="alert alert-info">
+                    {{-- Sudah masuk dan pulang --}}
+                    <div class="alert alert-info">
                         <h5 class="mb-3"><i class="bi bi-check-all"></i> Presensi Hari Ini Selesai</h5>
                         <div class="row justify-content-center">
                             <div class="col-md-5 mb-2">
@@ -76,7 +97,26 @@
                                 <span class="badge bg-success fs-6">{{ $presensiHariIni->status }}</span>
                             @endif
                         </div>
+
+                        {{-- TOMBOL UPDATE JAM PULANG --}}
+                        <div class="mt-4 pt-3 border-top">
+                            <p class="text-muted small mb-2">
+                                <i class="bi bi-info-circle"></i> Perlu update jam pulang? Klik tombol di bawah
+                            </p>
+                            <button type="button" id="btnUpdatePulang" class="btn btn-warning btn-sm px-4 py-2"
+                                onclick="updateJamPulang()">
+                                <i class="bi bi-arrow-clockwise me-1"></i> Update Jam Pulang
+                            </button>
+                        </div>
                     </div>
+
+                    {{-- Form untuk update (tetap ada meskipun sudah selesai) --}}
+                    <form id="formPulang" action="{{ route('pelajar.presensi.update', $presensiHariIni->id) }}"
+                        method="POST" class="d-none">
+                        @csrf
+                        @method('PUT')
+                        <input type="hidden" name="jam_client" id="jamPulangInput">
+                    </form>
                 @endif
             </div>
         </div>
@@ -129,7 +169,7 @@
             </button>
         </div>
 
-        {{-- TABEL RIWAYAT PRESENSI (DISSEMBUNYIKAN AWALNYA) --}}
+        {{-- TABEL RIWAYAT PRESENSI (DISEMBUNYIKAN AWALNYA) --}}
         <div id="riwayatCard" class="card mt-4 shadow-sm border-0 d-none">
             <div class="card-body">
                 <h5 class="card-title mb-3 fw-bold text-uppercase text-dark">
@@ -220,11 +260,11 @@
             </div>
         </div>
 
-        {{-- SCRIPT UNTUK TOMBOL --}}
+        {{-- SCRIPT UNTUK TOMBOL RIWAYAT --}}
         <script>
             document.getElementById('btnShowRiwayat').addEventListener('click', function() {
                 const card = document.getElementById('riwayatCard');
-                card.classList.toggle('d-none'); // tampilkan/sembunyikan
+                card.classList.toggle('d-none');
                 this.innerHTML = card.classList.contains('d-none') ?
                     '<i class="bi bi-clock-history me-2"></i> Lihat Riwayat Presensi' :
                     '<i class="bi bi-eye-slash me-2"></i> Sembunyikan Riwayat Presensi';
@@ -236,19 +276,16 @@
             $bulanIni = now()->format('Y-m');
             $isCurrentMonth = request('bulan', $bulanIni) == $bulanIni;
 
-            // Filter presensi berdasarkan bulan yang dipilih dan hilangkan duplikat
             $presensiFilterBulan = $pelajarPresensi
                 ->filter(function ($p) use ($bulanDipilih) {
                     return substr($p->tanggal, 0, 7) == $bulanDipilih;
                 })
                 ->unique('tanggal');
 
-            // Hitung total hadir, tepat waktu, dan terlambat
             $totalHadir = $presensiFilterBulan->count();
             $totalTepat = $presensiFilterBulan->where('status', 'Tepat Waktu')->count();
             $totalTerlambat = $presensiFilterBulan->where('status', 'Terlambat')->count();
 
-            // Hitung hari kerja (Senin–Jumat) yang sudah lewat di bulan tersebut
             $hariKerjaLewat = 0;
             foreach ($semuaTanggal as $tgl) {
                 $date = \Carbon\Carbon::parse($tgl);
@@ -257,7 +294,6 @@
                 }
             }
 
-            // Alfa = Hari kerja yang sudah lewat - Total hadir
             $totalAlfa = max(0, $hariKerjaLewat - $totalHadir);
         @endphp
 
@@ -269,7 +305,7 @@
             </button>
         </div>
 
-        {{-- CARD STATISTIK, disembunyikan dulu --}}
+        {{-- CARD STATISTIK --}}
         <div id="statistikCard" class="card mt-4 shadow-sm border-0 d-none">
             <div class="card-body">
                 <h5 class="card-title mb-3 fw-bold text-uppercase text-dark">
@@ -304,11 +340,11 @@
             </div>
         </div>
 
-        {{-- SCRIPT UNTUK TOMBOL --}}
+        {{-- SCRIPT UNTUK TOMBOL STATISTIK --}}
         <script>
             document.getElementById('btnShowStatistik').addEventListener('click', function() {
                 const card = document.getElementById('statistikCard');
-                card.classList.toggle('d-none'); // tampilkan/sembunyikan
+                card.classList.toggle('d-none');
                 this.innerHTML = card.classList.contains('d-none') ?
                     '<i class="bi bi-bar-chart-line me-2"></i> Lihat Statistik Bulan Ini' :
                     '<i class="bi bi-eye-slash me-2"></i> Sembunyikan Statistik';
@@ -402,8 +438,7 @@
 
     {{-- SCRIPT LOGIC --}}
     <script>
-        let sudahAbsenMasuk = false;
-        let sudahAbsenPulang = false;
+        let sedangAbsenMasuk = false;
 
         function getCurrentTime() {
             const now = new Date();
@@ -431,21 +466,20 @@
         function tapMasuk() {
             const btnTap = document.getElementById('btnTapMasuk');
 
-            // Jika sudah pernah absen, tidak perlu konfirmasi lagi
-            if (sudahAbsenMasuk) {
+            // PROTEKSI: Hanya bisa sekali untuk absen masuk
+            if (sedangAbsenMasuk) {
+                alert('Sedang memproses presensi masuk, mohon tunggu...');
                 return;
             }
 
             const currentTime = getCurrentTime();
 
-            // Konfirmasi hanya sekali
             if (confirm(`Konfirmasi Presensi Masuk\n\nWaktu: ${currentTime}\n\nLanjutkan?`)) {
-                // Tandai sudah absen dan disable button
-                sudahAbsenMasuk = true;
+                sedangAbsenMasuk = true;
                 btnTap.classList.add('disabled');
-                btnTap.textContent = 'Sedang Memproses...';
+                btnTap.innerHTML =
+                    '<div class="d-flex flex-column align-items-center"><i class="bi bi-hourglass-split fs-3 mb-2"></i><span>Memproses...</span></div>';
 
-                // Submit form
                 document.getElementById('jamMasukInput').value = currentTime;
                 document.getElementById('formMasuk').submit();
             }
@@ -454,21 +488,36 @@
         function tapPulang() {
             const btnTap = document.getElementById('btnTapPulang');
 
-            // Jika sudah pernah absen, tidak perlu konfirmasi lagi
-            if (sudahAbsenPulang) {
-                return;
-            }
-
+            // TIDAK ADA PROTEKSI - Bisa diklik berkali-kali
             const currentTime = getCurrentTime();
 
-            // Konfirmasi hanya sekali
-            if (confirm(`Konfirmasi Presensi Pulang\n\nWaktu: ${currentTime}\n\nLanjutkan?`)) {
-                // Tandai sudah absen dan disable button
-                sudahAbsenPulang = true;
-                btnTap.classList.add('disabled');
-                btnTap.textContent = 'Sedang Memproses...';
+            // Pesan konfirmasi dengan info bahwa bisa diupdate
+            const confirmMessage =
+                `Konfirmasi Presensi Pulang\n\nWaktu: ${currentTime}\n\n⚠️ Info: Jika Anda sudah absen pulang sebelumnya, waktu akan diperbarui ke waktu terbaru.\n\nLanjutkan?`;
 
-                // Submit form
+            if (confirm(confirmMessage)) {
+                // Tampilkan loading (tanpa disable permanent)
+                const originalContent = btnTap.innerHTML;
+                btnTap.innerHTML =
+                    '<div class="d-flex flex-column align-items-center"><i class="bi bi-hourglass-split fs-3 mb-2"></i><span>Memproses...</span></div>';
+
+                document.getElementById('jamPulangInput').value = currentTime;
+                document.getElementById('formPulang').submit();
+
+                // Reset button setelah 3 detik (antisipasi jika gagal submit)
+                setTimeout(() => {
+                    btnTap.innerHTML = originalContent;
+                }, 3000);
+            }
+        }
+
+        // Fungsi untuk update jam pulang dari tombol update
+        function updateJamPulang() {
+            const currentTime = getCurrentTime();
+
+            if (confirm(
+                    `Update Presensi Pulang\n\nWaktu baru: ${currentTime}\n\n⚠️ Waktu pulang sebelumnya akan diganti dengan waktu ini.\n\nLanjutkan?`
+                    )) {
                 document.getElementById('jamPulangInput').value = currentTime;
                 document.getElementById('formPulang').submit();
             }
@@ -477,5 +526,4 @@
 
     {{-- Bootstrap Icons CDN --}}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-
 @endsection

@@ -16,11 +16,14 @@ class KegiatanController extends Controller
         $user = Auth::user();
 
         if ($user->role == 'pelajar') {
+            // PEMBATASAN: Cek apakah magang sudah selesai
+            $isMagangSelesai = $user->pelajar && $user->pelajar->status_magang === 'selesai';
+
             $kegiatans = Kegiatan::where('user_id', $user->id)
                 ->latest()
                 ->paginate(10);
 
-            return view('kegiatan.index', compact('kegiatans'));
+            return view('kegiatan.index', compact('kegiatans', 'isMagangSelesai'));
         }
 
         if ($user->role == 'pembimbing') {
@@ -76,17 +79,27 @@ class KegiatanController extends Controller
 
     public function harian()
     {
+        $user = Auth::user();
+
+        // PEMBATASAN: Cek apakah magang sudah selesai
+        $isMagangSelesai = $user->pelajar && $user->pelajar->status_magang === 'selesai';
+
         $today = now()->format('Y-m-d');
 
         $kegiatans = Kegiatan::where('user_id', Auth::id())
             ->whereDate('tanggal', $today)
             ->get();
 
-        return view('kegiatan.harian', compact('kegiatans'));
+        return view('kegiatan.harian', compact('kegiatans', 'isMagangSelesai'));
     }
 
     public function kegiatanBulanan(Request $request)
     {
+        $user = Auth::user();
+
+        // PEMBATASAN: Cek apakah magang sudah selesai
+        $isMagangSelesai = $user->pelajar && $user->pelajar->status_magang === 'selesai';
+
         $bulan = $request->input('bulan', Carbon::now()->format('Y-m'));
         [$tahun, $bulanNum] = explode('-', $bulan);
 
@@ -95,11 +108,19 @@ class KegiatanController extends Controller
             ->whereMonth('tanggal', $bulanNum)
             ->get();
 
-        return view('kegiatan.bulanan', compact('kegiatans', 'bulan'));
+        return view('kegiatan.bulanan', compact('kegiatans', 'bulan', 'isMagangSelesai'));
     }
 
     public function store(Request $request)
     {
+        $user = Auth::user();
+
+        // PEMBATASAN: Cek apakah magang sudah selesai
+        if ($user->pelajar && $user->pelajar->status_magang === 'selesai') {
+            return redirect()->route('pelajar.kegiatan.harian')
+                ->with('error', 'Magang Anda sudah selesai. Tidak dapat menambahkan kegiatan baru.');
+        }
+
         $validated = $request->validate([
             'tanggal' => 'required|date',
             'nama_kegiatan' => 'required|string|max:255',
@@ -139,6 +160,14 @@ class KegiatanController extends Controller
 
     public function edit($id)
     {
+        $user = Auth::user();
+
+        // PEMBATASAN: Cek apakah magang sudah selesai
+        if ($user->pelajar && $user->pelajar->status_magang === 'selesai') {
+            return redirect()->route('pelajar.kegiatan.harian')
+                ->with('error', 'Magang Anda sudah selesai. Tidak dapat mengedit kegiatan.');
+        }
+
         $kegiatan = Kegiatan::findOrFail($id);
 
         if (Auth::id() != $kegiatan->user_id) {
@@ -150,6 +179,14 @@ class KegiatanController extends Controller
 
     public function update(Request $request, $id)
     {
+        $user = Auth::user();
+
+        // PEMBATASAN: Cek apakah magang sudah selesai
+        if ($user->pelajar && $user->pelajar->status_magang === 'selesai') {
+            return redirect()->route('pelajar.kegiatan.harian')
+                ->with('error', 'Magang Anda sudah selesai. Tidak dapat mengedit kegiatan.');
+        }
+
         $validated = $request->validate([
             'tanggal' => 'required|date',
             'nama_kegiatan' => 'required|string|max:255',
@@ -188,6 +225,14 @@ class KegiatanController extends Controller
 
     public function destroy($id)
     {
+        $user = Auth::user();
+
+        // PEMBATASAN: Cek apakah magang sudah selesai
+        if ($user->pelajar && $user->pelajar->status_magang === 'selesai') {
+            return redirect()->route('pelajar.kegiatan.harian')
+                ->with('error', 'Magang Anda sudah selesai. Tidak dapat menghapus kegiatan.');
+        }
+
         $kegiatan = Kegiatan::findOrFail($id);
 
         if (Auth::id() != $kegiatan->user_id) {

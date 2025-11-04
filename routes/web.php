@@ -68,10 +68,11 @@ Route::middleware(['auth'])->group(function () {
         // LAPORAN AKHIR
         Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
         Route::get('/laporan/download/{id}', [LaporanController::class, 'download'])->name('laporan.download');
+        Route::get('/admin/sertifikat', [LaporanController::class, 'halamanSertifikat'])->name('admin.sertifikat');
+        Route::post('/admin/laporan/upload-sertifikat/{id}', [LaporanController::class, 'uploadSertifikat'])->name('admin.upload.sertifikat');
 
-        Route::get('/sertifikat', function () {
-            return view('admin.sertifikat.index');
-        })->name('sertifikat.index');
+        Route::get('/sertifikat', [LaporanController::class, 'adminSertifikat'])->name('sertifikat.index');
+        Route::post('/sertifikat/upload/{id}', [LaporanController::class, 'uploadSertifikat'])->name('sertifikat.upload');
 
         // PRODUK MAGANG
         Route::resource('produk', App\Http\Controllers\ProdukMagangController::class)->names([
@@ -102,20 +103,23 @@ Route::middleware(['auth'])->group(function () {
         // Penilaian
         Route::get('/penilaian', [PenilaianController::class, 'index'])->name('penilaian');
 
+        // Assign Pembimbing
         Route::get('/assign-pembimbing', [AdminPelajarController::class, 'assignView'])->name('assignpembimbing.view');
         Route::post('/assign-pembimbing/{id}', [AdminPelajarController::class, 'assignPembimbing'])->name('assignpembimbing.assign');
 
-        // LAPORAN AKHIR
-        Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
+        Route::get('/laporan', [LaporanController::class, 'halamanPembimbing'])->name('laporan');
         Route::get('/laporan/download/{id}', [LaporanController::class, 'download'])->name('laporan.download');
+        Route::post('/laporan/setujui/{id}', [LaporanController::class, 'setujui'])->name('laporan.setujui');
+        Route::post('/laporan/tolak/{id}', [LaporanController::class, 'tolak'])->name('laporan.tolak');
 
-        // PRODUK MAGANG
+        // ====================== PRODUK MAGANG ======================
         Route::get('/produk', [ProdukMagangController::class, 'index'])->name('produk.index');
     });
 
 
+
     // -------- PELAJAR --------
-    Route::prefix('pelajar')->middleware(['auth'])->name('pelajar.')->group(function () {
+    Route::prefix('pelajar')->middleware(['auth', 'role:pelajar'])->name('pelajar.')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'pelajar'])->name('dashboard');
 
         // Route profil pelajar
@@ -132,9 +136,12 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/kegiatan', [KegiatanController::class, 'index'])->name('kegiatan.index');
         Route::get('/kegiatan/create', [KegiatanController::class, 'create'])->name('kegiatan.create');
         Route::post('/kegiatan', [KegiatanController::class, 'store'])->name('kegiatan.store');
+        Route::get('/kegiatan/harian', [KegiatanController::class, 'harian'])->name('kegiatan.harian');
+        Route::get('/kegiatan/bulanan', [KegiatanController::class, 'kegiatanBulanan'])->name('kegiatan.bulanan');
         Route::get('/kegiatan/{kegiatan}/edit', [KegiatanController::class, 'edit'])->name('kegiatan.edit');
         Route::put('/kegiatan/{kegiatan}', [KegiatanController::class, 'update'])->name('kegiatan.update');
         Route::delete('/kegiatan/{kegiatan}', [KegiatanController::class, 'destroy'])->name('kegiatan.destroy');
+        Route::get('/kegiatan/{id}', [KegiatanController::class, 'show'])->name('kegiatan.show');
 
         // Upload Bukti Dukung
         Route::post('/kegiatan/{kegiatan}/bukti', [KegiatanController::class, 'uploadBukti'])->name('kegiatan.uploadBukti');
@@ -149,9 +156,21 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/presensi', [PresensiController::class, 'store'])->name('presensi.store');
         Route::put('/presensi/{id}', [PresensiController::class, 'update'])->name('presensi.update');
 
-        // LAPORAN AKHIR
         Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
         Route::post('/laporan/upload', [LaporanController::class, 'store'])->name('laporan.store');
+        Route::get('/pelajar/laporan/upload', [LaporanController::class, 'create'])
+            ->name('pelajar.laporan.create')
+            ->middleware(['auth', 'role:pelajar']);
+
+        Route::post('/pelajar/laporan/upload', [LaporanController::class, 'store'])
+            ->name('pelajar.laporan.store')
+            ->middleware(['auth', 'role:pelajar']);
+        Route::post('/laporan/upload', [LaporanController::class, 'upload'])->name('laporan.upload');
+
+        // ✅ Route download laporan (tambahkan ini)
+        Route::get('/laporan/download/{id}', [LaporanController::class, 'download'])->name('laporan.download');
+
+        Route::get('/sertifikat/download/{id}', [LaporanController::class, 'downloadSertifikat'])->name('pelajar.sertifikat.download');
 
         // PRODUK MAGANG
         Route::resource('produk', App\Http\Controllers\ProdukMagangController::class)->names([

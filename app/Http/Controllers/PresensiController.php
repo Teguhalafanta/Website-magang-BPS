@@ -15,12 +15,15 @@ class PresensiController extends Controller
         $user = Auth::user();
 
         if ($user->role === 'pelajar') {
+            // Cek apakah magang sudah selesai
+            $isMagangSelesai = $user->pelajar->status_magang === 'selesai';
+            
             $presensis = Presensi::where('pelajar_id', $user->pelajar->id)
                 ->orderBy('tanggal', 'desc')
                 ->orderBy('waktu_datang', 'desc')
                 ->get();
 
-            return view('presensi.index', compact('presensis'));
+            return view('presensi.index', compact('presensis', 'isMagangSelesai'));
         } elseif ($user->role === 'pembimbing') {
             $pembimbing = $user->pembimbing;
 
@@ -71,6 +74,13 @@ class PresensiController extends Controller
     public function create()
     {
         $user = Auth::user();
+        
+        // PEMBATASAN: Cek apakah magang sudah selesai
+        if ($user->pelajar && $user->pelajar->status_magang === 'selesai') {
+            return redirect()->route('pelajar.presensi.index')
+                ->with('error', 'Magang Anda sudah selesai. Tidak dapat menambahkan presensi baru.');
+        }
+        
         $today = Carbon::today()->toDateString();
 
         $sudah = Presensi::where('pelajar_id', $user->pelajar->id)
@@ -88,6 +98,13 @@ class PresensiController extends Controller
     public function store(Request $request)
     {
         $user = Auth::user();
+        
+        // PEMBATASAN: Cek apakah magang sudah selesai
+        if ($user->pelajar && $user->pelajar->status_magang === 'selesai') {
+            return redirect()->route('pelajar.presensi.index')
+                ->with('error', 'Magang Anda sudah selesai. Tidak dapat menambahkan presensi baru.');
+        }
+        
         $today = Carbon::now()->toDateString();
 
         $pelajar = $user->pelajar;
@@ -141,6 +158,14 @@ class PresensiController extends Controller
 
     public function update(Request $request, $id)
     {
+        $user = Auth::user();
+        
+        // PEMBATASAN: Cek apakah magang sudah selesai (untuk presensi pulang)
+        if ($user->role === 'pelajar' && $user->pelajar && $user->pelajar->status_magang === 'selesai') {
+            return redirect()->route('pelajar.presensi.index')
+                ->with('error', 'Magang Anda sudah selesai. Tidak dapat melakukan presensi pulang.');
+        }
+        
         $presensi = Presensi::findOrFail($id);
 
         if ($presensi->waktu_pulang) {

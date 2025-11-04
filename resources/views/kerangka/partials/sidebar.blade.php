@@ -273,6 +273,14 @@
                             </a>
                         </li>
 
+                        <li class="sidebar-item {{ request()->routeIs('pembimbing.laporan') ? 'active' : '' }}">
+                            <a href="{{ route('pembimbing.laporan') }}" class="sidebar-link">
+                                <i class="bi bi-file-earmark-check"></i>
+                                <span>Verifikasi Laporan Akhir</span>
+                            </a>
+                        </li>
+
+
                         <li class="sidebar-item {{ request()->routeIs('pembimbing.produk.*') ? 'active' : '' }}">
                             <a href="{{ route('pembimbing.produk.index') }}" class="sidebar-link">
                                 <i class="bi bi-archive"></i>

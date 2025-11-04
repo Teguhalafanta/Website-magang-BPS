@@ -1,42 +1,58 @@
 @extends('kerangka.master')
 
 @section('content')
-    <div class="container mt-4">
-        <h3 class="mb-4">Daftar Laporan Akhir Pelajar</h3>
+<h3>Halaman Admin - Upload Sertifikat</h3>
 
-        @if ($laporans->isEmpty())
-            <div class="alert alert-info">Belum ada laporan yang diunggah.</div>
-        @else
-            <table class="table table-bordered table-striped">
-                <thead>
-                    <tr class="text-center">
-                        <th>Nama Pelajar</th>
-                        <th>Judul Laporan</th>
-                        <th>Tanggal Upload</th>
-                        <th>Berkas</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($laporans as $laporan)
-                        <tr>
-                            <td class="text-center">{{ $laporan->pelajar->nama ?? '-' }}</td>
-                            <td class="text-center">{{ $laporan->judul ?? 'Laporan Magang' }}</td>
-                            <td class="text-center">{{ $laporan->created_at->format('d-m-Y') }}</td>
-                            <td class="text-center">
-                                {{-- Tombol lihat file --}}
-                                <a href="{{ asset('storage/' . $laporan->file) }}" target="_blank"
-                                    class="btn btn-primary btn-sm">
-                                    Lihat
-                                </a>
-                                {{-- Tombol download file --}}
-                                <a href="{{ route('laporan.download', $laporan->id) }}" class="btn btn-success btn-sm">
-                                    Download
-                                </a>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        @endif
-    </div>
+@if(session('success'))
+<div style="color: green;">{{ session('success') }}</div>
+@endif
+
+@if(session('error'))
+<div style="color: red;">{{ session('error') }}</div>
+@endif
+
+<table border="1" cellpadding="10" cellspacing="0" width="100%">
+    <tr>
+        <th>Nama Pelajar</th>
+        <th>Laporan Magang</th>
+        <th>Status</th>
+        <th>Aksi</th>
+    </tr>
+
+    @foreach($laporans as $laporan)
+    <tr>
+        <td>{{ $laporan->user->name }}</td>
+        <td>
+            <a href="{{ route('download.laporan', $laporan->id) }}" target="_blank">Lihat Laporan</a>
+        </td>
+        <td>
+            @if($laporan->status == 'menunggu')
+                <span style="color: orange;">Menunggu Pembimbing</span>
+            @elseif($laporan->status == 'disetujui')
+                <span style="color: green;">Disetujui Pembimbing</span>
+            @elseif($laporan->status == 'ditolak')
+                <span style="color: red;">Ditolak - Pelajar Upload Ulang</span>
+            @elseif($laporan->status == 'selesai')
+                <span style="color: blue;">Selesai</span>
+            @endif
+        </td>
+        <td>
+            @if($laporan->status == 'disetujui')
+                <!-- Upload sertifikat -->
+                <form action="{{ route('admin.upload.sertifikat', $laporan->id) }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <input type="file" name="file_sertifikat" required>
+                    <button type="submit">Upload Sertifikat</button>
+                </form>
+            @elseif($laporan->status == 'selesai')
+                <!-- Download sertifikat -->
+                <a href="{{ asset('storage/'.$laporan->file_sertifikat) }}" target="_blank">Download Sertifikat</a>
+            @else
+                Tidak ada aksi
+            @endif
+        </td>
+    </tr>
+    @endforeach
+</table>
+
 @endsection

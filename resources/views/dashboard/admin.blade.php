@@ -17,7 +17,8 @@
                         <div class="card-body p-3">
                             <div class="d-flex justify-content-between align-items-start mb-2">
                                 <div>
-                                    <h6 class="text-white-50 mb-1 text-uppercase" style="font-size: 0.7rem;">Total Pelajar
+                                    <h6 class="text-white-50 mb-1 text-uppercase" style="font-size: 0.7rem;">Total Peserta
+                                        Disetujui
                                     </h6>
                                     <h3 class="fw-bold mb-0">{{ $jumlahPelajar }}</h3>
                                 </div>
@@ -34,19 +35,19 @@
                 </a>
             </div>
 
-            {{-- Presensi Hari Ini --}}
+            {{-- Total Peserta Aktif --}}
             <div class="col-md-4 mb-2">
-                <a href="{{ route('admin.presensi.index', ['today' => true]) }}" class="text-decoration-none">
+                <a href="{{ route('admin.pengajuan.index') }}" class="text-decoration-none">
                     <div class="card bg-warning text-white shadow border-0 h-100">
                         <div class="card-body p-3">
                             <div class="d-flex justify-content-between align-items-start mb-2">
                                 <div>
-                                    <h6 class="text-white-50 mb-1 text-uppercase" style="font-size: 0.7rem;">Presensi Hari
-                                        Ini</h6>
-                                    <h3 class="fw-bold mb-0">{{ $jumlahPresensiHariIni }}</h3>
+                                    <h6 class="text-white-50 mb-1 text-uppercase" style="font-size: 0.7rem;">Total Peserta
+                                        Aktif</h6>
+                                    <h3 class="fw-bold mb-0">{{ $jumlahPesertaAktif }}</h3>
                                 </div>
                                 <div class="bg-white bg-opacity-25 rounded-3 p-2">
-                                    <i class="bi bi-calendar-check-fill fs-4"></i>
+                                    <i class="bi bi-person-check-fill fs-4"></i>
                                 </div>
                             </div>
                             <div class="d-flex align-items-center">
@@ -93,7 +94,7 @@
                             <div>
                                 <h5 class="fw-bold mb-1" style="color: #1a202c; font-size: 1.1rem;">
                                     <i class="bi bi-bar-chart-line-fill text-success me-2"></i>
-                                    Grafik Jumlah Peserta Magang per Bulan
+                                    Grafik Jumlah Peserta Aktif per Bulan
                                 </h5>
                             </div>
                             <form action="{{ route('admin.dashboard') }}" method="GET" class="d-flex">
@@ -132,8 +133,8 @@
                             <canvas id="grafikPresensiHarian"></canvas>
                         @else
                             <div class="d-flex flex-column justify-content-center align-items-center h-100 text-secondary">
-                                <i class="bi bi-emoji-neutral" style="font-size: 2.5rem;"></i>
-                                <p class="mt-2 mb-0 fw-semibold">Tidak ada peserta aktif hari ini</p>
+                                <i class="bi bi-emoji-neutral mb-5" style="font-size: 2.5rem;"></i>
+                                <p class="fw-semibold mb-0">Tidak ada peserta aktif hari ini</p>
                             </div>
                         @endif
                     </div>
@@ -167,7 +168,7 @@
                         <div class="d-flex justify-content-between align-items-start">
                             <div>
                                 <h5 class="fw-bold mb-1" style="color: #1a202c; font-size: 1.1rem;">
-                                    <i class="bi bi-graph-up-arrow text-primary me-2"></i>
+                                    <i class="bi bi-graph-up-arrow text-success me-2"></i>
                                     Grafik Total Peserta Magang Tiap Tahun
                                 </h5>
                             </div>
@@ -181,14 +182,14 @@
         </div>
 
         <div class="row mt-3 g-3">
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <div class="card border-0"
                     style="box-shadow: 0 2px 8px rgba(0,0,0,0.08); border-radius: 12px; background: #ffffff;">
                     <div class="card-header bg-transparent border-0 pt-4 px-4 pb-3">
                         <div class="d-flex justify-content-between align-items-start">
                             <div>
                                 <h5 class="fw-bold mb-1" style="color: #1a202c; font-size: 1.1rem;">
-                                    <i class="bi bi-calendar-week text-primary me-2"></i>
+                                    <i class="bi bi-calendar-week text-success me-2"></i>
                                     Grafik Periode Magang Setiap Peserta
                                 </h5>
                             </div>
@@ -208,25 +209,9 @@
                     <div class="card-body px-4 pb-4 pt-2" style="height: 400px;">
                         <canvas id="chartMagangTimeline"></canvas>
                     </div>
-                </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card border-0 text-center"
-                    style="box-shadow: 0 2px 8px rgba(0,0,0,0.08); border-radius: 12px; background: #ffffff;">
-                    <div class="card-header bg-transparent border-0 pt-4 px-4 pb-3">
-                        <div class="d-flex justify-content-between align-items-start">
-                            <div>
-                                <h5 class="fw-bold mb-1" style="color: #1a202c; font-size: 1.1rem;">
-                                    <i class="bi bi-people-fill text-primary me-2"></i>
-                                    Total Keseluruhan Peserta Magang
-                                </h5>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body d-flex flex-column justify-content-center align-items-center"
-                        style="height: 220px;">
-                        <h1 class="fw-bold text-success display-4">{{ $jumlahPelajar }}</h1>
-                        <p class="mb-0 text-secondary">Total Peserta Magang Terdaftar</p>
+                    {{-- 🔹 Pagination di bawah grafik --}}
+                    <div class="card-footer bg-transparent pt-0 px-4 pb-4">
+                        {{ $dataMagangTimeline->appends(['tahun' => $tahun])->links() }}
                     </div>
                 </div>
             </div>
@@ -311,7 +296,7 @@
                 const belumPresensi = @json($dataPresensiHarian['belumPresensi'] ?? 0);
 
                 const semuaSudahPresensi = (belumPresensi === 0 && totalPeserta > 0);
-                const warna = semuaSudahPresensi ? ['#198754', '#e9ecef'] : ['#dc3545', '#e9ecef'];
+                const warna = semuaSudahPresensi ? ['#198754', '#e9ecef'] : ['#0d6efd', '#e9ecef'];
 
                 new Chart(ctxPresensi, {
                     type: 'doughnut',
@@ -435,7 +420,7 @@
         });
 
         const ctxTimeline = document.getElementById('chartMagangTimeline').getContext('2d');
-        const dataTimeline = @json($dataMagangTimeline);
+        const dataTimeline = @json($dataMagangTimeline->items());
 
         // Format data ke bentuk [start, end] untuk setiap peserta
         const datasetTimeline = dataTimeline.map(item => ({

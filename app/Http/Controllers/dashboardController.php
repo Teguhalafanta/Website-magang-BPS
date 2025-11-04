@@ -157,7 +157,7 @@ class DashboardController extends Controller
 
         // Cek apakah pelajar sudah terdaftar
         if (!$pelajar) {
-            return redirect()->route('pelajar.profil')->with('warning', 'Silakan lengkapi data profil terlebih dahulu');
+            return redirect()->route('dashboard.pelajar')->with('warning', 'Silakan lengkapi data profil terlebih dahulu');
         }
 
         // **PENTING: Cek status magang**

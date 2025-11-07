@@ -17,7 +17,7 @@ class PresensiController extends Controller
         if ($user->role === 'pelajar') {
             // Cek apakah magang sudah selesai
             $isMagangSelesai = $user->pelajar->status_magang === 'selesai';
-            
+
             $presensis = Presensi::where('pelajar_id', $user->pelajar->id)
                 ->orderBy('tanggal', 'desc')
                 ->orderBy('waktu_datang', 'desc')
@@ -74,13 +74,13 @@ class PresensiController extends Controller
     public function create()
     {
         $user = Auth::user();
-        
+
         // PEMBATASAN: Cek apakah magang sudah selesai
         if ($user->pelajar && $user->pelajar->status_magang === 'selesai') {
             return redirect()->route('pelajar.presensi.index')
                 ->with('error', 'Magang Anda sudah selesai. Tidak dapat menambahkan presensi baru.');
         }
-        
+
         $today = Carbon::today()->toDateString();
 
         $sudah = Presensi::where('pelajar_id', $user->pelajar->id)
@@ -98,13 +98,13 @@ class PresensiController extends Controller
     public function store(Request $request)
     {
         $user = Auth::user();
-        
+
         // PEMBATASAN: Cek apakah magang sudah selesai
         if ($user->pelajar && $user->pelajar->status_magang === 'selesai') {
             return redirect()->route('pelajar.presensi.index')
                 ->with('error', 'Magang Anda sudah selesai. Tidak dapat menambahkan presensi baru.');
         }
-        
+
         $today = Carbon::now()->toDateString();
 
         $pelajar = $user->pelajar;
@@ -159,20 +159,18 @@ class PresensiController extends Controller
     public function update(Request $request, $id)
     {
         $user = Auth::user();
-        
+
         // PEMBATASAN: Cek apakah magang sudah selesai (untuk presensi pulang)
         if ($user->role === 'pelajar' && $user->pelajar && $user->pelajar->status_magang === 'selesai') {
             return redirect()->route('pelajar.presensi.index')
                 ->with('error', 'Magang Anda sudah selesai. Tidak dapat melakukan presensi pulang.');
         }
+
+        $presensi = Presensi::where('id', $id)
+            ->where('user_id', $user->id)
+            ->whereDate('created_at', today())
+            ->firstOrFail();
         
-        $presensi = Presensi::findOrFail($id);
-
-        if ($presensi->waktu_pulang) {
-            return redirect()->route('pelajar.presensi.index')
-                ->with('error', 'Anda sudah melakukan presensi pulang hari ini!');
-        }
-
         // Ambil waktu dari browser, fallback ke server
         $jamPulang = $request->jam_client ?? Carbon::now()->format('H:i:s');
 

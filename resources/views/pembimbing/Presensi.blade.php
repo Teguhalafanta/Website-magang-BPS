@@ -109,6 +109,7 @@
                                     Pelajar</th>
                                 <th class="py-3 px-3 fw-semibold text-secondary" style="width: 120px;">Tanggal</th>
                                 <th class="py-3 px-3 fw-semibold text-secondary" style="width: 100px;">Status</th>
+                                <th class="py-3 px-3 fw-semibold text-secondary" style="width: 100px;">Aksi</th>
                                 <th class="py-3 px-4 fw-semibold text-secondary text-start" style="min-width: 200px;">
                                     Keterangan</th>
                             </tr>

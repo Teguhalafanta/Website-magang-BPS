@@ -131,7 +131,13 @@
 
                         {{-- Role: Pelajar --}}
                     @elseif(auth()->user()->role == 'pelajar')
-                        @if (auth()->user()->isApproved())
+                        {{-- Determine pelajar status explicitly so we can handle 'disetujui', 'selesai', etc. --}}
+                        @php
+                            $pelajar = auth()->user()->pelajar;
+                            $status = $pelajar ? $pelajar->status : null;
+                        @endphp
+
+                        @if ($status === 'disetujui')
                             {{-- MENU UNTUK PELAJAR YANG SUDAH DISETUJUI --}}
                             <li class="sidebar-item {{ request()->routeIs('pelajar.dashboard') ? 'active' : '' }}">
                                 <a href="{{ route('pelajar.dashboard') }}" class="sidebar-link">
@@ -188,6 +194,72 @@
                                     <span class="badge bg-success ms-auto" style="font-size: 10px;">Disetujui</span>
                                 </a>
                             </li>
+
+                        @elseif ($status === 'selesai')
+                            {{-- PELAJAR SUDAH SELESAI MAGANG: Tampilkan menu tetapi non-aktifkan sebagian link.
+                                 Hanya izinkan akses ke: Presensi, Kegiatan, Upload Laporan (jika masih diperlukan), Sertifikat/riwayat. --}}
+
+                            {{-- Dashboard (boleh diakses untuk melihat riwayat meskipun sudah selesai) --}}
+                            <li class="sidebar-item {{ request()->routeIs('pelajar.dashboard') ? 'active' : '' }}">
+                                <a href="{{ route('pelajar.dashboard') }}" class="sidebar-link">
+                                    <i class="bi bi-speedometer2"></i>
+                                    <span>Dashboard</span>
+                                </a>
+                            </li>
+
+                            {{-- Presensi (boleh lihat) --}}
+                            <li class="sidebar-item {{ request()->routeIs('pelajar.presensi.*') ? 'active' : '' }}">
+                                <a href="{{ route('pelajar.presensi.index') }}" class="sidebar-link">
+                                    <i class="bi bi-calendar-check"></i>
+                                    <span>Presensi</span>
+                                </a>
+                            </li>
+
+                            {{-- Kegiatan (boleh lihat) --}}
+                            <li
+                                class="sidebar-item has-sub {{ request()->routeIs('pelajar.kegiatan.*') ? 'active' : '' }}">
+                                <a href="#" class="sidebar-link">
+                                    <i class="bi bi-journal-text"></i>
+                                    <span>Kegiatan</span>
+                                </a>
+                                <ul class="submenu"
+                                    style="{{ request()->routeIs('pelajar.kegiatan.*') ? 'display:block;' : 'display:none;' }}">
+                                    <li
+                                        class="submenu-item {{ request()->routeIs('pelajar.kegiatan.harian') ? 'active' : '' }}">
+                                        <a href="{{ route('pelajar.kegiatan.harian') }}">Kegiatan Harian</a>
+                                    </li>
+                                    <li
+                                        class="submenu-item {{ request()->routeIs('pelajar.kegiatan.bulanan') ? 'active' : '' }}">
+                                        <a href="{{ route('pelajar.kegiatan.bulanan') }}">Kegiatan Bulanan</a>
+                                    </li>
+                                </ul>
+                            </li>
+
+                            {{-- Produk (boleh dilihat, edit/hapus dibatasi di halaman produk) --}}
+                            <li class="sidebar-item {{ request()->routeIs('pelajar.produk.*') ? 'active' : '' }}">
+                                <a href="{{ route('pelajar.produk.index') }}" class="sidebar-link">
+                                    <i class="bi bi-archive"></i>
+                                    <span>Produk Magang</span>
+                                </a>
+                            </li>
+
+                            {{-- Upload Laporan Akhir (boleh lihat/unduh) --}}
+                            <li class="sidebar-item {{ request()->routeIs('pelajar.laporan.*') ? 'active' : '' }}">
+                                <a href="{{ route('pelajar.laporan.index') }}" class="sidebar-link">
+                                    <i class="bi bi-upload"></i>
+                                    <span>Upload Laporan Akhir</span>
+                                </a>
+                            </li>
+
+                            {{-- Pengajuan (tampilkan sebagai riwayat untuk yang sudah selesai) --}}
+                            <li class="sidebar-item {{ request()->routeIs('pelajar.pengajuan.*') ? 'active' : '' }}">
+                                <a href="{{ route('pelajar.pengajuan.index') }}" class="sidebar-link">
+                                    <i class="bi bi-file-earmark-text"></i>
+                                    <span>Daftar Pengajuan</span>
+                                    <span class="badge bg-secondary ms-auto" style="font-size: 10px;">Selesai</span>
+                                </a>
+                            </li>
+
                         @else
                             {{-- MENU UNTUK PELAJAR YANG BELUM DISETUJUI --}}
                             <li class="sidebar-item {{ request()->routeIs('pelajar.pengajuan.*') ? 'active' : '' }}">

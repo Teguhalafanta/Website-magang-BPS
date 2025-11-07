@@ -35,6 +35,9 @@ class PresensiController extends Controller
                 return view('pembimbing.presensi', [
                     'presensis' => collect(),
                     'pelajars' => collect(),
+                    'allDates' => collect(),
+                    'startDate' => null,
+                    'endDate' => null,
                 ]);
             }
 
@@ -42,6 +45,41 @@ class PresensiController extends Controller
 
             // Tangkap filter dari request
             $selectedPelajarId = request('pelajar_id');
+
+            // Generate semua tanggal periode magang
+            $allDates = collect();
+            $startDate = null;
+            $endDate = null;
+
+            if ($pelajars->isNotEmpty()) {
+                // Ambil tanggal mulai dan selesai dari pelajar (sesuaikan dengan struktur database Anda)
+                $startDate = $pelajars->first()->tanggal_mulai ?? now()->subMonths(3)->format('Y-m-d');
+                $endDate = $pelajars->first()->tanggal_selesai ?? now()->format('Y-m-d');
+
+                // Jika ada pelajar yang dipilih, gunakan tanggal dari pelajar tersebut
+                if ($selectedPelajarId) {
+                    $selectedPelajar = \App\Models\Pelajar::find($selectedPelajarId);
+                    if ($selectedPelajar) {
+                        $startDate = $selectedPelajar->tanggal_mulai ?? $startDate;
+                        $endDate = $selectedPelajar->tanggal_selesai ?? $endDate;
+                    }
+                }
+
+                // Generate semua tanggal antara start dan end date
+                $current = Carbon::parse($startDate);
+                $end = Carbon::parse($endDate);
+
+                while ($current <= $end) {
+                    // Hanya hari kerja (Senin-Jumat), sesuaikan jika perlu
+                    if ($current->isWeekday()) {
+                        $allDates->push($current->format('Y-m-d'));
+                    }
+                    $current->addDay();
+                }
+
+                // Reverse dates untuk urutan descending (terbaru di depan)
+                $allDates = $allDates->reverse();
+            }
 
             $presensisQuery = \App\Models\Presensi::with('pelajar')
                 ->whereIn('pelajar_id', $pelajars->pluck('id'))
@@ -54,7 +92,20 @@ class PresensiController extends Controller
 
             $presensis = $presensisQuery->get();
 
-            return view('pembimbing.presensi', compact('presensis', 'pelajars', 'selectedPelajarId'));
+            // Group presensi untuk memudahkan akses di view
+            $presensiGrouped = $presensis->groupBy(['pelajar_id', function ($item) {
+                return Carbon::parse($item->tanggal)->format('Y-m-d');
+            }]);
+
+            return view('pembimbing.presensi', compact(
+                'presensis',
+                'pelajars',
+                'selectedPelajarId',
+                'allDates',
+                'presensiGrouped',
+                'startDate',
+                'endDate'
+            ));
         } elseif ($user->role === 'admin') {
             // Ambil query dasar
             $query = \App\Models\Presensi::with('pelajar')
@@ -67,9 +118,45 @@ class PresensiController extends Controller
                 $query->whereDate('tanggal', $today);
             }
 
+            // Filter by pelajar jika ada
+            if (request()->has('pelajar_id')) {
+                $query->where('pelajar_id', request('pelajar_id'));
+            }
+
             $presensis = $query->get();
 
-            return view('admin.presensi.index', compact('presensis'));
+            // Untuk admin, tampilkan semua pelajar
+            $allPelajars = \App\Models\Pelajar::all();
+
+            // Generate all dates untuk admin view (opsional)
+            $allDates = collect();
+            $startDate = now()->subMonths(3)->format('Y-m-d');
+            $endDate = now()->format('Y-m-d');
+
+            $current = Carbon::parse($startDate);
+            $end = Carbon::parse($endDate);
+
+            while ($current <= $end) {
+                if ($current->isWeekday()) {
+                    $allDates->push($current->format('Y-m-d'));
+                }
+                $current->addDay();
+            }
+
+            $allDates = $allDates->reverse();
+
+            $presensiGrouped = $presensis->groupBy(['pelajar_id', function ($item) {
+                return Carbon::parse($item->tanggal)->format('Y-m-d');
+            }]);
+
+            return view('admin.presensi.index', compact(
+                'presensis',
+                'allPelajars',
+                'allDates',
+                'presensiGrouped',
+                'startDate',
+                'endDate'
+            ));
         } else {
             abort(403); // role lain tidak bisa mengakses
         }

@@ -9,6 +9,10 @@
             </div>
         </div>
 
+        @php
+            $status = auth()->check() && auth()->user()->pelajar ? auth()->user()->pelajar->status : null;
+        @endphp
+
         <div class="row mb-3">
             <div class="col">
                 <a href="{{ route('pelajar.produk.create') }}" class="btn btn-primary shadow-sm">
@@ -55,22 +59,37 @@
                                             </span>
                                         </td>
                                         <td class="text-center">
-                                            <div class="btn-group" role="group">
-                                                <a href="{{ route('pelajar.produk.edit', $p->id) }}"
-                                                    class="btn btn-sm btn-warning shadow-sm" title="Edit Produk">
-                                                    <i class="bi bi-pencil-square"></i>
-                                                </a>
+                                                <div class="btn-group" role="group">
+                                                    <a href="{{ asset('storage/' . $p->file_produk) }}" target="_blank"
+                                                        class="btn btn-sm btn-success shadow-sm" title="Download File">
+                                                        <i class="bi bi-download"></i>
+                                                    </a>
 
-                                                <form action="{{ route('pelajar.produk.destroy', $p->id) }}" method="POST"
-                                                    class="d-inline"
-                                                    onsubmit="return confirm('Yakin ingin menghapus produk ini?');">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button class="btn btn-sm btn-danger shadow-sm" title="Hapus Produk">
-                                                        <i class="bi bi-trash3"></i>
-                                                    </button>
-                                                </form>
-                                            </div>
+                                                    @if ($status !== 'selesai')
+                                                        <a href="{{ route('pelajar.produk.edit', $p->id) }}"
+                                                            class="btn btn-sm btn-warning shadow-sm" title="Edit Produk">
+                                                            <i class="bi bi-pencil-square"></i>
+                                                        </a>
+
+                                                        <form action="{{ route('pelajar.produk.destroy', $p->id) }}" method="POST"
+                                                            class="d-inline"
+                                                            onsubmit="return confirm('Yakin ingin menghapus produk ini?');">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button class="btn btn-sm btn-danger shadow-sm" title="Hapus Produk">
+                                                                <i class="bi bi-trash3"></i>
+                                                            </button>
+                                                        </form>
+                                                    @else
+                                                        {{-- Jika selesai magang, sembunyikan tombol edit/hapus --}}
+                                                        <button class="btn btn-sm btn-outline-secondary" disabled title="Tidak dapat mengubah setelah selesai magang">
+                                                            <i class="bi bi-pencil-square"></i>
+                                                        </button>
+                                                        <button class="btn btn-sm btn-outline-secondary" disabled title="Tidak dapat menghapus setelah selesai magang">
+                                                            <i class="bi bi-trash3"></i>
+                                                        </button>
+                                                    @endif
+                                                </div>
                                         </td>
                                     </tr>
                                 @endforeach

@@ -97,20 +97,17 @@
                                     Grafik Jumlah Peserta Aktif per Bulan
                                 </h5>
                             </div>
-                            <form action="{{ route('admin.dashboard') }}" method="GET" class="d-flex">
-                                <select name="tahun" class="form-select border-0 bg-light"
-                                    style="font-size: 0.875rem; padding: 0.5rem 2rem 0.5rem 0.75rem; border-radius: 8px; font-weight: 500; color: #4a5568; cursor: pointer; min-width: 90px;"
-                                    onchange="this.form.submit()">
-                                    @foreach ($daftarTahun as $th)
-                                        <option value="{{ $th }}" {{ $th == $tahun ? 'selected' : '' }}>
-                                            {{ $th }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </form>
+                            <select id="tahunPesertaBulan" class="form-select border-0 bg-light"
+                                style="font-size: 0.875rem; padding: 0.5rem 2rem 0.5rem 0.75rem; border-radius: 8px; font-weight: 500; color: #4a5568; cursor: pointer; min-width: 90px;">
+                                @foreach ($daftarTahun as $th)
+                                    <option value="{{ $th }}" {{ $th == $tahun ? 'selected' : '' }}>
+                                        {{ $th }}
+                                    </option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
-                    <div class="card-body px-4 pb-4 pt-2" style="height: 320px;">
+                    <div class="card-body px-4 pb-4 pt-2" style="height: 320px;" id="containerGrafikPesertaMagang">
                         <canvas id="grafikPesertaMagang"></canvas>
                     </div>
                 </div>
@@ -193,25 +190,22 @@
                                     Grafik Periode Magang Setiap Peserta
                                 </h5>
                             </div>
-                            <form action="{{ route('admin.dashboard') }}" method="GET" class="d-flex">
-                                <select name="tahun" class="form-select border-0 bg-light"
-                                    style="font-size: 0.875rem; padding: 0.5rem 2rem 0.5rem 0.75rem; border-radius: 8px; font-weight: 500; color: #4a5568; cursor: pointer; min-width: 90px;"
-                                    onchange="this.form.submit()">
-                                    @foreach ($daftarTahun as $th)
-                                        <option value="{{ $th }}" {{ $th == $tahun ? 'selected' : '' }}>
-                                            {{ $th }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </form>
+                            <select id="tahunTimeline" class="form-select border-0 bg-light"
+                                style="font-size: 0.875rem; padding: 0.5rem 2rem 0.5rem 0.75rem; border-radius: 8px; font-weight: 500; color: #4a5568; cursor: pointer; min-width: 90px;">
+                                @foreach ($daftarTahun as $th)
+                                    <option value="{{ $th }}" {{ $th == $tahunTimeline ? 'selected' : '' }}>
+                                        {{ $th }}
+                                    </option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
-                    <div class="card-body px-4 pb-4 pt-2" style="height: 400px;">
+                    <div class="card-body px-4 pb-4 pt-2" style="height: 400px;" id="containerTimeline">
                         <canvas id="chartMagangTimeline"></canvas>
                     </div>
-                    {{-- 🔹 Pagination di bawah grafik --}}
-                    <div class="card-footer bg-transparent pt-0 px-4 pb-4">
-                        {{ $dataMagangTimeline->appends(['tahun' => $tahun])->links() }}
+                    {{-- Pagination di bawah grafik --}}
+                    <div class="card-footer bg-transparent pt-0 px-4 pb-4" id="paginationTimeline">
+                        {{ $dataMagangTimeline->links() }}
                     </div>
                 </div>
             </div>
@@ -231,65 +225,97 @@
         }
     </style>
     <script>
-        const ctx3 = document.getElementById('grafikPesertaMagang');
-        new Chart(ctx3, {
-            type: 'bar',
-            data: {
-                labels: @json($dataMagangPerBulan['labels']),
-                datasets: [{
-                    label: 'Jumlah Peserta',
-                    data: @json($dataMagangPerBulan['totals']),
-                    backgroundColor: '#198754',
-                    borderRadius: 6,
-                    borderWidth: 0,
-                    barThickness: 32,
-                    maxBarThickness: 40
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false
-                    }
+        let chartPesertaMagang = null;
+        let chartTimeline = null;
+
+        // Grafik Peserta Magang Per Bulan (Initial Load)
+        function initGrafikPesertaMagang(labels, totals) {
+            const ctx3 = document.getElementById('grafikPesertaMagang');
+            if (chartPesertaMagang) {
+                chartPesertaMagang.destroy();
+            }
+            chartPesertaMagang = new Chart(ctx3, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Jumlah Peserta',
+                        data: totals,
+                        backgroundColor: '#198754',
+                        borderRadius: 6,
+                        borderWidth: 0,
+                        barThickness: 32,
+                        maxBarThickness: 40
+                    }]
                 },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            stepSize: 2
-                        },
-                        grid: {
-                            color: 'rgba(0,0,0,0.05)'
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
                         }
                     },
-                    x: {
-                        grid: {
-                            display: false
-                        },
-                        ticks: {
-                            padding: 8,
-                            font: {
-                                size: 11
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 2
                             },
-                            color: '#64748B',
-                            maxRotation: 0,
-                            minRotation: 0,
-                            autoSkip: false
+                            grid: {
+                                color: 'rgba(0,0,0,0.05)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                padding: 8,
+                                font: {
+                                    size: 11
+                                },
+                                color: '#64748B',
+                                maxRotation: 0,
+                                minRotation: 0,
+                                autoSkip: false
+                            }
+                        }
+                    },
+                    layout: {
+                        padding: {
+                            top: 10
                         }
                     }
-                },
-                layout: {
-                    padding: {
-                        top: 10
-                    }
                 }
-            }
+            });
+        }
+
+        // Initialize dengan data awal
+        initGrafikPesertaMagang(@json($dataMagangPerBulan['labels']), @json($dataMagangPerBulan['totals']));
+
+        // Event listener untuk dropdown tahun peserta per bulan
+        document.getElementById('tahunPesertaBulan').addEventListener('change', function() {
+            const tahun = this.value;
+            const container = document.getElementById('containerGrafikPesertaMagang');
+            container.innerHTML =
+                '<div class="d-flex justify-content-center align-items-center h-100"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>';
+
+            fetch(`/admin/dashboard/grafik-peserta-bulan?tahun=${tahun}`)
+                .then(response => response.json())
+                .then(data => {
+                    container.innerHTML = '<canvas id="grafikPesertaMagang"></canvas>';
+                    initGrafikPesertaMagang(data.labels, data.totals);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    container.innerHTML = '<div class="alert alert-danger">Gagal memuat data</div>';
+                });
         });
 
+        // Grafik Presensi Harian
         (function() {
-            const ctxPresensi = document.getElementById('grafikPresensiHarian').getContext('2d');
+            const ctxPresensi = document.getElementById('grafikPresensiHarian');
             if (ctxPresensi) {
                 const totalPeserta = @json($dataPresensiHarian['totalPeserta'] ?? 0);
                 const sudahPresensi = @json($dataPresensiHarian['sudahPresensi'] ?? 0);
@@ -346,6 +372,7 @@
             }
         })();
 
+        // Grafik Peserta per Instansi
         const ctx = document.getElementById('grafikPeserta');
         new Chart(ctx, {
             type: 'bar',
@@ -377,6 +404,7 @@
             }
         });
 
+        // Grafik Total Peserta per Tahun
         const ctxTahun = document.getElementById('chartMagangTiapTahun').getContext('2d');
         const chartTahun = new Chart(ctxTahun, {
             type: 'line',
@@ -419,107 +447,164 @@
             }
         });
 
-        const ctxTimeline = document.getElementById('chartMagangTimeline').getContext('2d');
-        const dataTimeline = @json($dataMagangTimeline->items());
+        // Fungsi untuk init grafik timeline
+        function initGrafikTimeline(dataTimeline, tahun) {
+            const ctxTimeline = document.getElementById('chartMagangTimeline');
+            if (!ctxTimeline) return;
 
-        // Format data ke bentuk [start, end] untuk setiap peserta
-        const datasetTimeline = dataTimeline.map(item => ({
-            x: [item.rencana_mulai, item.rencana_selesai],
-            y: item.nama
-        }));
+            const datasetTimeline = dataTimeline.map(item => ({
+                x: [item.rencana_mulai, item.rencana_selesai],
+                y: item.nama
+            }));
 
-        // Buat garis vertikal untuk bulan sekarang
-        const today = new Date();
-        const bulanSekarang = today.toISOString().split('T')[0]; // format yyyy-mm-dd
+            const today = new Date();
+            const bulanSekarang = today.toISOString().split('T')[0];
 
-        const chartTimeline = new Chart(ctxTimeline, {
-            type: 'bar',
-            data: {
-                datasets: [{
-                    label: 'Periode Magang',
-                    data: datasetTimeline,
-                    backgroundColor: 'rgba(54, 162, 235, 0.7)',
-                    borderColor: 'rgb(54, 162, 235)',
-                    borderWidth: 1,
-                    borderRadius: 6,
-                    barThickness: 20
-                }]
-            },
-            options: {
-                indexAxis: 'y',
-                responsive: true,
-                maintainAspectRatio: false,
-                scales: {
-                    x: {
-                        type: 'time',
-                        position: 'top', // ini agar label bulan ada di ATAS seperti di gambar
-                        time: {
-                            unit: 'month',
-                            displayFormats: {
-                                month: 'MMM'
+            if (chartTimeline) {
+                chartTimeline.destroy();
+            }
+
+            chartTimeline = new Chart(ctxTimeline, {
+                type: 'bar',
+                data: {
+                    datasets: [{
+                        label: 'Periode Magang',
+                        data: datasetTimeline,
+                        backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                        borderColor: 'rgb(54, 162, 235)',
+                        borderWidth: 1,
+                        borderRadius: 6,
+                        barThickness: 20
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            type: 'time',
+                            position: 'top',
+                            time: {
+                                unit: 'month',
+                                displayFormats: {
+                                    month: 'MMM'
+                                }
+                            },
+                            min: `${tahun}-01-01`,
+                            max: `${tahun}-12-31`,
+                            title: {
+                                display: true,
+                                text: 'Bulan'
+                            },
+                            grid: {
+                                drawOnChartArea: false
                             }
                         },
-                        min: '{{ $tahun }}-01-01',
-                        max: '{{ $tahun }}-12-31',
-                        title: {
-                            display: true,
-                            text: 'Bulan'
-                        },
-                        grid: {
-                            drawOnChartArea: false
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Nama Peserta'
+                            },
+                            grid: {
+                                drawBorder: false
+                            }
                         }
                     },
-                    y: {
-                        title: {
-                            display: true,
-                            text: 'Nama Peserta'
+                    plugins: {
+                        legend: {
+                            display: false
                         },
-                        grid: {
-                            drawBorder: false
-                        }
-                    }
-                },
-                plugins: {
-                    legend: {
-                        display: false
-                    },
-                    annotation: {
-                        annotations: {
-                            garisSekarang: {
-                                type: 'line',
-                                xMin: bulanSekarang,
-                                xMax: bulanSekarang,
-                                borderColor: 'red',
-                                borderWidth: 2,
-                                label: {
-                                    display: true,
-                                    content: 'Sekarang',
-                                    position: 'start'
+                        annotation: {
+                            annotations: {
+                                garisSekarang: {
+                                    type: 'line',
+                                    xMin: bulanSekarang,
+                                    xMax: bulanSekarang,
+                                    borderColor: 'red',
+                                    borderWidth: 2,
+                                    label: {
+                                        display: true,
+                                        content: 'Sekarang',
+                                        position: 'start'
+                                    }
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const [start, end] = context.raw.x;
+                                    const startDate = new Date(start).toLocaleDateString('id-ID', {
+                                        day: '2-digit',
+                                        month: 'short',
+                                        year: 'numeric'
+                                    });
+                                    const endDate = new Date(end).toLocaleDateString('id-ID', {
+                                        day: '2-digit',
+                                        month: 'short',
+                                        year: 'numeric'
+                                    });
+                                    return `${context.raw.y}: ${startDate} - ${endDate}`;
                                 }
                             }
                         }
-                    },
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                const [start, end] = context.raw.x;
-                                const startDate = new Date(start).toLocaleDateString('id-ID', {
-                                    day: '2-digit',
-                                    month: 'short',
-                                    year: 'numeric'
-                                });
-                                const endDate = new Date(end).toLocaleDateString('id-ID', {
-                                    day: '2-digit',
-                                    month: 'short',
-                                    year: 'numeric'
-                                });
-                                return `${context.raw.y}: ${startDate} - ${endDate}`;
-                            }
-                        }
                     }
-                }
-            },
-            plugins: [Chart.registry.getPlugin('annotation')]
+                },
+                plugins: [Chart.registry.getPlugin('annotation')]
+            });
+        }
+
+        // Initialize timeline dengan data awal
+        initGrafikTimeline(@json($dataMagangTimeline->items()), {{ $tahunTimeline }});
+
+        // Event listener untuk dropdown tahun timeline
+        document.getElementById('tahunTimeline').addEventListener('change', function() {
+            const tahun = this.value;
+            const container = document.getElementById('containerTimeline');
+            const paginationContainer = document.getElementById('paginationTimeline');
+
+            container.innerHTML =
+                '<div class="d-flex justify-content-center align-items-center h-100"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>';
+            paginationContainer.innerHTML = '';
+
+            fetch(`{{ route('admin.dashboard.grafik-timeline') }}?tahun=${tahun}`)
+                .then(response => response.json())
+                .then(data => {
+                    container.innerHTML = '<canvas id="chartMagangTimeline"></canvas>';
+                    paginationContainer.innerHTML = data.pagination;
+                    initGrafikTimeline(data.items, tahun);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    container.innerHTML = '<div class="alert alert-danger">Gagal memuat data</div>';
+                });
+        });
+
+        // Handle pagination clicks
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('#paginationTimeline a')) {
+                e.preventDefault();
+                const url = e.target.closest('a').href;
+                const tahun = document.getElementById('tahunTimeline').value;
+                const container = document.getElementById('containerTimeline');
+                const paginationContainer = document.getElementById('paginationTimeline');
+
+                container.innerHTML =
+                    '<div class="d-flex justify-content-center align-items-center h-100"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>';
+
+                fetch(`${url}&ajax=1`)
+                    .then(response => response.json())
+                    .then(data => {
+                        container.innerHTML = '<canvas id="chartMagangTimeline"></canvas>';
+                        paginationContainer.innerHTML = data.pagination;
+                        initGrafikTimeline(data.items, tahun);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        container.innerHTML = '<div class="alert alert-danger">Gagal memuat data</div>';
+                    });
+            }
         });
     </script>
 @endpush

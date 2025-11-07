@@ -11,6 +11,7 @@ use App\Http\Controllers\PresensiController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProdukMagangController;
+use App\Http\Controllers\SertifikatController;
 use App\Http\Controllers\Admin\PengajuanController;
 use App\Http\Controllers\Admin\LaporanAdminController;
 use App\Http\Controllers\Pembimbing\BimbinganController;
@@ -68,11 +69,12 @@ Route::middleware(['auth'])->group(function () {
         // LAPORAN AKHIR
         Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
         Route::get('/laporan/download/{id}', [LaporanController::class, 'download'])->name('laporan.download');
-        Route::get('/admin/sertifikat', [LaporanController::class, 'halamanSertifikat'])->name('admin.sertifikat');
-        Route::post('/admin/laporan/upload-sertifikat/{id}', [LaporanController::class, 'uploadSertifikat'])->name('admin.upload.sertifikat');
 
-        Route::get('/sertifikat', [LaporanController::class, 'adminSertifikat'])->name('sertifikat.index');
-        Route::post('/sertifikat/upload/{id}', [LaporanController::class, 'uploadSertifikat'])->name('sertifikat.upload');
+        Route::get('/sertifikat', [SertifikatController::class, 'index'])
+            ->name('sertifikat.index');
+
+        Route::post('/sertifikat/upload/{id}', [SertifikatController::class, 'upload'])
+            ->name('sertifikat.upload');
 
         // PRODUK MAGANG
         Route::resource('produk', App\Http\Controllers\ProdukMagangController::class)->names([

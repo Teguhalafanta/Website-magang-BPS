@@ -121,18 +121,11 @@
                             </a>
                         </li>
 
-                        <li class="sidebar-item {{ request()->routeIs('pelajar.laporan.index') ? 'active' : '' }}">
-                            <a href="{{ route('pelajar.laporan.index') }}" class="sidebar-link">
-                                <i class="bi bi-file-earmark-text"></i> <!-- icon laporan -->
-                                <span>Laporan Akhir</span>
-                            </a>
-                        </li>
-
                         {{-- FITUR BARU: Upload Sertifikat --}}
                         <li class="sidebar-item {{ request()->routeIs('admin.sertifikat.*') ? 'active' : '' }}">
                             <a href="{{ route('admin.sertifikat.index') }}" class="sidebar-link">
                                 <i class="bi bi-award-fill"></i>
-                                <span>Upload Sertifikat Magang</span>
+                                <span>Laporan dan Sertifikat</span>
                             </a>
                         </li>
 

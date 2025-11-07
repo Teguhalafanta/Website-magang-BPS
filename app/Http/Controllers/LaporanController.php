@@ -49,19 +49,16 @@ class LaporanController extends Controller
             'file_laporan' => 'required|mimes:pdf|max:2048'
         ]);
 
-        // Simpan file
-        $file = $request->file('file_laporan');
-        $namaFile = time() . '_' . $file->getClientOriginalName();
-        $file->move(public_path('uploads/laporan'), $namaFile);
+        $path = $request->file('file_laporan')->store('laporan', 'public');
 
-        // Simpan ke database
         Laporan::updateOrCreate(
             ['user_id' => Auth::id()],
             [
-                'file_laporan' => $namaFile,
+                'file' => $path,
                 'status' => 'menunggu'
             ]
         );
+
 
         return back()->with('success', 'Laporan berhasil diupload!');
     }

@@ -8,6 +8,7 @@ use App\Notifications\NotifikasiBaru;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
 
 class PelajarController extends Controller
 {
@@ -98,6 +99,16 @@ class PelajarController extends Controller
             ->with('user')
             ->latest()
             ->get();
+
+        // 🔹 Cek apakah tanggal selesai sudah lewat, lalu ubah status jadi 'selesai'
+        foreach ($pengajuans as $pengajuan) {
+            if ($pengajuan->rencana_selesai && Carbon::now()->gt(Carbon::parse($pengajuan->rencana_selesai))) {
+                if ($pengajuan->status != 'selesai') {
+                    $pengajuan->status = 'selesai';
+                    $pengajuan->save();
+                }
+            }
+        }
 
         return view('pelajar.daftar_pengajuan', compact('pengajuans'));
     }

@@ -80,9 +80,23 @@ class KegiatanController extends Controller
     public function harian()
     {
         $user = Auth::user();
+        $pelajar = $user->pelajar;
 
-        // PEMBATASAN: Cek apakah magang sudah selesai
-        $isMagangSelesai = $user->pelajar && $user->pelajar->status_magang === 'selesai';
+        // Default: magang belum selesai
+        $isMagangSelesai = false;
+
+        if ($pelajar) {
+            // Ambil tanggal selesai magang
+            $tanggalSelesai = Carbon::parse($pelajar->rencana_selesai);
+
+            // Jika hari ini >= tanggal selesai, ubah otomatis statusnya
+            if (now()->greaterThanOrEqualTo($tanggalSelesai)) {
+                $pelajar->update(['status_magang' => 'selesai']);
+                $isMagangSelesai = true;
+            } elseif ($pelajar->status_magang === 'selesai') {
+                $isMagangSelesai = true;
+            }
+        }
 
         $today = now()->format('Y-m-d');
 
@@ -92,6 +106,7 @@ class KegiatanController extends Controller
 
         return view('kegiatan.harian', compact('kegiatans', 'isMagangSelesai'));
     }
+
 
     public function kegiatanBulanan(Request $request)
     {
@@ -114,12 +129,16 @@ class KegiatanController extends Controller
     public function store(Request $request)
     {
         $user = Auth::user();
-
-        // PEMBATASAN: Cek apakah magang sudah selesai
-        if ($user->pelajar && $user->pelajar->status_magang === 'selesai') {
-            return redirect()->route('pelajar.kegiatan.harian')
-                ->with('error', 'Magang Anda sudah selesai. Tidak dapat menambahkan kegiatan baru.');
+        $pelajar = $user->pelajar;
+        if ($pelajar) {
+            $tanggalSelesai = Carbon::parse($pelajar->rencana_selesai);
+            if (now()->greaterThanOrEqualTo($tanggalSelesai)) {
+                $pelajar->update(['status_magang' => 'selesai']);
+                return redirect()->route('pelajar.kegiatan.harian')
+                    ->with('error', 'Magang Anda sudah selesai. Tidak dapat menambahkan kegiatan baru.');
+            }
         }
+
 
         $validated = $request->validate([
             'tanggal' => 'required|date',

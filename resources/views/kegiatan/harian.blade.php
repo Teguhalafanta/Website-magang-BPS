@@ -6,30 +6,26 @@
         <p>Tanggal: {{ \Carbon\Carbon::now()->format('d-m-Y') }}</p>
 
         {{-- ALERT SUCCESS/ERROR --}}
-        @if(session('success'))
+        @if (session('success'))
             <div class="alert alert-success alert-dismissible fade show">
                 <i class="bi bi-check-circle-fill me-2"></i>{{ session('success') }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         @endif
 
-        @if(session('error'))
+        @if (session('error'))
             <div class="alert alert-danger alert-dismissible fade show">
                 <i class="bi bi-x-circle-fill me-2"></i>{{ session('error') }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         @endif
 
-        {{-- CEK APAKAH MAGANG SUDAH SELESAI --}}
-        @php
-            $isMagangSelesai = isset($isMagangSelesai) ? $isMagangSelesai : (auth()->user()->pelajar && auth()->user()->pelajar->status_magang === 'selesai');
-        @endphp
-        
-        {{-- Tombol tambah kegiatan - HANYA TAMPIL JIKA MAGANG BELUM SELESAI --}}
-        @if(!$isMagangSelesai)
-            <button class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#tambahKegiatanModal">
-                Tambah Kegiatan
-            </button>
+        @if (!$isMagangSelesai)
+            <div class="mb-3 text-start">
+                <a href="{{ route('pelajar.kegiatan.create') }}" class="btn btn-primary">
+                    <i class="fas fa-plus-circle me-1"></i> Tambah Kegiatan
+                </a>
+            </div>
         @endif
 
         <table class="table table-bordered">
@@ -72,9 +68,8 @@
                         </td>
                         <td>
                             {{-- Tombol Detail dengan Modal --}}
-                            <button class="btn btn-sm btn-info" 
-                                    data-bs-toggle="modal" 
-                                    data-bs-target="#detailModal{{ $kegiatan->id }}">
+                            <button class="btn btn-sm btn-info" data-bs-toggle="modal"
+                                data-bs-target="#detailModal{{ $kegiatan->id }}">
                                 <i class="bi bi-eye"></i> Detail
                             </button>
                         </td>
@@ -88,7 +83,8 @@
                                     <h5 class="modal-title">
                                         <i class="bi bi-file-earmark-text"></i> Detail Kegiatan
                                     </h5>
-                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                    <button type="button" class="btn-close btn-close-white"
+                                        data-bs-dismiss="modal"></button>
                                 </div>
                                 <div class="modal-body">
                                     {{-- Status Badge --}}
@@ -113,8 +109,9 @@
                                         <label class="form-label fw-bold text-muted mb-1">
                                             <i class="bi bi-calendar-event text-primary"></i> Tanggal
                                         </label>
-                                        <input type="text" class="form-control" 
-                                               value="{{ \Carbon\Carbon::parse($kegiatan->tanggal)->translatedFormat('d F Y') }}" readonly>
+                                        <input type="text" class="form-control"
+                                            value="{{ \Carbon\Carbon::parse($kegiatan->tanggal)->translatedFormat('d F Y') }}"
+                                            readonly>
                                     </div>
 
                                     {{-- Nama Kegiatan --}}
@@ -122,8 +119,8 @@
                                         <label class="form-label fw-bold text-muted mb-1">
                                             <i class="bi bi-pencil-square text-success"></i> Nama Kegiatan
                                         </label>
-                                        <input type="text" class="form-control" 
-                                               value="{{ $kegiatan->nama_kegiatan }}" readonly>
+                                        <input type="text" class="form-control" value="{{ $kegiatan->nama_kegiatan }}"
+                                            readonly>
                                     </div>
 
                                     {{-- Deskripsi --}}
@@ -140,15 +137,15 @@
                                             <label class="form-label fw-bold text-muted mb-1">
                                                 <i class="bi bi-person-badge text-warning"></i> Pemberi Tugas
                                             </label>
-                                            <input type="text" class="form-control" 
-                                                   value="{{ $kegiatan->pemberi_tugas ?? '-' }}" readonly>
+                                            <input type="text" class="form-control"
+                                                value="{{ $kegiatan->pemberi_tugas ?? '-' }}" readonly>
                                         </div>
                                         <div class="col-6">
                                             <label class="form-label fw-bold text-muted mb-1">
                                                 <i class="bi bi-people-fill text-success"></i> Tim Kerja
                                             </label>
-                                            <input type="text" class="form-control" 
-                                                   value="{{ $kegiatan->tim_kerja ?? '-' }}" readonly>
+                                            <input type="text" class="form-control"
+                                                value="{{ $kegiatan->tim_kerja ?? '-' }}" readonly>
                                         </div>
                                     </div>
 
@@ -157,13 +154,12 @@
                                         <label class="form-label fw-bold text-muted mb-1">
                                             <i class="bi bi-paperclip text-primary"></i> Bukti Dukung
                                         </label>
-                                        @if($kegiatan->bukti_dukung)
+                                        @if ($kegiatan->bukti_dukung)
                                             <div class="input-group">
-                                                <input type="text" class="form-control" 
-                                                       value="{{ basename($kegiatan->bukti_dukung) }}" readonly>
-                                                <a href="{{ asset('storage/' . $kegiatan->bukti_dukung) }}" 
-                                                   target="_blank" 
-                                                   class="btn btn-primary btn-sm">
+                                                <input type="text" class="form-control"
+                                                    value="{{ basename($kegiatan->bukti_dukung) }}" readonly>
+                                                <a href="{{ asset('storage/' . $kegiatan->bukti_dukung) }}" target="_blank"
+                                                    class="btn btn-primary btn-sm">
                                                     <i class="bi bi-download"></i>
                                                 </a>
                                             </div>
@@ -183,8 +179,9 @@
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                                         <i class="bi bi-x-circle"></i> Tutup
                                     </button>
-                                    @if(!$isMagangSelesai)
-                                        <a href="{{ route('pelajar.kegiatan.edit', $kegiatan->id) }}" class="btn btn-warning">
+                                    @if (!$isMagangSelesai)
+                                        <a href="{{ route('pelajar.kegiatan.edit', $kegiatan->id) }}"
+                                            class="btn btn-warning">
                                             <i class="bi bi-pencil-square"></i> Edit
                                         </a>
                                     @endif
@@ -204,79 +201,84 @@
     </div>
 
     {{-- Modal Tambah Kegiatan - HANYA RENDER JIKA MAGANG BELUM SELESAI --}}
-    @if(!$isMagangSelesai)
-    <div class="modal fade" id="tambahKegiatanModal" tabindex="-1" aria-labelledby="tambahKegiatanModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <form action="{{ route('pelajar.kegiatan.store') }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                <div class="modal-content">
-                    <div class="modal-header bg-primary text-white">
-                        <h5 class="modal-title" id="tambahKegiatanModalLabel">
-                            <i class="bi bi-plus-circle"></i> Tambah Kegiatan Baru
-                        </h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="tanggal" class="form-label">Tanggal <span class="text-danger">*</span></label>
-                            <input type="date" class="form-control" id="tanggal" name="tanggal"
-                                value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}" required>
+    @if (!$isMagangSelesai)
+        <div class="modal fade" id="tambahKegiatanModal" tabindex="-1" aria-labelledby="tambahKegiatanModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <form action="{{ route('pelajar.kegiatan.store') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="modal-content">
+                        <div class="modal-header bg-primary text-white">
+                            <h5 class="modal-title" id="tambahKegiatanModalLabel">
+                                <i class="bi bi-plus-circle"></i> Tambah Kegiatan Baru
+                            </h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                         </div>
-
-                        <div class="mb-3">
-                            <label for="nama_kegiatan" class="form-label">Nama Kegiatan <span class="text-danger">*</span></label>
-                            <input type="text" class="form-control" id="nama_kegiatan" name="nama_kegiatan" 
-                                   placeholder="Contoh: Membuat laporan bulanan" required>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="deskripsi" class="form-label">Deskripsi <span class="text-danger">*</span></label>
-                            <textarea class="form-control" id="deskripsi" name="deskripsi" rows="3" 
-                                      placeholder="Detail kegiatan yang dilakukan" required></textarea>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-6 mb-3">
-                                <label for="pemberi_tugas" class="form-label">Pemberi Tugas</label>
-                                <input type="text" class="form-control" id="pemberi_tugas" name="pemberi_tugas"
-                                       placeholder="Nama pemberi tugas">
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="tanggal" class="form-label">Tanggal <span
+                                        class="text-danger">*</span></label>
+                                <input type="date" class="form-control" id="tanggal" name="tanggal"
+                                    value="{{ \Carbon\Carbon::now()->format('Y-m-d') }}" required>
                             </div>
-                            <div class="col-6 mb-3">
-                                <label for="tim_kerja" class="form-label">Tim Kerja</label>
-                                <input type="text" class="form-control" id="tim_kerja" name="tim_kerja"
-                                       placeholder="Nama tim">
+
+                            <div class="mb-3">
+                                <label for="nama_kegiatan" class="form-label">Nama Kegiatan <span
+                                        class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="nama_kegiatan" name="nama_kegiatan"
+                                    placeholder="Contoh: Membuat laporan bulanan" required>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="deskripsi" class="form-label">Deskripsi <span
+                                        class="text-danger">*</span></label>
+                                <textarea class="form-control" id="deskripsi" name="deskripsi" rows="3"
+                                    placeholder="Detail kegiatan yang dilakukan" required></textarea>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-6 mb-3">
+                                    <label for="pemberi_tugas" class="form-label">Pemberi Tugas</label>
+                                    <input type="text" class="form-control" id="pemberi_tugas" name="pemberi_tugas"
+                                        placeholder="Nama pemberi tugas">
+                                </div>
+                                <div class="col-6 mb-3">
+                                    <label for="tim_kerja" class="form-label">Tim Kerja</label>
+                                    <input type="text" class="form-control" id="tim_kerja" name="tim_kerja"
+                                        placeholder="Nama tim">
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="status" class="form-label">Status Penyelesaian <span
+                                        class="text-danger">*</span></label>
+                                <select class="form-select" id="status" name="status" required>
+                                    <option value="Belum Dimulai">Belum Dimulai</option>
+                                    <option value="Dalam Proses">Dalam Proses</option>
+                                    <option value="Selesai">Selesai</option>
+                                </select>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Bukti Dukung (Opsional)</label>
+                                <input type="file" name="bukti_dukung" class="form-control"
+                                    accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+                                <small class="text-muted">Format: PDF, DOC, DOCX, JPG, JPEG, PNG (Max: 2MB)</small>
                             </div>
                         </div>
 
-                        <div class="mb-3">
-                            <label for="status" class="form-label">Status Penyelesaian <span class="text-danger">*</span></label>
-                            <select class="form-select" id="status" name="status" required>
-                                <option value="Belum Dimulai">Belum Dimulai</option>
-                                <option value="Dalam Proses">Dalam Proses</option>
-                                <option value="Selesai">Selesai</option>
-                            </select>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Bukti Dukung (Opsional)</label>
-                            <input type="file" name="bukti_dukung" class="form-control" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
-                            <small class="text-muted">Format: PDF, DOC, DOCX, JPG, JPEG, PNG (Max: 2MB)</small>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                <i class="bi bi-x-circle"></i> Batal
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-save"></i> Simpan Kegiatan
+                            </button>
                         </div>
                     </div>
-
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                            <i class="bi bi-x-circle"></i> Batal
-                        </button>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="bi bi-save"></i> Simpan Kegiatan
-                        </button>
-                    </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
-    </div>
     @endif
 
     {{-- Custom CSS --}}

@@ -19,9 +19,15 @@
 
         {{-- LOGIKA PRESENSI --}}
         @php
-            $pelajarPresensi = auth()->user()->pelajar->presensis ?? collect([]);
+
+            $pelajar = auth()->user()->pelajar;
+            $pelajarPresensi = $pelajar->presensis ?? collect([]);
             $hariIni = now()->toDateString();
             $presensiHariIni = $pelajarPresensi->where('tanggal', $hariIni)->first();
+
+            // Tambahkan logika selesai magang
+            $tanggalSelesai = \Carbon\Carbon::parse($pelajar->rencana_selesai ?? now());
+            $magangSelesai = now()->gt($tanggalSelesai); // true jika sudah lewat tanggal selesai
         @endphp
 
         {{-- CARD PRESENSI DENGAN TOMBOL TAP --}}
@@ -32,9 +38,17 @@
                     <p class="mb-2">Waktu Sekarang: <strong id="jamSekarang" class="fs-5 text-primary"></strong></p>
                 </div>
 
-                {{-- JIKA MAGANG MASIH AKTIF - TAMPILKAN TOMBOL PRESENSI --}}
-                @if (!$presensiHariIni)
-                    {{-- Belum ada presensi hari ini --}}
+                {{-- CEK JIKA SUDAH SELESAI MAGANG --}}
+                @if ($magangSelesai)
+                    {{-- Magang selesai → tampilkan pesan --}}
+                    <div class="alert alert-secondary text-center p-4">
+                        <i class="bi bi-check-circle-fill fs-3 mb-2"></i>
+                        <h5 class="fw-bold mb-2">Magang Telah Selesai</h5>
+                        <p class="mb-0">Anda tidak dapat melakukan presensi lagi, tetapi masih bisa melihat riwayat
+                            presensi Anda.</p>
+                    </div>
+                @elseif (!$presensiHariIni)
+                    {{-- Belum absen sama sekali hari ini --}}
                     <div class="d-flex justify-content-center gap-3 mb-3">
                         <button type="button" id="btnTapMasuk"
                             class="btn-tap btn-tap-masuk d-flex flex-column align-items-center justify-content-center"
@@ -43,6 +57,7 @@
                             <span>Absen Masuk</span>
                         </button>
                     </div>
+
                     <form id="formMasuk" action="{{ route('pelajar.presensi.store') }}" method="POST" class="d-none">
                         @csrf
                         <input type="hidden" name="jam_client" id="jamMasukInput">
@@ -132,32 +147,26 @@
 
         {{-- LOGIKA GENERATE TANGGAL --}}
         @php
-            use Carbon\Carbon;
 
             $pelajar = auth()->user()->pelajar;
-            $mulai = Carbon::parse($pelajar->rencana_mulai ?? now());
-            $selesai = Carbon::parse($pelajar->rencana_selesai ?? now());
+            $mulai = \Carbon\Carbon::parse($pelajar->rencana_mulai ?? now());
+            $selesai = \Carbon\Carbon::parse($pelajar->rencana_selesai ?? now());
 
             $bulanDipilih = request('bulan', now()->format('Y-m'));
             $tahun = (int) substr($bulanDipilih, 0, 4);
             $bulan = (int) substr($bulanDipilih, 5, 2);
 
             $jumlahHari = cal_days_in_month(CAL_GREGORIAN, $bulan, $tahun);
-
             $semuaTanggal = [];
 
             for ($i = 1; $i <= $jumlahHari; $i++) {
-                $tanggal = Carbon::createFromDate($tahun, $bulan, $i);
-
-                // hanya tampilkan tanggal antara tanggal mulai & selesai magang
+                $tanggal = \Carbon\Carbon::createFromDate($tahun, $bulan, $i);
                 if ($tanggal->lt($mulai) || $tanggal->gt($selesai)) {
                     continue;
                 }
-
                 $semuaTanggal[] = $tanggal->format('Y-m-d');
             }
 
-            // mapping data presensi berdasarkan tanggal
             $presensiMap = $pelajarPresensi->keyBy('tanggal');
         @endphp
 
@@ -517,7 +526,7 @@
 
             if (confirm(
                     `Update Presensi Pulang\n\nWaktu baru: ${currentTime}\n\n⚠️ Waktu pulang sebelumnya akan diganti dengan waktu ini.\n\nLanjutkan?`
-                    )) {
+                )) {
                 document.getElementById('jamPulangInput').value = currentTime;
                 document.getElementById('formPulang').submit();
             }

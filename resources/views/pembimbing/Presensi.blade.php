@@ -329,6 +329,9 @@
                 }
             });
 
+            // Base URL untuk rute presensi pembimbing (pastikan prefix pembimbing digunakan)
+            const pembimbingPresensiBase = "{{ url('pembimbing/presensi') }}";
+
             const table = $('#presensiTable').DataTable({
                 paging: true,
                 searching: true,
@@ -392,9 +395,9 @@
                 $('.invalid-feedback').hide().text('');
                 $('.is-invalid').removeClass('is-invalid');
 
-                // Load data presensi via AJAX
+                // Load data presensi via AJAX (gunakan prefix pembimbing)
                 $.ajax({
-                    url: `/presensi/${presensiId}/data`,
+                    url: `${pembimbingPresensiBase}/${presensiId}/data`,
                     type: 'GET',
                     success: function(response) {
                         console.log('Data loaded:', response); // Debug
@@ -454,9 +457,9 @@
                 $(this).prop('disabled', true).html(
                     '<i class="fas fa-spinner fa-spin me-1"></i> Menyimpan...');
 
-                // Kirim data via AJAX
+                // Kirim data via AJAX (gunakan prefix pembimbing)
                 $.ajax({
-                    url: `/presensi/${presensiId}/update`,
+                    url: `${pembimbingPresensiBase}/${presensiId}/update`,
                     type: 'POST', // Gunakan POST
                     data: {
                         _method: 'PUT', // Method spoofing untuk PUT

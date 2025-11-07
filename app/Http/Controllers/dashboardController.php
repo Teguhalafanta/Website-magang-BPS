@@ -33,6 +33,7 @@ class DashboardController extends Controller
         $jumlahKegiatan = Kegiatan::count();
 
         $tahun = $request->get('tahun', date('Y'));
+        $tahunTimeline = $request->get('tahun_timeline', date('Y'));
 
         // --- DAFTAR TAHUN ---
         $daftarTahun = collect();
@@ -54,37 +55,7 @@ class DashboardController extends Controller
         $daftarTahun = $daftarTahun->unique()->sortDesc()->values();
 
         // --- GRAFIK JUMLAH PESERTA AKTIF PER BULAN ---
-        $data = [];
-        $bulan = [
-            1 => 'Januari',
-            2 => 'Februari',
-            3 => 'Maret',
-            4 => 'April',
-            5 => 'Mei',
-            6 => 'Juni',
-            7 => 'Juli',
-            8 => 'Agustus',
-            9 => 'September',
-            10 => 'Oktober',
-            11 => 'November',
-            12 => 'Desember'
-        ];
-
-        $dataMagangPerBulan = ['labels' => [], 'totals' => []];
-
-        foreach ($bulan as $i => $namaBulan) {
-            $awalBulan = Carbon::createFromDate($tahun, $i, 1)->startOfMonth();
-            $akhirBulan = Carbon::createFromDate($tahun, $i, 1)->endOfMonth();
-
-            // Hitung peserta yang masih aktif di bulan itu
-            $jumlah = Pelajar::where('status', 'disetujui')
-                ->whereDate('rencana_mulai', '<=', $akhirBulan)
-                ->whereDate('rencana_selesai', '>=', $awalBulan)
-                ->count();
-
-            $dataMagangPerBulan['labels'][] = $namaBulan;
-            $dataMagangPerBulan['totals'][] = $jumlah;
-        }
+        $dataMagangPerBulan = $this->getDataPesertaPerBulan($tahun);
 
         // --- GRAFIK PRESENSI HARIAN (DOUGHNUT) ---
         $hariIni = Carbon::today();
@@ -143,9 +114,9 @@ class DashboardController extends Controller
 
         // --- GRAFIK TIMELINE PESERTA MAGANG (PERIODE MULAI - SELESAI) ---
         $dataMagangTimeline = Pelajar::whereIn('status', ['disetujui', 'selesai'])
-            ->where(function ($query) use ($tahun) {
-                $query->whereYear('rencana_mulai', '<=', $tahun)
-                    ->whereYear('rencana_selesai', '>=', $tahun);
+            ->where(function ($query) use ($tahunTimeline) {
+                $query->whereYear('rencana_mulai', '<=', $tahunTimeline)
+                    ->whereYear('rencana_selesai', '>=', $tahunTimeline);
             })
             ->select('nama', 'rencana_mulai', 'rencana_selesai')
             ->orderBy('rencana_mulai', 'asc')
@@ -158,11 +129,79 @@ class DashboardController extends Controller
             'dataMagangPerBulan',
             'daftarTahun',
             'tahun',
+            'tahunTimeline',
             'dataPresensiHarian',
             'instansi',
             'grafikMagangPerTahun',
             'dataMagangTimeline'
         ));
+    }
+
+    // Method untuk AJAX - Grafik Peserta Per Bulan
+    public function getGrafikPesertaBulan(Request $request)
+    {
+        $tahun = $request->get('tahun', date('Y'));
+        $data = $this->getDataPesertaPerBulan($tahun);
+
+        return response()->json($data);
+    }
+
+    // Method untuk AJAX - Grafik Timeline
+    public function getGrafikTimeline(Request $request)
+    {
+        $tahun = $request->get('tahun', date('Y'));
+        $page = $request->get('page', 1);
+
+        $dataMagangTimeline = Pelajar::whereIn('status', ['disetujui', 'selesai'])
+            ->where(function ($query) use ($tahun) {
+                $query->whereYear('rencana_mulai', '<=', $tahun)
+                    ->whereYear('rencana_selesai', '>=', $tahun);
+            })
+            ->select('nama', 'rencana_mulai', 'rencana_selesai')
+            ->orderBy('rencana_mulai', 'asc')
+            ->paginate(10);
+
+        return response()->json([
+            'items' => $dataMagangTimeline->items(),
+            'pagination' => $dataMagangTimeline->appends(['tahun' => $tahun])->links()->render()
+        ]);
+    }
+
+    // Helper method untuk mendapatkan data peserta per bulan
+    private function getDataPesertaPerBulan($tahun)
+    {
+        $bulan = [
+            1 => 'Januari',
+            2 => 'Februari',
+            3 => 'Maret',
+            4 => 'April',
+            5 => 'Mei',
+            6 => 'Juni',
+            7 => 'Juli',
+            8 => 'Agustus',
+            9 => 'September',
+            10 => 'Oktober',
+            11 => 'November',
+            12 => 'Desember'
+        ];
+
+        $dataMagangPerBulan = ['labels' => [], 'totals' => []];
+
+        foreach ($bulan as $i => $namaBulan) {
+            $awalBulan = Carbon::createFromDate($tahun, $i, 1)->startOfMonth();
+            $akhirBulan = Carbon::createFromDate($tahun, $i, 1)->endOfMonth();
+
+            // Hitung peserta yang masih aktif di bulan itu
+            $jumlah = Pelajar::where('status', 'disetujui')
+                ->whereDate('rencana_mulai', '<=', $akhirBulan)
+                ->whereDate('rencana_selesai', '>=', $awalBulan)
+                ->count();
+
+            $dataMagangPerBulan['labels'][] = $namaBulan;
+            $dataMagangPerBulan['totals'][] = $jumlah;
+        }
+
+        return $dataMagangPerBulan;
     }
 
     public function pelajar()

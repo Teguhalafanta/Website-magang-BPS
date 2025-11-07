@@ -83,6 +83,14 @@ Route::middleware(['auth'])->group(function () {
             'update' => 'produk.update',
             'destroy' => 'produk.destroy'
         ]);
+
+        // Route AJAX untuk grafik peserta per bulan
+        Route::get('/dashboard/grafik-peserta-bulan', [DashboardController::class, 'getGrafikPesertaBulan'])
+            ->name('dashboard.grafik-peserta-bulan');
+
+        // Route AJAX untuk grafik timeline
+        Route::get('/dashboard/grafik-timeline', [DashboardController::class, 'getGrafikTimeline'])
+            ->name('dashboard.grafik-timeline');
     });
 
     // -------- PEMBIMBING --------

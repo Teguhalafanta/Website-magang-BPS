@@ -104,7 +104,7 @@
                 <div class="glass-card p-4 text-center">
                     <i class="fas fa-info-circle fa-3x text-primary mb-3"></i>
                     <p class="fw-semibold">Kamu belum mengunggah laporan akhir.</p>
-                    <a href="{{ route('pelajar.laporan.create') }}" class="btn btn-primary">
+                    <a href="{{ route('pelajar.laporan.index') }}" class="btn btn-primary">
                         <i class="fas fa-upload"></i> Upload Laporan Sekarang
                     </a>
                 </div>

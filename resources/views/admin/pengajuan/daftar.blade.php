@@ -75,7 +75,7 @@
                                     <th class="ps-4" style="width: 4%;">No</th>
                                     <th style="width: 20%;">Nama</th>
                                     <th style="width: 23%;">Asal Institusi</th>
-                                    <th style="width: 18%;" class="text-center">Rentang Pengajuan</th>
+                                    <th style="width: 18%;" class="text-center">Tanggal Pengajuan</th>
                                     <th style="width: 10%;" class="text-center">Status</th>
                                     <th style="width: 13%;" class="text-center">Aksi</th>
                                 </tr>
@@ -105,14 +105,9 @@
                                             <small class="text-muted">{{ $p->jurusan }}</small>
                                         </td>
                                         <td class="text-center">
-                                            @if ($p->rencana_mulai && $p->rencana_selesai)
-                                                {{ \Carbon\Carbon::parse($p->rencana_mulai)->format('d/m/Y') }}
-                                                -
-                                                {{ \Carbon\Carbon::parse($p->rencana_selesai)->format('d/m/Y') }}
-                                            @else
-                                                <span class="text-muted">Belum diisi</span>
-                                            @endif
+                                            {{ \Carbon\Carbon::parse($p->created_at)->format('d/m/Y') }}
                                         </td>
+
                                         <td class="text-center">
                                             @if ($p->status == 'diajukan')
                                                 <span class="badge bg-primary">Diajukan</span>

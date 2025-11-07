@@ -13,11 +13,11 @@ class Laporan extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class);
     }
 
     public function pelajar()
     {
-        return $this->belongsTo(Pelajar::class, 'user_id', 'user_id');
+        return $this->belongsTo(Pelajar::class, 'pelajar_id');
     }
 }

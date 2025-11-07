@@ -32,7 +32,7 @@
                         @forelse ($laporans as $index => $laporan)
                             <tr>
                                 <td>{{ $index + 1 }}</td>
-                                <td>{{ $laporan->user->name }}</td>
+                                <td>{{ $laporan->user->pelajar->nama }}</td>
 
                                 <td>
                                     @if ($laporan->status == 'menunggu')
@@ -46,7 +46,7 @@
 
                                 <td>
                                     <button class="btn btn-outline-primary btn-sm"
-                                        onclick="tampilLaporan('{{ asset('storage/' . $laporan->file_laporan) }}')">
+                                        onclick="tampilLaporan('{{ asset('uploads/laporan/' . $laporan->file) }}')">
                                         Lihat Laporan
                                     </button>
                                 </td>

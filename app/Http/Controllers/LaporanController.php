@@ -38,44 +38,43 @@ class LaporanController extends Controller
         abort(403, 'Akses tidak diizinkan.');
     }
 
-    // Upload laporan (hanya pelajar)
-    public function store(Request $request)
+    public function create()
+    {
+        return view('pelajar.laporan.upload');
+    }
+
+    public function upload(Request $request)
     {
         $request->validate([
-            'file' => 'required|mimes:pdf,doc,docx|max:5120',
+            'file_laporan' => 'required|mimes:pdf|max:2048'
         ]);
 
-        $user = Auth::user();
+        // Simpan file
+        $file = $request->file('file_laporan');
+        $namaFile = time() . '_' . $file->getClientOriginalName();
+        $file->move(public_path('uploads/laporan'), $namaFile);
 
-        if ($user->role !== 'pelajar') {
-            abort(403, 'Hanya pelajar yang dapat mengunggah laporan.');
-        }
+        // Simpan ke database
+        Laporan::updateOrCreate(
+            ['user_id' => Auth::id()],
+            [
+                'file_laporan' => $namaFile,
+                'status' => 'menunggu'
+            ]
+        );
 
-        // Hapus laporan lama jika ada
-        $old = Laporan::where('user_id', $user->id)->first();
-        if ($old) {
-            Storage::disk('public')->delete($old->file);
-            $old->delete();
-        }
-
-        // Simpan laporan baru
-        $path = $request->file('file')->store('laporan', 'public');
-
-        Laporan::create([
-            'user_id' => $user->id,
-            'file' => $path,
-            'status' => 'menunggu',
-        ]);
-
-        return redirect()->back()->with('success', 'Laporan berhasil diunggah!');
+        return back()->with('success', 'Laporan berhasil diupload!');
     }
+
+
+
     // Pembimbing menyetujui laporan
     public function setujui($id)
     {
         $laporan = Laporan::findOrFail($id);
 
         // hanya pembimbing pemilik yg boleh setujui
-        if (Auth::user()->id !== $laporan->user->pembimbing_id) {
+        if (Auth::user()->id == $laporan->user->pembimbing_id) {
             abort(403, 'Tidak berwenang menyetujui laporan ini.');
         }
 
@@ -91,7 +90,7 @@ class LaporanController extends Controller
     {
         $laporan = Laporan::findOrFail($id);
 
-        if (Auth::user()->id !== $laporan->user->pembimbing_id) {
+        if (Auth::user()->id == $laporan->user->pembimbing_id) {
             abort(403, 'Tidak berwenang menolak laporan ini.');
         }
 
@@ -180,12 +179,12 @@ class LaporanController extends Controller
 
         return response()->download($filePath);
     }
-    
+
     public function downloadLaporan($id)
     {
         $laporan = \App\Models\Laporan::findOrFail($id);
 
-        return response()->download(storage_path('app/' . $laporan->file));
+        return response()->download(storage_path('app/' . $laporan->file_laporan));
     }
 
     // Download laporan (admin & pembimbing bisa semua, pelajar hanya miliknya)
@@ -207,7 +206,7 @@ class LaporanController extends Controller
 
         // Admin tidak dibatasi
 
-        $filePath = storage_path('app/public/' . $laporan->file);
+        $filePath = storage_path('app/public/' . $laporan->file_laporan);
         if (!file_exists($filePath)) {
             abort(404, 'File tidak ditemukan.');
         }

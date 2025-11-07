@@ -160,15 +160,12 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/presensi/{id}', [PresensiController::class, 'update'])->name('presensi.update');
 
         Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
-        Route::post('/laporan/upload', [LaporanController::class, 'store'])->name('laporan.store');
-        Route::get('/pelajar/laporan/upload', [LaporanController::class, 'create'])
-            ->name('pelajar.laporan.index')
-            ->middleware(['auth', 'role:pelajar']);
 
-        Route::post('/pelajar/laporan/upload', [LaporanController::class, 'store'])
-            ->name('pelajar.laporan.store')
-            ->middleware(['auth', 'role:pelajar']);
-        Route::post('/laporan/upload', [LaporanController::class, 'upload'])->name('laporan.upload');
+        Route::get('/laporan/upload', [LaporanController::class, 'create'])
+            ->name('laporan.create');
+
+        Route::post('/laporan/upload', [LaporanController::class, 'upload'])
+            ->name('laporan.store');
 
         // ✅ Route download laporan (tambahkan ini)
         Route::get('/laporan/download/{id}', [LaporanController::class, 'download'])->name('laporan.download');

@@ -98,6 +98,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/kegiatan', [KegiatanController::class, 'index'])->name('kegiatan');
 
         // Presensi
+        Route::put('/presensi/{id}/update', [PresensiController::class, 'updatePresensi']);
+        Route::resource('presensi', PresensiController::class);
+        Route::get('/presensi/{id}/data', [PresensiController::class, 'getPresensiData']);
         Route::get('/presensi', [PresensiController::class, 'index'])->name('presensi');
 
         // Penilaian

@@ -115,8 +115,9 @@
                             </tr>
                         </thead>
                         <tbody>
+                            
                             @forelse ($presensis as $index => $presensi)
-                                <tr class="border-bottom">
+                                <tr class="border-bottom" id="row-{{ $presensi->id }}">
                                     <td class="text-center px-3">
                                         <span class="badge bg-light text-dark rounded-circle p-2"
                                             style="width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center;">
@@ -154,6 +155,7 @@
                                                 'izin' => 'warning',
                                                 'sakit' => 'info',
                                                 'alpha' => 'danger',
+                                                'terlambat' => 'secondary',
                                                 default => 'secondary',
                                             };
                                             $statusIcon = match (strtolower($presensi->status)) {
@@ -161,16 +163,26 @@
                                                 'izin' => 'exclamation',
                                                 'sakit' => 'notes-medical',
                                                 'alpha' => 'times',
+                                                'terlambat' => 'clock',
                                                 default => 'question',
                                             };
                                         @endphp
-                                        <span class="badge bg-{{ $statusClass }} px-3 py-2">
+                                        <span class="badge bg-{{ $statusClass }} px-3 py-2"
+                                            id="badge-{{ $presensi->id }}">
                                             <i class="fas fa-{{ $statusIcon }} me-1"></i>
                                             {{ ucfirst($presensi->status) }}
                                         </span>
                                     </td>
+                                    <td class="text-center px-3">
+                                        <button type="button" class="btn btn-sm btn-primary btn-edit-presensi"
+                                            data-id="{{ $presensi->id }}" data-bs-toggle="modal"
+                                            data-bs-target="#editPresensiModal">
+                                            <i class="fas fa-edit me-1"></i> Edit
+                                        </button>
+                                    </td>
                                     <td class="px-4">
-                                        <span class="text-dark">{{ $presensi->keterangan ?? '-' }}</span>
+                                        <span class="text-dark"
+                                            id="keterangan-{{ $presensi->id }}">{{ $presensi->keterangan ?? '-' }}</span>
                                     </td>
                                 </tr>
                             @empty
@@ -206,11 +218,117 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal Edit Presensi -->
+    <div class="modal fade" id="editPresensiModal" tabindex="-1" aria-labelledby="editPresensiModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <h5 class="modal-title text-white" id="editPresensiModalLabel">
+                        <i class="fas fa-edit me-2"></i>Edit Presensi
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editPresensiForm">
+                        @csrf
+                        @method('PUT')
+                        <input type="hidden" id="presensi_id">
+
+                        <!-- Info Pelajar -->
+                        <div class="alert alert-info">
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fas fa-user me-2"></i>
+                                <strong>Informasi Pelajar</strong>
+                            </div>
+                            <p class="mb-1 fw-bold" id="modal_pelajar_nama"></p>
+                            <small class="text-muted">
+                                <i class="far fa-calendar me-1"></i>
+                                <span id="modal_tanggal"></span>
+                            </small>
+                        </div>
+
+                        <!-- Status Presensi -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">
+                                Status Presensi <span class="text-danger">*</span>
+                            </label>
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <input type="radio" class="btn-check" name="status" id="status_hadir"
+                                        value="Hadir">
+                                    <label class="btn btn-outline-success w-100" for="status_hadir">
+                                        <i class="fas fa-check-circle me-1"></i> Hadir
+                                    </label>
+                                </div>
+                                <div class="col-6">
+                                    <input type="radio" class="btn-check" name="status" id="status_izin"
+                                        value="Izin">
+                                    <label class="btn btn-outline-warning w-100" for="status_izin">
+                                        <i class="fas fa-exclamation-circle me-1"></i> Izin
+                                    </label>
+                                </div>
+                                <div class="col-6">
+                                    <input type="radio" class="btn-check" name="status" id="status_sakit"
+                                        value="Sakit">
+                                    <label class="btn btn-outline-info w-100" for="status_sakit">
+                                        <i class="fas fa-notes-medical me-1"></i> Sakit
+                                    </label>
+                                </div>
+                                <div class="col-6">
+                                    <input type="radio" class="btn-check" name="status" id="status_alpha"
+                                        value="Alpha">
+                                    <label class="btn btn-outline-danger w-100" for="status_alpha">
+                                        <i class="fas fa-times-circle me-1"></i> Alpha
+                                    </label>
+                                </div>
+                                <div class="col-12">
+                                    <input type="radio" class="btn-check" name="status" id="status_terlambat"
+                                        value="Terlambat">
+                                    <label class="btn btn-outline-secondary w-100" for="status_terlambat">
+                                        <i class="fas fa-clock me-1"></i> Terlambat
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="invalid-feedback d-block" id="error_status"></div>
+                        </div>
+
+                        <!-- Keterangan -->
+                        <div class="mb-3">
+                            <label for="keterangan" class="form-label fw-bold">
+                                Keterangan (Opsional)
+                            </label>
+                            <textarea class="form-control" id="keterangan" name="keterangan" rows="3"
+                                placeholder="Tambahkan keterangan jika diperlukan..."></textarea>
+                            <div class="invalid-feedback" id="error_keterangan"></div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i> Batal
+                    </button>
+                    <button type="button" class="btn btn-primary" id="btnSimpanPresensi">
+                        <i class="fas fa-save me-1"></i> Simpan Perubahan
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @push('scripts')
     <script>
         $(document).ready(function() {
+            // Setup CSRF token untuk semua AJAX request
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
             const table = $('#presensiTable').DataTable({
                 paging: true,
                 searching: true,
@@ -259,6 +377,202 @@
                 'Menampilkan ' + (info.start + 1) + ' sampai ' + info.end + ' dari ' + info.recordsTotal +
                 ' data'
             );
+
+            // ============ EDIT PRESENSI FUNCTIONALITY ============
+
+            // Buka modal dan load data presensi
+            $(document).on('click', '.btn-edit-presensi', function() {
+                const presensiId = $(this).data('id');
+                $('#presensi_id').val(presensiId);
+
+                console.log('Edit presensi ID:', presensiId); // Debug
+
+                // Reset form dan error messages
+                $('#editPresensiForm')[0].reset();
+                $('.invalid-feedback').hide().text('');
+                $('.is-invalid').removeClass('is-invalid');
+
+                // Load data presensi via AJAX
+                $.ajax({
+                    url: `/presensi/${presensiId}/data`,
+                    type: 'GET',
+                    success: function(response) {
+                        console.log('Data loaded:', response); // Debug
+
+                        if (response.success) {
+                            const data = response.data;
+
+                            // Isi informasi pelajar
+                            $('#modal_pelajar_nama').text(data.pelajar_nama);
+                            $('#modal_tanggal').text(data.tanggal);
+
+                            // Set status radio button
+                            $(`input[name="status"][value="${data.status}"]`).prop('checked',
+                                true);
+
+                            // Set keterangan
+                            $('#keterangan').val(data.keterangan === '-' ? '' : data
+                            .keterangan);
+
+                            // Enable tombol simpan
+                            $('#btnSimpanPresensi').prop('disabled', false).html(
+                                '<i class="fas fa-save me-1"></i> Simpan Perubahan');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error loading data:', xhr.responseText); // Debug
+                        alert('Gagal memuat data presensi');
+                    }
+                });
+            });
+
+            // Simpan perubahan presensi
+            $('#btnSimpanPresensi').on('click', function(e) {
+                e.preventDefault();
+
+                const presensiId = $('#presensi_id').val();
+                const status = $('input[name="status"]:checked').val();
+                const keterangan = $('#keterangan').val();
+
+                console.log('Saving presensi:', {
+                    presensiId,
+                    status,
+                    keterangan
+                }); // Debug
+
+                // Validasi
+                if (!status) {
+                    $('#error_status').show().text('Status presensi wajib dipilih');
+                    return;
+                }
+
+                // Reset error messages
+                $('.invalid-feedback').hide().text('');
+                $('.is-invalid').removeClass('is-invalid');
+
+                // Disable tombol dan tampilkan loading
+                $(this).prop('disabled', true).html(
+                    '<i class="fas fa-spinner fa-spin me-1"></i> Menyimpan...');
+
+                // Kirim data via AJAX
+                $.ajax({
+                    url: `/presensi/${presensiId}/update`,
+                    type: 'POST', // Gunakan POST
+                    data: {
+                        _method: 'PUT', // Method spoofing untuk PUT
+                        _token: $('meta[name="csrf-token"]').attr('content'),
+                        status: status,
+                        keterangan: keterangan || ''
+                    },
+                    success: function(response) {
+                        console.log('Update response:', response); // Debug
+
+                        if (response.success) {
+                            // Update badge status di tabel
+                            const statusConfig = {
+                                'Hadir': {
+                                    class: 'success',
+                                    icon: 'check'
+                                },
+                                'Izin': {
+                                    class: 'warning',
+                                    icon: 'exclamation'
+                                },
+                                'Sakit': {
+                                    class: 'info',
+                                    icon: 'notes-medical'
+                                },
+                                'Alpha': {
+                                    class: 'danger',
+                                    icon: 'times'
+                                },
+                                'Terlambat': {
+                                    class: 'secondary',
+                                    icon: 'clock'
+                                },
+                                'Tepat Waktu': {
+                                    class: 'success',
+                                    icon: 'check'
+                                }
+                            };
+
+                            const config = statusConfig[status] || {
+                                class: 'secondary',
+                                icon: 'question'
+                            };
+                            const badgeHtml =
+                                `<i class="fas fa-${config.icon} me-1"></i>${status}`;
+
+                            $(`#badge-${presensiId}`)
+                                .removeClass(
+                                    'bg-success bg-warning bg-info bg-danger bg-secondary')
+                                .addClass(`bg-${config.class}`)
+                                .html(badgeHtml);
+
+                            // Update keterangan di tabel
+                            $(`#keterangan-${presensiId}`).text(response.data.keterangan ||
+                            '-');
+
+                            // Tutup modal
+                            $('#editPresensiModal').modal('hide');
+
+                            // Tampilkan notifikasi sukses
+                            const successAlert = `
+                        <div class="alert alert-success alert-dismissible fade show shadow-sm border-0" role="alert">
+                            <div class="d-flex align-items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="me-2" viewBox="0 0 16 16">
+                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                                </svg>
+                                <span>${response.message}</span>
+                            </div>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    `;
+
+                            $('.container.my-5').prepend(successAlert);
+
+                            // Auto hide alert setelah 3 detik
+                            setTimeout(function() {
+                                $('.alert-success').fadeOut('slow', function() {
+                                    $(this).remove();
+                                });
+                            }, 3000);
+
+                            // Reset tombol
+                            $('#btnSimpanPresensi').prop('disabled', false).html(
+                                '<i class="fas fa-save me-1"></i> Simpan Perubahan');
+                        } else {
+                            alert(response.message || 'Gagal menyimpan perubahan');
+                            $('#btnSimpanPresensi').prop('disabled', false).html(
+                                '<i class="fas fa-save me-1"></i> Simpan Perubahan');
+                        }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error saving:', xhr.responseText); // Debug
+
+                        let errorMessage = 'Terjadi kesalahan saat menyimpan data';
+
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            errorMessage = xhr.responseJSON.message;
+                        }
+
+                        alert(errorMessage);
+
+                        // Enable tombol kembali
+                        $('#btnSimpanPresensi').prop('disabled', false).html(
+                            '<i class="fas fa-save me-1"></i> Simpan Perubahan');
+                    }
+                });
+            });
+
+            // Reset form saat modal ditutup
+            $('#editPresensiModal').on('hidden.bs.modal', function() {
+                $('#editPresensiForm')[0].reset();
+                $('.invalid-feedback').hide().text('');
+                $('.is-invalid').removeClass('is-invalid');
+                $('#btnSimpanPresensi').prop('disabled', false).html(
+                    '<i class="fas fa-save me-1"></i> Simpan Perubahan');
+            });
         });
     </script>
 @endpush
@@ -278,6 +592,49 @@
         .badge {
             font-weight: 500;
             letter-spacing: 0.3px;
+        }
+
+        /* Custom styling for radio buttons */
+        .btn-check:checked+.btn-outline-success {
+            background-color: #28a745;
+            border-color: #28a745;
+            color: white;
+        }
+
+        .btn-check:checked+.btn-outline-warning {
+            background-color: #ffc107;
+            border-color: #ffc107;
+            color: #000;
+        }
+
+        .btn-check:checked+.btn-outline-info {
+            background-color: #17a2b8;
+            border-color: #17a2b8;
+            color: white;
+        }
+
+        .btn-check:checked+.btn-outline-danger {
+            background-color: #dc3545;
+            border-color: #dc3545;
+            color: white;
+        }
+
+        .btn-check:checked+.btn-outline-secondary {
+            background-color: #6c757d;
+            border-color: #6c757d;
+            color: white;
+        }
+
+        /* Modal animation */
+        .modal.fade .modal-dialog {
+            transition: transform 0.3s ease-out;
+        }
+
+        /* Button hover effects */
+        .btn-edit-presensi:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            transition: all 0.2s ease;
         }
     </style>
 @endpush

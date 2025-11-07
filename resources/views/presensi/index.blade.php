@@ -246,16 +246,35 @@
                                             <span class="text-muted">-</span>
                                         @endif
                                     </td>
-                                    <td>
+                                    <td class="text-center">
                                         @if ($presensi)
-                                            @if ($presensi->status == 'Terlambat')
-                                                <span class="badge bg-danger">{{ $presensi->status }}</span>
-                                            @else
-                                                <span class="badge bg-success">{{ $presensi->status }}</span>
-                                            @endif
-                                        @elseif($isFuture)
+                                            @switch(strtolower($presensi->status))
+                                                @case('hadir')
+                                                    <span class="badge bg-success">Hadir</span>
+                                                @break
+
+                                                @case('izin')
+                                                    <span class="badge bg-warning text-dark">Izin</span>
+                                                @break
+
+                                                @case('sakit')
+                                                    <span class="badge bg-info text-dark">Sakit</span>
+                                                @break
+
+                                                @case('terlambat')
+                                                    <span class="badge bg-secondary">Terlambat</span>
+                                                @break
+
+                                                @case('alpha')
+                                                    <span class="badge bg-danger">Alfa</span>
+                                                @break
+
+                                                @default
+                                                    <span class="badge bg-light text-dark">-</span>
+                                            @endswitch
+                                        @elseif ($isFuture)
                                             <span class="badge bg-secondary">Belum Tiba</span>
-                                        @elseif($isWeekend)
+                                        @elseif ($isWeekend)
                                             <span class="badge bg-secondary">Libur</span>
                                         @else
                                             <span class="badge bg-danger">Alfa</span>
@@ -291,10 +310,14 @@
                 })
                 ->unique('tanggal');
 
+            // Hitung total berdasarkan status
             $totalHadir = $presensiFilterBulan->count();
             $totalTepat = $presensiFilterBulan->where('status', 'Tepat Waktu')->count();
             $totalTerlambat = $presensiFilterBulan->where('status', 'Terlambat')->count();
+            $totalIzin = $presensiFilterBulan->where('status', 'Izin')->count();
+            $totalSakit = $presensiFilterBulan->where('status', 'Sakit')->count();
 
+            // Hitung hari kerja yang sudah lewat
             $hariKerjaLewat = 0;
             foreach ($semuaTanggal as $tgl) {
                 $date = \Carbon\Carbon::parse($tgl);
@@ -303,7 +326,8 @@
                 }
             }
 
-            $totalAlfa = max(0, $hariKerjaLewat - $totalHadir);
+            // Hitung Alfa berdasarkan hari kerja - (hadir + izin + sakit)
+            $totalAlfa = max(0, $hariKerjaLewat - ($totalHadir + $totalIzin + $totalSakit));
         @endphp
 
         {{-- Tombol untuk menampilkan statistik --}}
@@ -321,25 +345,37 @@
                     Statistik Bulan {{ \Carbon\Carbon::parse($bulanDipilih)->locale('id')->isoFormat('MMMM Y') }}
                 </h5>
                 <div class="row text-center">
-                    <div class="col-md-3 mb-3">
+                    <div class="col-md-2 mb-3">
                         <div class="p-3 bg-success text-white rounded shadow-sm">
                             <h3 class="mb-0">{{ $totalHadir }}</h3>
-                            <small>Total Hadir</small>
+                            <small>Hadir</small>
                         </div>
                     </div>
-                    <div class="col-md-3 mb-3">
+                    <div class="col-md-2 mb-3">
                         <div class="p-3 bg-primary text-white rounded shadow-sm">
                             <h3 class="mb-0">{{ $totalTepat }}</h3>
                             <small>Tepat Waktu</small>
                         </div>
                     </div>
-                    <div class="col-md-3 mb-3">
-                        <div class="p-3 bg-warning text-white rounded shadow-sm">
+                    <div class="col-md-2 mb-3">
+                        <div class="p-3 bg-warning text-dark rounded shadow-sm">
                             <h3 class="mb-0">{{ $totalTerlambat }}</h3>
                             <small>Terlambat</small>
                         </div>
                     </div>
-                    <div class="col-md-3 mb-3">
+                    <div class="col-md-2 mb-3">
+                        <div class="p-3 bg-info text-dark rounded shadow-sm">
+                            <h3 class="mb-0">{{ $totalSakit }}</h3>
+                            <small>Sakit</small>
+                        </div>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <div class="p-3 bg-warning text-dark rounded shadow-sm" style="background-color: #ffc107;">
+                            <h3 class="mb-0">{{ $totalIzin }}</h3>
+                            <small>Izin</small>
+                        </div>
+                    </div>
+                    <div class="col-md-2 mb-3">
                         <div class="p-3 bg-danger text-white rounded shadow-sm">
                             <h3 class="mb-0">{{ $totalAlfa }}</h3>
                             <small>Alfa</small>

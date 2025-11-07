@@ -98,7 +98,7 @@
                                 </h5>
                             </div>
                             <select id="tahunPesertaBulan" class="form-select border-0 bg-light"
-                                style="font-size: 0.875rem; padding: 0.5rem 2rem 0.5rem 0.75rem; border-radius: 8px; font-weight: 500; color: #4a5568; cursor: pointer; min-width: 90px;">
+                                style="font-size: 0.875rem; padding: 0.5rem 1rem 0.5rem 0.75rem; border-radius: 8px; font-weight: 500; color: #4a5568; cursor: pointer; width: 80px;">
                                 @foreach ($daftarTahun as $th)
                                     <option value="{{ $th }}" {{ $th == $tahun ? 'selected' : '' }}>
                                         {{ $th }}
@@ -191,7 +191,7 @@
                                 </h5>
                             </div>
                             <select id="tahunTimeline" class="form-select border-0 bg-light"
-                                style="font-size: 0.875rem; padding: 0.5rem 2rem 0.5rem 0.75rem; border-radius: 8px; font-weight: 500; color: #4a5568; cursor: pointer; min-width: 90px;">
+                                style="font-size: 0.875rem; padding: 0.5rem 1rem 0.5rem 0.75rem; border-radius: 8px; font-weight: 500; color: #4a5568; cursor: pointer; width: 80px;">
                                 @foreach ($daftarTahun as $th)
                                     <option value="{{ $th }}" {{ $th == $tahunTimeline ? 'selected' : '' }}>
                                         {{ $th }}

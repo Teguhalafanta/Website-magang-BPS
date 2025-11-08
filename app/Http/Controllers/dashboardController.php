@@ -91,7 +91,7 @@ class DashboardController extends Controller
         // --- GRAFIK PESERTA MAGANG PER INSTANSI ---
         $instansi = DB::table('pelajars')
             ->select('asal_institusi as nama_instansi', DB::raw('COUNT(*) as total'))
-            ->where('status', 'disetujui')
+            ->whereIn('status', ['disetujui', 'selesai'])
             ->groupBy('asal_institusi')
             ->get();
 
@@ -101,7 +101,7 @@ class DashboardController extends Controller
             DB::raw('COUNT(*) as total')
         )
             ->whereNotNull('rencana_mulai')
-            ->where('status', 'disetujui')
+            ->whereIn('status', ['disetujui', 'selesai'])
             ->groupBy(DB::raw('YEAR(rencana_mulai)'))
             ->orderBy(DB::raw('YEAR(rencana_mulai)'))
             ->pluck('total', 'tahun')
@@ -191,8 +191,8 @@ class DashboardController extends Controller
             $awalBulan = Carbon::createFromDate($tahun, $i, 1)->startOfMonth();
             $akhirBulan = Carbon::createFromDate($tahun, $i, 1)->endOfMonth();
 
-            // Hitung peserta yang masih aktif di bulan itu
-            $jumlah = Pelajar::where('status', 'disetujui')
+            // Hanya peserta disetujui + selesai yang dihitung
+            $jumlah = Pelajar::whereIn('status', ['disetujui', 'selesai'])
                 ->whereDate('rencana_mulai', '<=', $akhirBulan)
                 ->whereDate('rencana_selesai', '>=', $awalBulan)
                 ->count();

@@ -226,7 +226,7 @@
 
                     </div>
                 </div>
-                <<div class="card mt-4 shadow-sm" style="max-width: 420px; font-size: 14px;">
+                <div class="card mt-4 shadow-sm" style="max-width: 420px; font-size: 14px;">
                     <div
                         class="card-header bg-secondary text-white py-2 d-flex justify-content-between align-items-center">
                         <h6 class="mb-0"><i class="bi bi-list-task me-2"></i> Kegiatan Terbaru</h6>

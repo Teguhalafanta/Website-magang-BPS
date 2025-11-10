@@ -66,9 +66,9 @@
                         <thead class="bg-light">
                             <tr>
                                 <th class="text-center py-3" style="width: 60px;">No</th>
-                                <th class="py-3">Nama</th>
-                                <th class="py-3">Asal Institusi</th>
-                                <th class="py-3">Jurusan</th>
+                                <th class="text-center">Nama</th>
+                                <th class="text-center">Asal Institusi</th>
+                                <th class="text-center">Jurusan</th>
                                 <th class="text-center py-3" style="width: 120px;">Aksi</th>
                             </tr>
                         </thead>

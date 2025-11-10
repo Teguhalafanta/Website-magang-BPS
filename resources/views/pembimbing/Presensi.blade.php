@@ -102,16 +102,30 @@
             <div class="card-body p-0">
                 <div class="table-responsive">
                     <table id="presensiTable" class="table table-hover align-middle mb-0">
-                        <thead class="bg-light">
+                        <colgroup>
+                            <col style="width: 65px;"> <!-- No -->
+                            <col style="width: 130px;"> <!-- Pelajar -->
+                            <col style="width: 140px;"> <!-- Tanggal -->
+                            <col style="width: 120px;"> <!-- Status -->
+                            <col style="width: 90px;"> <!-- Aksi -->
+                        </colgroup>
+
+                        <thead class="table-light">
                             <tr class="text-center align-middle">
-                                <th class="py-3 px-3 fw-semibold text-secondary" style="width: 50px;">No</th>
-                                <th class="py-3 px-3 fw-semibold text-secondary text-start" style="min-width: 200px;">
-                                    Pelajar</th>
-                                <th class="py-3 px-3 fw-semibold text-secondary" style="width: 120px;">Tanggal</th>
-                                <th class="py-3 px-3 fw-semibold text-secondary" style="width: 100px;">Status</th>
-                                <th class="py-3 px-3 fw-semibold text-secondary" style="width: 100px;">Aksi</th>
+                                <th class="fw-semibold text-muted small text-center">No</th>
+                                <th class="fw-semibold text-muted small text-center">Pelajar</th>
+                                <th class="fw-semibold text-muted small text-center">Tanggal</th>
+                                <th class="fw-semibold text-muted small text-center">Status</th>
+                                <th class="fw-semibold text-muted small text-center">Aksi</th>
                             </tr>
                         </thead>
+                        <style>
+                            table {
+                                table-layout: fixed;
+                                width: 100%;
+                            }
+                        </style>
+
                         <tbody>
 
                             @forelse ($presensis as $index => $presensi)

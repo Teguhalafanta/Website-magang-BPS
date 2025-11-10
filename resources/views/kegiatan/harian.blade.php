@@ -22,9 +22,9 @@
 
         @if (!$isMagangSelesai)
             <div class="mb-3 text-start">
-                <a href="{{ route('pelajar.kegiatan.create') }}" class="btn btn-primary">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tambahKegiatanModal">
                     <i class="fas fa-plus-circle me-1"></i> Tambah Kegiatan
-                </a>
+                </button>
             </div>
         @endif
 
@@ -244,8 +244,20 @@
                                 </div>
                                 <div class="col-6 mb-3">
                                     <label for="tim_kerja" class="form-label">Tim Kerja</label>
-                                    <input type="text" class="form-control" id="tim_kerja" name="tim_kerja"
-                                        placeholder="Nama tim">
+                                    <select class="form-select" id="tim_kerja" name="tim_kerja">
+                                        <option value="">-- Pilih Tim --</option>
+                                        <option value="TIM UMUM">TIM UMUM</option>
+                                        <option value="Tim Statistik Sosial">Tim Statistik Sosial</option>
+                                        <option value="Tim Statistik Produksi">Tim Statistik Produksi</option>
+                                        <option value="Tim Statistik Harga, Distribusi dan Jasa">Tim Statistik Harga,
+                                            Distribusi dan Jasa</option>
+                                        <option value="Tim Neraca Wilayah dan Analisis Statistik">Tim Neraca Wilayah dan
+                                            Analisis Statistik</option>
+                                        <option value="Tim Metodologi, Pengolahan, Infrastruktur dan Inovasi Digital">Tim
+                                            Metodologi, Pengolahan, Infrastruktur dan Inovasi Digital</option>
+                                        <option value="Tim Diseminasi dan Pelayanan Statistik">Tim Diseminasi dan Pelayanan
+                                            Statistik</option>
+                                    </select>
                                 </div>
                             </div>
 

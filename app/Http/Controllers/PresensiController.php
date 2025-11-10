@@ -9,6 +9,8 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Pelajar;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class PresensiController extends Controller
 {
@@ -33,6 +35,9 @@ class PresensiController extends Controller
                 return view('pembimbing.presensi', [
                     'presensis' => collect(),
                     'pelajars' => collect(),
+                    'allDates' => collect(),
+                    'startDate' => null,
+                    'endDate' => null,
                 ]);
             }
 
@@ -40,6 +45,41 @@ class PresensiController extends Controller
 
             // Tangkap filter dari request
             $selectedPelajarId = request('pelajar_id');
+
+            // Generate semua tanggal periode magang
+            $allDates = collect();
+            $startDate = null;
+            $endDate = null;
+
+            if ($pelajars->isNotEmpty()) {
+                // Ambil tanggal mulai dan selesai dari pelajar (sesuaikan dengan struktur database Anda)
+                $startDate = $pelajars->first()->tanggal_mulai ?? now()->subMonths(3)->format('Y-m-d');
+                $endDate = $pelajars->first()->tanggal_selesai ?? now()->format('Y-m-d');
+
+                // Jika ada pelajar yang dipilih, gunakan tanggal dari pelajar tersebut
+                if ($selectedPelajarId) {
+                    $selectedPelajar = \App\Models\Pelajar::find($selectedPelajarId);
+                    if ($selectedPelajar) {
+                        $startDate = $selectedPelajar->tanggal_mulai ?? $startDate;
+                        $endDate = $selectedPelajar->tanggal_selesai ?? $endDate;
+                    }
+                }
+
+                // Generate semua tanggal antara start dan end date
+                $current = Carbon::parse($startDate);
+                $end = Carbon::parse($endDate);
+
+                while ($current <= $end) {
+                    // Hanya hari kerja (Senin-Jumat), sesuaikan jika perlu
+                    if ($current->isWeekday()) {
+                        $allDates->push($current->format('Y-m-d'));
+                    }
+                    $current->addDay();
+                }
+
+                // Reverse dates untuk urutan descending (terbaru di depan)
+                $allDates = $allDates->reverse();
+            }
 
             $presensisQuery = \App\Models\Presensi::with('pelajar')
                 ->whereIn('pelajar_id', $pelajars->pluck('id'))
@@ -52,7 +92,20 @@ class PresensiController extends Controller
 
             $presensis = $presensisQuery->get();
 
-            return view('pembimbing.presensi', compact('presensis', 'pelajars', 'selectedPelajarId'));
+            // Group presensi untuk memudahkan akses di view
+            $presensiGrouped = $presensis->groupBy(['pelajar_id', function ($item) {
+                return Carbon::parse($item->tanggal)->format('Y-m-d');
+            }]);
+
+            return view('pembimbing.presensi', compact(
+                'presensis',
+                'pelajars',
+                'selectedPelajarId',
+                'allDates',
+                'presensiGrouped',
+                'startDate',
+                'endDate'
+            ));
         } elseif ($user->role === 'admin') {
             // Ambil query dasar
             $query = \App\Models\Presensi::with('pelajar')
@@ -65,9 +118,45 @@ class PresensiController extends Controller
                 $query->whereDate('tanggal', $today);
             }
 
+            // Filter by pelajar jika ada
+            if (request()->has('pelajar_id')) {
+                $query->where('pelajar_id', request('pelajar_id'));
+            }
+
             $presensis = $query->get();
 
-            return view('admin.presensi.index', compact('presensis'));
+            // Untuk admin, tampilkan semua pelajar
+            $allPelajars = \App\Models\Pelajar::all();
+
+            // Generate all dates untuk admin view (opsional)
+            $allDates = collect();
+            $startDate = now()->subMonths(3)->format('Y-m-d');
+            $endDate = now()->format('Y-m-d');
+
+            $current = Carbon::parse($startDate);
+            $end = Carbon::parse($endDate);
+
+            while ($current <= $end) {
+                if ($current->isWeekday()) {
+                    $allDates->push($current->format('Y-m-d'));
+                }
+                $current->addDay();
+            }
+
+            $allDates = $allDates->reverse();
+
+            $presensiGrouped = $presensis->groupBy(['pelajar_id', function ($item) {
+                return Carbon::parse($item->tanggal)->format('Y-m-d');
+            }]);
+
+            return view('admin.presensi.index', compact(
+                'presensis',
+                'allPelajars',
+                'allDates',
+                'presensiGrouped',
+                'startDate',
+                'endDate'
+            ));
         } else {
             abort(403); // role lain tidak bisa mengakses
         }
@@ -262,8 +351,31 @@ class PresensiController extends Controller
             ], 403);
         }
 
-        $validator = Validator::make($request->all(), [
-            'status' => 'required|in:Hadir,Izin,Sakit,Alpha,Terlambat,Tepat Waktu',
+        // Normalisasi status agar cocok dengan nilai enum di database.
+        // Beberapa bagian aplikasi menggunakan variasi kapitalisasi ("Izin" vs "izin").
+        // Kita ubah ke format canonical lowercase yang digunakan di view/controller lain.
+        $inputStatus = $request->input('status', '');
+        $normalized = mb_strtolower(trim($inputStatus));
+
+        // Normalisasi beberapa variasi penulisan
+        if ($normalized === 'alfa') {
+            $normalized = 'alpha';
+        }
+        // 'tepatwaktu' atau 'tepat_waktu' => 'tepat waktu'
+        $normalized = str_replace(['_', "\u00A0"], [' ', ' '], $normalized);
+        $normalized = preg_replace('/\s+/', ' ', $normalized);
+
+        // Jika ada input tanpa spasi untuk 'tepatwaktu'
+        if ($normalized === 'tepatwaktu') {
+            $normalized = 'tepat waktu';
+        }
+
+        // Ganti nilai request sementara untuk validasi berikutnya
+        $dataForValidation = array_merge($request->all(), ['status' => $normalized]);
+
+        $validator = Validator::make($dataForValidation, [
+            // Sesuaikan rule dengan format yang disimpan di DB (lowercase)
+            'status' => ['required', Rule::in(['hadir', 'izin', 'sakit', 'alpha', 'terlambat', 'tepat waktu'])],
             'keterangan' => 'nullable|string|max:500'
         ], [
             'status.required' => 'Status presensi wajib dipilih',
@@ -293,7 +405,27 @@ class PresensiController extends Controller
                 ], 403);
             }
 
-            $presensi->status = $request->status;
+            // Map nilai ter-normalisasi kembali ke format enum yang disimpan di database
+            $dbStatusMap = [
+                'hadir' => 'Hadir',
+                'izin' => 'Izin',
+                'sakit' => 'Sakit',
+                'alpha' => 'Alpha',
+                'terlambat' => 'Terlambat',
+                'tepat waktu' => 'Tepat Waktu'
+            ];
+
+            $dbStatus = $dbStatusMap[$normalized] ?? ucfirst($normalized);
+
+            // Simpan ke model menggunakan label enum yang sesuai
+            // Tambahkan logging untuk debug jika DB mengembalikan peringatan enum
+            Log::info('Presensi update attempt', [
+                'presensi_id' => $presensi->id,
+                'dbStatus' => $dbStatus,
+                'dbStatus_type' => gettype($dbStatus),
+            ]);
+
+            $presensi->status = (string) $dbStatus;
             $presensi->keterangan = $request->keterangan ?? null;
             $presensi->save();
 
@@ -307,6 +439,55 @@ class PresensiController extends Controller
                 ]
             ]);
         } catch (\Exception $e) {
+            // Log detail lengkap untuk membantu diagnosa enum/DB issue
+            try {
+                // DB::select returns an array of stdClass objects
+                $pdoInfo = DB::select("SELECT @@sql_mode AS sql_mode");
+            } catch (\Exception $ex) {
+                $pdoInfo = null;
+            }
+
+            // Safely extract sql_mode whether $pdoInfo is an array of objects or null
+            $sqlMode = null;
+            if (is_array($pdoInfo) && isset($pdoInfo[0])) {
+                $row = $pdoInfo[0];
+                if (is_object($row)) {
+                    $sqlMode = property_exists($row, 'sql_mode') ? $row->sql_mode : null;
+                } elseif (is_array($row)) {
+                    $sqlMode = $row['sql_mode'] ?? null;
+                }
+            }
+
+            // Also attempt to fetch the CREATE TABLE statement for presensis to inspect enum
+            $createTable = null;
+            try {
+                $res = DB::select("SHOW CREATE TABLE presensis");
+                if (is_array($res) && isset($res[0])) {
+                    $r0 = $res[0];
+                    // The returned object usually has property 'Create Table'
+                    if (is_object($r0) && property_exists($r0, 'Create Table')) {
+                        $createTable = $r0->{'Create Table'};
+                    } elseif (is_object($r0)) {
+                        // fallback: cast to array and try keys
+                        $arr = (array) $r0;
+                        $createTable = reset($arr) ?: null;
+                    }
+                }
+            } catch (\Exception $ex) {
+                $createTable = null;
+            }
+
+            Log::error('Presensi update failed', [
+                'exception' => $e->getMessage(),
+                'presensi_id' => $id,
+                'attempted_dbStatus' => $dbStatus ?? null,
+                'raw_status_input' => $request->status ?? null,
+                'normalized_status' => $normalized ?? null,
+                'request_all' => $request->all(),
+                'sql_mode' => $sqlMode,
+                'create_table' => $createTable,
+            ]);
+
             return response()->json([
                 'success' => false,
                 'message' => 'Terjadi kesalahan: ' . $e->getMessage()

@@ -54,7 +54,8 @@ class ProdukMagangController extends Controller
 
         $request->validate([
             'nama_produk' => 'required',
-            'file_produk' => 'required|mimes:pdf,doc,docx,zip,rar,mp4|max:20480',
+            // Tambahkan ppt/pptx agar konsisten dengan form 'accept' di view
+            'file_produk' => 'required|mimes:pdf,doc,docx,ppt,pptx,zip,rar,mp4|max:20480',
         ]);
 
         $path = $request->file('file_produk')->store('produk_magang', 'public');
@@ -94,7 +95,8 @@ class ProdukMagangController extends Controller
     {
         $request->validate([
             'nama_produk' => 'required',
-            'file_produk' => 'nullable|mimes:pdf,doc,docx,zip,rar,mp4|max:20480',
+            // Tambahkan ppt/pptx agar konsisten dengan form 'accept' di view
+            'file_produk' => 'nullable|mimes:pdf,doc,docx,ppt,pptx,zip,rar,mp4|max:20480',
         ]);
 
         $produk = ProdukMagang::findOrFail($id);

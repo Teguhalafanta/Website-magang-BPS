@@ -68,6 +68,11 @@ class Pelajar extends Model
         return $this->hasMany(Kegiatan::class);
     }
 
+    public function laporan()
+    {
+        return $this->hasOne(Laporan::class, 'pelajar_id');
+    }
+
     // Accessor: status magang otomatis untuk tampilan
     public function getStatusMagangOtomatisAttribute()
     {

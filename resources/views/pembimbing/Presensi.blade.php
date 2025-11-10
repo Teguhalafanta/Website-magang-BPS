@@ -103,19 +103,17 @@
                 <div class="table-responsive">
                     <table id="presensiTable" class="table table-hover align-middle mb-0">
                         <thead class="bg-light">
-                            <tr class="text-center">
+                            <tr class="text-center align-middle">
                                 <th class="py-3 px-3 fw-semibold text-secondary" style="width: 50px;">No</th>
-                                <th class="py-3 px-4 fw-semibold text-secondary text-start" style="min-width: 150px;">
+                                <th class="py-3 px-3 fw-semibold text-secondary text-start" style="min-width: 200px;">
                                     Pelajar</th>
                                 <th class="py-3 px-3 fw-semibold text-secondary" style="width: 120px;">Tanggal</th>
                                 <th class="py-3 px-3 fw-semibold text-secondary" style="width: 100px;">Status</th>
                                 <th class="py-3 px-3 fw-semibold text-secondary" style="width: 100px;">Aksi</th>
-                                <th class="py-3 px-4 fw-semibold text-secondary text-start" style="min-width: 200px;">
-                                    Keterangan</th>
                             </tr>
                         </thead>
                         <tbody>
-                            
+
                             @forelse ($presensis as $index => $presensi)
                                 <tr class="border-bottom" id="row-{{ $presensi->id }}">
                                     <td class="text-center px-3">
@@ -179,10 +177,6 @@
                                             data-bs-target="#editPresensiModal">
                                             <i class="fas fa-edit me-1"></i> Edit
                                         </button>
-                                    </td>
-                                    <td class="px-4">
-                                        <span class="text-dark"
-                                            id="keterangan-{{ $presensi->id }}">{{ $presensi->keterangan ?? '-' }}</span>
                                     </td>
                                 </tr>
                             @empty
@@ -294,16 +288,6 @@
                             </div>
                             <div class="invalid-feedback d-block" id="error_status"></div>
                         </div>
-
-                        <!-- Keterangan -->
-                        <div class="mb-3">
-                            <label for="keterangan" class="form-label fw-bold">
-                                Keterangan (Opsional)
-                            </label>
-                            <textarea class="form-control" id="keterangan" name="keterangan" rows="3"
-                                placeholder="Tambahkan keterangan jika diperlukan..."></textarea>
-                            <div class="invalid-feedback" id="error_keterangan"></div>
-                        </div>
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -328,6 +312,9 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
+
+            // Base URL untuk rute presensi pembimbing (pastikan prefix pembimbing digunakan)
+            const pembimbingPresensiBase = "{{ url('pembimbing/presensi') }}";
 
             const table = $('#presensiTable').DataTable({
                 paging: true,
@@ -392,9 +379,9 @@
                 $('.invalid-feedback').hide().text('');
                 $('.is-invalid').removeClass('is-invalid');
 
-                // Load data presensi via AJAX
+                // Load data presensi via AJAX (gunakan prefix pembimbing)
                 $.ajax({
-                    url: `/presensi/${presensiId}/data`,
+                    url: `${pembimbingPresensiBase}/${presensiId}/data`,
                     type: 'GET',
                     success: function(response) {
                         console.log('Data loaded:', response); // Debug
@@ -409,10 +396,6 @@
                             // Set status radio button
                             $(`input[name="status"][value="${data.status}"]`).prop('checked',
                                 true);
-
-                            // Set keterangan
-                            $('#keterangan').val(data.keterangan === '-' ? '' : data
-                            .keterangan);
 
                             // Enable tombol simpan
                             $('#btnSimpanPresensi').prop('disabled', false).html(
@@ -432,12 +415,10 @@
 
                 const presensiId = $('#presensi_id').val();
                 const status = $('input[name="status"]:checked').val();
-                const keterangan = $('#keterangan').val();
 
                 console.log('Saving presensi:', {
                     presensiId,
                     status,
-                    keterangan
                 }); // Debug
 
                 // Validasi
@@ -454,15 +435,14 @@
                 $(this).prop('disabled', true).html(
                     '<i class="fas fa-spinner fa-spin me-1"></i> Menyimpan...');
 
-                // Kirim data via AJAX
+                // Kirim data via AJAX (gunakan prefix pembimbing)
                 $.ajax({
-                    url: `/presensi/${presensiId}/update`,
+                    url: `${pembimbingPresensiBase}/${presensiId}/update`,
                     type: 'POST', // Gunakan POST
                     data: {
                         _method: 'PUT', // Method spoofing untuk PUT
                         _token: $('meta[name="csrf-token"]').attr('content'),
                         status: status,
-                        keterangan: keterangan || ''
                     },
                     success: function(response) {
                         console.log('Update response:', response); // Debug
@@ -508,10 +488,6 @@
                                     'bg-success bg-warning bg-info bg-danger bg-secondary')
                                 .addClass(`bg-${config.class}`)
                                 .html(badgeHtml);
-
-                            // Update keterangan di tabel
-                            $(`#keterangan-${presensiId}`).text(response.data.keterangan ||
-                            '-');
 
                             // Tutup modal
                             $('#editPresensiModal').modal('hide');

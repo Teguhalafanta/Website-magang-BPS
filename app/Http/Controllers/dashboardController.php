@@ -158,6 +158,12 @@ class DashboardController extends Controller
                     ->whereYear('rencana_selesai', '>=', $tahun);
             })
             ->select('nama', 'rencana_mulai', 'rencana_selesai')
+            ->orderByRaw("
+            CASE 
+                WHEN rencana_selesai >= CURDATE() THEN 0 
+                ELSE 1 
+            END
+        ")
             ->orderBy('rencana_mulai', 'asc')
             ->paginate(10);
 

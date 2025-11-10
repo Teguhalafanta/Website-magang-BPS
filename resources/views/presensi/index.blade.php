@@ -1,8 +1,8 @@
 @extends('kerangka.master')
 
 @section('content')
-    <div class="container mt-4">
-        <h3 class="mb-4 text-center">Presensi Pelajar</h3>
+    <div class="container-sm mt-3" style="max-width: 800px;">
+        <h5 class="mb-3 text-center">Presensi Pelajar</h5>
 
         {{-- ALERT JIKA ADA PESAN --}}
         @if (session('success'))
@@ -32,10 +32,10 @@
 
         {{-- CARD PRESENSI DENGAN TOMBOL TAP --}}
         <div class="card mb-4 shadow border-0">
-            <div class="card-body text-center p-4">
-                <h5 class="mb-3">Presensi Hari Ini ({{ now()->format('d M Y') }})</h5>
-                <div class="mb-3">
-                    <p class="mb-2">Waktu Sekarang: <strong id="jamSekarang" class="fs-5 text-primary"></strong></p>
+            <div class="card-body text-center p-2">
+                <div class="small mb-1">
+                    <span class="text-muted">{{ now()->format('d M Y') }}</span> • 
+                    <span>Waktu: <strong id="jamSekarang" class="text-primary"></strong></span>
                 </div>
 
                 {{-- CEK JIKA SUDAH SELESAI MAGANG --}}
@@ -137,11 +137,11 @@
         </div>
 
         {{-- FILTER BULAN --}}
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h4 class="mb-0"></h4>
-            <form method="GET" action="{{ route('pelajar.presensi.index') }}" class="d-flex gap-2">
-                <input type="month" name="bulan" class="form-control"
-                    value="{{ request('bulan', now()->format('Y-m')) }}" onchange="this.form.submit()">
+        <div class="d-flex justify-content-end align-items-center mb-2">
+            <form method="GET" action="{{ route('pelajar.presensi.index') }}" class="d-flex">
+                <input type="month" name="bulan" class="form-control form-control-sm"
+                    value="{{ request('bulan', now()->format('Y-m')) }}" onchange="this.form.submit()"
+                    style="max-width: 150px;">
             </form>
         </div>
 
@@ -170,30 +170,22 @@
             $presensiMap = $pelajarPresensi->keyBy('tanggal');
         @endphp
 
-        {{-- TOMBOL UNTUK TAMPILKAN TABEL RIWAYAT --}}
-        <div class="text-center mt-4">
-            <button id="btnShowRiwayat" class="btn btn-outline-secondary btn-lg px-4 py-2 fw-semibold shadow-sm"
-                style="border-radius: 30px;">
-                <i class="bi bi-clock-history me-2"></i> Lihat Riwayat Presensi
-            </button>
-        </div>
-
-        {{-- TABEL RIWAYAT PRESENSI (DISEMBUNYIKAN AWALNYA) --}}
-        <div id="riwayatCard" class="card mt-4 shadow-sm border-0 d-none">
-            <div class="card-body">
-                <h5 class="card-title mb-3 fw-bold text-uppercase text-dark">
-                    Riwayat Presensi Bulan {{ \Carbon\Carbon::parse($bulanDipilih)->locale('id')->isoFormat('MMMM Y') }}
-                </h5>
-                <div class="table-responsive">
-                    <table class="table table-bordered table-hover text-center align-middle">
+        {{-- TABEL RIWAYAT PRESENSI --}}
+        <div class="card mt-4 shadow-sm border-0">
+            <div class="card-body p-2">
+                <div class="small fw-bold mb-2">
+                    <i class="bi bi-calendar-check me-1"></i>Riwayat Presensi {{ \Carbon\Carbon::parse($bulanDipilih)->locale('id')->isoFormat('MMMM Y') }}
+                </div>
+                <div class="table-responsive" style="max-height: 400px;">
+                    <table class="table table-sm table-bordered table-hover text-center align-middle small" style="min-width: 600px;">
                         <thead class="table-dark">
-                            <tr>
-                                <th>No</th>
-                                <th>Tanggal</th>
-                                <th>Hari</th>
-                                <th>Waktu Datang</th>
-                                <th>Waktu Pulang</th>
-                                <th>Status</th>
+                            <tr style="font-size: 0.8rem;">
+                                <th class="py-1">No</th>
+                                <th class="py-1">Tanggal</th>
+                                <th class="py-1">Hari</th>
+                                <th class="py-1">Datang</th>
+                                <th class="py-1">Pulang</th>
+                                <th class="py-1">Status</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -207,77 +199,71 @@
                                     $isFuture = $carbonDate->isFuture();
                                 @endphp
                                 <tr class="{{ $isWeekend ? 'table-light' : '' }}">
-                                    <td>{{ $no++ }}</td>
-                                    <td><strong>{{ $carbonDate->format('d M Y') }}</strong></td>
-                                    <td>
+                                    <td class="py-1">{{ $no++ }}</td>
+                                    <td class="py-1">{{ $carbonDate->format('d/m/y') }}</td>
+                                    <td class="py-1">
                                         @if ($isWeekend)
-                                            <span class="badge bg-secondary">{{ $namaHari }}</span>
+                                            <small class="badge bg-secondary">{{ substr($namaHari, 0, 3) }}</small>
                                         @else
-                                            <span class="text-muted">{{ $namaHari }}</span>
+                                            <small class="text-muted">{{ substr($namaHari, 0, 3) }}</small>
                                         @endif
                                     </td>
-                                    <td>
+                                    <td class="py-1">
                                         @if ($presensi)
-                                            <span class="badge bg-success">
-                                                <i class="bi bi-clock"></i> {{ $presensi->waktu_datang }}
-                                            </span>
+                                            <small class="badge bg-success">{{ $presensi->waktu_datang }}</small>
                                         @elseif($isFuture)
-                                            <span class="text-muted">-</span>
+                                            <small class="text-muted">-</small>
                                         @elseif($isWeekend)
-                                            <span class="badge bg-secondary">Libur</span>
+                                            <small class="badge bg-secondary">Libur</small>
                                         @else
-                                            <span class="badge bg-danger">
-                                                <i class="bi bi-x-circle"></i> Tidak Hadir
-                                            </span>
+                                            <small class="badge bg-danger">Tidak Hadir</small>
                                         @endif
                                     </td>
-                                    <td>
+                                    <td class="py-1">
                                         @if ($presensi && $presensi->waktu_pulang)
-                                            <span class="badge bg-primary">
-                                                <i class="bi bi-clock"></i> {{ $presensi->waktu_pulang }}
-                                            </span>
+                                            <small class="badge bg-primary">{{ $presensi->waktu_pulang }}</small>
                                         @elseif($presensi && !$presensi->waktu_pulang)
-                                            <span class="badge bg-warning text-dark">Belum Pulang</span>
+                                            <small class="badge bg-warning text-dark">Belum</small>
                                         @elseif($isFuture)
-                                            <span class="text-muted">-</span>
+                                            <small class="text-muted">-</small>
                                         @elseif($isWeekend)
-                                            <span class="badge bg-secondary">Libur</span>
+                                            <small class="badge bg-secondary">Libur</small>
                                         @else
-                                            <span class="text-muted">-</span>
+                                            <small class="text-muted">-</small>
                                         @endif
                                     </td>
-                                    <td class="text-center">
+                                    <td class="py-1">
                                         @if ($presensi)
                                             @switch(strtolower($presensi->status))
                                                 @case('hadir')
-                                                    <span class="badge bg-success">Hadir</span>
+                                                    <small class="badge bg-success">Hadir</small>
                                                 @break
 
                                                 @case('izin')
-                                                    <span class="badge bg-warning text-dark">Izin</span>
+                                                    <small class="badge bg-warning text-dark">Izin</small>
                                                 @break
 
                                                 @case('sakit')
-                                                    <span class="badge bg-info text-dark">Sakit</span>
+                                                    <small class="badge bg-info text-dark">Sakit</small>
                                                 @break
 
                                                 @case('terlambat')
-                                                    <span class="badge bg-secondary">Terlambat</span>
+                                                    <small class="badge bg-secondary">Terlambat</small>
                                                 @break
 
                                                 @case('alpha')
-                                                    <span class="badge bg-danger">Alfa</span>
+                                                    <small class="badge bg-danger">Alfa</small>
                                                 @break
 
                                                 @default
-                                                    <span class="badge bg-light text-dark">-</span>
+                                                    <small class="badge bg-light text-dark"></small>
                                             @endswitch
                                         @elseif ($isFuture)
-                                            <span class="badge bg-secondary">Belum Tiba</span>
+                                            <small class="badge bg-secondary">Belum Tiba</small>
                                         @elseif ($isWeekend)
-                                            <span class="badge bg-secondary">Libur</span>
+                                            <small class="badge bg-secondary">Libur</small>
                                         @else
-                                            <span class="badge bg-danger">Alfa</span>
+                                            <small class="badge bg-danger">Alfa</small>
                                         @endif
                                     </td>
                                 </tr>
@@ -287,17 +273,6 @@
                 </div>
             </div>
         </div>
-
-        {{-- SCRIPT UNTUK TOMBOL RIWAYAT --}}
-        <script>
-            document.getElementById('btnShowRiwayat').addEventListener('click', function() {
-                const card = document.getElementById('riwayatCard');
-                card.classList.toggle('d-none');
-                this.innerHTML = card.classList.contains('d-none') ?
-                    '<i class="bi bi-clock-history me-2"></i> Lihat Riwayat Presensi' :
-                    '<i class="bi bi-eye-slash me-2"></i> Sembunyikan Riwayat Presensi';
-            });
-        </script>
 
         {{-- STATISTIK BULAN INI --}}
         @php
@@ -330,78 +305,60 @@
             $totalAlfa = max(0, $hariKerjaLewat - ($totalHadir + $totalIzin + $totalSakit));
         @endphp
 
-        {{-- Tombol untuk menampilkan statistik --}}
-        <div class="text-center mt-4">
-            <button id="btnShowStatistik" class="btn btn-outline-primary btn-lg px-4 py-2 fw-semibold shadow-sm"
-                style="border-radius: 30px;">
-                <i class="bi bi-bar-chart-line me-2"></i> Lihat Statistik Bulan Ini
-            </button>
-        </div>
-
         {{-- CARD STATISTIK --}}
-        <div id="statistikCard" class="card mt-4 shadow-sm border-0 d-none">
-            <div class="card-body">
-                <h5 class="card-title mb-3 fw-bold text-uppercase text-dark">
-                    Statistik Bulan {{ \Carbon\Carbon::parse($bulanDipilih)->locale('id')->isoFormat('MMMM Y') }}
-                </h5>
-                <div class="row text-center">
-                    <div class="col-md-2 mb-3">
-                        <div class="p-3 bg-success text-white rounded shadow-sm">
-                            <h3 class="mb-0">{{ $totalHadir }}</h3>
-                            <small>Hadir</small>
+        <div class="card mt-4 shadow-sm border-0">
+            <div class="card-body p-2">
+                <div class="small fw-bold mb-2">
+                    <i class="bi bi-bar-chart-line me-1"></i>Statistik Bulan {{ \Carbon\Carbon::parse($bulanDipilih)->locale('id')->isoFormat('MMMM Y') }}
+                </div>
+                <div class="row text-center g-1">
+                    <div class="col-4 col-md-2">
+                        <div class="p-1 bg-success bg-opacity-10 rounded">
+                            <div class="text-success fw-bold">{{ $totalHadir }}</div>
+                            <div class="small text-muted">Hadir</div>
                         </div>
                     </div>
-                    <div class="col-md-2 mb-3">
-                        <div class="p-3 bg-primary text-white rounded shadow-sm">
-                            <h3 class="mb-0">{{ $totalTepat }}</h3>
-                            <small>Tepat Waktu</small>
+                    <div class="col-4 col-md-2">
+                        <div class="p-1 bg-primary bg-opacity-10 rounded">
+                            <div class="text-primary fw-bold">{{ $totalTepat }}</div>
+                            <div class="small text-muted">Tepat Waktu</div>
                         </div>
                     </div>
-                    <div class="col-md-2 mb-3">
-                        <div class="p-3 bg-warning text-dark rounded shadow-sm">
-                            <h3 class="mb-0">{{ $totalTerlambat }}</h3>
-                            <small>Terlambat</small>
+                    <div class="col-4 col-md-2">
+                        <div class="p-1 bg-warning bg-opacity-10 rounded">
+                            <div class="text-warning fw-bold">{{ $totalTerlambat }}</div>
+                            <div class="small text-muted">Terlambat</div>
                         </div>
                     </div>
-                    <div class="col-md-2 mb-3">
-                        <div class="p-3 bg-info text-dark rounded shadow-sm">
-                            <h3 class="mb-0">{{ $totalSakit }}</h3>
-                            <small>Sakit</small>
+                    <div class="col-4 col-md-2">
+                        <div class="p-1 bg-info bg-opacity-10 rounded">
+                            <div class="text-info fw-bold">{{ $totalSakit }}</div>
+                            <div class="small text-muted">Sakit</div>
                         </div>
                     </div>
-                    <div class="col-md-2 mb-3">
-                        <div class="p-3 bg-warning text-dark rounded shadow-sm" style="background-color: #ffc107;">
-                            <h3 class="mb-0">{{ $totalIzin }}</h3>
-                            <small>Izin</small>
+                    <div class="col-4 col-md-2">
+                        <div class="p-1 bg-warning bg-opacity-10 rounded">
+                            <div class="fw-bold" style="color: #ffc107;">{{ $totalIzin }}</div>
+                            <div class="small text-muted">Izin</div>
                         </div>
                     </div>
-                    <div class="col-md-2 mb-3">
-                        <div class="p-3 bg-danger text-white rounded shadow-sm">
-                            <h3 class="mb-0">{{ $totalAlfa }}</h3>
-                            <small>Alfa</small>
+                    <div class="col-4 col-md-2">
+                        <div class="p-1 bg-danger bg-opacity-10 rounded">
+                            <div class="text-danger fw-bold">{{ $totalAlfa }}</div>
+                            <div class="small text-muted">Alfa</div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        {{-- SCRIPT UNTUK TOMBOL STATISTIK --}}
-        <script>
-            document.getElementById('btnShowStatistik').addEventListener('click', function() {
-                const card = document.getElementById('statistikCard');
-                card.classList.toggle('d-none');
-                this.innerHTML = card.classList.contains('d-none') ?
-                    '<i class="bi bi-bar-chart-line me-2"></i> Lihat Statistik Bulan Ini' :
-                    '<i class="bi bi-eye-slash me-2"></i> Sembunyikan Statistik';
-            });
-        </script>
     </div>
 
     {{-- CUSTOM CSS --}}
     <style>
         .btn-tap {
-            padding: 16px 32px;
-            border-radius: 12px;
+            padding: 10px 20px;
+            border-radius: 8px;
             border: none;
             color: white;
             font-weight: 600;
@@ -409,14 +366,14 @@
             transition: all 0.3s ease;
             display: inline-flex;
             align-items: center;
-            gap: 12px;
-            font-size: 16px;
-            min-width: 180px;
+            gap: 8px;
+            font-size: 14px;
+            min-width: 140px;
             justify-content: center;
         }
 
         .btn-tap i {
-            font-size: 24px;
+            font-size: 18px;
         }
 
         .btn-tap-masuk {

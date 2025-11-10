@@ -209,12 +209,14 @@
                                         </div>
 
                                         <div class="col-md-4 mb-3">
-                                            <div class="p-3 bg-light rounded hover-card">
-                                                <i class="bi bi-clock-history text-warning fs-1 mb-2"></i>
-                                                <h4 class="mb-0 fw-bold">
-                                                    {{ auth()->user()->pelajar->durasi_magang ?? '-' }}</h4>
-                                                <small class="text-muted">Durasi (hari)</small>
-                                            </div>
+                                            <a href="{{ route('pelajar.presensi.index') }}" class="text-decoration-none text-dark">
+                                                <div class="p-3 bg-light rounded hover-card">
+                                                    <i class="bi bi-clock-history text-warning fs-1 mb-2"></i>
+                                                    <h4 class="mb-0 fw-bold">
+                                                        {{ auth()->user()->pelajar->hari_aktif_magang }}</h4>
+                                                    <small class="text-muted">Hari Aktif Magang</small>
+                                                </div>
+                                            </a>
                                         </div>
 
                                     </div>

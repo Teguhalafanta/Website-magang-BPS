@@ -73,6 +73,25 @@ class Pelajar extends Model
         return $this->hasOne(Laporan::class, 'pelajar_id');
     }
 
+    // Accessor: menghitung jumlah hari aktif magang
+    public function getHariAktifMagangAttribute()
+    {
+        if ($this->status !== 'disetujui' || !$this->rencana_mulai) {
+            return 0;
+        }
+
+        $mulai = Carbon::parse($this->rencana_mulai);
+        $akhir = $this->status_magang === 'selesai' 
+            ? Carbon::parse($this->rencana_selesai)
+            : Carbon::today();
+
+        if ($mulai->gt($akhir)) {
+            return 0;
+        }
+
+        return $mulai->diffInDays($akhir) + 1;
+    }
+
     // Accessor: status magang otomatis untuk tampilan
     public function getStatusMagangOtomatisAttribute()
     {

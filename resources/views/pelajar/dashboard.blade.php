@@ -10,7 +10,7 @@
         return !in_array($current, $allowedStatuses);
     }
 @endphp
-
+    
 <div class="container py-4">
     <div class="row mb-4">
         <div class="col">

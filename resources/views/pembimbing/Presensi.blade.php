@@ -12,230 +12,108 @@
                         <h2 class="mb-1 fw-bold text-dark">Daftar Presensi Peserta Bimbingan</h2>
                         <p class="text-muted mb-0">Monitoring kehadiran dan aktivitas bimbingan pelajar</p>
                     </div>
-
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Alert Success -->
-    @if (session('success'))
-        <div class="alert alert-success alert-dismissible fade show shadow-sm border-0" role="alert">
-            <div class="d-flex align-items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="me-2"
-                    viewBox="0 0 16 16">
-                    <path
-                        d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
-                </svg>
-                <span>{{ session('success') }}</span>
-            </div>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    @endif
-
-    <!-- Alert Error -->
-    @if (session('error'))
-        <div class="alert alert-danger alert-dismissible fade show shadow-sm border-0" role="alert">
-            <div class="d-flex align-items-center">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="me-2"
-                    viewBox="0 0 16 16">
-                    <path
-                        d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z" />
-                </svg>
-                <span>{{ session('error') }}</span>
-            </div>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    @endif
-
-    <!-- Main Card -->
-    <div class="card border-0 shadow-lg rounded-3 overflow-hidden">
-        <!-- Card Header -->
-        <div class="card-header bg-gradient text-white py-3 border-0"
-            style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-            <div class="d-flex justify-content-between align-items-center">
-                <h5 class="mb-0 fw-bold text-white">
-                    Tabel Presensi
-                </h5>
-            </div>
-        </div>
-
-        <!-- Search & Filter Section -->
-        <div class="card-body bg-light border-bottom">
-            <div class="row g-3 align-items-center">
-                <div class="col-md-4">
-                    <label for="searchInput" class="form-label fw-semibold mb-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                            class="me-1" viewBox="0 0 16 16">
-                            <path
-                                d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
-                        </svg>
-                        Cari Presensi
-                    </label>
-                    <input type="text" id="searchInput" class="form-control form-control-lg border-2"
-                        placeholder="Ketik untuk mencari...">
+        <!-- Alert Success -->
+        @if (session('success'))
+            <div class="alert alert-success alert-dismissible fade show shadow-sm border-0" role="alert">
+                <div class="d-flex align-items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="me-2"
+                        viewBox="0 0 16 16">
+                        <path
+                            d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
+                    </svg>
+                    <span>{{ session('success') }}</span>
                 </div>
-                <div class="col-md-4">
-                    <form method="GET" action="{{ route('pembimbing.presensi') }}" id="filterForm">
-                        <label for="pelajar_id" class="form-label fw-semibold mb-2">
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
+        <!-- Alert Error -->
+        @if (session('error'))
+            <div class="alert alert-danger alert-dismissible fade show shadow-sm border-0" role="alert">
+                <div class="d-flex align-items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="me-2"
+                        viewBox="0 0 16 16">
+                        <path
+                            d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z" />
+                    </svg>
+                    <span>{{ session('error') }}</span>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
+
+        <!-- Main Card -->
+        <div class="card border-0 shadow-lg rounded-3 overflow-hidden">
+            <!-- Card Header -->
+            <div class="card-header bg-gradient text-white py-3 border-0"
+                style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0 fw-bold text-white">
+                        Tabel Presensi
+                    </h5>
+                </div>
+            </div>
+
+            <!-- Search Section -->
+            <div class="card-body bg-light border-bottom">
+                <div class="row g-3 align-items-center">
+                    <div class="col-md-6">
+                        <label for="searchInput" class="form-label fw-semibold mb-2">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                 class="me-1" viewBox="0 0 16 16">
                                 <path
-                                    d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z" />
+                                    d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
                             </svg>
-                            Filter Pelajar
+                            Cari Presensi
                         </label>
-                        <select name="pelajar_id" id="pelajar_id" class="form-select form-select-lg border-2"
-                            onchange="this.form.submit()">
-                            <option value="">Semua Pelajar</option>
-                            @foreach ($pelajars as $pelajar)
-                                <option value="{{ $pelajar->id }}"
-                                    {{ isset($selectedPelajarId) && $selectedPelajarId == $pelajar->id ? 'selected' : '' }}>
-                                    {{ $pelajar->nama }}
-                                </option>
-                            @endforeach
-                        </select>
-                        <input type="hidden" name="bulan" value="{{ request('bulan', now()->format('Y-m')) }}">
-                    </form>
-                </div>
-                <div class="col-md-4">
-                    <label for="bulan" class="form-label fw-semibold mb-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                            class="me-1" viewBox="0 0 16 16">
-                            <path
-                                d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z" />
-                        </svg>
-                        Filter Bulan
-                    </label>
-                    <input type="month" name="bulan" id="bulan" class="form-control form-control-lg border-2"
-                        value="{{ request('bulan', now()->format('Y-m')) }}"
-                        onchange="document.getElementById('filterForm').submit()">
+                        <input type="text" id="searchInput" class="form-control form-control-lg border-2"
+                            placeholder="Ketik untuk mencari...">
+                    </div>
+                    <div class="col-md-6">
+                        <form method="GET" action="{{ route('pembimbing.presensi') }}" id="filterForm">
+                            <label for="pelajar_id" class="form-label fw-semibold mb-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                    class="me-1" viewBox="0 0 16 16">
+                                    <path
+                                        d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z" />
+                                </svg>
+                                Filter Berdasarkan Pelajar
+                            </label>
+                            <select name="pelajar_id" id="pelajar_id" class="form-select form-select-lg border-2"
+                                onchange="this.form.submit()">
+                                <option value="">Semua Pelajar</option>
+                                @foreach ($pelajars as $pelajar)
+                                    <option value="{{ $pelajar->id }}"
+                                        {{ isset($selectedPelajarId) && $selectedPelajarId == $pelajar->id ? 'selected' : '' }}>
+                                        {{ $pelajar->nama }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Card Body -->
-        <div class="card-body p-0">
-            <div class="table-responsive">
-                <table id="presensiTable" class="table table-hover align-middle mb-0">
-                    <thead class="bg-light">
-                        <tr class="text-center align-middle">
-                            <th class="py-3 px-3 fw-semibold text-secondary" style="width: 50px;">No</th>
-                            <th class="py-3 px-3 fw-semibold text-secondary text-start" style="min-width: 200px;">
-                                Pelajar</th>
-                            <th class="py-3 px-3 fw-semibold text-secondary" style="width: 120px;">Tanggal</th>
-                            <th class="py-3 px-3 fw-semibold text-secondary" style="width: 100px;">Status</th>
-                            <th class="py-3 px-3 fw-semibold text-secondary" style="width: 100px;">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @php
-                            // Jika pelajar terpilih, tampilkan semua tanggal sesuai durasi magangnya
-                            $showRange = isset($selectedPelajarId) && $selectedPelajarId;
-                            if ($showRange) {
-                                $pelajarFull = $pelajars->where('id', $selectedPelajarId)->first();
-                                if ($pelajarFull) {
-                                    $mulaiFull = \Carbon\Carbon::parse($pelajarFull->rencana_mulai ?? now());
-                                    $selesaiFull = \Carbon\Carbon::parse($pelajarFull->rencana_selesai ?? now());
-                                    $semuaTanggalFull = [];
-                                    for ($d = $mulaiFull->copy(); $d->lte($selesaiFull); $d->addDay()) {
-                                        $semuaTanggalFull[] = $d->format('Y-m-d');
-                                    }
+            <!-- Card Body -->
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table id="presensiTable" class="table table-hover align-middle mb-0">
+                        <thead class="bg-light">
+                            <tr class="text-center align-middle">
+                                <th class="py-3 px-3 fw-semibold text-secondary" style="width: 50px;">No</th>
+                                <th class="py-3 px-3 fw-semibold text-secondary text-start" style="min-width: 200px;">
+                                    Pelajar</th>
+                                <th class="py-3 px-3 fw-semibold text-secondary" style="width: 120px;">Tanggal</th>
+                                <th class="py-3 px-3 fw-semibold text-secondary" style="width: 100px;">Status</th>
+                                <th class="py-3 px-3 fw-semibold text-secondary" style="width: 100px;">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
 
-                                    $pelajarPresensis = $presensis
-                                        ->filter(function ($p) use ($selectedPelajarId) {
-                                            return $p->pelajar_id == $selectedPelajarId;
-                                        })
-                                        ->unique('tanggal');
-                                    $presensiMapFull = $pelajarPresensis->keyBy('tanggal');
-                                } else {
-                                    $showRange = false;
-                                }
-                            }
-                        @endphp
-
-                        @if (!empty($showRange) && !empty($pelajarFull))
-                            @php $no = 1; @endphp
-                            @foreach ($semuaTanggalFull as $tanggal)
-                                @php
-                                    $pres = $presensiMapFull->get($tanggal);
-                                    $carbonDate = \Carbon\Carbon::parse($tanggal);
-                                    $isWeekend = $carbonDate->isWeekend();
-                                @endphp
-                                <tr class="border-bottom">
-                                    <td class="text-center px-3">
-                                        <span class="badge bg-light text-dark rounded-circle p-2"
-                                            style="width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center;">
-                                            {{ $no++ }}
-                                        </span>
-                                    </td>
-                                    <td class="px-4">
-                                        <div class="d-flex align-items-center">
-                                            <div class="bg-primary bg-opacity-10 rounded-circle p-2 me-2"
-                                                style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
-                                                    fill="currentColor" class="text-primary" viewBox="0 0 16 16">
-                                                    <path
-                                                        d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z" />
-                                                </svg>
-                                            </div>
-                                            <span class="text-dark">{{ $pelajarFull->nama ?? '-' }}</span>
-                                        </div>
-                                    </td>
-                                    <td class="text-center px-3">
-                                        <span
-                                            class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25 px-2 py-2">
-                                            {{ \Carbon\Carbon::parse($tanggal)->format('d/m/Y') }}
-                                        </span>
-                                    </td>
-                                    <td class="text-center px-3">
-                                        @if ($pres)
-                                            @php
-                                                $statusClass = match (strtolower($pres->status)) {
-                                                    'hadir' => 'success',
-                                                    'izin' => 'warning',
-                                                    'sakit' => 'info',
-                                                    'alpha' => 'danger',
-                                                    'terlambat' => 'secondary',
-                                                    default => 'secondary',
-                                                };
-                                                $statusIcon = match (strtolower($pres->status)) {
-                                                    'hadir' => 'check',
-                                                    'izin' => 'exclamation',
-                                                    'sakit' => 'notes-medical',
-                                                    'alpha' => 'times',
-                                                    'terlambat' => 'clock',
-                                                    default => 'question',
-                                                };
-                                            @endphp
-                                            <span class="badge bg-{{ $statusClass }} px-3 py-2">
-                                                <i class="fas fa-{{ $statusIcon }} me-1"></i>
-                                                {{ ucfirst($pres->status) }}
-                                            </span>
-                                        @else
-                                            @if ($carbonDate->isFuture())
-                                                <span class="badge bg-secondary">Belum Tiba</span>
-                                            @elseif($isWeekend)
-                                                <span class="badge bg-secondary">Libur</span>
-                                            @else
-                                                <span class="badge bg-danger">Alfa</span>
-                                            @endif
-                                        @endif
-                                    </td>
-                                    <td class="text-center px-3">
-                                        <button type="button"
-                                            class="btn btn-sm {{ $pres ? 'btn-primary' : 'btn-success' }} btn-edit-presensi"
-                                            data-tanggal="{{ $tanggal }}" data-pelajar-id="{{ $pelajarFull->id }}"
-                                            data-pelajar-nama="{{ $pelajarFull->nama }}"
-                                            data-id="{{ $pres ? $pres->id : '' }}" data-bs-toggle="modal"
-                                            data-bs-target="#editPresensiModal">
-                                            <i class="fas fa-{{ $pres ? 'edit' : 'plus' }} me-1"></i>
-                                            {{ $pres ? 'Edit' : 'Isi' }}
-                                        </button>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        @else
                             @forelse ($presensis as $index => $presensi)
                                 <tr class="border-bottom" id="row-{{ $presensi->id }}">
                                     <td class="text-center px-3">
@@ -318,96 +196,21 @@
                                     </td>
                                 </tr>
                             @endforelse
-                        @endif
-                    </tbody>
-                </table>
-            </div>
+                        </tbody>
+                    </table>
+                </div>
 
-            <!-- Pagination Info -->
-            <div class="d-flex justify-content-between align-items-center p-3 bg-light border-top">
-                <div class="text-muted small" id="tableInfo">
-                    Menampilkan data
-                </div>
-                <nav id="paginationNav">
-                    <!-- Pagination will be inserted here by DataTables -->
-                </nav>
-            </div>
-        </div>
-    </div>
-
-    {{-- STATISTIK BULAN TERPILIH --}}
-    @php
-        $bulanDipilih = request('bulan', now()->format('Y-m'));
-
-        // Filter presensi berdasarkan bulan dan pelajar yang dipilih
-        $presensiFilterBulan = $presensis
-            ->filter(function ($p) use ($bulanDipilih, $selectedPelajarId) {
-                $matchBulan = substr($p->tanggal, 0, 7) == $bulanDipilih;
-                $matchPelajar = !$selectedPelajarId || $p->pelajar_id == $selectedPelajarId;
-                return $matchBulan && $matchPelajar;
-            })
-            ->unique('tanggal');
-
-        // Hitung total berdasarkan status
-        $totalHadir = $presensiFilterBulan->count();
-        $totalTepat = $presensiFilterBulan->where('status', 'Tepat Waktu')->count();
-        $totalTerlambat = $presensiFilterBulan->where('status', 'Terlambat')->count();
-        $totalIzin = $presensiFilterBulan->where('status', 'Izin')->count();
-        $totalSakit = $presensiFilterBulan->where('status', 'Sakit')->count();
-        $totalAlfa = $presensiFilterBulan->where('status', 'Alpha')->count();
-    @endphp
-
-    {{-- CARD STATISTIK --}}
-    <div class="card mt-4 shadow-sm border-0">
-        <div class="card-body p-3">
-            <div class="fw-bold mb-3">
-                <i class="bi bi-bar-chart-line me-2"></i>Statistik Bulan
-                {{ \Carbon\Carbon::parse($bulanDipilih)->locale('id')->isoFormat('MMMM Y') }}
-                @if ($selectedPelajarId)
-                    <span class="text-muted small">-
-                        {{ $pelajars->where('id', $selectedPelajarId)->first()->nama ?? '' }}</span>
-                @endif
-            </div>
-            <div class="row text-center g-3">
-                <div class="col-6 col-md-2">
-                    <div class="p-3 bg-success bg-opacity-10 rounded">
-                        <div class="text-success fw-bold fs-4">{{ $totalHadir }}</div>
-                        <div class="small text-muted">Hadir</div>
+                <!-- Pagination Info -->
+                <div class="d-flex justify-content-between align-items-center p-3 bg-light border-top">
+                    <div class="text-muted small" id="tableInfo">
+                        Menampilkan data
                     </div>
-                </div>
-                <div class="col-6 col-md-2">
-                    <div class="p-3 bg-primary bg-opacity-10 rounded">
-                        <div class="text-primary fw-bold fs-4">{{ $totalTepat }}</div>
-                        <div class="small text-muted">Tepat Waktu</div>
-                    </div>
-                </div>
-                <div class="col-6 col-md-2">
-                    <div class="p-3 bg-warning bg-opacity-10 rounded">
-                        <div class="text-warning fw-bold fs-4">{{ $totalTerlambat }}</div>
-                        <div class="small text-muted">Terlambat</div>
-                    </div>
-                </div>
-                <div class="col-6 col-md-2">
-                    <div class="p-3 bg-info bg-opacity-10 rounded">
-                        <div class="text-info fw-bold fs-4">{{ $totalSakit }}</div>
-                        <div class="small text-muted">Sakit</div>
-                    </div>
-                </div>
-                <div class="col-6 col-md-2">
-                    <div class="p-3 bg-warning bg-opacity-10 rounded">
-                        <div class="fw-bold fs-4" style="color: #ffc107;">{{ $totalIzin }}</div>
-                        <div class="small text-muted">Izin</div>
-                    </div>
-                </div>
-                <div class="col-6 col-md-2">
-                    <div class="p-3 bg-danger bg-opacity-10 rounded">
-                        <div class="text-danger fw-bold fs-4">{{ $totalAlfa }}</div>
-                        <div class="small text-muted">Alfa</div>
-                    </div>
+                    <nav id="paginationNav">
+                        <!-- Pagination will be inserted here by DataTables -->
+                    </nav>
                 </div>
             </div>
         </div>
-    </div>
     </div>
 
     <!-- Modal Edit Presensi -->
@@ -427,8 +230,6 @@
                         @csrf
                         @method('PUT')
                         <input type="hidden" id="presensi_id">
-                        <input type="hidden" id="pelajar_id" name="pelajar_id">
-                        <input type="hidden" id="tanggal" name="tanggal">
 
                         <!-- Info Pelajar -->
                         <div class="alert alert-info">
@@ -512,7 +313,7 @@
                 }
             });
 
-            // Base URL untuk rute presensi pembimbing
+            // Base URL untuk rute presensi pembimbing (pastikan prefix pembimbing digunakan)
             const pembimbingPresensiBase = "{{ url('pembimbing/presensi') }}";
 
             const table = $('#presensiTable').DataTable({
@@ -539,7 +340,7 @@
                 scrollX: false,
                 autoWidth: false,
                 order: [
-                    [2, 'asc']
+                    [2, 'desc']
                 ]
             });
 
@@ -578,46 +379,34 @@
                 $('.invalid-feedback').hide().text('');
                 $('.is-invalid').removeClass('is-invalid');
 
-                const presensiId = $(this).data('id');
-                const tanggal = $(this).data('tanggal');
-                const pelajarId = $(this).data('pelajar-id');
-                const pelajarNama = $(this).data('pelajar-nama');
+                // Load data presensi via AJAX (gunakan prefix pembimbing)
+                $.ajax({
+                    url: `${pembimbingPresensiBase}/${presensiId}/data`,
+                    type: 'GET',
+                    success: function(response) {
+                        console.log('Data loaded:', response); // Debug
 
-                // Clear previous form data
-                $('#editPresensiForm')[0].reset();
-                $('.invalid-feedback').hide().text('');
-                $('.is-invalid').removeClass('is-invalid');
+                        if (response.success) {
+                            const data = response.data;
 
-                // Fill in modal info
-                $('#modal_pelajar_nama').text(pelajarNama);
-                $('#modal_tanggal').text(tanggal);
+                            // Isi informasi pelajar
+                            $('#modal_pelajar_nama').text(data.pelajar_nama);
+                            $('#modal_tanggal').text(data.tanggal);
 
-                // Set hidden fields
-                $('#presensi_id').val(presensiId);
-                $('#pelajar_id').val(pelajarId);
-                $('#tanggal').val(tanggal);
+                            // Set status radio button
+                            $(`input[name="status"][value="${data.status}"]`).prop('checked',
+                                true);
 
-                if (presensiId) {
-                    // If existing presensi, load via AJAX
-                    $.ajax({
-                        url: `${pembimbingPresensiBase}/${presensiId}/data`,
-                        type: 'GET',
-                        success: function(response) {
-                            if (response.success) {
-                                const data = response.data;
-                                $(`input[name="status"][value="${data.status}"]`).prop(
-                                    'checked', true);
-                            }
-                        },
-                        error: function(xhr, status, error) {
-                            console.error('Error loading data:', xhr.responseText);
-                            alert('Gagal memuat data presensi');
+                            // Enable tombol simpan
+                            $('#btnSimpanPresensi').prop('disabled', false).html(
+                                '<i class="fas fa-save me-1"></i> Simpan Perubahan');
                         }
-                    });
-                } else {
-                    // For new presensi, set default "Hadir" status
-                    $('#status_hadir').prop('checked', true);
-                }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error loading data:', xhr.responseText); // Debug
+                        alert('Gagal memuat data presensi');
+                    }
+                });
             });
 
             // Simpan perubahan presensi
@@ -646,30 +435,15 @@
                 $(this).prop('disabled', true).html(
                     '<i class="fas fa-spinner fa-spin me-1"></i> Menyimpan...');
 
-                // Kirim data via AJAX
-                const isNew = !presensiId;
-                const url = isNew ? pembimbingPresensiBase :
-                    `${pembimbingPresensiBase}/${presensiId}/update`;
-                const method = isNew ? 'POST' : 'PUT';
-
-                // Prepare data
-                const formData = {
-                    _token: $('meta[name="csrf-token"]').attr('content'),
-                    status: status
-                };
-
-                // Add additional fields for new records
-                if (isNew) {
-                    formData.pelajar_id = $('#pelajar_id').val();
-                    formData.tanggal = $('#tanggal').val();
-                } else {
-                    formData._method = 'PUT';
-                }
-
+                // Kirim data via AJAX (gunakan prefix pembimbing)
                 $.ajax({
-                    url: url,
-                    type: 'POST',
-                    data: formData,
+                    url: `${pembimbingPresensiBase}/${presensiId}/update`,
+                    type: 'POST', // Gunakan POST
+                    data: {
+                        _method: 'PUT', // Method spoofing untuk PUT
+                        _token: $('meta[name="csrf-token"]').attr('content'),
+                        status: status,
+                    },
                     success: function(response) {
                         console.log('Update response:', response); // Debug
 
@@ -739,11 +513,6 @@
                                     $(this).remove();
                                 });
                             }, 3000);
-
-                            // Reload halaman untuk update statistik
-                            setTimeout(function() {
-                                location.reload();
-                            }, 1500);
 
                             // Reset tombol
                             $('#btnSimpanPresensi').prop('disabled', false).html(
@@ -843,13 +612,5 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
             transition: all 0.2s ease;
         }
-
-        /* Bootstrap Icons */
-        .bi {
-            vertical-align: middle;
-        }
     </style>
-
-    <!-- Bootstrap Icons CDN -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 @endpush

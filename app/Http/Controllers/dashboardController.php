@@ -164,7 +164,18 @@ class DashboardController extends Controller
                 ELSE 1 
             END
         ")
-            ->orderBy('rencana_mulai', 'asc')
+            ->orderByRaw("
+            CASE 
+                WHEN rencana_selesai >= CURDATE() THEN rencana_mulai 
+                ELSE NULL 
+            END ASC
+        ")
+            ->orderByRaw("
+            CASE 
+                WHEN rencana_selesai < CURDATE() THEN rencana_mulai 
+                ELSE NULL 
+            END DESC
+        ")
             ->paginate(10);
 
         return response()->json([

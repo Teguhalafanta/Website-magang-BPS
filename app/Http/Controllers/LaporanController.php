@@ -71,7 +71,7 @@ class LaporanController extends Controller
         $laporan = Laporan::findOrFail($id);
 
         // hanya pembimbing pemilik yg boleh setujui
-        if (Auth::user()->id == $laporan->user->pembimbing_id) {
+        if (!isset($laporan->user) || Auth::user()->id !== $laporan->user->pembimbing_id) {
             abort(403, 'Tidak berwenang menyetujui laporan ini.');
         }
 
@@ -87,7 +87,7 @@ class LaporanController extends Controller
     {
         $laporan = Laporan::findOrFail($id);
 
-        if (Auth::user()->id == $laporan->user->pembimbing_id) {
+        if (!isset($laporan->user) || Auth::user()->id !== $laporan->user->pembimbing_id) {
             abort(403, 'Tidak berwenang menolak laporan ini.');
         }
 
@@ -181,7 +181,13 @@ class LaporanController extends Controller
     {
         $laporan = \App\Models\Laporan::findOrFail($id);
 
-        return response()->download(storage_path('app/' . $laporan->file_laporan));
+        // Use the 'file' column (stored via storage disk 'public')
+        $filePath = storage_path('app/public/' . $laporan->file);
+        if (!file_exists($filePath)) {
+            abort(404, 'File laporan tidak ditemukan.');
+        }
+
+        return response()->download($filePath);
     }
 
     // Download laporan (admin & pembimbing bisa semua, pelajar hanya miliknya)
@@ -203,7 +209,7 @@ class LaporanController extends Controller
 
         // Admin tidak dibatasi
 
-        $filePath = storage_path('app/public/' . $laporan->file_laporan);
+        $filePath = storage_path('app/public/' . $laporan->file);
         if (!file_exists($filePath)) {
             abort(404, 'File tidak ditemukan.');
         }

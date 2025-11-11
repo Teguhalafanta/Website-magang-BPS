@@ -3,11 +3,16 @@
 @section('title', 'Presensi Bimbingan')
 
 @section('content')
-    <div class="container my-5">
+    <div class="container-fluid py-4">
         <!-- Header Section -->
         <div class="row mb-4">
             <div class="col-12">
                 <div class="d-flex align-items-center mb-3">
+                    <div class="me-3">
+                        <div class="bg-primary rounded p-2">
+                            <i class="fas fa-clipboard-list text-white fs-4"></i>
+                        </div>
+                    </div>
                     <div>
                         <h2 class="mb-1 fw-bold text-dark">Daftar Presensi Peserta Bimbingan</h2>
                         <p class="text-muted mb-0">Monitoring kehadiran dan aktivitas bimbingan pelajar</p>
@@ -18,13 +23,9 @@
 
         <!-- Alert Success -->
         @if (session('success'))
-            <div class="alert alert-success alert-dismissible fade show shadow-sm border-0" role="alert">
+            <div class="alert alert-success alert-dismissible fade show shadow-sm border-0 mb-4" role="alert">
                 <div class="d-flex align-items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="me-2"
-                        viewBox="0 0 16 16">
-                        <path
-                            d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z" />
-                    </svg>
+                    <i class="fas fa-check-circle me-2"></i>
                     <span>{{ session('success') }}</span>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -33,13 +34,9 @@
 
         <!-- Alert Error -->
         @if (session('error'))
-            <div class="alert alert-danger alert-dismissible fade show shadow-sm border-0" role="alert">
+            <div class="alert alert-danger alert-dismissible fade show shadow-sm border-0 mb-4" role="alert">
                 <div class="d-flex align-items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="me-2"
-                        viewBox="0 0 16 16">
-                        <path
-                            d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z" />
-                    </svg>
+                    <i class="fas fa-exclamation-circle me-2"></i>
                     <span>{{ session('error') }}</span>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -48,14 +45,13 @@
 
         @if (!isset($selectedPelajarId) || !$selectedPelajarId)
             <!-- Presensi Hari Ini Card -->
-            <div class="card border-0 shadow-lg rounded-3 overflow-hidden mb-4">
-                <div class="card-header bg-gradient text-white py-3 border-0"
-                    style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+            <div class="card border-0 shadow-sm rounded-3 overflow-hidden mb-4">
+                <div class="card-header bg-primary text-white py-3 border-0">
                     <div class="d-flex justify-content-between align-items-center">
                         <h5 class="mb-0 fw-bold text-white">
                             <i class="fas fa-calendar-day me-2"></i>Presensi Hari Ini
                         </h5>
-                        <span class="badge bg-white text-primary">
+                        <span class="badge bg-light text-primary">
                             {{ \Carbon\Carbon::now()->locale('id')->isoFormat('dddd, D MMMM Y') }}
                         </span>
                     </div>
@@ -95,7 +91,7 @@
                                     };
                                 @endphp
                                 <div class="col-md-6 col-lg-4">
-                                    <div class="card h-100 border-0 shadow-sm hover-card">
+                                    <div class="card h-100 border-0 shadow-sm">
                                         <div class="card-body">
                                             <div class="d-flex align-items-center mb-3">
                                                 <div class="avatar-circle bg-{{ $statusClass }} bg-opacity-10 me-3">
@@ -104,8 +100,7 @@
                                                 <div class="grow">
                                                     <h6 class="mb-1 fw-bold">{{ $pelajar->nama ?? 'N/A' }}</h6>
                                                     <small class="text-muted">
-                                                        <i
-                                                            class="fas fa-building me-1"></i>{{ $pelajar->asal_sekolah ?? '-' }}
+                                                        <i class="fas fa-building me-1"></i>{{ $pelajar->asal_sekolah ?? '-' }}
                                                     </small>
                                                 </div>
                                             </div>
@@ -193,10 +188,9 @@
         @endif
 
         <!-- Main Card -->
-        <div class="card border-0 shadow-lg rounded-3 overflow-hidden">
+        <div class="card border-0 shadow-sm rounded-3 overflow-hidden">
             <!-- Card Header -->
-            <div class="card-header bg-gradient text-white py-3 border-0"
-                style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+            <div class="card-header bg-primary text-white py-2 border-0">
                 <div class="d-flex justify-content-between align-items-center">
                     <h5 class="mb-0 fw-bold text-white">
                         <i class="fas fa-table me-2"></i>Tabel Presensi Lengkap
@@ -206,19 +200,13 @@
 
             <!-- Filter Section -->
             <div class="card-body bg-light border-bottom">
-                <div class="row g-3 align-items-end">
+                <div class="row g-5 align-items-end">
                     <div class="col-md-4">
                         <form method="GET" action="{{ route('pembimbing.presensi') }}" id="filterForm">
                             <label for="pelajar_id" class="form-label fw-semibold mb-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                    fill="currentColor" class="me-1" viewBox="0 0 16 16">
-                                    <path
-                                        d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z" />
-                                </svg>
-                                Filter Berdasarkan Pelajar
+                                <i class="fas fa-user me-1"></i>Filter Berdasarkan Pelajar
                             </label>
-                            <select name="pelajar_id" id="pelajar_id" class="form-select form-select-lg border-2"
-                                onchange="this.form.submit()">
+                            <select name="pelajar_id" id="pelajar_id" class="form-select border-2" onchange="this.form.submit()">
                                 <option value="">Semua Pelajar</option>
                                 @foreach ($pelajars as $pelajar)
                                     <option value="{{ $pelajar->id }}"
@@ -241,7 +229,7 @@
                                 <label class="form-label fw-semibold mb-2">
                                     <i class="fas fa-calendar-alt me-1"></i>Filter Bulan
                                 </label>
-                                <input type="month" name="bulan" class="form-control form-control-lg border-2"
+                                <input type="month" name="bulan" class="form-control border-2"
                                     value="{{ $bulanDipilih }}" onchange="this.form.submit()">
                             </form>
                         </div>
@@ -279,9 +267,9 @@
                         $presensiMap = $pelajarPresensi->keyBy('tanggal');
                     @endphp
 
-                    <div class="table-responsive" style="max-height: 600px;">
+                    <div class="table-responsive" style="max-height: 400px;">
                         <table class="table table-sm table-bordered table-hover text-center align-middle small">
-                            <thead class="table-dark sticky-top">
+                            <thead class="table-primary sticky-top">
                                 <tr>
                                     <th class="py-2">No</th>
                                     <th class="py-2">Tanggal</th>
@@ -470,11 +458,7 @@
                     </div>
                 @else
                     <div class="p-5 text-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor"
-                            class="mb-3 opacity-50 text-muted" viewBox="0 0 16 16">
-                            <path
-                                d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z" />
-                        </svg>
+                        <i class="fas fa-user fa-4x mb-3 opacity-50 text-muted"></i>
                         <h5 class="text-muted mb-2">Pilih Pelajar</h5>
                         <p class="text-muted small mb-0">Silakan pilih pelajar dari dropdown di atas untuk melihat data
                             presensi lengkap</p>
@@ -489,7 +473,7 @@
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                <div class="modal-header bg-primary text-white">
                     <h5 class="modal-title text-white" id="editPresensiModalLabel">
                         <i class="fas fa-edit me-2"></i>Edit Presensi
                     </h5>
@@ -687,7 +671,7 @@
                             $('#editPresensiModal').modal('hide');
                             const alertHtml =
                                 `<div class="alert alert-success alert-dismissible fade show" role="alert">${resp.message}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>`;
-                            $('.container.my-5').prepend(alertHtml);
+                            $('.container-fluid.py-4').prepend(alertHtml);
                             setTimeout(function() {
                                 location.reload();
                             }, 1200);
@@ -721,21 +705,40 @@
 
 @push('styles')
     <style>
-        .table th,
+        /* BPS Professional Styling */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+        }
+        
+        .card {
+            border: none;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        }
+        
+        .card-header {
+            font-weight: 600;
+        }
+        
+        .table th {
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        
         .table td {
-            vertical-align: middle;
+            font-size: 0.85rem;
         }
-
+        
         .table-hover tbody tr:hover {
-            background-color: rgba(102, 126, 234, 0.05);
-            transition: background-color 0.2s ease;
+            background-color: rgba(13, 110, 253, 0.05);
         }
-
+        
         .badge {
             font-weight: 500;
             letter-spacing: 0.3px;
+            font-size: 0.75rem;
         }
-
+        
         /* Avatar Circle for Today's Attendance */
         .avatar-circle {
             width: 50px;
@@ -745,81 +748,87 @@
             align-items: center;
             justify-content: center;
         }
-
-        /* Hover effect for today's attendance cards */
-        .hover-card {
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .hover-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15) !important;
-        }
-
+        
         /* Custom styling for radio buttons */
         .btn-check:checked+.btn-outline-success {
             background-color: #28a745;
             border-color: #28a745;
             color: white;
         }
-
+        
         .btn-check:checked+.btn-outline-warning {
             background-color: #ffc107;
             border-color: #ffc107;
             color: #000;
         }
-
+        
         .btn-check:checked+.btn-outline-info {
             background-color: #17a2b8;
             border-color: #17a2b8;
             color: white;
         }
-
+        
         .btn-check:checked+.btn-outline-danger {
             background-color: #dc3545;
             border-color: #dc3545;
             color: white;
         }
-
+        
         .btn-check:checked+.btn-outline-secondary {
             background-color: #6c757d;
             border-color: #6c757d;
             color: white;
         }
-
-        /* Modal animation */
-        .modal.fade .modal-dialog {
-            transition: transform 0.3s ease-out;
-        }
-
+        
         /* Button hover effects */
         .btn-edit-presensi {
             transition: all 0.2s ease;
         }
-
+        
         .btn-edit-presensi:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
-
+        
         /* Force yellow styling for action buttons to match request */
         .btn-edit-presensi.btn-warning {
             background-color: #ffc107;
             border-color: #ffc107;
             color: #212529;
         }
-
+        
         .btn-edit-presensi.btn-warning:hover,
         .btn-edit-presensi.btn-warning:focus {
             background-color: #e0a800;
             border-color: #d39e00;
             color: #212529;
         }
-
+        
         /* Improve action button visibility */
         .btn-sm {
             padding: 0.25rem 0.5rem;
             font-size: 0.875rem;
+        }
+        
+        /* Professional table styling */
+        .table-primary {
+            background-color: #0d6efd;
+            color: white;
+        }
+        
+        .table-primary th {
+            border-color: #0d6efd;
+            color: white;
+        }
+        
+        /* Form styling */
+        .form-select, .form-control {
+            border-radius: 0.375rem;
+        }
+        
+        /* Alert styling */
+        .alert {
+            border-radius: 0.5rem;
         }
     </style>
 @endpush

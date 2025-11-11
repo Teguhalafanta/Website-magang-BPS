@@ -182,8 +182,8 @@ Route::middleware(['auth'])->group(function () {
         // ✅ Route download laporan (tambahkan ini)
         Route::get('/laporan/download/{id}', [LaporanController::class, 'download'])->name('laporan.download');
 
-        Route::get('/sertifikat/download/{id}', [LaporanController::class, 'downloadSertifikat'])->name('pelajar.sertifikat.download');
-
+        Route::get('/laporan/{id}/download-sertifikat', [LaporanController::class, 'downloadSertifikat'])
+            ->name('laporan.downloadSertifikat');
         // PRODUK MAGANG
         Route::resource('produk', App\Http\Controllers\ProdukMagangController::class)->names([
             'index' => 'produk.index',

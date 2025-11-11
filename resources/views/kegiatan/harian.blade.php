@@ -29,7 +29,7 @@
         @endif
 
         <table class="table table-bordered">
-            <thead>
+            <thead class="table-primary">
                 <tr class="text-center">
                     <th>No</th>
                     <th>Nama Kegiatan</th>

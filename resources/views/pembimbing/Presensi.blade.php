@@ -46,6 +46,144 @@
             </div>
         @endif
 
+        @if (!isset($selectedPelajarId) || !$selectedPelajarId)
+            <!-- Presensi Hari Ini Card -->
+            <div class="card border-0 shadow-lg rounded-3 overflow-hidden mb-4">
+                <div class="card-header bg-gradient text-white py-3 border-0"
+                    style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0 fw-bold text-white">
+                            <i class="fas fa-calendar-day me-2"></i>Presensi Hari Ini
+                        </h5>
+                        <span class="badge bg-white text-primary">
+                            {{ \Carbon\Carbon::now()->locale('id')->isoFormat('dddd, D MMMM Y') }}
+                        </span>
+                    </div>
+                </div>
+                <div class="card-body p-4">
+                    @php
+                        $hariIni = \Carbon\Carbon::now()->format('Y-m-d');
+                        $presensiHariIni = $presensis->where('tanggal', $hariIni);
+                    @endphp
+
+                    @if ($presensiHariIni->isEmpty())
+                        <div class="text-center py-5">
+                            <i class="fas fa-calendar-times fa-4x text-muted mb-3"></i>
+                            <h5 class="text-muted">Belum Ada Presensi Hari Ini</h5>
+                            <p class="text-muted small">Belum ada pelajar yang melakukan presensi pada hari ini</p>
+                        </div>
+                    @else
+                        <div class="row g-3">
+                            @foreach ($presensiHariIni as $presensi)
+                                @php
+                                    $pelajar = $pelajars->firstWhere('id', $presensi->pelajar_id);
+                                    $statusClass = match (strtolower($presensi->status)) {
+                                        'hadir', 'tepat waktu' => 'success',
+                                        'izin' => 'warning',
+                                        'sakit' => 'info',
+                                        'alpha' => 'danger',
+                                        'terlambat' => 'secondary',
+                                        default => 'secondary',
+                                    };
+                                    $statusIcon = match (strtolower($presensi->status)) {
+                                        'hadir', 'tepat waktu' => 'fa-check-circle',
+                                        'izin' => 'fa-exclamation-circle',
+                                        'sakit' => 'fa-notes-medical',
+                                        'alpha' => 'fa-times-circle',
+                                        'terlambat' => 'fa-clock',
+                                        default => 'fa-circle',
+                                    };
+                                @endphp
+                                <div class="col-md-6 col-lg-4">
+                                    <div class="card h-100 border-0 shadow-sm hover-card">
+                                        <div class="card-body">
+                                            <div class="d-flex align-items-center mb-3">
+                                                <div class="avatar-circle bg-{{ $statusClass }} bg-opacity-10 me-3">
+                                                    <i class="fas {{ $statusIcon }} text-{{ $statusClass }} fs-4"></i>
+                                                </div>
+                                                <div class="grow">
+                                                    <h6 class="mb-1 fw-bold">{{ $pelajar->nama ?? 'N/A' }}</h6>
+                                                    <small class="text-muted">
+                                                        <i
+                                                            class="fas fa-building me-1"></i>{{ $pelajar->asal_sekolah ?? '-' }}
+                                                    </small>
+                                                </div>
+                                            </div>
+                                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                                <span class="small text-muted">
+                                                    <i class="fas fa-sign-in-alt me-1"></i>Datang:
+                                                </span>
+                                                <span class="badge bg-success">{{ $presensi->waktu_datang }}</span>
+                                            </div>
+                                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                                <span class="small text-muted">
+                                                    <i class="fas fa-sign-out-alt me-1"></i>Pulang:
+                                                </span>
+                                                @if ($presensi->waktu_pulang)
+                                                    <span class="badge bg-primary">{{ $presensi->waktu_pulang }}</span>
+                                                @else
+                                                    <span class="badge bg-warning text-dark">Belum Pulang</span>
+                                                @endif
+                                            </div>
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <span class="small text-muted">
+                                                    <i class="fas fa-info-circle me-1"></i>Status:
+                                                </span>
+                                                <span class="badge bg-{{ $statusClass }}">
+                                                    {{ ucfirst($presensi->status) }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+
+                        <!-- Statistik Hari Ini -->
+                        <div class="mt-4 pt-3 border-top">
+                            <h6 class="fw-bold mb-3">
+                                <i class="fas fa-chart-pie me-2"></i>Ringkasan Hari Ini
+                            </h6>
+                            <div class="row text-center g-2">
+                                @php
+                                    $totalHadirHariIni = $presensiHariIni
+                                        ->whereIn('status', ['Hadir', 'Tepat Waktu'])
+                                        ->count();
+                                    $totalTerlambatHariIni = $presensiHariIni->where('status', 'Terlambat')->count();
+                                    $totalIzinHariIni = $presensiHariIni->where('status', 'Izin')->count();
+                                    $totalSakitHariIni = $presensiHariIni->where('status', 'Sakit')->count();
+                                @endphp
+                                <div class="col-3">
+                                    <div class="p-3 bg-success bg-opacity-10 rounded">
+                                        <div class="text-success fw-bold fs-4">{{ $totalHadirHariIni }}</div>
+                                        <div class="small text-muted">Hadir</div>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="p-3 bg-secondary bg-opacity-10 rounded">
+                                        <div class="text-secondary fw-bold fs-4">{{ $totalTerlambatHariIni }}</div>
+                                        <div class="small text-muted">Terlambat</div>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="p-3 bg-warning bg-opacity-10 rounded">
+                                        <div class="text-warning fw-bold fs-4">{{ $totalIzinHariIni }}</div>
+                                        <div class="small text-muted">Izin</div>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="p-3 bg-info bg-opacity-10 rounded">
+                                        <div class="text-info fw-bold fs-4">{{ $totalSakitHariIni }}</div>
+                                        <div class="small text-muted">Sakit</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+                </div>
+            </div>
+        @endif
+
         <!-- Main Card -->
         <div class="card border-0 shadow-lg rounded-3 overflow-hidden">
             <!-- Card Header -->
@@ -53,31 +191,19 @@
                 style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
                 <div class="d-flex justify-content-between align-items-center">
                     <h5 class="mb-0 fw-bold text-white">
-                        Tabel Presensi
+                        <i class="fas fa-table me-2"></i>Tabel Presensi Lengkap
                     </h5>
                 </div>
             </div>
 
-            <!-- Search Section -->
+            <!-- Filter Section -->
             <div class="card-body bg-light border-bottom">
-                <div class="row g-3 align-items-center">
-                    <div class="col-md-6">
-                        <label for="searchInput" class="form-label fw-semibold mb-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                class="me-1" viewBox="0 0 16 16">
-                                <path
-                                    d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
-                            </svg>
-                            Cari Presensi
-                        </label>
-                        <input type="text" id="searchInput" class="form-control form-control-lg border-2"
-                            placeholder="Ketik untuk mencari...">
-                    </div>
-                    <div class="col-md-6">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-4">
                         <form method="GET" action="{{ route('pembimbing.presensi') }}" id="filterForm">
                             <label for="pelajar_id" class="form-label fw-semibold mb-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                    class="me-1" viewBox="0 0 16 16">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                    fill="currentColor" class="me-1" viewBox="0 0 16 16">
                                     <path
                                         d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z" />
                                 </svg>
@@ -95,134 +221,244 @@
                             </select>
                         </form>
                     </div>
+
+                    @if (isset($selectedPelajarId) && $selectedPelajarId)
+                        @php
+                            $selectedPelajar = $pelajars->firstWhere('id', $selectedPelajarId);
+                            $bulanDipilih = request('bulan', now()->format('Y-m'));
+                        @endphp
+                        <div class="col-md-4">
+                            <form method="GET" action="{{ route('pembimbing.presensi') }}" class="d-flex flex-column">
+                                <input type="hidden" name="pelajar_id" value="{{ $selectedPelajarId }}">
+                                <label class="form-label fw-semibold mb-2">
+                                    <i class="fas fa-calendar-alt me-1"></i>Filter Bulan
+                                </label>
+                                <input type="month" name="bulan" class="form-control form-control-lg border-2"
+                                    value="{{ $bulanDipilih }}" onchange="this.form.submit()">
+                            </form>
+                        </div>
+                    @endif
                 </div>
             </div>
 
             <!-- Card Body -->
             <div class="card-body p-0">
-                <div class="table-responsive">
-                    <table id="presensiTable" class="table table-hover align-middle mb-0">
-                        <colgroup>
-                            <col style="width: 65px;"> <!-- No -->
-                            <col style="width: 130px;"> <!-- Pelajar -->
-                            <col style="width: 140px;"> <!-- Tanggal -->
-                            <col style="width: 120px;"> <!-- Status -->
-                            <col style="width: 90px;"> <!-- Aksi -->
-                        </colgroup>
+                @if (isset($selectedPelajarId) && $selectedPelajarId)
+                    @php
+                        $selectedPelajar = $pelajars->firstWhere('id', $selectedPelajarId);
+                        $pelajarPresensi = $presensis->where('pelajar_id', $selectedPelajarId);
 
-                        <thead class="table-light">
-                            <tr class="text-center align-middle">
-                                <th class="fw-semibold text-muted small text-center">No</th>
-                                <th class="fw-semibold text-muted small text-center">Pelajar</th>
-                                <th class="fw-semibold text-muted small text-center">Tanggal</th>
-                                <th class="fw-semibold text-muted small text-center">Status</th>
-                                <th class="fw-semibold text-muted small text-center">Aksi</th>
-                            </tr>
-                        </thead>
-                        <style>
-                            table {
-                                table-layout: fixed;
-                                width: 100%;
+                        // Ambil bulan yang dipilih
+                        $bulanDipilih = request('bulan', now()->format('Y-m'));
+                        $tahun = (int) substr($bulanDipilih, 0, 4);
+                        $bulan = (int) substr($bulanDipilih, 5, 2);
+
+                        // Generate tanggal untuk bulan yang dipilih
+                        $mulai = \Carbon\Carbon::parse($selectedPelajar->rencana_mulai ?? now());
+                        $selesai = \Carbon\Carbon::parse($selectedPelajar->rencana_selesai ?? now());
+
+                        $jumlahHari = cal_days_in_month(CAL_GREGORIAN, $bulan, $tahun);
+                        $semuaTanggal = [];
+
+                        for ($i = 1; $i <= $jumlahHari; $i++) {
+                            $tanggal = \Carbon\Carbon::createFromDate($tahun, $bulan, $i);
+                            if ($tanggal->lt($mulai) || $tanggal->gt($selesai)) {
+                                continue;
                             }
-                        </style>
+                            $semuaTanggal[] = $tanggal->format('Y-m-d');
+                        }
 
-                        <tbody>
+                        $presensiMap = $pelajarPresensi->keyBy('tanggal');
+                    @endphp
 
-                            @forelse ($presensis as $index => $presensi)
-                                <tr class="border-bottom" id="row-{{ $presensi->id }}">
-                                    <td class="text-center px-3">
-                                        <span class="badge bg-light text-dark rounded-circle p-2"
-                                            style="width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center;">
-                                            {{ $index + 1 }}
-                                        </span>
-                                    </td>
-                                    <td class="px-4">
-                                        <div class="d-flex align-items-center">
-                                            <div class="bg-primary bg-opacity-10 rounded-circle p-2 me-2"
-                                                style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
-                                                    fill="currentColor" class="text-primary" viewBox="0 0 16 16">
-                                                    <path
-                                                        d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z" />
-                                                </svg>
-                                            </div>
-                                            <span class="text-dark">{{ $presensi->pelajar->nama ?? '-' }}</span>
-                                        </div>
-                                    </td>
-                                    <td class="text-center px-3">
-                                        <span
-                                            class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25 px-2 py-2">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12"
-                                                fill="currentColor" class="me-1 mb-1" viewBox="0 0 16 16">
-                                                <path
-                                                    d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z" />
-                                            </svg>
-                                            {{ \Carbon\Carbon::parse($presensi->tanggal)->format('d/m/Y') }}
-                                        </span>
-                                    </td>
-                                    <td class="text-center px-3">
-                                        @php
-                                            $statusClass = match (strtolower($presensi->status)) {
-                                                'hadir' => 'success',
-                                                'izin' => 'warning',
-                                                'sakit' => 'info',
-                                                'alpha' => 'danger',
-                                                'terlambat' => 'secondary',
-                                                default => 'secondary',
-                                            };
-                                            $statusIcon = match (strtolower($presensi->status)) {
-                                                'hadir' => 'check',
-                                                'izin' => 'exclamation',
-                                                'sakit' => 'notes-medical',
-                                                'alpha' => 'times',
-                                                'terlambat' => 'clock',
-                                                default => 'question',
-                                            };
-                                        @endphp
-                                        <span class="badge bg-{{ $statusClass }} px-3 py-2"
-                                            id="badge-{{ $presensi->id }}">
-                                            <i class="fas fa-{{ $statusIcon }} me-1"></i>
-                                            {{ ucfirst($presensi->status) }}
-                                        </span>
-                                    </td>
-                                    <td class="text-center px-3">
-                                        <button type="button" class="btn btn-sm btn-primary btn-edit-presensi"
-                                            data-id="{{ $presensi->id }}" data-bs-toggle="modal"
-                                            data-bs-target="#editPresensiModal">
-                                            <i class="fas fa-edit me-1"></i> Edit
-                                        </button>
-                                    </td>
-                                </tr>
-                            @empty
+                    <div class="table-responsive" style="max-height: 600px;">
+                        <table class="table table-sm table-bordered table-hover text-center align-middle small">
+                            <thead class="table-dark sticky-top">
                                 <tr>
-                                    <td colspan="6" class="text-center py-5">
-                                        <div class="text-muted">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48"
-                                                fill="currentColor" class="mb-3 opacity-50" viewBox="0 0 16 16">
-                                                <path
-                                                    d="M1 2.5A1.5 1.5 0 0 1 2.5 1h3A1.5 1.5 0 0 1 7 2.5v3A1.5 1.5 0 0 1 5.5 7h-3A1.5 1.5 0 0 1 1 5.5v-3zM2.5 2a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 1h3A1.5 1.5 0 0 1 15 2.5v3A1.5 1.5 0 0 1 13.5 7h-3A1.5 1.5 0 0 1 9 5.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zM1 10.5A1.5 1.5 0 0 1 2.5 9h3A1.5 1.5 0 0 1 7 10.5v3A1.5 1.5 0 0 1 5.5 15h-3A1.5 1.5 0 0 1 1 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3zm6.5.5A1.5 1.5 0 0 1 10.5 9h3a1.5 1.5 0 0 1 1.5 1.5v3a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 9 13.5v-3zm1.5-.5a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3z" />
-                                            </svg>
-                                            <p class="fw-semibold mb-1">Belum Ada Data Presensi</p>
-                                            <p class="small mb-0">Data presensi akan muncul di sini setelah pelajar
-                                                melakukan
-                                                absensi</p>
-                                        </div>
-                                    </td>
+                                    <th class="py-2">No</th>
+                                    <th class="py-2">Tanggal</th>
+                                    <th class="py-2">Hari</th>
+                                    <th class="py-2">Datang</th>
+                                    <th class="py-2">Pulang</th>
+                                    <th class="py-2">Status</th>
+                                    <th class="py-2">Aksi</th>
                                 </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- Pagination Info -->
-                <div class="d-flex justify-content-between align-items-center p-3 bg-light border-top">
-                    <div class="text-muted small" id="tableInfo">
-                        Menampilkan data
+                            </thead>
+                            <tbody>
+                                @php $no = 1; @endphp
+                                @forelse (array_reverse($semuaTanggal) as $tanggal)
+                                    @php
+                                        $presensi = $presensiMap->get($tanggal);
+                                        $carbonDate = \Carbon\Carbon::parse($tanggal);
+                                        $namaHari = $carbonDate->locale('id')->isoFormat('dddd');
+                                        $isWeekend = $carbonDate->isWeekend();
+                                        $isFuture = $carbonDate->isFuture();
+                                    @endphp
+                                    <tr class="{{ $isWeekend ? 'table-light' : '' }}"
+                                        id="row-{{ $presensi->id ?? '' }}">
+                                        <td class="py-2">{{ $no++ }}</td>
+                                        <td class="py-2">{{ $carbonDate->format('d/m/y') }}</td>
+                                        <td class="py-2">
+                                            @if ($isWeekend)
+                                                <small class="badge bg-secondary">{{ substr($namaHari, 0, 3) }}</small>
+                                            @else
+                                                <small class="text-muted">{{ substr($namaHari, 0, 3) }}</small>
+                                            @endif
+                                        </td>
+                                        <td class="py-2">
+                                            @if ($presensi)
+                                                <small class="badge bg-success">{{ $presensi->waktu_datang }}</small>
+                                            @elseif($isFuture)
+                                                <small class="text-muted">-</small>
+                                            @elseif($isWeekend)
+                                                <small class="badge bg-secondary">Libur</small>
+                                            @else
+                                                <small class="badge bg-danger">Tidak Hadir</small>
+                                            @endif
+                                        </td>
+                                        <td class="py-2">
+                                            @if ($presensi && $presensi->waktu_pulang)
+                                                <small class="badge bg-primary">{{ $presensi->waktu_pulang }}</small>
+                                            @elseif($presensi && !$presensi->waktu_pulang)
+                                                <small class="badge bg-warning text-dark">Belum</small>
+                                            @elseif($isFuture)
+                                                <small class="text-muted">-</small>
+                                            @elseif($isWeekend)
+                                                <small class="badge bg-secondary">Libur</small>
+                                            @else
+                                                <small class="text-muted">-</small>
+                                            @endif
+                                        </td>
+                                        <td class="py-2">
+                                            @if ($presensi)
+                                                @php
+                                                    $statusClass = match (strtolower($presensi->status)) {
+                                                        'hadir', 'tepat waktu' => 'success',
+                                                        'izin' => 'warning',
+                                                        'sakit' => 'info',
+                                                        'alpha' => 'danger',
+                                                        'terlambat' => 'secondary',
+                                                        default => 'secondary',
+                                                    };
+                                                @endphp
+                                                <small class="badge bg-{{ $statusClass }}"
+                                                    id="badge-{{ $presensi->id }}">
+                                                    {{ ucfirst($presensi->status) }}
+                                                </small>
+                                            @elseif ($isFuture)
+                                                <small class="badge bg-secondary">Belum Tiba</small>
+                                            @elseif ($isWeekend)
+                                                <small class="badge bg-secondary">Libur</small>
+                                            @else
+                                                <small class="badge bg-danger">Alfa</small>
+                                            @endif
+                                        </td>
+                                        <td class="py-2">
+                                            @if ($presensi && !$isWeekend && !$isFuture)
+                                                <button type="button" class="btn btn-sm btn-warning btn-edit-presensi"
+                                                    data-id="{{ $presensi->id }}" data-bs-toggle="modal"
+                                                    data-bs-target="#editPresensiModal" title="Edit Presensi">
+                                                    <i class="fas fa-pen"></i>
+                                                </button>
+                                            @else
+                                                <small class="text-muted">-</small>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="7" class="text-center py-5">
+                                            <div class="text-muted">
+                                                <p class="mb-0">Tidak ada data presensi untuk bulan ini</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
                     </div>
-                    <nav id="paginationNav">
-                        <!-- Pagination will be inserted here by DataTables -->
-                    </nav>
-                </div>
+
+                    {{-- STATISTIK BULAN INI --}}
+                    @php
+                        $presensiFilterBulan = $pelajarPresensi
+                            ->filter(function ($p) use ($bulanDipilih) {
+                                return substr($p->tanggal, 0, 7) == $bulanDipilih;
+                            })
+                            ->unique('tanggal');
+
+                        $totalHadir = $presensiFilterBulan->count();
+                        $totalTepat = $presensiFilterBulan->whereIn('status', ['Tepat Waktu', 'Hadir'])->count();
+                        $totalTerlambat = $presensiFilterBulan->where('status', 'Terlambat')->count();
+                        $totalIzin = $presensiFilterBulan->where('status', 'Izin')->count();
+                        $totalSakit = $presensiFilterBulan->where('status', 'Sakit')->count();
+
+                        $hariKerjaLewat = 0;
+                        foreach ($semuaTanggal as $tgl) {
+                            $date = \Carbon\Carbon::parse($tgl);
+                            if (!$date->isWeekend() && $date->isPast()) {
+                                $hariKerjaLewat++;
+                            }
+                        }
+
+                        $totalAlfa = max(0, $hariKerjaLewat - ($totalHadir + $totalIzin + $totalSakit));
+                    @endphp
+
+                    <div class="card-body border-top">
+                        <div class="small fw-bold mb-3">
+                            <i class="fas fa-chart-bar me-1"></i>Statistik Bulan
+                            {{ \Carbon\Carbon::parse($bulanDipilih)->locale('id')->isoFormat('MMMM Y') }}
+                        </div>
+                        <div class="row text-center g-2">
+                            <div class="col-4 col-md-2">
+                                <div class="p-2 bg-success bg-opacity-10 rounded">
+                                    <div class="text-success fw-bold fs-5">{{ $totalHadir }}</div>
+                                    <div class="small text-muted">Hadir</div>
+                                </div>
+                            </div>
+                            <div class="col-4 col-md-2">
+                                <div class="p-2 bg-primary bg-opacity-10 rounded">
+                                    <div class="text-primary fw-bold fs-5">{{ $totalTepat }}</div>
+                                    <div class="small text-muted">Tepat Waktu</div>
+                                </div>
+                            </div>
+                            <div class="col-4 col-md-2">
+                                <div class="p-2 bg-warning bg-opacity-10 rounded">
+                                    <div class="text-warning fw-bold fs-5">{{ $totalTerlambat }}</div>
+                                    <div class="small text-muted">Terlambat</div>
+                                </div>
+                            </div>
+                            <div class="col-4 col-md-2">
+                                <div class="p-2 bg-info bg-opacity-10 rounded">
+                                    <div class="text-info fw-bold fs-5">{{ $totalSakit }}</div>
+                                    <div class="small text-muted">Sakit</div>
+                                </div>
+                            </div>
+                            <div class="col-4 col-md-2">
+                                <div class="p-2 bg-warning bg-opacity-10 rounded">
+                                    <div class="fw-bold fs-5" style="color: #ffc107;">{{ $totalIzin }}</div>
+                                    <div class="small text-muted">Izin</div>
+                                </div>
+                            </div>
+                            <div class="col-4 col-md-2">
+                                <div class="p-2 bg-danger bg-opacity-10 rounded">
+                                    <div class="text-danger fw-bold fs-5">{{ $totalAlfa }}</div>
+                                    <div class="small text-muted">Alfa</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @else
+                    <div class="p-5 text-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor"
+                            class="mb-3 opacity-50 text-muted" viewBox="0 0 16 16">
+                            <path
+                                d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4zm-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10c-2.29 0-3.516.68-4.168 1.332-.678.678-.83 1.418-.832 1.664h10z" />
+                        </svg>
+                        <h5 class="text-muted mb-2">Pilih Pelajar</h5>
+                        <p class="text-muted small mb-0">Silakan pilih pelajar dari dropdown di atas untuk melihat data
+                            presensi lengkap</p>
+                    </div>
+                @endif
             </div>
         </div>
     </div>
@@ -317,256 +553,6 @@
     </div>
 @endsection
 
-@push('scripts')
-    <script>
-        $(document).ready(function() {
-            // Setup CSRF token untuk semua AJAX request
-            $.ajaxSetup({
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-            });
-
-            // Base URL untuk rute presensi pembimbing (pastikan prefix pembimbing digunakan)
-            const pembimbingPresensiBase = "{{ url('pembimbing/presensi') }}";
-
-            const table = $('#presensiTable').DataTable({
-                paging: true,
-                searching: true,
-                ordering: true,
-                pageLength: 10,
-                language: {
-                    search: "",
-                    searchPlaceholder: "Cari data...",
-                    lengthMenu: "Tampilkan _MENU_ data per halaman",
-                    info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ data",
-                    infoEmpty: "Menampilkan 0 sampai 0 dari 0 data",
-                    infoFiltered: "(difilter dari _MAX_ total data)",
-                    paginate: {
-                        first: "Pertama",
-                        last: "Terakhir",
-                        next: "›",
-                        previous: "‹"
-                    },
-                    zeroRecords: "Tidak ada data yang cocok dengan pencarian"
-                },
-                dom: 't',
-                scrollX: false,
-                autoWidth: false,
-                order: [
-                    [2, 'desc']
-                ]
-            });
-
-            // Custom search input
-            $('#searchInput').on('keyup', function() {
-                table.search(this.value).draw();
-            });
-
-            // Update info display
-            table.on('draw', function() {
-                const info = table.page.info();
-                $('#tableInfo').html(
-                    'Menampilkan ' + (info.start + 1) + ' sampai ' + info.end + ' dari ' + info
-                    .recordsTotal + ' data'
-                );
-            });
-
-            // Initial info display
-            const info = table.page.info();
-            $('#tableInfo').html(
-                'Menampilkan ' + (info.start + 1) + ' sampai ' + info.end + ' dari ' + info.recordsTotal +
-                ' data'
-            );
-
-            // ============ EDIT PRESENSI FUNCTIONALITY ============
-
-            // Buka modal dan load data presensi
-            $(document).on('click', '.btn-edit-presensi', function() {
-                const presensiId = $(this).data('id');
-                $('#presensi_id').val(presensiId);
-
-                console.log('Edit presensi ID:', presensiId); // Debug
-
-                // Reset form dan error messages
-                $('#editPresensiForm')[0].reset();
-                $('.invalid-feedback').hide().text('');
-                $('.is-invalid').removeClass('is-invalid');
-
-                // Load data presensi via AJAX (gunakan prefix pembimbing)
-                $.ajax({
-                    url: `${pembimbingPresensiBase}/${presensiId}/data`,
-                    type: 'GET',
-                    success: function(response) {
-                        console.log('Data loaded:', response); // Debug
-
-                        if (response.success) {
-                            const data = response.data;
-
-                            // Isi informasi pelajar
-                            $('#modal_pelajar_nama').text(data.pelajar_nama);
-                            $('#modal_tanggal').text(data.tanggal);
-
-                            // Set status radio button
-                            $(`input[name="status"][value="${data.status}"]`).prop('checked',
-                                true);
-
-                            // Enable tombol simpan
-                            $('#btnSimpanPresensi').prop('disabled', false).html(
-                                '<i class="fas fa-save me-1"></i> Simpan Perubahan');
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Error loading data:', xhr.responseText); // Debug
-                        alert('Gagal memuat data presensi');
-                    }
-                });
-            });
-
-            // Simpan perubahan presensi
-            $('#btnSimpanPresensi').on('click', function(e) {
-                e.preventDefault();
-
-                const presensiId = $('#presensi_id').val();
-                const status = $('input[name="status"]:checked').val();
-
-                console.log('Saving presensi:', {
-                    presensiId,
-                    status,
-                }); // Debug
-
-                // Validasi
-                if (!status) {
-                    $('#error_status').show().text('Status presensi wajib dipilih');
-                    return;
-                }
-
-                // Reset error messages
-                $('.invalid-feedback').hide().text('');
-                $('.is-invalid').removeClass('is-invalid');
-
-                // Disable tombol dan tampilkan loading
-                $(this).prop('disabled', true).html(
-                    '<i class="fas fa-spinner fa-spin me-1"></i> Menyimpan...');
-
-                // Kirim data via AJAX (gunakan prefix pembimbing)
-                $.ajax({
-                    url: `${pembimbingPresensiBase}/${presensiId}/update`,
-                    type: 'POST', // Gunakan POST
-                    data: {
-                        _method: 'PUT', // Method spoofing untuk PUT
-                        _token: $('meta[name="csrf-token"]').attr('content'),
-                        status: status,
-                    },
-                    success: function(response) {
-                        console.log('Update response:', response); // Debug
-
-                        if (response.success) {
-                            // Update badge status di tabel
-                            const statusConfig = {
-                                'Hadir': {
-                                    class: 'success',
-                                    icon: 'check'
-                                },
-                                'Izin': {
-                                    class: 'warning',
-                                    icon: 'exclamation'
-                                },
-                                'Sakit': {
-                                    class: 'info',
-                                    icon: 'notes-medical'
-                                },
-                                'Alpha': {
-                                    class: 'danger',
-                                    icon: 'times'
-                                },
-                                'Terlambat': {
-                                    class: 'secondary',
-                                    icon: 'clock'
-                                },
-                                'Tepat Waktu': {
-                                    class: 'success',
-                                    icon: 'check'
-                                }
-                            };
-
-                            const config = statusConfig[status] || {
-                                class: 'secondary',
-                                icon: 'question'
-                            };
-                            const badgeHtml =
-                                `<i class="fas fa-${config.icon} me-1"></i>${status}`;
-
-                            $(`#badge-${presensiId}`)
-                                .removeClass(
-                                    'bg-success bg-warning bg-info bg-danger bg-secondary')
-                                .addClass(`bg-${config.class}`)
-                                .html(badgeHtml);
-
-                            // Tutup modal
-                            $('#editPresensiModal').modal('hide');
-
-                            // Tampilkan notifikasi sukses
-                            const successAlert = `
-                        <div class="alert alert-success alert-dismissible fade show shadow-sm border-0" role="alert">
-                            <div class="d-flex align-items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="me-2" viewBox="0 0 16 16">
-                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
-                                </svg>
-                                <span>${response.message}</span>
-                            </div>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                        </div>
-                    `;
-
-                            $('.container.my-5').prepend(successAlert);
-
-                            // Auto hide alert setelah 3 detik
-                            setTimeout(function() {
-                                $('.alert-success').fadeOut('slow', function() {
-                                    $(this).remove();
-                                });
-                            }, 3000);
-
-                            // Reset tombol
-                            $('#btnSimpanPresensi').prop('disabled', false).html(
-                                '<i class="fas fa-save me-1"></i> Simpan Perubahan');
-                        } else {
-                            alert(response.message || 'Gagal menyimpan perubahan');
-                            $('#btnSimpanPresensi').prop('disabled', false).html(
-                                '<i class="fas fa-save me-1"></i> Simpan Perubahan');
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Error saving:', xhr.responseText); // Debug
-
-                        let errorMessage = 'Terjadi kesalahan saat menyimpan data';
-
-                        if (xhr.responseJSON && xhr.responseJSON.message) {
-                            errorMessage = xhr.responseJSON.message;
-                        }
-
-                        alert(errorMessage);
-
-                        // Enable tombol kembali
-                        $('#btnSimpanPresensi').prop('disabled', false).html(
-                            '<i class="fas fa-save me-1"></i> Simpan Perubahan');
-                    }
-                });
-            });
-
-            // Reset form saat modal ditutup
-            $('#editPresensiModal').on('hidden.bs.modal', function() {
-                $('#editPresensiForm')[0].reset();
-                $('.invalid-feedback').hide().text('');
-                $('.is-invalid').removeClass('is-invalid');
-                $('#btnSimpanPresensi').prop('disabled', false).html(
-                    '<i class="fas fa-save me-1"></i> Simpan Perubahan');
-            });
-        });
-    </script>
-@endpush
-
 @push('styles')
     <style>
         .table th,
@@ -582,6 +568,26 @@
         .badge {
             font-weight: 500;
             letter-spacing: 0.3px;
+        }
+
+        /* Avatar Circle for Today's Attendance */
+        .avatar-circle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Hover effect for today's attendance cards */
+        .hover-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .hover-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15) !important;
         }
 
         /* Custom styling for radio buttons */
@@ -621,10 +627,19 @@
         }
 
         /* Button hover effects */
+        .btn-edit-presensi {
+            transition: all 0.2s ease;
+        }
+
         .btn-edit-presensi:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-            transition: all 0.2s ease;
+        }
+
+        /* Improve action button visibility */
+        .btn-sm {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.875rem;
         }
     </style>
 @endpush

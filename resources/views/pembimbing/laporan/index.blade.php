@@ -46,7 +46,7 @@
 
                                 <td>
                                     <button class="btn btn-outline-primary btn-sm"
-                                        onclick="tampilLaporan('{{ asset('uploads/laporan/' . $laporan->file) }}')">
+                                        onclick="tampilLaporan('{{ asset('storage/' . $laporan->file) }}')">
                                         Lihat Laporan
                                     </button>
                                 </td>

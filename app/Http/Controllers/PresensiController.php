@@ -19,6 +19,12 @@ class PresensiController extends Controller
         $user = Auth::user();
 
         if ($user->role === 'pelajar') {
+            // Guard: pastikan relasi pelajar ada
+            if (!$user->pelajar) {
+                Log::warning('PresensiController@index: authenticated user has no pelajar relation', ['user_id' => $user->id]);
+                abort(403, 'Akun Anda belum memiliki data pelajar. Hubungi administrator.');
+            }
+
             // Cek apakah magang sudah selesai
             $isMagangSelesai = $user->pelajar->status_magang === 'selesai';
 
@@ -190,6 +196,12 @@ class PresensiController extends Controller
     {
         $user = Auth::user();
 
+        // Guard: pastikan user memiliki relasi pelajar
+        if (!$user->pelajar) {
+            Log::warning('PresensiController@store: attempt to store presensi but user has no pelajar relation', ['user_id' => $user->id, 'request' => $request->all()]);
+            return redirect()->route('pelajar.dashboard')->with('error', 'Akun Anda belum terdaftar sebagai pelajar.');
+        }
+
         // PEMBATASAN: Cek apakah magang sudah selesai
         if ($user->pelajar && $user->pelajar->status_magang === 'selesai') {
             return redirect()->route('pelajar.presensi.index')
@@ -257,10 +269,27 @@ class PresensiController extends Controller
                 ->with('error', 'Magang Anda sudah selesai. Tidak dapat melakukan presensi pulang.');
         }
 
-        $presensi = Presensi::where('id', $id)
-            ->where('user_id', $user->id)
-            ->whereDate('created_at', today())
-            ->firstOrFail();
+        // Untuk aksi pulang oleh pelajar, cari berdasarkan pelajar_id dan tanggal
+        // (jangan mengikat ke user_id karena presensi bisa dibuat oleh pembimbing)
+        if ($user->role === 'pelajar') {
+            if (!$user->pelajar) {
+                Log::warning('PresensiController@update: user has no pelajar relation', ['user_id' => $user->id]);
+                return redirect()->route('pelajar.dashboard')->with('error', 'Akun Anda belum terdaftar sebagai pelajar.');
+            }
+
+            $today = Carbon::today()->toDateString();
+
+            $presensi = Presensi::where('id', $id)
+                ->where('pelajar_id', $user->pelajar->id)
+                ->where('tanggal', $today)
+                ->firstOrFail();
+        } else {
+            // Untuk non-pelajar (should not reach here normally) fall back to previous strict check
+            $presensi = Presensi::where('id', $id)
+                ->where('user_id', $user->id)
+                ->whereDate('created_at', today())
+                ->firstOrFail();
+        }
 
         // Ambil waktu dari browser, fallback ke server
         $jamPulang = $request->jam_client ?? Carbon::now()->format('H:i:s');
@@ -338,6 +367,110 @@ class PresensiController extends Controller
                 'success' => false,
                 'message' => 'Data presensi tidak ditemukan'
             ], 404);
+        }
+    }
+
+    /**
+     * Store a new presensi record created by a pembimbing (via AJAX).
+     * This endpoint is for pembimbing role only and returns JSON.
+     */
+    public function storeByPembimbing(Request $request)
+    {
+        if (Auth::user()->role !== 'pembimbing') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized'
+            ], 403);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'pelajar_id' => 'required|exists:pelajars,id',
+            'tanggal' => 'required|date',
+            'status' => ['required', Rule::in(['hadir', 'izin', 'sakit', 'alpha', 'terlambat', 'tepat waktu', 'Hadir', 'Izin', 'Sakit', 'Alpha', 'Terlambat', 'Tepat Waktu'])],
+            'keterangan' => 'nullable|string|max:500'
+        ], [
+            'pelajar_id.required' => 'Pelajar harus dipilih',
+            'pelajar_id.exists' => 'Pelajar tidak ditemukan',
+            'tanggal.required' => 'Tanggal wajib diisi',
+            'status.required' => 'Status wajib dipilih'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validasi gagal',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        try {
+            $pembimbing = Auth::user()->pembimbing;
+            $pelajar = Pelajar::findOrFail($request->pelajar_id);
+
+            if ($pelajar->pembimbing_id !== $pembimbing->id) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Anda tidak memiliki akses untuk menambah presensi untuk pelajar ini'
+                ], 403);
+            }
+
+            // Normalize status similar to updatePresensi
+            $inputStatus = $request->input('status');
+            $normalized = mb_strtolower(trim($inputStatus));
+            if ($normalized === 'alfa') {
+                $normalized = 'alpha';
+            }
+            $normalized = str_replace(['_', "\u00A0"], [' ', ' '], $normalized);
+            $normalized = preg_replace('/\s+/', ' ', $normalized);
+            if ($normalized === 'tepatwaktu') {
+                $normalized = 'tepat waktu';
+            }
+
+            $dbStatusMap = [
+                'hadir' => 'Hadir',
+                'izin' => 'Izin',
+                'sakit' => 'Sakit',
+                'alpha' => 'Alpha',
+                'terlambat' => 'Terlambat',
+                'tepat waktu' => 'Tepat Waktu'
+            ];
+            $dbStatus = $dbStatusMap[$normalized] ?? ucfirst($normalized);
+
+            // Prevent duplicate presensi for same pelajar+tanggal
+            $exists = Presensi::where('pelajar_id', $pelajar->id)
+                ->where('tanggal', Carbon::parse($request->tanggal)->toDateString())
+                ->exists();
+
+            if ($exists) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Presensi untuk tanggal tersebut sudah ada'
+                ], 409);
+            }
+
+            $presensi = Presensi::create([
+                'pelajar_id' => $pelajar->id,
+                'user_id' => Auth::id(),
+                'tanggal' => Carbon::parse($request->tanggal)->toDateString(),
+                'waktu_datang' => $request->waktu_datang ?? null,
+                'status' => $dbStatus,
+                'keterangan' => $request->keterangan ?? null,
+            ]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Presensi berhasil ditambahkan',
+                'data' => [
+                    'id' => $presensi->id,
+                    'status' => $presensi->status
+                ]
+            ]);
+        } catch (\Exception $e) {
+            Log::error('storeByPembimbing failed', ['error' => $e->getMessage(), 'request' => $request->all()]);
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat menyimpan presensi'
+            ], 500);
         }
     }
 

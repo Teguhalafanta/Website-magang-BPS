@@ -109,6 +109,8 @@ Route::middleware(['auth'])->group(function () {
 
         // Presensi
         Route::put('/presensi/{id}/update', [PresensiController::class, 'updatePresensi']);
+        // Allow pembimbing to create presensi for a pelajar via AJAX
+        Route::post('/presensi/create-by-pembimbing', [PresensiController::class, 'storeByPembimbing']);
         Route::resource('presensi', PresensiController::class);
         Route::get('/presensi/{id}/data', [PresensiController::class, 'getPresensiData']);
         Route::get('/presensi', [PresensiController::class, 'index'])->name('presensi');

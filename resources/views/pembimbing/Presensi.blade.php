@@ -119,10 +119,18 @@
                                                 <span class="small text-muted">
                                                     <i class="fas fa-sign-out-alt me-1"></i>Pulang:
                                                 </span>
+                                                @php
+                                                    $statusLower = strtolower($presensi->status ?? '');
+                                                @endphp
                                                 @if ($presensi->waktu_pulang)
                                                     <span class="badge bg-primary">{{ $presensi->waktu_pulang }}</span>
                                                 @else
-                                                    <span class="badge bg-warning text-dark">Belum Pulang</span>
+                                                    {{-- Show "Belum Pulang" only if peserta memang hadir/terlambat/tepat waktu --}}
+                                                    @if (in_array($statusLower, ['hadir', 'tepat waktu', 'terlambat']))
+                                                        <span class="badge bg-warning text-dark">Belum Pulang</span>
+                                                    @else
+                                                        <span class="text-muted">-</span>
+                                                    @endif
                                                 @endif
                                             </div>
                                             <div class="d-flex justify-content-between align-items-center">
@@ -313,14 +321,21 @@
                                             @elseif($isWeekend)
                                                 <small class="badge bg-secondary">Libur</small>
                                             @else
-                                                <small class="badge bg-danger">Tidak Hadir</small>
+                                                {{-- show '-' when peserta tidak absen (dibuat oleh pembimbing atau alfa/izin/sakit) --}}
+                                                <small class="text-muted">-</small>
                                             @endif
                                         </td>
                                         <td class="py-2">
+                                            @php $statusLower = strtolower($presensi->status ?? ''); @endphp
                                             @if ($presensi && $presensi->waktu_pulang)
                                                 <small class="badge bg-primary">{{ $presensi->waktu_pulang }}</small>
                                             @elseif($presensi && !$presensi->waktu_pulang)
-                                                <small class="badge bg-warning text-dark">Belum</small>
+                                                {{-- show "Belum" only if attendee actually came --}}
+                                                @if (in_array($statusLower, ['hadir', 'tepat waktu', 'terlambat']))
+                                                    <small class="badge bg-warning text-dark">Belum</small>
+                                                @else
+                                                    <small class="text-muted">-</small>
+                                                @endif
                                             @elseif($isFuture)
                                                 <small class="text-muted">-</small>
                                             @elseif($isWeekend)
@@ -354,11 +369,16 @@
                                             @endif
                                         </td>
                                         <td class="py-2">
-                                            @if ($presensi && !$isWeekend && !$isFuture)
-                                                <button type="button" class="btn btn-sm btn-warning btn-edit-presensi"
-                                                    data-id="{{ $presensi->id }}" data-bs-toggle="modal"
-                                                    data-bs-target="#editPresensiModal" title="Edit Presensi">
-                                                    <i class="fas fa-pen"></i>
+                                            @if (!$isWeekend && !$isFuture)
+                                                <button type="button"
+                                                    class="btn btn-sm btn-warning btn-edit-presensi text-dark"
+                                                    data-id="{{ $presensi->id ?? '' }}"
+                                                    data-tanggal="{{ $tanggal }}"
+                                                    data-pelajar-id="{{ $selectedPelajarId }}"
+                                                    data-pelajar-nama="{{ $selectedPelajar->nama ?? '' }}"
+                                                    data-bs-toggle="modal" data-bs-target="#editPresensiModal"
+                                                    title="{{ $presensi ? 'Edit Presensi' : 'Isi Presensi' }}">
+                                                    <i class="fas fa-{{ $presensi ? 'pen' : 'plus' }}"></i>
                                                 </button>
                                             @else
                                                 <small class="text-muted">-</small>
@@ -480,6 +500,8 @@
                         @csrf
                         @method('PUT')
                         <input type="hidden" id="presensi_id">
+                        <input type="hidden" id="pelajar_id" name="pelajar_id">
+                        <input type="hidden" id="tanggal" name="tanggal">
 
                         <!-- Info Pelajar -->
                         <div class="alert alert-info">
@@ -552,6 +574,149 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+    <script>
+        $(function() {
+            // Setup CSRF token for AJAX
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            const pembimbingPresensiBase = "{{ url('pembimbing/presensi') }}";
+
+            // Open modal and load data (supports create and edit)
+            $(document).on('click', '.btn-edit-presensi', function() {
+                const presensiId = $(this).data('id') || '';
+                const tanggal = $(this).data('tanggal') || $(this).attr('data-tanggal') || '';
+                const pelajarId = $(this).data('pelajar-id') || $(this).attr('data-pelajar-id') || '';
+                const pelajarNama = $(this).data('pelajar-nama') || $(this).attr('data-pelajar-nama') || '';
+
+                // reset
+                $('#editPresensiForm')[0].reset();
+                $('#error_status').hide().text('');
+
+                // fill hidden fields
+                $('#presensi_id').val(presensiId);
+                $('#pelajar_id').val(pelajarId);
+                $('#tanggal').val(tanggal);
+
+                // fill display
+                $('#modal_pelajar_nama').text(pelajarNama || '');
+                $('#modal_tanggal').text(tanggal ? tanggal : '');
+
+                if (presensiId) {
+                    // load existing
+                    $.get(`${pembimbingPresensiBase}/${presensiId}/data`)
+                        .done(function(resp) {
+                            if (resp.success && resp.data) {
+                                const status = resp.data.status || '';
+                                $(`input[name="status"][value="${status}"]`).prop('checked', true);
+                                $('#modal_pelajar_nama').text(resp.data.pelajar_nama || pelajarNama ||
+                                    '');
+                                $('#modal_tanggal').text(resp.data.tanggal || tanggal || '');
+                            }
+                        })
+                        .fail(function(xhr) {
+                            console.error('Gagal memuat data presensi', xhr.responseText);
+                            alert('Gagal memuat data presensi');
+                        });
+                } else {
+                    // new presensi -> default status Hadir
+                    $('#status_hadir').prop('checked', true);
+                }
+            });
+
+            // Save changes
+            $('#btnSimpanPresensi').on('click', function(e) {
+                e.preventDefault();
+                const presensiId = $('#presensi_id').val();
+                const status = $('input[name="status"]:checked').val();
+
+                if (!status) {
+                    $('#error_status').show().text('Status presensi wajib dipilih');
+                    return;
+                }
+
+                let url, data;
+                if (presensiId) {
+                    url = `${pembimbingPresensiBase}/${presensiId}/update`;
+                    data = {
+                        _token: $('meta[name="csrf-token"]').attr('content'),
+                        _method: 'PUT',
+                        status: status
+                    };
+                } else {
+                    // create new presensi by pembimbing
+                    url = `${pembimbingPresensiBase}/create-by-pembimbing`;
+                    data = {
+                        _token: $('meta[name="csrf-token"]').attr('content'),
+                        pelajar_id: $('#pelajar_id').val(),
+                        tanggal: $('#tanggal').val(),
+                        status: status
+                    };
+                }
+
+                $(this).prop('disabled', true).html(
+                    '<i class="fas fa-spinner fa-spin me-1"></i> Menyimpan...');
+
+                $.post(url, data)
+                    .done(function(resp) {
+                        if (resp.success) {
+                            // update badge text if present
+                            const badge = $(`#badge-${resp.data.id}`);
+                            if (badge.length) {
+                                // simple mapping
+                                const map = {
+                                    'Hadir': 'bg-success',
+                                    'Izin': 'bg-warning',
+                                    'Sakit': 'bg-info',
+                                    'Alpha': 'bg-danger',
+                                    'Terlambat': 'bg-secondary',
+                                    'Tepat Waktu': 'bg-success'
+                                };
+                                const cls = map[resp.data.status] || 'bg-secondary';
+                                badge.removeClass(
+                                        'bg-success bg-warning bg-info bg-danger bg-secondary')
+                                    .addClass(cls).text(resp.data.status);
+                            }
+
+                            $('#editPresensiModal').modal('hide');
+                            const alertHtml =
+                                `<div class="alert alert-success alert-dismissible fade show" role="alert">${resp.message}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>`;
+                            $('.container.my-5').prepend(alertHtml);
+                            setTimeout(function() {
+                                location.reload();
+                            }, 1200);
+                        } else {
+                            alert(resp.message || 'Gagal menyimpan perubahan');
+                        }
+                    })
+                    .fail(function(xhr) {
+                        console.error('Error saving presensi', xhr.responseText);
+                        let msg = 'Terjadi kesalahan saat menyimpan';
+                        if (xhr.responseJSON && xhr.responseJSON.message) msg = xhr.responseJSON
+                            .message;
+                        alert(msg);
+                    })
+                    .always(function() {
+                        $('#btnSimpanPresensi').prop('disabled', false).html(
+                            '<i class="fas fa-save me-1"></i> Simpan Perubahan');
+                    });
+            });
+
+            // reset when modal closed
+            $('#editPresensiModal').on('hidden.bs.modal', function() {
+                $('#editPresensiForm')[0].reset();
+                $('#error_status').hide().text('');
+                $('#btnSimpanPresensi').prop('disabled', false).html(
+                    '<i class="fas fa-save me-1"></i> Simpan Perubahan');
+            });
+        });
+    </script>
+@endpush
 
 @push('styles')
     <style>
@@ -634,6 +799,20 @@
         .btn-edit-presensi:hover {
             transform: translateY(-2px);
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Force yellow styling for action buttons to match request */
+        .btn-edit-presensi.btn-warning {
+            background-color: #ffc107;
+            border-color: #ffc107;
+            color: #212529;
+        }
+
+        .btn-edit-presensi.btn-warning:hover,
+        .btn-edit-presensi.btn-warning:focus {
+            background-color: #e0a800;
+            border-color: #d39e00;
+            color: #212529;
         }
 
         /* Improve action button visibility */

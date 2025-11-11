@@ -406,9 +406,10 @@
                             })
                             ->unique('tanggal');
 
-                        $totalHadir = $presensiFilterBulan->count();
-                        $totalTepat = $presensiFilterBulan->whereIn('status', ['Tepat Waktu', 'Hadir'])->count();
+                        // Define Tepat Waktu and Terlambat explicitly, then compute Hadir as their sum
+                        $totalTepat = $presensiFilterBulan->where('status', 'Tepat Waktu')->count();
                         $totalTerlambat = $presensiFilterBulan->where('status', 'Terlambat')->count();
+                        $totalHadir = $totalTepat + $totalTerlambat;
                         $totalIzin = $presensiFilterBulan->where('status', 'Izin')->count();
                         $totalSakit = $presensiFilterBulan->where('status', 'Sakit')->count();
 

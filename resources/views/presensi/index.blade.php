@@ -34,7 +34,7 @@
         <div class="card mb-4 shadow border-0">
             <div class="card-body text-center p-2">
                 <div class="small mb-1">
-                    <span class="text-muted">{{ now()->format('d M Y') }}</span> • 
+                    <span class="text-muted">{{ now()->format('d M Y') }}</span> •
                     <span>Waktu: <strong id="jamSekarang" class="text-primary"></strong></span>
                 </div>
 
@@ -174,10 +174,12 @@
         <div class="card mt-4 shadow-sm border-0">
             <div class="card-body p-2">
                 <div class="small fw-bold mb-2">
-                    <i class="bi bi-calendar-check me-1"></i>Riwayat Presensi {{ \Carbon\Carbon::parse($bulanDipilih)->locale('id')->isoFormat('MMMM Y') }}
+                    <i class="bi bi-calendar-check me-1"></i>Riwayat Presensi
+                    {{ \Carbon\Carbon::parse($bulanDipilih)->locale('id')->isoFormat('MMMM Y') }}
                 </div>
                 <div class="table-responsive" style="max-height: 400px;">
-                    <table class="table table-sm table-bordered table-hover text-center align-middle small" style="min-width: 600px;">
+                    <table class="table table-sm table-bordered table-hover text-center align-middle small"
+                        style="min-width: 600px;">
                         <thead class="table-secondary">
                             <tr style="font-size: 0.8rem;">
                                 <th class="py-1">No</th>
@@ -286,9 +288,10 @@
                 ->unique('tanggal');
 
             // Hitung total berdasarkan status
-            $totalHadir = $presensiFilterBulan->count();
             $totalTepat = $presensiFilterBulan->where('status', 'Tepat Waktu')->count();
             $totalTerlambat = $presensiFilterBulan->where('status', 'Terlambat')->count();
+            // Definisi 'Hadir' = Tepat Waktu + Terlambat
+            $totalHadir = $totalTepat + $totalTerlambat;
             $totalIzin = $presensiFilterBulan->where('status', 'Izin')->count();
             $totalSakit = $presensiFilterBulan->where('status', 'Sakit')->count();
 
@@ -309,7 +312,8 @@
         <div class="card mt-4 shadow-sm border-0">
             <div class="card-body p-2">
                 <div class="small fw-bold mb-2">
-                    <i class="bi bi-bar-chart-line me-1"></i>Statistik Bulan {{ \Carbon\Carbon::parse($bulanDipilih)->locale('id')->isoFormat('MMMM Y') }}
+                    <i class="bi bi-bar-chart-line me-1"></i>Statistik Bulan
+                    {{ \Carbon\Carbon::parse($bulanDipilih)->locale('id')->isoFormat('MMMM Y') }}
                 </div>
                 <div class="row text-center g-1">
                     <div class="col-4 col-md-2">

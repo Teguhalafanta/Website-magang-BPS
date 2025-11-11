@@ -16,7 +16,7 @@
         </form>
 
         <table class="table table-bordered table-striped">
-            <thead>
+            <thead class="table-primary">
                 <tr>
                     <th class="text-center">No</th>
                     <th class="text-center">Uraian Kegiatan</th>

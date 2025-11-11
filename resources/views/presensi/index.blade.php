@@ -178,7 +178,7 @@
                 </div>
                 <div class="table-responsive" style="max-height: 400px;">
                     <table class="table table-sm table-bordered table-hover text-center align-middle small" style="min-width: 600px;">
-                        <thead class="table-dark">
+                        <thead class="table-secondary">
                             <tr style="font-size: 0.8rem;">
                                 <th class="py-1">No</th>
                                 <th class="py-1">Tanggal</th>

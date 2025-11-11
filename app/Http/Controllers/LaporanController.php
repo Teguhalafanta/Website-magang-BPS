@@ -171,7 +171,8 @@ class LaporanController extends Controller
         $filePath = storage_path('app/public/' . $laporan->file_sertifikat);
 
         if (!file_exists($filePath)) {
-            abort(404, 'File sertifikat tidak ditemukan.');
+            // Instead of aborting (which renders errors.404), return user back with a clear message
+            return back()->with('error', 'File sertifikat tidak ditemukan di server.');
         }
 
         return response()->download($filePath);

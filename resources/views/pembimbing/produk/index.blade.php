@@ -1,66 +1,83 @@
 @extends('kerangka.master')
 
 @section('content')
-    <div class="container py-4">
+    <div class="container-fluid py-4">
+        <!-- Header Section -->
         <div class="row mb-4">
-            <div class="col">
-                <h3 class="fw-bold text-primary">Produk Magang Peserta Bimbingan</h3>
-                <p class="text-muted">Pantau dan kelola produk dari pelajar yang Anda bimbing</p>
+            <div class="col-12">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="me-3">
+                        <div class="bg-primary rounded p-3">
+                            <i class="fas fa-box-open text-white fs-4"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <h2 class="mb-1 fw-bold text-dark">Produk Magang Peserta Bimbingan</h2>
+                        <p class="text-muted mb-0">Pantau dan kelola produk dari pelajar yang Anda bimbing</p>
+                    </div>
+                </div>
             </div>
         </div>
 
         @if ($produk->count() == 0)
-            <div class="alert alert-info border-0 shadow-sm d-flex align-items-center" role="alert">
-                <i class="bi bi-info-circle fs-4 me-3"></i>
-                <div>
-                    <h5 class="alert-heading mb-1">Belum Ada Produk</h5>
-                    <p class="mb-0">Belum ada produk yang diupload oleh pelajar bimbingan Anda.</p>
+            <!-- Empty State -->
+            <div class="card border-0 shadow-sm bg-primary bg-opacity-10">
+                <div class="card-body py-5">
+                    <div class="text-center">
+                        <i class="fas fa-inbox fa-4x text-primary opacity-50 mb-4"></i>
+                        <h4 class="text-primary fw-bold mb-3">Belum Ada Produk</h4>
+                        <p class="text-muted mb-0">Belum ada produk yang diupload oleh pelajar bimbingan Anda.</p>
+                    </div>
                 </div>
             </div>
         @else
             {{-- Summary Cards --}}
             <div class="row g-3 mb-4">
                 <div class="col-md-4">
-                    <div class="card border-0 shadow-sm bg-primary text-white">
-                        <div class="card-body">
+                    <div class="card border-0 shadow-sm text-white bg-primary">
+                        <div class="card-body p-4">
                             <div class="d-flex align-items-center">
-                                <div class="flex-shrink-0">
-                                    <i class="bi bi-box-seam fs-1 opacity-75"></i>
+                                <div class="bg-white bg-opacity-20 rounded-circle p-3 me-3">
+                                    <i class="fas fa-box fa-2x text-white"></i>
                                 </div>
-                                <div class="flex-grow-1 ms-3">
-                                    <h6 class="mb-0 text-uppercase small">Total Produk</h6>
+                                <div>
+                                    <h6 class="mb-1 text-uppercase small opacity-75">Total Produk</h6>
                                     <h3 class="mb-0 fw-bold">{{ $produk->count() }}</h3>
+                                    <small class="opacity-75">Seluruh produk magang</small>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="card border-0 shadow-sm bg-success text-white">
-                        <div class="card-body">
+                    <div class="card border-0 shadow-sm text-white bg-success">
+                        <div class="card-body p-4">
                             <div class="d-flex align-items-center">
-                                <div class="flex-shrink-0">
-                                    <i class="bi bi-people fs-1 opacity-75"></i>
+                                <div class="bg-white bg-opacity-20 rounded-circle p-3 me-3">
+                                    <i class="fas fa-users fa-2x text-white"></i>
                                 </div>
-                                <div class="flex-grow-1 ms-3">
-                                    <h6 class="mb-0 text-uppercase small">Total Pelajar</h6>
+                                <div>
+                                    <h6 class="mb-1 text-uppercase small opacity-75">Total Pelajar</h6>
                                     <h3 class="mb-0 fw-bold">{{ $produk->unique('pelajar_id')->count() }}</h3>
+                                    <small class="opacity-75">Peserta aktif</small>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-4">
-                    <div class="card border-0 shadow-sm bg-info text-white">
-                        <div class="card-body">
+                    <div class="card border-0 shadow-sm text-white bg-info">
+                        <div class="card-body p-4">
                             <div class="d-flex align-items-center">
-                                <div class="flex-shrink-0">
-                                    <i class="bi bi-calendar-check fs-1 opacity-75"></i>
+                                <div class="bg-white bg-opacity-20 rounded-circle p-3 me-3">
+                                    <i class="fas fa-calendar-check fa-2x text-white"></i>
                                 </div>
-                                <div class="flex-grow-1 ms-3">
-                                    <h6 class="mb-0 text-uppercase small">Bulan Ini</h6>
+                                <div>
+                                    <h6 class="mb-1 text-uppercase small opacity-75">Bulan Ini</h6>
                                     <h3 class="mb-0 fw-bold">
-                                        {{ $produk->where('created_at', '>=', now()->startOfMonth())->count() }}</h3>
+                                        {{ $produk->where('created_at', '>=', now()->startOfMonth())->count() }}
+                                    </h3>
+                                    <small class="opacity-75">Produk baru</small>
                                 </div>
                             </div>
                         </div>
@@ -69,72 +86,86 @@
             </div>
 
             {{-- Table Card --}}
-            <div class="card shadow-sm border-0">
-                <div class="card-header bg-white border-bottom">
+            <div class="card border-0 shadow-sm rounded-3 overflow-hidden">
+                <!-- Card Header -->
+                <div class="card-header bg-primary text-white py-3 border-0">
                     <div class="d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0 fw-semibold">
-                            <i class="bi bi-table me-2 text-primary"></i>Daftar Produk
+                        <h5 class="mb-0 fw-bold text-white">
+                            <i class="fas fa-table me-2"></i>Daftar Produk Magang
                         </h5>
-                        <span class="badge bg-primary rounded-pill">{{ $produk->count() }} Produk</span>
+                        <span class="badge bg-light text-primary fs-6">{{ $produk->count() }} Produk</span>
                     </div>
                 </div>
+
+                <!-- Search Section -->
+                <div class="card-body bg-light border-bottom py-3">
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <span class="input-group-text bg-white border-end-0">
+                                    <i class="fas fa-search text-muted"></i>
+                                </span>
+                                <input type="text" class="form-control border-start-0" 
+                                       placeholder="Cari nama produk, pelajar, atau deskripsi...">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Table Section -->
                 <div class="card-body p-0">
                     <div class="table-responsive">
                         <table class="table table-hover align-middle mb-0" id="tableProduk">
-                            <thead class="table-light">
+                            <thead class="table-primary">
                                 <tr>
-                                    <th class="text-center" style="width: 50px;">No</th>
-                                    <th style="width: 18%;">
-                                        <i class="bi bi-person me-1"></i>Nama Pelajar
-                                    </th>
-                                    <th style="width: 22%;">
-                                        <i class="bi bi-box me-1"></i>Nama Produk
-                                    </th>
-                                    <th style="width: 30%;">
-                                        <i class="bi bi-file-text me-1"></i>Deskripsi
-                                    </th>
-                                    <th class="text-center" style="width: 100px;">
-                                        <i class="bi bi-download me-1"></i>File
-                                    </th>
-                                    <th class="text-center" style="width: 120px;">
-                                        <i class="bi bi-calendar me-1"></i>Tanggal Upload
-                                    </th>
+                                    <th class="py-3 px-3 text-center" style="width: 80px;">No</th>
+                                    <th class="py-3 px-3">Nama Pelajar</th>
+                                    <th class="py-3 px-3">Nama Produk</th>
+                                    <th class="py-3 px-3">Deskripsi</th>
+                                    <th class="py-3 px-3 text-center" style="width: 120px;">File</th>
+                                    <th class="py-3 px-3 text-center" style="width: 140px;">Tanggal Upload</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($produk as $p)
                                     <tr>
-                                        <td class="text-center fw-semibold text-muted">{{ $loop->iteration }}</td>
-                                        <td>
+                                        <td class="text-center py-3 fw-medium">
+                                            <span class="badge bg-light text-dark rounded-circle p-2">
+                                                {{ $loop->iteration }}
+                                            </span>
+                                        </td>
+                                        <td class="py-3">
                                             <div class="d-flex align-items-center">
-                                                <div class="avatar-circle bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2"
-                                                    style="width: 35px; height: 35px; min-width: 35px;">
+                                                <div class="avatar-circle bg-primary bg-opacity-10 text-primary me-3">
                                                     <strong>{{ substr($p->pelajar->nama, 0, 1) }}</strong>
                                                 </div>
-                                                <span class="fw-semibold">{{ $p->pelajar->nama }}</span>
+                                                <div>
+                                                    <div class="fw-semibold">{{ $p->pelajar->nama }}</div>
+                                                    <small class="text-muted">{{ $p->pelajar->asal_institusi ?? '' }}</small>
+                                                </div>
                                             </div>
                                         </td>
-                                        <td class="fw-semibold text-dark">{{ $p->nama_produk }}</td>
-                                        <td class="text-muted">
+                                        <td class="py-3 fw-semibold text-dark">{{ $p->nama_produk }}</td>
+                                        <td class="py-3 text-muted">
                                             @if ($p->deskripsi)
                                                 <span class="d-inline-block text-truncate" style="max-width: 300px;"
                                                     title="{{ $p->deskripsi }}">
                                                     {{ $p->deskripsi }}
                                                 </span>
                                             @else
-                                                <span class="fst-italic text-secondary">Tidak ada deskripsi</span>
+                                                <span class="text-muted fst-italic">Tidak ada deskripsi</span>
                                             @endif
                                         </td>
-                                        <td class="text-center">
+                                        <td class="text-center py-3">
                                             <a href="{{ asset('storage/' . $p->file_produk) }}"
-                                                class="btn btn-sm btn-success shadow-sm" target="_blank"
+                                                class="btn btn-success btn-sm" target="_blank"
                                                 title="Download File">
-                                                <i class="bi bi-download me-1"></i>Download
+                                                <i class="fas fa-download me-1"></i>Download
                                             </a>
                                         </td>
-                                        <td class="text-center">
-                                            <span class="badge bg-secondary px-3 py-2">
-                                                <i class="bi bi-calendar3 me-1"></i>
+                                        <td class="text-center py-3">
+                                            <span class="badge bg-secondary bg-opacity-10 text-secondary px-3 py-2">
+                                                <i class="fas fa-calendar me-1"></i>
                                                 {{ $p->created_at->format('d-m-Y') }}
                                             </span>
                                         </td>
@@ -150,12 +181,6 @@
 @endsection
 
 @push('scripts')
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
-
-    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
-
     <script>
         $(document).ready(function() {
             $('#tableProduk').DataTable({
@@ -169,20 +194,65 @@
                     "paginate": {
                         "first": "Awal",
                         "last": "Akhir",
-                        "next": ">",
-                        "previous": "<"
+                        "next": "›",
+                        "previous": "‹"
                     }
                 },
                 "pageLength": 10,
-                "order": [
-                    [5, "desc"]
-                ], // Sort by date (newest first)
+                "order": [[5, "desc"]], // Sort by date (newest first)
                 "columnDefs": [{
-                        "orderable": false,
-                        "targets": 4
-                    } // Disable sorting on download column
-                ]
+                    "orderable": false,
+                    "targets": 4 // Disable sorting on download column
+                }],
+                "dom": 't'
             });
         });
     </script>
+@endpush
+
+@push('styles')
+    <style>
+        .avatar-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .table-primary {
+            background-color: #0d6efd;
+        }
+
+        .table-primary th {
+            border: none;
+            color: white;
+            font-weight: 600;
+        }
+
+        .card {
+            border: none;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        }
+
+        .badge {
+            font-weight: 500;
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: rgba(13, 110, 253, 0.05);
+        }
+
+        .btn-success {
+            background-color: #198754;
+            border-color: #198754;
+        }
+
+        .btn-success:hover {
+            background-color: #157347;
+            border-color: #146c43;
+        }
+    </style>
 @endpush

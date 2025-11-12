@@ -19,47 +19,36 @@
     </a> --}}
     {{-- Logo / Brand --}}
     <a class="navbar-brand fw-bold text-primary" href="#">Badan Pusat Statistik</a>
-
     <div class="ms-auto d-flex align-items-center">
         {{-- Notifikasi Dropdown --}}
         <div class="nav-item dropdown me-3">
             <a class="nav-link position-relative" href="#" id="notificationDropdown" role="button"
                 data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="bi bi-bell fs-4"></i>
-                @if (Auth::user()->unreadNotifications->count() > 0)
-                    <span id="notifBadge"
-                        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                        {{ Auth::user()->unreadNotifications->count() }}
-                    </span>
-                @endif
+                @auth
+                    @if (Auth::user()->unreadNotifications->count() > 0)
+                        <span id="notifBadge"
+                            class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                            {{ Auth::user()->unreadNotifications->count() }}
+                        </span>
+                    @endif
+                @endauth
             </a>
             <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="notificationDropdown"
                 style="min-width: 300px;">
                 <li>
                     <h6 class="dropdown-header fw-semibold text-primary">Notifikasi</h6>
                 </li>
-                <li>
-                    <hr class="dropdown-divider">
-                </li>
 
-                @forelse($notifikasi as $notif)
-                    <li>
-                        <a href="#"
-                            class="dropdown-item notif-item {{ is_null($notif->read_at) ? 'fw-bold' : '' }}"
-                            data-id="{{ $notif->id }}" data-url="{{ $notif->data['url'] ?? '#' }}">
-                            {{ $notif->data['pesan'] }}
-                            <br>
-                            <small class="text-muted">{{ $notif->created_at->diffForHumans() }}</small>
-                        </a>
-                    </li>
-                @empty
-                    <li><span class="dropdown-item text-muted text-center py-2">Tidak ada notifikasi</span></li>
-                @endforelse
-                <li>
-                    <hr class="dropdown-divider">
-                </li>
-                <li><a href="{{ route('notifications.index') }}"
-                        class="dropdown-item text-center fw-semibold text-primary">Lihat semua</a></li>
+                @auth
+                    @forelse (Auth::user()->unreadNotifications as $notification)
+                        <li class="dropdown-item small">{{ $notification->data['message'] ?? 'Notifikasi baru' }}</li>
+                    @empty
+                        <li class="dropdown-item text-muted small">Tidak ada notifikasi</li>
+                    @endforelse
+                @else
+                    <li class="dropdown-item text-muted small">Silakan login untuk melihat notifikasi</li>
+                @endauth
             </ul>
         </div>
 

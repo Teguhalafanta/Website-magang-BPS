@@ -92,6 +92,11 @@
                         <i class="bi bi-shield-check"></i>
                         Log in with SSO
                     </a>
+
+                    <a href="{{ route('google.login') }}" class="btn-google">
+                        <i class="bi bi-google"></i>
+                        Login dengan Google
+                    </a>
                 </form>
             </div>
 

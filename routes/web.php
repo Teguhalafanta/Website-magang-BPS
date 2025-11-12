@@ -19,6 +19,7 @@ use App\Http\Controllers\Pembimbing\PenilaianController;
 use App\Http\Controllers\Admin\AssignPembimbingController;
 use App\Http\Controllers\Admin\LaporanController as AdminLaporanController;
 use App\Http\Controllers\Admin\PelajarController as AdminPelajarController;
+use App\Http\Controllers\GoogleController;
 
 // ================== GUEST ==================
 Route::middleware('guest')->group(function () {
@@ -27,6 +28,8 @@ Route::middleware('guest')->group(function () {
     Route::get('/login-sso', [AuthController::class, 'sso'])->name('login.sso');
     Route::get('/register', [AuthController::class, 'register'])->name('register');
     Route::post('/register', [AuthController::class, 'store'])->name('register.store');
+    Route::get('auth/google', [GoogleController::class, 'redirectToGoogle'])->name('google.login');
+    Route::get('auth/google/call-back', [GoogleController::class, 'handleGoogleCallback']);
 });
 
 // ================== AUTH ==================

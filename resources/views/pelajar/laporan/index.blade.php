@@ -4,14 +4,22 @@
     <style>
         /* BPS Color Scheme */
         :root {
-            --bps-primary: #003366;    /* Biru tua BPS */
-            --bps-secondary: #0056b3;  /* Biru medium */
-            --bps-accent: #e6f2ff;     /* Biru muda */
-            --bps-success: #28a745;    /* Hijau */
-            --bps-warning: #ffc107;    /* Kuning */
-            --bps-danger: #dc3545;     /* Merah */
-            --bps-light: #f8f9fa;      /* Abu-abu muda */
-            --bps-white: #ffffff;      /* Putih */
+            --bps-primary: #003366;
+            /* Biru tua BPS */
+            --bps-secondary: #0056b3;
+            /* Biru medium */
+            --bps-accent: #e6f2ff;
+            /* Biru muda */
+            --bps-success: #28a745;
+            /* Hijau */
+            --bps-warning: #ffc107;
+            /* Kuning */
+            --bps-danger: #dc3545;
+            /* Merah */
+            --bps-light: #f8f9fa;
+            /* Abu-abu muda */
+            --bps-white: #ffffff;
+            /* Putih */
         }
 
         /* BPS Glassmorphism Style */
@@ -255,12 +263,14 @@
                             </div>
                             <div class="col-md-6 text-md-end">
                                 <div class="d-flex justify-content-md-end gap-2">
-                                    <a href="{{ route('pelajar.laporan.download', $laporan->id) }}"
-                                        class="bps-btn-outline">
+                                    <a href="{{ route('pelajar.laporan.download', $laporan->id) }}" class="bps-btn-outline"
+                                        role="button">
                                         <i class="fas fa-download me-2"></i>Download Laporan
                                     </a>
                                     @if ($laporan->status == 'ditolak')
-                                        <button type="button" class="bps-btn-danger" data-bs-toggle="modal" data-bs-target="#uploadUlangModal">
+                                        <button id="uploadUlangBtn" type="button" class="bps-btn-danger"
+                                            data-bs-toggle="modal" data-bs-target="#uploadUlangModal"
+                                            onclick="(function(){ try{ if(!document.getElementById('uploadUlangModal')) return; if(typeof bootstrap==='undefined'){ return; } }catch(e){} })();">
                                             <i class="fas fa-upload me-2"></i>Upload Ulang
                                         </button>
                                     @endif
@@ -299,7 +309,8 @@
                                         <i class="fas fa-exclamation-triangle bps-icon text-warning"></i>
                                         <div>
                                             <strong class="d-block mb-1">Perhatian!</strong>
-                                            Laporan Anda ditolak. Silakan perbaiki sesuai masukan pembimbing dan upload ulang laporan.
+                                            Laporan Anda ditolak. Silakan perbaiki sesuai masukan pembimbing dan upload
+                                            ulang laporan.
                                         </div>
                                     </div>
                                 </div>
@@ -335,9 +346,10 @@
                         <div class="mb-4">
                             <i class="fas fa-file-upload text-primary fa-4x mb-3"></i>
                             <h4 class="fw-bold text-primary mb-2">Belum Ada Laporan</h4>
-                            <p class="text-muted mb-4">Anda belum mengunggah laporan akhir magang. Upload laporan Anda untuk melanjutkan proses.</p>
+                            <p class="text-muted mb-4">Anda belum mengunggah laporan akhir magang. Upload laporan Anda untuk
+                                melanjutkan proses.</p>
                         </div>
-                        <a href="{{ route('pelajar.laporan.create') }}" class="bps-btn-primary btn-lg">
+                        <a href="{{ route('pelajar.laporan.create') }}" class="bps-btn-primary btn-lg" role="button">
                             <i class="fas fa-upload me-2"></i>Upload Laporan Sekarang
                         </a>
                     </div>
@@ -348,55 +360,59 @@
 
     <!-- Modal Upload Ulang -->
     @if ($laporan && $laporan->status == 'ditolak')
-    <div class="modal fade" id="uploadUlangModal" tabindex="-1" aria-labelledby="uploadUlangModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="bps-modal-content">
-                <div class="modal-header bps-modal-header">
-                    <h5 class="modal-title" id="uploadUlangModalLabel">
-                        <i class="fas fa-upload me-2"></i>Upload Laporan Ulang
-                    </h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form action="{{ route('pelajar.laporan.store') }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    <div class="modal-body p-4">
-                        <div class="mb-4">
-                            <label for="file_laporan" class="form-label fw-semibold text-primary mb-3">
-                                <i class="fas fa-file-pdf me-2"></i>File Laporan (PDF)
-                            </label>
-                            <input type="file" class="form-control bps-form-control @error('file_laporan') is-invalid @enderror" 
-                                   id="file_laporan" name="file_laporan" accept=".pdf" required>
-                            @error('file_laporan')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                            <div class="form-text text-muted mt-2">
-                                <i class="fas fa-info-circle me-1"></i> 
-                                Maksimal ukuran file: 2MB. Format yang diterima: PDF
+        <div class="modal fade" id="uploadUlangModal" tabindex="-1" aria-labelledby="uploadUlangModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="bps-modal-content">
+                    <div class="modal-header bps-modal-header">
+                        <h5 class="modal-title" id="uploadUlangModalLabel">
+                            <i class="fas fa-upload me-2"></i>Upload Laporan Ulang
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <form action="{{ route('pelajar.laporan.store') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="modal-body p-4">
+                            <div class="mb-4">
+                                <label for="file_laporan" class="form-label fw-semibold text-primary mb-3">
+                                    <i class="fas fa-file-pdf me-2"></i>File Laporan (PDF)
+                                </label>
+                                <input type="file"
+                                    class="form-control bps-form-control @error('file_laporan') is-invalid @enderror"
+                                    id="file_laporan" name="file_laporan" accept=".pdf" required>
+                                @error('file_laporan')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                                <div class="form-text text-muted mt-2">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Maksimal ukuran file: 2MB. Format yang diterima: PDF
+                                </div>
                             </div>
-                        </div>
-                        
-                        <div class="alert alert-info bps-alert">
-                            <div class="d-flex align-items-start">
-                                <i class="fas fa-lightbulb bps-icon text-info mt-1"></i>
-                                <div>
-                                    <strong class="d-block mb-1">Tips Upload Ulang</strong>
-                                    Pastikan laporan sudah diperbaiki sesuai dengan masukan dari pembimbing sebelum mengupload ulang. Perhatikan format dan struktur laporan yang telah ditentukan.
+
+                            <div class="alert alert-info bps-alert">
+                                <div class="d-flex align-items-start">
+                                    <i class="fas fa-lightbulb bps-icon text-info mt-1"></i>
+                                    <div>
+                                        <strong class="d-block mb-1">Tips Upload Ulang</strong>
+                                        Pastikan laporan sudah diperbaiki sesuai dengan masukan dari pembimbing sebelum
+                                        mengupload ulang. Perhatikan format dan struktur laporan yang telah ditentukan.
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="modal-footer border-top-0 bg-light">
-                        <button type="button" class="bps-btn-outline" data-bs-dismiss="modal">
-                            <i class="fas fa-times me-2"></i>Batal
-                        </button>
-                        <button type="submit" class="bps-btn-primary">
-                            <i class="fas fa-upload me-2"></i>Upload Laporan Ulang
-                        </button>
-                    </div>
-                </form>
+                        <div class="modal-footer border-top-0 bg-light">
+                            <button type="button" class="bps-btn-outline" data-bs-dismiss="modal">
+                                <i class="fas fa-times me-2"></i>Batal
+                            </button>
+                            <button type="submit" class="bps-btn-primary">
+                                <i class="fas fa-upload me-2"></i>Upload Laporan Ulang
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
     @endif
 
     <script>
@@ -413,7 +429,7 @@
                             this.value = '';
                             return;
                         }
-                        
+
                         // Validasi tipe file (hanya PDF sesuai controller)
                         if (file.type !== 'application/pdf') {
                             alert('Format file tidak didukung. Hanya file PDF yang diperbolehkan.');
@@ -423,6 +439,64 @@
                     }
                 });
             }
+        });
+    </script>
+
+    <script>
+        // Fallback programmatic modal opener for 'Upload Ulang' button
+        document.addEventListener('DOMContentLoaded', function() {
+            const btn = document.getElementById('uploadUlangBtn');
+            const modalEl = document.getElementById('uploadUlangModal');
+            if (!btn || !modalEl) return;
+
+            function hideModal() {
+                modalEl.classList.remove('show');
+                modalEl.style.display = 'none';
+                modalEl.setAttribute('aria-hidden', 'true');
+                document.body.classList.remove('modal-open');
+                const bd = document.querySelector('.modal-backdrop');
+                if (bd) bd.remove();
+            }
+
+            btn.addEventListener('click', function(e) {
+                try {
+                    // Prefer Bootstrap's JS if present
+                    if (window.bootstrap && typeof bootstrap.Modal === 'function') {
+                        const modal = new bootstrap.Modal(modalEl);
+                        modal.show();
+                        return;
+                    }
+                } catch (err) {
+                    // fallthrough to manual fallback
+                }
+
+                // Manual fallback: toggle classes/styles to show modal
+                if (!modalEl.classList.contains('show')) {
+                    // move modal to body to avoid stacking/context issues
+                    if (modalEl.parentElement !== document.body) {
+                        document.body.appendChild(modalEl);
+                    }
+
+                    modalEl.classList.add('show');
+                    modalEl.style.display = 'block';
+                    modalEl.removeAttribute('aria-hidden');
+                    modalEl.setAttribute('aria-modal', 'true');
+                    modalEl.style.zIndex = 1060; // above typical backdrop
+                    document.body.classList.add('modal-open');
+
+                    if (!document.querySelector('.modal-backdrop')) {
+                        const backdrop = document.createElement('div');
+                        backdrop.className = 'modal-backdrop fade show';
+                        backdrop.style.zIndex = 1050;
+                        document.body.appendChild(backdrop);
+                        backdrop.addEventListener('click', hideModal);
+                    }
+
+                    // attach close handlers inside modal
+                    const closeBtns = modalEl.querySelectorAll('[data-bs-dismiss="modal"], .btn-close');
+                    closeBtns.forEach(cb => cb.addEventListener('click', hideModal));
+                }
+            });
         });
     </script>
 @endsection

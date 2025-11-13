@@ -22,9 +22,10 @@ class LaporanController extends Controller
 
         if ($user->role === 'pembimbing') {
             // Pembimbing hanya melihat laporan peserta bimbingannya
-            $laporans = Laporan::whereHas('user', function ($query) use ($user) {
-                $query->where('pembimbing_id', $user->id);
-            })->with('user')->get();
+            $pembimbing = $user->pembimbing;
+            $laporans = Laporan::whereHas('user.pelajar', function ($query) use ($pembimbing) {
+                $query->where('pembimbing_id', $pembimbing->id ?? 0);
+            })->with('user.pelajar')->get();
 
             return view('pembimbing.laporan.index', compact('laporans'));
         }
@@ -59,19 +60,28 @@ class LaporanController extends Controller
             ]
         );
 
+        // === Kirim notifikasi ke pembimbing ===
+        $pelajar = \App\Models\Pelajar::where('user_id', Auth::id())->first();
+
+        if ($pelajar && $pelajar->pembimbing && $pelajar->pembimbing->user) {
+            $pembimbingUser = $pelajar->pembimbing->user;
+
+            $pembimbingUser->notify(new \App\Notifications\NotifikasiBaru(
+                $pelajar->nama . ' mengunggah laporan akhir untuk diverifikasi.',
+                route('pembimbing.laporan')
+            ));
+        }
 
         return back()->with('success', 'Laporan berhasil diupload!');
     }
-
-
 
     // Pembimbing menyetujui laporan
     public function setujui($id)
     {
         $laporan = Laporan::findOrFail($id);
-
         // hanya pembimbing pemilik yg boleh setujui
-        if (!isset($laporan->user) || Auth::user()->id !== $laporan->user->pembimbing_id) {
+        $pembimbing = Auth::user()->pembimbing;
+        if (!isset($laporan->user) || !isset($laporan->user->pelajar) || !$pembimbing || $laporan->user->pelajar->pembimbing_id != $pembimbing->id) {
             abort(403, 'Tidak berwenang menyetujui laporan ini.');
         }
 
@@ -86,8 +96,8 @@ class LaporanController extends Controller
     public function tolak($id)
     {
         $laporan = Laporan::findOrFail($id);
-
-        if (!isset($laporan->user) || Auth::user()->id !== $laporan->user->pembimbing_id) {
+        $pembimbing = Auth::user()->pembimbing;
+        if (!isset($laporan->user) || !isset($laporan->user->pelajar) || !$pembimbing || $laporan->user->pelajar->pembimbing_id != $pembimbing->id) {
             abort(403, 'Tidak berwenang menolak laporan ini.');
         }
 
@@ -202,7 +212,8 @@ class LaporanController extends Controller
         }
 
         if ($user->role === 'pembimbing') {
-            $isBimbingan = $laporan->user && $laporan->user->pembimbing_id == $user->id;
+            $pembimbing = $user->pembimbing;
+            $isBimbingan = $laporan->user && isset($laporan->user->pelajar) && ($laporan->user->pelajar->pembimbing_id == ($pembimbing->id ?? null));
             if (!$isBimbingan) {
                 abort(403, 'Laporan ini bukan peserta bimbingan kamu.');
             }

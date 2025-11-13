@@ -363,20 +363,22 @@
         <div class="modal fade" id="uploadUlangModal" tabindex="-1" aria-labelledby="uploadUlangModalLabel"
             aria-hidden="true">
             <div class="modal-dialog modal-lg">
-                <div class="bps-modal-content">
+                <div class="modal-content bps-modal-content" style="position: relative; z-index: 1055;">
                     <div class="modal-header bps-modal-header">
                         <h5 class="modal-title" id="uploadUlangModalLabel">
-                            <i class="fas fa-upload me-2"></i>Upload Laporan Ulang
+                            <i class="fas fa-upload me-2"></i> Upload Laporan Ulang
                         </h5>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
                             aria-label="Close"></button>
                     </div>
+
+                    <!-- FORM -->
                     <form action="{{ route('pelajar.laporan.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="modal-body p-4">
                             <div class="mb-4">
                                 <label for="file_laporan" class="form-label fw-semibold text-primary mb-3">
-                                    <i class="fas fa-file-pdf me-2"></i>File Laporan (PDF)
+                                    <i class="fas fa-file-pdf me-2"></i> File Laporan (PDF)
                                 </label>
                                 <input type="file"
                                     class="form-control bps-form-control @error('file_laporan') is-invalid @enderror"
@@ -386,7 +388,7 @@
                                 @enderror
                                 <div class="form-text text-muted mt-2">
                                     <i class="fas fa-info-circle me-1"></i>
-                                    Maksimal ukuran file: 2MB. Format yang diterima: PDF
+                                    Maksimal ukuran file: 2MB. Format yang diterima: PDF.
                                 </div>
                             </div>
 
@@ -401,12 +403,13 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="modal-footer border-top-0 bg-light">
                             <button type="button" class="bps-btn-outline" data-bs-dismiss="modal">
-                                <i class="fas fa-times me-2"></i>Batal
+                                <i class="fas fa-times me-2"></i> Batal
                             </button>
-                            <button type="submit" class="bps-btn-primary">
-                                <i class="fas fa-upload me-2"></i>Upload Laporan Ulang
+                            <button type="submit" class="bps-btn-primary" style="pointer-events:auto; z-index:1100;">
+                                <i class="fas fa-upload me-2"></i> Upload Laporan Ulang
                             </button>
                         </div>
                     </form>

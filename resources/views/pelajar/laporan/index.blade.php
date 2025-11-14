@@ -273,7 +273,7 @@
                                 <i class="bi bi-file-pdf me-2"></i> File Laporan (PDF)
                             </label>
                             <input type="file" class="form-control bps-form-control @error('file_laporan') is-invalid @enderror" 
-                                   id="file_laporan" name="file_laporan" accept=".pdf" required>
+                                    id="file_laporan" name="file_laporan" accept=".pdf" required>
                             @error('file_laporan')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror

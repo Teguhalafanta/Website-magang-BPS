@@ -89,6 +89,13 @@ class LaporanController extends Controller
             'status' => 'disetujui'
         ]);
 
+        // === Kirim Notifikasi ke Pelajar ===
+        $pelajarUser = $laporan->user; // user pelajar
+        $pelajarUser->notify(new \App\Notifications\NotifikasiBaru(
+            'Laporan akhir kamu telah disetujui oleh pembimbing.',
+            route('pelajar.laporan.index')
+        ));
+
         return back()->with('success', 'Laporan telah disetujui dan dikirim ke admin.');
     }
 
@@ -104,6 +111,13 @@ class LaporanController extends Controller
         $laporan->update([
             'status' => 'ditolak'
         ]);
+
+        // === Kirim Notifikasi ke Pelajar ===
+        $pelajarUser = $laporan->user;
+        $pelajarUser->notify(new \App\Notifications\NotifikasiBaru(
+            'Laporan akhir kamu ditolak oleh pembimbing, silakan perbaiki kembali.',
+            route('pelajar.laporan.index')
+        ));
 
         return back()->with('error', 'Laporan ditolak. Pelajar harus upload ulang.');
     }

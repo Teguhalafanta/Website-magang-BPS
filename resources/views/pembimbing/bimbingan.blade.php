@@ -262,7 +262,7 @@
                                                                         <div class="bg-primary bg-opacity-10 rounded p-2 me-3">
                                                                             <i class="fas fa-file-pdf text-primary fs-5"></i>
                                                                         </div>
-                                                                        <div class="flex-grow-1">
+                                                                        <div class="flex-1">
                                                                             <small class="text-muted d-block">Proposal</small>
                                                                             @if ($p->proposal)
                                                                                 <a href="{{ asset('storage/' . $p->proposal) }}"
@@ -286,7 +286,7 @@
                                                                         <div class="bg-primary bg-opacity-10 rounded p-2 me-3">
                                                                             <i class="fas fa-file-pdf text-primary fs-5"></i>
                                                                         </div>
-                                                                        <div class="flex-grow-1">
+                                                                        <div class="flex-1">
                                                                             <small class="text-muted d-block">Surat Pengajuan</small>
                                                                             @if ($p->surat_pengajuan)
                                                                                 <a href="{{ asset('storage/' . $p->surat_pengajuan) }}"

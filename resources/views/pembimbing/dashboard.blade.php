@@ -15,7 +15,8 @@
                         <h4 class="fw-bold mb-1 text-dark">Dashboard Pembimbing</h4>
                         <p class="text-muted mb-0">
                             Selamat datang kembali,
-                            <strong class="text-primary">{{ Auth::user()->pembimbing->nama ?? Auth::user()->username }}</strong>
+                            <strong
+                                class="text-primary">{{ Auth::user()->pembimbing->nama ?? Auth::user()->username }}</strong>
                         </p>
                     </div>
                 </div>
@@ -33,7 +34,7 @@
                                 <div>
                                     <p class="text-uppercase fw-semibold mb-2 opacity-75 small">Total Pelajar</p>
                                     <h2 class="fw-bold mb-0 display-6">{{ $totalPelajar ?? 0 }}</h2>
-                                    <p class="mb-0 small opacity-75">Peserta bimbingan</p>
+                                    <p class="mb-0 small opacity-75">Peserta Bimbingan</p>
                                 </div>
                                 <div class="bg-white bg-opacity-20 rounded-circle p-3">
                                     <i class="fas fa-users text-white fs-3"></i>
@@ -59,7 +60,7 @@
                                 <div>
                                     <p class="text-uppercase fw-semibold mb-2 opacity-75 small">Total Kegiatan</p>
                                     <h2 class="fw-bold mb-0 display-6">{{ $jumlahKegiatan ?? 0 }}</h2>
-                                    <p class="mb-0 small opacity-75">Aktivitas bimbingan</p>
+                                    <p class="mb-0 small opacity-75">Aktivitas Bimbingan</p>
                                 </div>
                                 <div class="bg-white bg-opacity-20 rounded-circle p-3">
                                     <i class="fas fa-tasks text-white fs-3"></i>
@@ -111,7 +112,7 @@
                                 <div>
                                     <p class="text-uppercase fw-semibold mb-2 opacity-75 small">Laporan Menunggu</p>
                                     <h2 class="fw-bold mb-0 display-6">{{ $laporanMenunggu ?? 0 }}</h2>
-                                    <p class="mb-0 small opacity-75">Perlu verifikasi</p>
+                                    <p class="mb-0 small opacity-75">Perlu Verifikasi</p>
                                 </div>
                                 <div class="bg-white bg-opacity-20 rounded-circle p-3">
                                     <i class="fas fa-file-alt text-white fs-3"></i>
@@ -149,23 +150,23 @@
                         @if (isset($laporanTerbaru) && $laporanTerbaru->count() > 0)
                             <div class="table-responsive">
                                 <table class="table table-hover align-middle mb-0">
-                                    <thead class="table-primary">
-                                        <tr>
-                                            <th class="py-3 px-3 text-white fw-semibold">Pelajar</th>
-                                            <th class="py-3 px-3 text-white fw-semibold">Tanggal</th>
-                                            <th class="py-3 px-3 text-white fw-semibold">Judul</th>
-                                            <th class="py-3 px-3 text-white fw-semibold">Status</th>
-                                            <th class="py-3 px-3 text-white fw-semibold text-center">Aksi</th>
+                                    <thead class="table-info">
+                                        <tr class="text-center">
+                                            <th class="py-3 px-3 text-dark fw-semibold">Pelajar</th>
+                                            <th class="py-3 px-3 text-dark fw-semibold">Tanggal</th>
+                                            <th class="py-3 px-3 text-dark fw-semibold">Judul</th>
+                                            <th class="py-3 px-3 text-dark fw-semibold">Status</th>
+                                            <th class="py-3 px-3 text-dark fw-semibold">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach ($laporanTerbaru as $laporan)
-                                            <tr>
-                                                <td class="py-3 px-3 fw-medium">{{ $laporan->pelajar->nama ?? '-' }}</td>
+                                            <tr class="text-center">
+                                                <td class="py-3 px-3 fw-medium text-start">{{ $laporan->pelajar->nama ?? '-' }}</td>
                                                 <td class="py-3 px-3 text-muted">
                                                     {{ $laporan->waktu ?? \Carbon\Carbon::parse($laporan->tanggal)->format('d/m/Y') }}
                                                 </td>
-                                                <td class="py-3 px-3">{{ Str::limit($laporan->topik ?? '-', 35) }}</td>
+                                                <td class="py-3 px-3 text-start">{{ Str::limit($laporan->topik ?? '-', 35) }}</td>
                                                 <td class="py-3 px-3">
                                                     @if ($laporan->status == 'Belum Dimulai')
                                                         <span class="badge bg-warning text-dark">Belum Dimulai</span>
@@ -208,20 +209,22 @@
                             Akses Cepat
                         </h5>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body p-4">
                         <div class="d-grid gap-3">
-                            <a href="{{ route('pembimbing.bimbingan') }}" class="btn btn-outline-primary text-start py-3">
+                            <a href="{{ route('pembimbing.bimbingan') }}"
+                                class="btn btn-outline-primary text-start py-3">
                                 <div class="d-flex align-items-center">
                                     <div class="bg-primary bg-opacity-10 rounded p-2 me-3">
                                         <i class="fas fa-users text-primary"></i>
                                     </div>
+
                                     <div>
                                         <div class="fw-bold">Kelola Pelajar</div>
                                         <small class="text-muted">Lihat daftar peserta bimbingan</small>
                                     </div>
                                 </div>
                             </a>
-                            
+
                             <a href="{{ route('pembimbing.kegiatan') }}" class="btn btn-outline-success text-start py-3">
                                 <div class="d-flex align-items-center">
                                     <div class="bg-success bg-opacity-10 rounded p-2 me-3">
@@ -233,7 +236,7 @@
                                     </div>
                                 </div>
                             </a>
-                            
+
                             <a href="{{ route('pembimbing.presensi') }}" class="btn btn-outline-warning text-start py-3">
                                 <div class="d-flex align-items-center">
                                     <div class="bg-warning bg-opacity-10 rounded p-2 me-3">
@@ -241,7 +244,7 @@
                                     </div>
                                     <div>
                                         <div class="fw-bold">Kelola Presensi</div>
-                                        <small class="text-muted">Monitor Kehadiran Pelajar</small>
+                                        <small class="text-muted">Monitor kehadiran pelajar</small>
                                     </div>
                                 </div>
                             </a>
@@ -263,23 +266,24 @@
 
                 {{-- Information --}}
                 <div class="card border-0 shadow-sm">
-                    <div class="card-header bg-light border-bottom py-3">
-                        <h5 class="fw-bold mb-0 text-dark">
+                    <div class="card-header bg-primary border-bottom py-3">
+                        <h5 class="fw-bold mb-0 text-light">
                             <i class="fas fa-info-circle me-2 text-primary"></i>
                             Informasi
                         </h5>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body p-4">
                         <div class="alert alert-info border-0 mb-3" role="alert">
                             <div class="d-flex">
                                 <i class="fas fa-lightbulb text-info me-3 fs-5"></i>
                                 <div>
                                     <strong class="d-block mb-1">Tips Bimbingan</strong>
-                                    <small>Periksa laporan kegiatan pelajar secara berkala untuk memastikan progres bimbingan berjalan lancar.</small>
+                                    <small>Periksa laporan kegiatan pelajar secara berkala untuk memastikan progres
+                                        bimbingan berjalan lancar.</small>
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="alert alert-warning border-0 mb-0" role="alert">
                             <div class="d-flex">
                                 <i class="fas fa-clock text-warning me-3 fs-5"></i>

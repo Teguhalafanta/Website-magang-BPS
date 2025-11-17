@@ -32,6 +32,16 @@ class SertifikatController extends Controller
             'status' => 'selesai' // ← supaya sertifikat muncul di siswa
         ]);
 
+        // === KIRIM NOTIFIKASI KE PELAJAR ===
+        $pelajarUser = \App\Models\User::find($laporan->user_id);
+
+        if ($pelajarUser) {
+            $pesan = 'Sertifikat magang kamu telah tersedia dan bisa diunduh.';
+            $url = route('pelajar.laporan.index');
+
+            $pelajarUser->notify(new \App\Notifications\NotifikasiBaru($pesan, $url));
+        }
+
         return back()->with('success', 'Sertifikat berhasil dikirim.');
     }
 }

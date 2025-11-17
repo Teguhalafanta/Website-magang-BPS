@@ -67,6 +67,16 @@ class ProdukMagangController extends Controller
             'file_produk' => $path,
         ]);
 
+        // === Kirim Notifikasi ke Pembimbing ===
+        $pembimbingUser = $user->pelajar->pembimbing->user;
+
+        $pembimbingUser->notify(
+            new \App\Notifications\NotifikasiBaru(
+                "Pelajar {$user->pelajar->nama} telah mengunggah produk magang.",
+                route('pembimbing.produk.index')
+            )
+        );
+
         return redirect()->route('pelajar.produk.index')->with('success', 'Produk berhasil dikirim!');
     }
 

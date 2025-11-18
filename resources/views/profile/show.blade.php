@@ -51,18 +51,17 @@
                         {{-- Foto Profil --}}
                         <div class="position-relative d-inline-block">
                             @if ($user->foto && Storage::disk('public')->exists($user->foto))
-                                <img src="{{ Storage::url($user->foto) }}" alt="Foto Profil" 
+                                <img src="{{ Storage::url($user->foto) }}" alt="Foto Profil"
                                     class="rounded-circle border shadow-sm mb-3"
                                     style="width: 180px; height: 180px; object-fit: cover;">
                             @else
                                 <img src="{{ asset('images/default-avatar.png') }}" alt="Default Foto"
-                                    class="rounded-circle border shadow-sm mb-3" 
+                                    class="rounded-circle border shadow-sm mb-3"
                                     style="width: 180px; height: 180px; object-fit: cover;">
                             @endif
                             <div class="position-absolute bottom-0 end-0">
-                                <button class="btn btn-primary btn-sm rounded-circle shadow" 
-                                        data-bs-toggle="modal" data-bs-target="#ubahFotoModal"
-                                        style="width: 40px; height: 40px;">
+                                <button class="btn btn-primary btn-sm rounded-circle shadow" data-bs-toggle="modal"
+                                    data-bs-target="#ubahFotoModal" style="width: 40px; height: 40px;">
                                     <i class="bi bi-camera"></i>
                                 </button>
                             </div>
@@ -74,7 +73,7 @@
                         <p class="text-muted mb-3">{{ $user->email }}</p>
 
                         {{-- Status Badge untuk Pelajar --}}
-                        @if($user->role === 'pelajar')
+                        @if ($user->role === 'pelajar')
                             @php
                                 $pelajar = $user->pelajar;
                                 $status = $pelajar->statusMagangOtomatis ?? 'belum ditentukan';
@@ -87,13 +86,6 @@
                         @endif
 
                         <hr class="my-4">
-
-                        {{-- Quick Actions --}}
-                        <div class="d-grid gap-2">
-                            <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editPribadiModal">
-                                <i class="bi bi-pencil-square me-2"></i>Edit Data Pribadi
-                            </button>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -147,11 +139,11 @@
                             </div>
                         @else
                             <div class="row g-3">
-                                <div class="col-md-6">
+                                <div class="col-md-9">
                                     <label class="text-muted small mb-1">Nama</label>
                                     <p class="fw-semibold mb-0">{{ $user->username ?? '-' }}</p>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-9">
                                     <label class="text-muted small mb-1">Email</label>
                                     <p class="fw-semibold mb-0">{{ $user->email ?? '-' }}</p>
                                 </div>
@@ -161,47 +153,48 @@
                 </div>
 
                 {{-- Informasi Magang Card (Hanya untuk Pelajar) --}}
-                @if($user->role === 'pelajar')
-                <div class="card shadow-sm border-0">
-                    <div class="card-header bg-white border-0 py-3">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <h5 class="fw-bold mb-0 text-primary">
-                                <i class="bi bi-briefcase-fill me-2"></i>Informasi Magang
-                            </h5>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label class="text-muted small mb-1">Tanggal Mulai</label>
-                                <p class="fw-semibold mb-0">
-                                    {{ optional($user->pelajar)->rencana_mulai ? \Carbon\Carbon::parse($user->pelajar->rencana_mulai)->format('d F Y') : '-' }}
-                                </p>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="text-muted small mb-1">Tanggal Selesai</label>
-                                <p class="fw-semibold mb-0">
-                                    {{ optional($user->pelajar)->rencana_selesai ? \Carbon\Carbon::parse($user->pelajar->rencana_selesai)->format('d F Y') : '-' }}
-                                </p>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="text-muted small mb-1">Pembimbing / Mentor</label>
-                                <p class="fw-semibold mb-0">{{ optional(optional($user->pelajar)->pembimbing)->nama ?? '-' }}</p>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="text-muted small mb-1">Status Magang</label>
-                                <p class="mb-0">
-                                    @php
-                                        $pelajar = $user->pelajar;
-                                        $status = $pelajar->statusMagangOtomatis ?? 'belum ditentukan';
-                                        $badgeClass = $pelajar->badgeClass ?? 'bg-secondary';
-                                    @endphp
-                                    <span class="badge {{ $badgeClass }}">{{ ucfirst($status) }}</span>
-                                </p>
+                @if ($user->role === 'pelajar')
+                    <div class="card shadow-sm border-0">
+                        <div class="card-header bg-white border-0 py-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="fw-bold mb-0 text-primary">
+                                    <i class="bi bi-briefcase-fill me-2"></i>Informasi Magang
+                                </h5>
                             </div>
                         </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="text-muted small mb-1">Tanggal Mulai</label>
+                                    <p class="fw-semibold mb-0">
+                                        {{ optional($user->pelajar)->rencana_mulai ? \Carbon\Carbon::parse($user->pelajar->rencana_mulai)->format('d F Y') : '-' }}
+                                    </p>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="text-muted small mb-1">Tanggal Selesai</label>
+                                    <p class="fw-semibold mb-0">
+                                        {{ optional($user->pelajar)->rencana_selesai ? \Carbon\Carbon::parse($user->pelajar->rencana_selesai)->format('d F Y') : '-' }}
+                                    </p>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="text-muted small mb-1">Pembimbing / Mentor</label>
+                                    <p class="fw-semibold mb-0">
+                                        {{ optional(optional($user->pelajar)->pembimbing)->nama ?? '-' }}</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="text-muted small mb-1">Status Magang</label>
+                                    <p class="mb-0">
+                                        @php
+                                            $pelajar = $user->pelajar;
+                                            $status = $pelajar->statusMagangOtomatis ?? 'belum ditentukan';
+                                            $badgeClass = $pelajar->badgeClass ?? 'bg-secondary';
+                                        @endphp
+                                        <span class="badge {{ $badgeClass }}">{{ ucfirst($status) }}</span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
                 @endif
             </div>
         </div>
@@ -379,7 +372,7 @@
                             <div class="form-text">Format: JPG, PNG, JPEG (Maks. 2MB)</div>
                         </div>
                         <div class="text-center">
-                            <img id="imagePreview" src="#" alt="Preview" class="rounded shadow-sm mt-2" 
+                            <img id="imagePreview" src="#" alt="Preview" class="rounded shadow-sm mt-2"
                                 style="max-width: 200px; display: none;">
                         </div>
                     </div>
@@ -398,26 +391,26 @@
         .card {
             border-radius: 0.5rem;
         }
-        
+
         .btn-primary {
             background-color: #0054a6;
             border-color: #0054a6;
         }
-        
+
         .btn-primary:hover {
             background-color: #003d7a;
             border-color: #003d7a;
         }
-        
+
         .input-group-text {
             background-color: #f8f9fa;
             border-color: #dee2e6;
         }
-        
+
         .modal-header {
             border-radius: 0.5rem 0.5rem 0 0;
         }
-        
+
         .badge {
             font-size: 0.75em;
             font-weight: 500;
@@ -441,7 +434,7 @@
         function previewImage(input) {
             const preview = document.getElementById('imagePreview');
             const file = input.files[0];
-            
+
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(e) {

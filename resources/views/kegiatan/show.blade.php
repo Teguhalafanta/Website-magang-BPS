@@ -1,9 +1,7 @@
 @extends('kerangka.master')
 
 @section('content')
-<div class="container mt-4">
-    
-
+<div class="container py-2">
     {{-- Main Card --}}
     <div class="card shadow-sm border-0" style="max-width: 700px; margin: 0 auto;">
         {{-- Header --}}

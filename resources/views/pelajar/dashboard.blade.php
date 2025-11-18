@@ -11,7 +11,7 @@
     }
 @endphp
     
-<div class="container py-4">
+<div class="container py-2">
     <div class="row mb-4">
         <div class="col">
             <h3 class="fw-bold text-primary">Dashboard Pelajar</h3>

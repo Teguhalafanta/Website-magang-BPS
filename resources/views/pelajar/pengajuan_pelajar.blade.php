@@ -1,9 +1,9 @@
 @extends('kerangka.master')
 
 @section('content')
-    <div class="container py-4">
+    <div class="container py-2">
         {{-- Header Section --}}
-        <div class="mb-5">
+        <div class="mb-3">
             <h2 class="fw-bold text-primary mb-2">Form Pengajuan Magang</h2>
             <p class="text-muted">Lengkapi data diri Anda dengan benar. Field bertanda <span
                     class="text-danger fw-bold">*</span> wajib diisi.</p>
@@ -14,7 +14,7 @@
             <strong>ℹ️ Informasi Penting:</strong>
             <ul class="mb-0 mt-2">
                 <li>Pastikan semua data yang diisi sesuai dengan dokumen resmi</li>
-                <li>File yang diupload maksimal 5MB dalam format PDF/DOC/DOCX</li>
+                <li>File yang diupload maksimal 5 MB dalam format PDF/DOC/DOCX</li>
                 <li>Proses verifikasi pengajuan membutuhkan waktu 3-5 hari kerja</li>
             </ul>
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -30,7 +30,7 @@
                         <div class="card-header bg-primary text-white">
                             <h5 class="mb-0">👤 Data Pribadi</h5>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body p-4">
                             {{-- Nama --}}
                             <div class="mb-3">
                                 <label class="form-label fw-semibold">Nama Lengkap <span
@@ -96,7 +96,7 @@
                         <div class="card-header bg-success text-white">
                             <h5 class="mb-0">🎓 Data Akademik</h5>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body p-4">
                             {{-- Email --}}
                             <div class="mb-3">
                                 <label class="form-label fw-semibold">Email <span class="text-danger">*</span></label>
@@ -165,7 +165,7 @@
                         <div class="card-header bg-warning text-dark">
                             <h5 class="mb-0">📄 Dokumen Pendukung</h5>
                         </div>
-                        <div class="card-body">
+                        <div class="card-body p-4">
                             {{-- Upload Proposal --}}
                             <div class="mb-3">
                                 <label class="form-label fw-semibold">Upload Proposal <span

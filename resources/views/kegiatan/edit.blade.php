@@ -1,7 +1,7 @@
 @extends('kerangka.master')
 
 @section('content')
-    <div class="container">
+    <div class="container py-2">
         <h2>Edit Kegiatan</h2>
 
         <form action="{{ route('pelajar.kegiatan.update', $kegiatan->id) }}" method="POST" enctype="multipart/form-data">
@@ -11,7 +11,7 @@
             <div class="mb-3">
                 <label for="nama_kegiatan" class="form-label">Nama Kegiatan</label>
                 <input type="text" name="nama_kegiatan" id="nama_kegiatan" class="form-control"
-                       value="{{ old('nama_kegiatan', $kegiatan->nama_kegiatan) }}" required>
+                        value="{{ old('nama_kegiatan', $kegiatan->nama_kegiatan) }}" required>
                 @error('nama_kegiatan')
                     <div class="text-danger">{{ $message }}</div>
                 @enderror
@@ -28,7 +28,7 @@
             <div class="mb-3">
                 <label for="tanggal" class="form-label">Tanggal</label>
                 <input type="date" name="tanggal" id="tanggal" class="form-control"
-                       value="{{ old('tanggal', $kegiatan->tanggal->format('Y-m-d')) }}" required>
+                        value="{{ old('tanggal', $kegiatan->tanggal->format('Y-m-d')) }}" required>
                 @error('tanggal')
                     <div class="text-danger">{{ $message }}</div>
                 @enderror

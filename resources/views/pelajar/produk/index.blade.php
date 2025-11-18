@@ -1,8 +1,8 @@
 @extends('kerangka.master')
 
 @section('content')
-    <div class="container py-4">
-        <div class="row mb-4">
+    <div class="container py-2">
+        <div class="row mb-3">
             <div class="col">
                 <h3 class="fw-bold text-primary">Produk Magang Saya</h3>
                 <p class="text-muted">Kelola dan pantau produk hasil magang Anda</p>
@@ -42,8 +42,8 @@
                             <thead class="table-primary">
                                 <tr>
                                     <th class="text-center" style="width: 50px;">No</th>
-                                    <th style="width: 20%;">Nama Produk</th>
-                                    <th style="width: 35%;">Deskripsi</th>
+                                    <th class="text-center" style="width: 20%;">Nama Produk</th>
+                                    <th class="text-center" style="width: 35%;">Deskripsi</th>
                                     <th class="text-center" style="width: 80px;">File</th>
                                     <th class="text-center" style="width: 120px;">Tanggal Upload</th>
                                     <th class="text-center" style="width: 120px;">Aksi</th>

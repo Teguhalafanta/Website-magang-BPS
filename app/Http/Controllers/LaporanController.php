@@ -96,7 +96,7 @@ class LaporanController extends Controller
             route('pelajar.laporan.index')
         ));
 
-        return back()->with('success', 'Laporan telah disetujui dan dikirim ke admin.');
+        return back()->with('success', 'Laporan telah disetujui.');
     }
 
     // Pembimbing menolak laporan

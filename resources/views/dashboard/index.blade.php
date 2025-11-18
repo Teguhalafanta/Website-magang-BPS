@@ -1,8 +1,8 @@
 @extends('kerangka.master')
 
 @section('content')
-    <div class="container">
-        <h2 class="mb-4">Dashboard BPS</h2>
+    <div class="container py-2">
+        <h3 class="fw-bold mb-3">Dashboard BPS</h3>
 
         <div class="row">
             {{-- Total Pelajar --}}

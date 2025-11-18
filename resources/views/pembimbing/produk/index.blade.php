@@ -1,18 +1,18 @@
 @extends('kerangka.master')
 
 @section('content')
-    <div class="container-fluid py-4">
+    <div class="container py-2">
         <!-- Header Section -->
-        <div class="row mb-4">
+        <div class="row mb-2">
             <div class="col-12">
                 <div class="d-flex align-items-center mb-3">
                     <div class="me-3">
-                        <div class="bg-primary rounded p-3">
-                            <i class="fas fa-box-open text-white fs-4"></i>
+                        <div class="bg-primary rounded p-2">
+                            <i class="bi bi-box-open text-white fs-4"></i>
                         </div>
                     </div>
                     <div>
-                        <h2 class="mb-1 fw-bold text-dark">Produk Magang Peserta Bimbingan</h2>
+                        <h3 class="mb-1 fw-bold text-dark">Produk Magang Peserta Bimbingan</h3>
                         <p class="text-muted mb-0">Pantau dan kelola produk dari pelajar yang Anda bimbing</p>
                     </div>
                 </div>
@@ -24,7 +24,7 @@
             <div class="card border-0 shadow-sm bg-primary bg-opacity-10">
                 <div class="card-body py-5">
                     <div class="text-center">
-                        <i class="fas fa-inbox fa-4x text-primary opacity-50 mb-4"></i>
+                        <i class="bi bi-inbox fa-4x text-primary opacity-50 mb-4"></i>
                         <h4 class="text-primary fw-bold mb-3">Belum Ada Produk</h4>
                         <p class="text-muted mb-0">Belum ada produk yang diupload oleh pelajar bimbingan Anda.</p>
                     </div>
@@ -32,13 +32,13 @@
             </div>
         @else
             {{-- Summary Cards --}}
-            <div class="row g-3 mb-4">
+            <div class="row g-3 mb-2">
                 <div class="col-md-4">
                     <div class="card border-0 shadow-sm text-white bg-primary">
                         <div class="card-body p-4">
                             <div class="d-flex align-items-center">
-                                <div class="bg-white bg-opacity-20 rounded-circle p-3 me-3">
-                                    <i class="fas fa-box fa-2x text-white"></i>
+                                <div class="bg-white bg-opacity-10 rounded-circle p-1 me-3">
+                                    <i class="bi bi-box fa-2x text-white"></i>
                                 </div>
                                 <div>
                                     <h6 class="mb-1 text-uppercase small opacity-75">Total Produk</h6>
@@ -53,8 +53,8 @@
                     <div class="card border-0 shadow-sm text-white bg-success">
                         <div class="card-body p-4">
                             <div class="d-flex align-items-center">
-                                <div class="bg-white bg-opacity-20 rounded-circle p-3 me-3">
-                                    <i class="fas fa-users fa-2x text-white"></i>
+                                <div class="bg-white bg-opacity-10 rounded-circle p-1 me-3">
+                                    <i class="bi bi-users fa-2x text-white"></i>
                                 </div>
                                 <div>
                                     <h6 class="mb-1 text-uppercase small opacity-75">Total Pelajar</h6>
@@ -69,8 +69,8 @@
                     <div class="card border-0 shadow-sm text-white bg-info">
                         <div class="card-body p-4">
                             <div class="d-flex align-items-center">
-                                <div class="bg-white bg-opacity-20 rounded-circle p-3 me-3">
-                                    <i class="fas fa-calendar-check fa-2x text-white"></i>
+                                <div class="bg-white bg-opacity-10 rounded-circle p-1 me-3">
+                                    <i class="bi bi-calendar-check fa-2x text-white"></i>
                                 </div>
                                 <div>
                                     <h6 class="mb-1 text-uppercase small opacity-75">Bulan Ini</h6>
@@ -91,7 +91,7 @@
                 <div class="card-header bg-primary text-white py-3 border-0">
                     <div class="d-flex justify-content-between align-items-center">
                         <h5 class="mb-0 fw-bold text-white">
-                            <i class="fas fa-table me-2"></i>Daftar Produk Magang
+                            <i class="bi bi-table me-2"></i>Daftar Produk Magang
                         </h5>
                         <span class="badge bg-light text-primary fs-6">{{ $produk->count() }} Produk</span>
                     </div>
@@ -103,10 +103,10 @@
                         <div class="col-md-6">
                             <div class="input-group">
                                 <span class="input-group-text bg-white border-end-0">
-                                    <i class="fas fa-search text-muted"></i>
+                                    <i class="bi bi-search text-muted"></i>
                                 </span>
                                 <input type="text" class="form-control border-start-0" 
-                                       placeholder="Cari nama produk, pelajar, atau deskripsi...">
+                                        placeholder="Cari nama produk, pelajar, atau deskripsi...">
                             </div>
                         </div>
                     </div>
@@ -119,9 +119,9 @@
                             <thead class="table-primary">
                                 <tr>
                                     <th class="py-3 px-3 text-center" style="width: 80px;">No</th>
-                                    <th class="py-3 px-3">Nama Pelajar</th>
-                                    <th class="py-3 px-3">Nama Produk</th>
-                                    <th class="py-3 px-3">Deskripsi</th>
+                                    <th class="py-3 px-3 text-center">Nama Pelajar</th>
+                                    <th class="py-3 px-3 text-center">Nama Produk</th>
+                                    <th class="py-3 px-3 text-center">Deskripsi</th>
                                     <th class="py-3 px-3 text-center" style="width: 120px;">File</th>
                                     <th class="py-3 px-3 text-center" style="width: 140px;">Tanggal Upload</th>
                                 </tr>
@@ -160,12 +160,12 @@
                                             <a href="{{ asset('storage/' . $p->file_produk) }}"
                                                 class="btn btn-success btn-sm" target="_blank"
                                                 title="Download File">
-                                                <i class="fas fa-download me-1"></i>Download
+                                                <i class="bi bi-download me-1"></i>Download
                                             </a>
                                         </td>
                                         <td class="text-center py-3">
                                             <span class="badge bg-secondary bg-opacity-10 text-secondary px-3 py-2">
-                                                <i class="fas fa-calendar me-1"></i>
+                                                <i class="bi bi-calendar me-1"></i>
                                                 {{ $p->created_at->format('d-m-Y') }}
                                             </span>
                                         </td>

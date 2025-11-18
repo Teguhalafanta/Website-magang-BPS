@@ -1,8 +1,8 @@
 @extends('kerangka.master')
 
 @section('content')
-    <div class="container">
-        <h3>Kegiatan Bulanan</h3>
+    <div class="container py-2">
+        <h3 class="fw-bold text-primary mb-3">Kegiatan Bulanan</h3>
 
         <form method="GET" action="{{ route('pelajar.kegiatan.bulanan') }}" class="row g-2 align-items-end mb-4">
             <div class="col-md-4 col-sm-6">
@@ -26,11 +26,11 @@
             </thead>
             <tbody>
                 @forelse ($kegiatans as $i => $kegiatan)
-                    <tr class="text-center">
-                        <td>{{ $i + 1 }}</td>
+                    <tr>
+                        <td class="text-center">{{ $i + 1 }}</td>
                         <td>{{ $kegiatan->nama_kegiatan ?? '-' }}</td>
                         <td>{{ $kegiatan->deskripsi }}</td>
-                        <td>
+                        <td class="text-center">
                             <a href="{{ route('pelajar.kegiatan.edit', $kegiatan->id) }}"
                                 class="btn btn-sm btn-warning">Edit</a>
                             <form action="{{ route('pelajar.kegiatan.destroy', $kegiatan->id) }}" method="POST"

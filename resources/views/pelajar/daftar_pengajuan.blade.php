@@ -1,11 +1,11 @@
 @extends('kerangka.master')
 
 @section('content')
-    <div class="container-fluid py-4">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h4 class="fw-bold text-primary mb-0">
+    <div class="container py-2">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3 class="fw-bold text-primary mb-0">
                 <i class="bi bi-briefcase-fill me-2"></i>Pengajuan Magang Saya
-            </h4>
+            </h3>
             <a href="{{ route('pelajar.pengajuan.create') }}" class="btn btn-primary">
                 <i class="bi bi-plus-circle me-2"></i>Tambah Pengajuan
             </a>
@@ -27,7 +27,7 @@
         {{-- Main Table --}}
         <div class="card shadow-sm border-0">
             <div class="card-header bg-white border-0 py-3">
-                <h6 class="mb-0 text-muted">
+                <h6 class="fw-bold mb-0 text-muted">
                     Total: <span class="badge bg-primary">{{ $pengajuans->count() }}</span> pengajuan
                 </h6>
             </div>
@@ -37,19 +37,19 @@
                     <div class="table-responsive">
                         <table class="table table-hover mb-0">
                             <thead class="table-light">
-                                <tr>
-                                    <th class="ps-4" style="width: 5%;">No</th>
+                                <tr class="text-center">
+                                    <th class="ps-3" style="width: 5%;">No</th>
                                     <th class="ps-4" style="width: 20%;">Nama</th>
                                     <th style="width: 25%;">Asal Institusi</th>
-                                    <th style="width: 15%;">Jurusan</th>
-                                    <th style="width: 12%;" class="text-center">Status</th>
-                                    <th style="width: 23%;" class="text-center">Aksi</th>
+                                    <th style="width: 25%;">Jurusan</th>
+                                    <th style="width: 10%;">Status</th>
+                                    <th style="width: 15%;">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($pengajuans as $key => $p)
                                     <tr>
-                                        <td class="ps-4">{{ $key + 1 }}</td>
+                                        <td class="text-center ps-3">{{ $key + 1 }}</td>
                                         <td>
                                             <div class="d-flex align-items-center">
                                                 <div class="avatar-sm bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center me-2"
@@ -66,8 +66,8 @@
                                                 </div>
                                             </div>
                                         </td>
-                                        <td>{{ $p->asal_institusi }}</td>
-                                        <td>{{ $p->jurusan }}</td>
+                                        <td class="text-center">{{ $p->asal_institusi }}</td>
+                                        <td class="text-center">{{ $p->jurusan }}</td>
                                         <td class="text-center">
                                             @if ($p->status == 'diajukan')
                                                 <span class="badge bg-warning">Diajukan</span>

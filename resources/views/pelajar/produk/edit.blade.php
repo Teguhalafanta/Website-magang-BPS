@@ -1,7 +1,7 @@
 @extends('kerangka.master')
 
 @section('content')
-    <div class="container py-4">
+    <div class="container py-2">
         <div class="row mb-4">
             <div class="col">
                 <nav aria-label="breadcrumb">

@@ -1,8 +1,8 @@
 @extends('kerangka.master')
 
 @section('content')
-    <div class="container">
-        <h3>Kegiatan Harian</h3>
+    <div class="container py-2">
+        <h3 class="fw-bold text-primary mb-3">Kegiatan Harian</h3>
         <p>Tanggal: {{ \Carbon\Carbon::now()->format('d-m-Y') }}</p>
 
         {{-- ALERT SUCCESS/ERROR --}}
@@ -23,7 +23,7 @@
         @if (!$isMagangSelesai)
             <div class="mb-3 text-start">
                 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#tambahKegiatanModal">
-                    <i class="fas fa-plus-circle me-1"></i> Tambah Kegiatan
+                    <i class="bi bi-plus-circle me-1"></i> Tambah Kegiatan
                 </button>
             </div>
         @endif
@@ -42,12 +42,12 @@
             </thead>
             <tbody>
                 @forelse ($kegiatans as $index => $kegiatan)
-                    <tr class="text-center">
-                        <td>{{ $index + 1 }}</td>
+                    <tr>
+                        <td class="text-center">{{ $index + 1 }}</td>
                         <td>{{ $kegiatan->nama_kegiatan }}</td>
-                        <td>{{ \Carbon\Carbon::parse($kegiatan->tanggal)->format('d-m-Y') }}</td>
-                        <td>{{ Str::limit($kegiatan->deskripsi, 50) }}</td>
-                        <td>
+                        <td class="text-center">{{ \Carbon\Carbon::parse($kegiatan->tanggal)->format('d-m-Y') }}</td>
+                        <td class="text-center">{{ Str::limit($kegiatan->deskripsi, 50) }}</td>
+                        <td class="text-center">
                             @if ($kegiatan->status_penyelesaian === 'Selesai')
                                 <span class="badge bg-success">Selesai</span>
                             @elseif ($kegiatan->status_penyelesaian === 'Dalam Proses')
@@ -58,7 +58,7 @@
                                 <span class="badge bg-dark">Tidak Diketahui</span>
                             @endif
                         </td>
-                        <td>
+                        <td class="text-center">
                             @if ($kegiatan->bukti_dukung)
                                 <a href="{{ asset('storage/' . $kegiatan->bukti_dukung) }}" target="_blank"
                                     class="btn btn-sm btn-primary">Lihat</a>
@@ -66,7 +66,7 @@
                                 <span class="text-muted">-</span>
                             @endif
                         </td>
-                        <td>
+                        <td class="text-center">
                             {{-- Tombol Detail dengan Modal --}}
                             <button class="btn btn-sm btn-info" data-bs-toggle="modal"
                                 data-bs-target="#detailModal{{ $kegiatan->id }}">

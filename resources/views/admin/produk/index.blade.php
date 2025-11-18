@@ -1,7 +1,7 @@
 @extends('kerangka.master')
 
 @section('content')
-    <div class="container py-4">
+    <div class="container py-2">
         <div class="row mb-4">
             <div class="col">
                 <h3 class="fw-bold text-primary">
@@ -17,10 +17,10 @@
                 <div class="card border-0 shadow-sm bg-primary text-white">
                     <div class="card-body">
                         <div class="d-flex align-items-center">
-                            <div class="flex-shrink-0">
+                            <div class="flex-0">
                                 <i class="bi bi-box-seam fs-1 opacity-75"></i>
                             </div>
-                            <div class="flex-grow-1 ms-3">
+                            <div class="flex-1 ms-3">
                                 <h6 class="mb-0 text-uppercase small opacity-75">Total Produk</h6>
                                 <h3 class="mb-0 fw-bold">{{ $produk->count() }}</h3>
                             </div>
@@ -32,10 +32,10 @@
                 <div class="card border-0 shadow-sm bg-success text-white">
                     <div class="card-body">
                         <div class="d-flex align-items-center">
-                            <div class="flex-shrink-0">
+                            <div class="flex-0">
                                 <i class="bi bi-people-fill fs-1 opacity-75"></i>
                             </div>
-                            <div class="flex-grow-1 ms-3">
+                            <div class="flex-1 ms-3">
                                 <h6 class="mb-0 text-uppercase small opacity-75">Total Pelajar</h6>
                                 <h3 class="mb-0 fw-bold">{{ $produk->unique('pelajar_id')->count() }}</h3>
                             </div>
@@ -47,10 +47,10 @@
                 <div class="card border-0 shadow-sm bg-info text-white">
                     <div class="card-body">
                         <div class="d-flex align-items-center">
-                            <div class="flex-shrink-0">
+                            <div class="flex-0">
                                 <i class="bi bi-calendar-week fs-1 opacity-75"></i>
                             </div>
-                            <div class="flex-grow-1 ms-3">
+                            <div class="flex-1 ms-3">
                                 <h6 class="mb-0 text-uppercase small opacity-75">Minggu Ini</h6>
                                 <h3 class="mb-0 fw-bold">
                                     {{ $produk->where('created_at', '>=', now()->startOfWeek())->count() }}</h3>
@@ -63,10 +63,10 @@
                 <div class="card border-0 shadow-sm bg-warning text-white">
                     <div class="card-body">
                         <div class="d-flex align-items-center">
-                            <div class="flex-shrink-0">
+                            <div class="flex-0">
                                 <i class="bi bi-calendar-check fs-1 opacity-75"></i>
                             </div>
-                            <div class="flex-grow-1 ms-3">
+                            <div class="flex-1 ms-3">
                                 <h6 class="mb-0 text-uppercase small opacity-75">Bulan Ini</h6>
                                 <h3 class="mb-0 fw-bold">
                                     {{ $produk->where('created_at', '>=', now()->startOfMonth())->count() }}</h3>

@@ -1,24 +1,24 @@
 @extends('kerangka.master')
 
 @section('content')
-    <div class="container-fluid py-4">
+    <div class="container py-2">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h4 class="fw-bold text-primary mb-0">
+            <h3 class="fw-bold text-primary mb-0">
                 <i class="bi bi-calendar-check me-2"></i>Daftar Presensi Pelajar
-            </h4>
+            </h3>
         </div>
 
         {{-- Filter & Summary Cards --}}
-        <div class="row g-3 mb-4">
+        <div class="row g-3 mb-2">
             <div class="col-md-3">
                 <div class="card border-0 shadow-sm bg-success text-white">
                     <div class="card-body py-3">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <p class="mb-1 small">Tepat Waktu</p>
+                                <p class="fw-bold mb-1 small text-uppercase">Tepat Waktu</p>
                                 <h4 class="mb-0 fw-bold">{{ $presensis->where('status', 'Tepat Waktu')->count() }}</h4>
                             </div>
-                            <i class="bi bi-check-circle fs-1 opacity-50"></i>
+                            <i class="bi bi-check-circle fs-3 opacity-50"></i>
                         </div>
                     </div>
                 </div>
@@ -28,10 +28,10 @@
                     <div class="card-body py-3">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <p class="mb-1 small">Terlambat</p>
+                                <p class="fw-bold mb-1 small text-uppercase">Terlambat</p>
                                 <h4 class="mb-0 fw-bold">{{ $presensis->where('status', 'Terlambat')->count() }}</h4>
                             </div>
-                            <i class="bi bi-clock-history fs-1 opacity-50"></i>
+                            <i class="bi bi-clock-history fs-3 opacity-50"></i>
                         </div>
                     </div>
                 </div>
@@ -41,10 +41,10 @@
                     <div class="card-body py-3">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <p class="mb-1 small">Izin</p>
+                                <p class="fw-bold mb-1 small text-uppercase">Izin</p>
                                 <h4 class="mb-0 fw-bold">{{ $presensis->where('status', 'Izin')->count() }}</h4>
                             </div>
-                            <i class="bi bi-file-text fs-1 opacity-50"></i>
+                            <i class="bi bi-file-text fs-3 opacity-50"></i>
                         </div>
                     </div>
                 </div>
@@ -54,11 +54,11 @@
                     <div class="card-body py-3">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <p class="mb-1 small">Alfa/Sakit</p>
+                                <p class="fw-bold mb-1 small text-uppercase">Alfa/Sakit</p>
                                 <h4 class="mb-0 fw-bold">{{ $presensis->whereIn('status', ['Alfa', 'Sakit'])->count() }}
                                 </h4>
                             </div>
-                            <i class="bi bi-x-circle fs-1 opacity-50"></i>
+                            <i class="bi bi-x-circle fs-3 opacity-50"></i>
                         </div>
                     </div>
                 </div>
@@ -117,20 +117,20 @@
                             <div class="table-responsive">
                                 <table class="table table-hover mb-0">
                                     <thead class="table-light">
-                                        <tr>
-                                            <th class="ps-4" style="width: 5%;">No</th>
+                                        <tr class="text-center">
+                                            <th class="ps-3" style="width: 5%;">No</th>
                                             <th style="width: 20%;">Pelajar</th>
                                             <th style="width: 12%;">Tanggal</th>
                                             <th style="width: 12%;">Waktu Datang</th>
                                             <th style="width: 12%;">Waktu Pulang</th>
                                             <th style="width: 12%;">Status</th>
-                                            <th style="width: 10%;" class="text-center">Aksi</th>
+                                            <th style="width: 10%;">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach ($presensis as $index => $presensi)
                                             <tr>
-                                                <td class="ps-4">{{ $index + 1 }}</td>
+                                                <td class="text-center ps-3">{{ $index + 1 }}</td>
                                                 <td>
                                                     <div class="d-flex align-items-center">
                                                         <div class="avatar-sm bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center me-2"

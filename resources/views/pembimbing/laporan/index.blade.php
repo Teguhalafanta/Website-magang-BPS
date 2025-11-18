@@ -1,18 +1,18 @@
 @extends('kerangka.master')
 
 @section('content')
-    <div class="container-fluid py-4">
+    <div class="container py-2">
         <!-- Header Section -->
-        <div class="row mb-4">
+        <div class="row mb-2">
             <div class="col-12">
                 <div class="d-flex align-items-center mb-3">
                     <div class="me-3">
-                        <div class="bg-primary rounded p-3">
-                            <i class="fas fa-file-check text-white fs-4"></i>
+                        <div class="bg-primary rounded p-2">
+                            <i class="bi bi-file-check text-white fs-4"></i>
                         </div>
                     </div>
                     <div>
-                        <h2 class="mb-1 fw-bold text-dark">Verifikasi Laporan Akhir Peserta Bimbingan</h2>
+                        <h3 class="mb-1 fw-bold text-dark">Verifikasi Laporan Akhir Peserta Bimbingan</h3>
                         <p class="text-muted mb-0">Silakan cek laporan akhir peserta sebelum disetujui atau ditolak</p>
                     </div>
                 </div>
@@ -23,7 +23,7 @@
         @if (session('success'))
             <div class="alert alert-success alert-dismissible fade show shadow-sm border-0 mb-4" role="alert">
                 <div class="d-flex align-items-center">
-                    <i class="fas fa-check-circle me-2"></i>
+                    <i class="bi bi-check-circle me-2"></i>
                     <span>{{ session('success') }}</span>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -34,7 +34,7 @@
         @if (session('error'))
             <div class="alert alert-danger alert-dismissible fade show shadow-sm border-0 mb-4" role="alert">
                 <div class="d-flex align-items-center">
-                    <i class="fas fa-exclamation-circle me-2"></i>
+                    <i class="bi bi-exclamation-circle me-2"></i>
                     <span>{{ session('error') }}</span>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -47,7 +47,7 @@
             <div class="card-header bg-primary text-white py-3 border-0">
                 <div class="d-flex justify-content-between align-items-center">
                     <h5 class="mb-0 fw-bold text-white">
-                        <i class="fas fa-list-check me-2"></i>Daftar Laporan Peserta
+                        <i class="bi bi-list-check me-2"></i>Daftar Laporan Peserta
                     </h5>
                 </div>
             </div>
@@ -71,58 +71,58 @@
                     <table class="table table-hover align-middle mb-0">
                         <thead class="table-primary">
                             <tr>
-                                <th class="py-3 px-3">No</th>
-                                <th class="py-3 px-3">Nama Pelajar</th>
-                                <th class="py-3 px-3">Status</th>
-                                <th class="py-3 px-3">Lihat</th>
-                                <th class="py-3 px-3">Aksi</th>
+                                <th class="py-3 px-3 text-center">No</th>
+                                <th class="py-3 px-3 text-center">Nama Pelajar</th>
+                                <th class="py-3 px-3 text-center">Status</th>
+                                <th class="py-3 px-3 text-center">Lihat</th>
+                                <th class="py-3 px-3 text-center">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
                             @forelse ($laporans as $index => $laporan)
                                 <tr>
-                                    <td class="py-3 px-3 fw-medium">{{ $index + 1 }}</td>
+                                    <td class="text-center py-3 px-3 fw-medium">{{ $index + 1 }}</td>
                                     <td class="py-3 px-3 fw-medium">{{ $laporan->user->pelajar->nama }}</td>
 
-                                    <td class="py-3 px-3">
+                                    <td class="text-center py-3 px-3">
                                         @if ($laporan->status == 'menunggu')
                                             <span class="badge bg-warning text-dark">
-                                                <i class="fas fa-clock me-1"></i>Menunggu
+                                                <i class="bi bi-clock me-1"></i>Menunggu
                                             </span>
                                         @elseif ($laporan->status == 'ditolak')
                                             <span class="badge bg-danger">
-                                                <i class="fas fa-times me-1"></i>Ditolak
+                                                <i class="bi bi-times me-1"></i>Ditolak
                                             </span>
                                         @else
                                             <span class="badge bg-success">
-                                                <i class="fas fa-check me-1"></i>Disetujui
+                                                <i class="bi bi-check me-1"></i>Disetujui
                                             </span>
                                         @endif
                                     </td>
 
-                                    <td class="py-3 px-3">
+                                    <td class="text-center py-3 px-3">
                                         <button class="btn btn-outline-primary btn-sm"
                                             onclick="tampilLaporan('{{ asset('storage/' . $laporan->file) }}')">
-                                            <i class="fas fa-eye me-1"></i>Lihat Laporan
+                                            <i class="bi bi-eye me-1"></i>Lihat Laporan
                                         </button>
                                     </td>
 
-                                    <td class="py-3 px-3">
+                                    <td class="text-center py-3 px-3">
                                         @if ($laporan->status == 'menunggu')
                                             <div class="d-flex gap-2">
                                                 <form action="{{ route('pembimbing.laporan.setujui', $laporan->id) }}" 
-                                                      method="POST" class="d-inline">
+                                                        method="POST" class="d-inline">
                                                     @csrf
                                                     <button type="submit" class="btn btn-success btn-sm">
-                                                        <i class="fas fa-check me-1"></i>Setujui
+                                                        <i class="bi bi-check me-1"></i>Setujui
                                                     </button>
                                                 </form>
 
                                                 <form action="{{ route('pembimbing.laporan.tolak', $laporan->id) }}" 
-                                                      method="POST" class="d-inline">
+                                                        method="POST" class="d-inline">
                                                     @csrf
                                                     <button type="submit" class="btn btn-danger btn-sm">
-                                                        <i class="fas fa-times me-1"></i>Tolak
+                                                        <i class="bi bi-times me-1"></i>Tolak
                                                     </button>
                                                 </form>
                                             </div>
@@ -135,7 +135,7 @@
                                 <tr>
                                     <td colspan="5" class="text-center py-5">
                                         <div class="text-muted">
-                                            <i class="fas fa-inbox fa-3x mb-3 opacity-50"></i>
+                                            <i class="bi bi-inbox fa-3x mb-3 opacity-50"></i>
                                             <p class="mb-0">Belum ada laporan dikirim</p>
                                         </div>
                                     </td>
@@ -152,7 +152,7 @@
             <div class="card-header bg-primary text-white py-3 border-0">
                 <div class="d-flex justify-content-between align-items-center">
                     <h5 class="mb-0 fw-bold text-white">
-                        <i class="fas fa-file-pdf me-2"></i>Preview Laporan
+                        <i class="bi bi-file-pdf me-2"></i>Preview Laporan
                     </h5>
                     <button type="button" class="btn-close btn-close-white" 
                             onclick="tutupPreview()"></button>

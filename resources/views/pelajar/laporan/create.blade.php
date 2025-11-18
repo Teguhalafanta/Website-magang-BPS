@@ -1,7 +1,7 @@
 @extends('kerangka.master')
 
 @section('content')
-<div class="container py-4">
+<div class="container py-2">
     <h4 class="mb-3">Upload Laporan Akhir</h4>
 
     <div class="card shadow-sm">

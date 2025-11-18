@@ -1,19 +1,21 @@
 @extends('kerangka.master')
 
 @section('content')
-    <div class="container">
+    <div class="container py-2">
         {{-- Jika user belum mengajukan atau pengajuan ditolak, redirect ke form pengajuan --}}
         @if (
             !auth()->user()->pelajar ||
                 auth()->user()->pelajar->status === 'ditolak' ||
                 auth()->user()->pelajar->status === null)
-            <h2 class="mb-4">Dashboard Pelajar</h2>
+            <h3 class="fw-bold text-primary mb-3">Dashboard Pelajar</h3>
 
             <div class="row">
                 <div class="col-12">
-                    <div class="alert alert-info d-flex align-items-center mb-4" role="alert">
-                        <i class="bi bi-info-circle-fill fs-4 me-3"></i>
-                        <div>
+                    <div class="alert alert-info d-flex align-items-center mb-3" role="alert">
+                        <div class="col-auto">
+                            <i class="bi bi-info-circle-fill fs-4 me-3"></i>
+                        </div>
+                        <div class="d-flex flex-column justify-content-center">
                             <strong>Selamat datang!</strong>
                             @if (auth()->user()->pelajar && auth()->user()->pelajar->status === 'ditolak')
                                 Pengajuan magang Anda sebelumnya ditolak.
@@ -42,7 +44,7 @@
             </div>
 
             {{-- Menampilkan preview fitur yang terkunci --}}
-            <div class="row mt-5">
+            <div class="row mt-4">
                 <div class="col-12">
                     <h5 class="text-muted mb-3">
                         <i class="bi bi-lock-fill me-2"></i>Fitur yang Akan Tersedia Setelah Pengajuan Disetujui
@@ -79,7 +81,7 @@
 
             {{-- Jika pengajuan sedang menunggu persetujuan --}}
         @elseif(auth()->user()->pelajar->status === 'menunggu')
-            <h2 class="mb-4">Dashboard Pelajar</h2>
+            <h3 class="fw-bold mb-3">Dashboard Pelajar</h3>
 
             <div class="row">
                 <div class="col-12">
@@ -131,7 +133,7 @@
                 $isMagangSelesai = auth()->user()->pelajar->status_magang === 'selesai';
             @endphp
 
-            <h2 class="mb-4">Dashboard Pelajar</h2>
+            <h3 class="fw-bold text-primary mb-3">Dashboard Pelajar</h3>
 
             {{-- Alert jika magang sudah selesai --}}
             @if ($isMagangSelesai)
@@ -183,7 +185,7 @@
                                         Ringkasan Magang Anda
                                     </h5>
                                 </div>
-                                <div class="card-body">
+                                <div class="card-body p-4">
                                     <div class="row text-center">
 
                                         <div class="col-md-4 mb-3">
@@ -238,7 +240,7 @@
                     <div class="card-body p-0">
                         <table class="table table-bordered table-sm mb-0 text-center align-middle"
                             style="font-size: 13px;">
-                            <thead class="table-light">
+                            <thead class="table-light text-center">
                                 <tr>
                                     <th style="width: 10%">No</th>
                                     <th style="width: 60%">Nama</th>
@@ -248,9 +250,9 @@
                             <tbody>
                                 @forelse ($kegiatanTerbaru as $index => $kegiatan)
                                     <tr>
-                                        <td>{{ $index + 1 }}</td>
+                                        <td class="text-center">{{ $index + 1 }}</td>
                                         <td class="text-start">{{ $kegiatan->nama_kegiatan }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($kegiatan->tanggal)->format('d-m-Y') }}</td>
+                                        <td class="text-center">{{ \Carbon\Carbon::parse($kegiatan->tanggal)->format('d-m-Y') }}</td>
                                     </tr>
                                 @empty
                                     <tr>

@@ -1,11 +1,11 @@
 @extends('kerangka.master')
 
 @section('content')
-    <div class="container py-3">
+    <div class="container py-2">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h4 class="fw-bold text-primary mb-0">
+            <h3 class="fw-bold text-primary mb-0">
                 <i class="bi bi-speedometer2 me-2"></i>Dashboard Admin BPS
-            </h4>
+            </h3>
             <span class="badge bg-secondary">{{ date('d M Y') }}</span>
         </div>
 
@@ -139,7 +139,7 @@
             </div>
         </div>
 
-        <div class="row mt-3 g-3">
+        <div class="row mt-0 g-3">
             <div class="col-md-6">
                 <div class="card border-0"
                     style="box-shadow: 0 2px 8px rgba(0,0,0,0.08); border-radius: 12px; background: #ffffff;">
@@ -178,7 +178,7 @@
             </div>
         </div>
 
-        <div class="row mt-3 g-3">
+        <div class="row mt-0 g-3">
             <div class="col-md-12">
                 <div class="card border-0"
                     style="box-shadow: 0 2px 8px rgba(0,0,0,0.08); border-radius: 12px; background: #ffffff;">

@@ -1,7 +1,7 @@
 @extends('kerangka.master')
 
 @section('content')
-<div class="container-fluid py-4">
+<div class="container py-2">
     <!-- Header -->
     <div class="text-center mb-4">
         <h3 class="fw-bold text-bps-gradient mb-2">LAPORAN AKHIR & SERTIFIKAT</h3>
@@ -36,7 +36,7 @@
                             <i class="bi bi-info-circle me-2"></i>Status Laporan
                         </h5>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body p-4">
                         {{-- Status Badge --}}
                         <div class="text-center mb-4">
                             @if ($laporan->status == 'menunggu')
@@ -126,7 +126,7 @@
                             <i class="bi bi-file-earmark-text me-2"></i>Detail Laporan
                         </h5>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body p-4">
                         {{-- Informasi File --}}
                         <div class="row mb-4">
                             <div class="col-md-6">

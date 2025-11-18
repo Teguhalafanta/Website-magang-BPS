@@ -3,18 +3,18 @@
 @section('title', 'Presensi Bimbingan')
 
 @section('content')
-    <div class="container-fluid py-4">
+    <div class="container py-2">
         <!-- Header Section -->
-        <div class="row mb-4">
+        <div class="row mb-2">
             <div class="col-12">
                 <div class="d-flex align-items-center mb-3">
                     <div class="me-3">
                         <div class="bg-primary rounded p-2">
-                            <i class="fas fa-clipboard-list text-white fs-4"></i>
+                            <i class="bi bi-clipboard-list text-white fs-4"></i>
                         </div>
                     </div>
                     <div>
-                        <h2 class="mb-1 fw-bold text-dark">Daftar Presensi Peserta Bimbingan</h2>
+                        <h3 class="mb-1 fw-bold text-dark">Daftar Presensi Peserta Bimbingan</h3>
                         <p class="text-muted mb-0">Monitoring kehadiran dan aktivitas bimbingan pelajar</p>
                     </div>
                 </div>
@@ -25,7 +25,7 @@
         @if (session('success'))
             <div class="alert alert-success alert-dismissible fade show shadow-sm border-0 mb-4" role="alert">
                 <div class="d-flex align-items-center">
-                    <i class="fas fa-check-circle me-2"></i>
+                    <i class="bi bi-check-circle me-2"></i>
                     <span>{{ session('success') }}</span>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -36,7 +36,7 @@
         @if (session('error'))
             <div class="alert alert-danger alert-dismissible fade show shadow-sm border-0 mb-4" role="alert">
                 <div class="d-flex align-items-center">
-                    <i class="fas fa-exclamation-circle me-2"></i>
+                    <i class="bi bi-exclamation-circle me-2"></i>
                     <span>{{ session('error') }}</span>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -49,7 +49,7 @@
                 <div class="card-header bg-primary text-white py-3 border-0">
                     <div class="d-flex justify-content-between align-items-center">
                         <h5 class="mb-0 fw-bold text-white">
-                            <i class="fas fa-calendar-day me-2"></i>Presensi Hari Ini
+                            <i class="bi bi-calendar-day me-2"></i>Presensi Hari Ini
                         </h5>
                         <span class="badge bg-light text-primary">
                             {{ \Carbon\Carbon::now()->locale('id')->isoFormat('dddd, D MMMM Y') }}
@@ -64,7 +64,7 @@
 
                     @if ($presensiHariIni->isEmpty())
                         <div class="text-center py-5">
-                            <i class="fas fa-calendar-times fa-4x text-muted mb-3"></i>
+                            <i class="bi bi-calendar-times fa-4x text-muted mb-3"></i>
                             <h5 class="text-muted">Belum Ada Presensi Hari Ini</h5>
                             <p class="text-muted small">Belum ada pelajar yang melakukan presensi pada hari ini</p>
                         </div>
@@ -95,24 +95,24 @@
                                         <div class="card-body">
                                             <div class="d-flex align-items-center mb-3">
                                                 <div class="avatar-circle bg-{{ $statusClass }} bg-opacity-10 me-3">
-                                                    <i class="fas {{ $statusIcon }} text-{{ $statusClass }} fs-4"></i>
+                                                    <i class="bi {{ $statusIcon }} text-{{ $statusClass }} fs-4"></i>
                                                 </div>
                                                 <div class="grow">
                                                     <h6 class="mb-1 fw-bold">{{ $pelajar->nama ?? 'N/A' }}</h6>
                                                     <small class="text-muted">
-                                                        <i class="fas fa-building me-1"></i>{{ $pelajar->asal_sekolah ?? '-' }}
+                                                        <i class="bi bi-building me-1"></i>{{ $pelajar->asal_sekolah ?? '-' }}
                                                     </small>
                                                 </div>
                                             </div>
                                             <div class="d-flex justify-content-between align-items-center mb-2">
                                                 <span class="small text-muted">
-                                                    <i class="fas fa-sign-in-alt me-1"></i>Datang:
+                                                    <i class="bi bi-sign-in-alt me-1"></i>Datang:
                                                 </span>
                                                 <span class="badge bg-success">{{ $presensi->waktu_datang }}</span>
                                             </div>
                                             <div class="d-flex justify-content-between align-items-center mb-2">
                                                 <span class="small text-muted">
-                                                    <i class="fas fa-sign-out-alt me-1"></i>Pulang:
+                                                    <i class="bi bi-sign-out-alt me-1"></i>Pulang:
                                                 </span>
                                                 @php
                                                     $statusLower = strtolower($presensi->status ?? '');
@@ -130,7 +130,7 @@
                                             </div>
                                             <div class="d-flex justify-content-between align-items-center">
                                                 <span class="small text-muted">
-                                                    <i class="fas fa-info-circle me-1"></i>Status:
+                                                    <i class="bi bi-info-circle me-1"></i>Status:
                                                 </span>
                                                 <span class="badge bg-{{ $statusClass }}">
                                                     {{ ucfirst($presensi->status) }}
@@ -145,7 +145,7 @@
                         <!-- Statistik Hari Ini -->
                         <div class="mt-4 pt-3 border-top">
                             <h6 class="fw-bold mb-3">
-                                <i class="fas fa-chart-pie me-2"></i>Ringkasan Hari Ini
+                                <i class="bi bi-chart-pie me-2"></i>Ringkasan Hari Ini
                             </h6>
                             <div class="row text-center g-2">
                                 @php
@@ -193,7 +193,7 @@
             <div class="card-header bg-primary text-white py-2 border-0">
                 <div class="d-flex justify-content-between align-items-center">
                     <h5 class="mb-0 fw-bold text-white">
-                        <i class="fas fa-table me-2"></i>Tabel Presensi Lengkap
+                        <i class="bi bi-table me-2"></i>Tabel Presensi Lengkap
                     </h5>
                 </div>
             </div>
@@ -204,7 +204,7 @@
                     <div class="col-md-4">
                         <form method="GET" action="{{ route('pembimbing.presensi') }}" id="filterForm">
                             <label for="pelajar_id" class="form-label fw-semibold mb-2">
-                                <i class="fas fa-user me-1"></i>Filter Berdasarkan Pelajar
+                                <i class="bi bi-user me-1"></i>Filter Berdasarkan Pelajar
                             </label>
                             <select name="pelajar_id" id="pelajar_id" class="form-select border-2" onchange="this.form.submit()">
                                 <option value="">Semua Pelajar</option>
@@ -227,7 +227,7 @@
                             <form method="GET" action="{{ route('pembimbing.presensi') }}" class="d-flex flex-column">
                                 <input type="hidden" name="pelajar_id" value="{{ $selectedPelajarId }}">
                                 <label class="form-label fw-semibold mb-2">
-                                    <i class="fas fa-calendar-alt me-1"></i>Filter Bulan
+                                    <i class="bi bi-calendar-alt me-1"></i>Filter Bulan
                                 </label>
                                 <input type="month" name="bulan" class="form-control border-2"
                                     value="{{ $bulanDipilih }}" onchange="this.form.submit()">
@@ -271,13 +271,13 @@
                         <table class="table table-sm table-bordered table-hover text-center align-middle small">
                             <thead class="table-primary sticky-top">
                                 <tr>
-                                    <th class="py-2">No</th>
-                                    <th class="py-2">Tanggal</th>
-                                    <th class="py-2">Hari</th>
-                                    <th class="py-2">Datang</th>
-                                    <th class="py-2">Pulang</th>
-                                    <th class="py-2">Status</th>
-                                    <th class="py-2">Aksi</th>
+                                    <th class="py-2 text-center">No</th>
+                                    <th class="py-2text-center">Tanggal</th>
+                                    <th class="py-2 text-center">Hari</th>
+                                    <th class="py-2 text-center">Datang</th>
+                                    <th class="py-2 text-center">Pulang</th>
+                                    <th class="py-2 text-center">Status</th>
+                                    <th class="py-2 text-center">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -292,16 +292,16 @@
                                     @endphp
                                     <tr class="{{ $isWeekend ? 'table-light' : '' }}"
                                         id="row-{{ $presensi->id ?? '' }}">
-                                        <td class="py-2">{{ $no++ }}</td>
-                                        <td class="py-2">{{ $carbonDate->format('d/m/y') }}</td>
-                                        <td class="py-2">
+                                        <td class="text-center py-2">{{ $no++ }}</td>
+                                        <td class="text-center py-2">{{ $carbonDate->format('d/m/y') }}</td>
+                                        <td class="text-center py-2">
                                             @if ($isWeekend)
                                                 <small class="badge bg-secondary">{{ substr($namaHari, 0, 3) }}</small>
                                             @else
                                                 <small class="text-muted">{{ substr($namaHari, 0, 3) }}</small>
                                             @endif
                                         </td>
-                                        <td class="py-2">
+                                        <td class="text-center py-2">
                                             @if ($presensi)
                                                 <small class="badge bg-success">{{ $presensi->waktu_datang }}</small>
                                             @elseif($isFuture)
@@ -313,7 +313,7 @@
                                                 <small class="text-muted">-</small>
                                             @endif
                                         </td>
-                                        <td class="py-2">
+                                        <td class="text-center py-2">
                                             @php $statusLower = strtolower($presensi->status ?? ''); @endphp
                                             @if ($presensi && $presensi->waktu_pulang)
                                                 <small class="badge bg-primary">{{ $presensi->waktu_pulang }}</small>
@@ -332,7 +332,7 @@
                                                 <small class="text-muted">-</small>
                                             @endif
                                         </td>
-                                        <td class="py-2">
+                                        <td class="text-center py-2">
                                             @if ($presensi)
                                                 @php
                                                     $statusClass = match (strtolower($presensi->status)) {
@@ -356,7 +356,7 @@
                                                 <small class="badge bg-danger">Alfa</small>
                                             @endif
                                         </td>
-                                        <td class="py-2">
+                                        <td class="text-center py-2">
                                             @if (!$isWeekend && !$isFuture)
                                                 <button type="button"
                                                     class="btn btn-sm btn-warning btn-edit-presensi text-dark"
@@ -366,7 +366,7 @@
                                                     data-pelajar-nama="{{ $selectedPelajar->nama ?? '' }}"
                                                     data-bs-toggle="modal" data-bs-target="#editPresensiModal"
                                                     title="{{ $presensi ? 'Edit Presensi' : 'Isi Presensi' }}">
-                                                    <i class="fas fa-{{ $presensi ? 'pen' : 'plus' }}"></i>
+                                                    <i class="bi bi-{{ $presensi ? 'pen' : 'plus' }}"></i>
                                                 </button>
                                             @else
                                                 <small class="text-muted">-</small>
@@ -414,7 +414,7 @@
 
                     <div class="card-body border-top">
                         <div class="small fw-bold mb-3">
-                            <i class="fas fa-chart-bar me-1"></i>Statistik Bulan
+                            <i class="bi bi-chart-bar me-1"></i>Statistik Bulan
                             {{ \Carbon\Carbon::parse($bulanDipilih)->locale('id')->isoFormat('MMMM Y') }}
                         </div>
                         <div class="row text-center g-2">
@@ -458,7 +458,7 @@
                     </div>
                 @else
                     <div class="p-5 text-center">
-                        <i class="fas fa-user fa-4x mb-3 opacity-50 text-muted"></i>
+                        <i class="bi bi-user fa-4x mb-3 opacity-50 text-muted"></i>
                         <h5 class="text-muted mb-2">Pilih Pelajar</h5>
                         <p class="text-muted small mb-0">Silakan pilih pelajar dari dropdown di atas untuk melihat data
                             presensi lengkap</p>
@@ -475,7 +475,7 @@
             <div class="modal-content">
                 <div class="modal-header bg-primary text-white">
                     <h5 class="modal-title text-white" id="editPresensiModalLabel">
-                        <i class="fas fa-edit me-2"></i>Edit Presensi
+                        <i class="bi bi-edit me-2"></i>Edit Presensi
                     </h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
                         aria-label="Close"></button>
@@ -491,12 +491,12 @@
                         <!-- Info Pelajar -->
                         <div class="alert alert-info">
                             <div class="d-flex align-items-center mb-2">
-                                <i class="fas fa-user me-2"></i>
+                                <i class="bi bi-user me-2"></i>
                                 <strong>Informasi Pelajar</strong>
                             </div>
                             <p class="mb-1 fw-bold" id="modal_pelajar_nama"></p>
                             <small class="text-muted">
-                                <i class="far fa-calendar me-1"></i>
+                                <i class="bi bi-calendar me-1"></i>
                                 <span id="modal_tanggal"></span>
                             </small>
                         </div>
@@ -511,35 +511,35 @@
                                     <input type="radio" class="btn-check" name="status" id="status_hadir"
                                         value="Hadir">
                                     <label class="btn btn-outline-success w-100" for="status_hadir">
-                                        <i class="fas fa-check-circle me-1"></i> Hadir
+                                        <i class="bi bi-check-circle me-1"></i> Hadir
                                     </label>
                                 </div>
                                 <div class="col-6">
                                     <input type="radio" class="btn-check" name="status" id="status_izin"
                                         value="Izin">
                                     <label class="btn btn-outline-warning w-100" for="status_izin">
-                                        <i class="fas fa-exclamation-circle me-1"></i> Izin
+                                        <i class="bi bi-exclamation-circle me-1"></i> Izin
                                     </label>
                                 </div>
                                 <div class="col-6">
                                     <input type="radio" class="btn-check" name="status" id="status_sakit"
                                         value="Sakit">
                                     <label class="btn btn-outline-info w-100" for="status_sakit">
-                                        <i class="fas fa-notes-medical me-1"></i> Sakit
+                                        <i class="bi bi-notes-medical me-1"></i> Sakit
                                     </label>
                                 </div>
                                 <div class="col-6">
                                     <input type="radio" class="btn-check" name="status" id="status_alpha"
                                         value="Alpha">
                                     <label class="btn btn-outline-danger w-100" for="status_alpha">
-                                        <i class="fas fa-times-circle me-1"></i> Alpha
+                                        <i class="bi bi-times-circle me-1"></i> Alpha
                                     </label>
                                 </div>
                                 <div class="col-12">
                                     <input type="radio" class="btn-check" name="status" id="status_terlambat"
                                         value="Terlambat">
                                     <label class="btn btn-outline-secondary w-100" for="status_terlambat">
-                                        <i class="fas fa-clock me-1"></i> Terlambat
+                                        <i class="bi bi-clock me-1"></i> Terlambat
                                     </label>
                                 </div>
                             </div>
@@ -549,10 +549,10 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        <i class="fas fa-times me-1"></i> Batal
+                        <i class="bi bi-times me-1"></i> Batal
                     </button>
                     <button type="button" class="btn btn-primary" id="btnSimpanPresensi">
-                        <i class="fas fa-save me-1"></i> Simpan Perubahan
+                        <i class="bi bi-save me-1"></i> Simpan Perubahan
                     </button>
                 </div>
             </div>
@@ -645,7 +645,7 @@
                 }
 
                 $(this).prop('disabled', true).html(
-                    '<i class="fas fa-spinner fa-spin me-1"></i> Menyimpan...');
+                    '<i class="bi bi-spinner fa-spin me-1"></i> Menyimpan...');
 
                 $.post(url, data)
                     .done(function(resp) {
@@ -688,7 +688,7 @@
                     })
                     .always(function() {
                         $('#btnSimpanPresensi').prop('disabled', false).html(
-                            '<i class="fas fa-save me-1"></i> Simpan Perubahan');
+                            '<i class="bi bi-save me-1"></i> Simpan Perubahan');
                     });
             });
 
@@ -697,7 +697,7 @@
                 $('#editPresensiForm')[0].reset();
                 $('#error_status').hide().text('');
                 $('#btnSimpanPresensi').prop('disabled', false).html(
-                    '<i class="fas fa-save me-1"></i> Simpan Perubahan');
+                    '<i class="bi bi-save me-1"></i> Simpan Perubahan');
             });
         });
     </script>

@@ -1,11 +1,11 @@
 @extends('kerangka.master')
 
 @section('content')
-    <div class="container-fluid py-4">
+    <div class="container py-2">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h4 class="fw-bold text-primary mb-0">
+            <h3 class="fw-bold text-primary mb-0">
                 <i class="bi bi-journal-text me-2"></i>Daftar Kegiatan Pelajar
-            </h4>
+            </h3>
         </div>
 
         {{-- Card Container --}}
@@ -42,19 +42,19 @@
                     <div class="table-responsive">
                         <table class="table table-hover mb-0">
                             <thead class="table-light">
-                                <tr>
-                                    <th class="ps-4" style="width: 5%;">No</th>
+                                <tr class="text-center">
+                                    <th class="ps-3" style="width: 5%;">No</th>
                                     <th style="width: 15%;">Pelajar</th>
                                     <th style="width: 10%;">Tanggal</th>
                                     <th style="width: 20%;">Nama Kegiatan</th>
                                     <th style="width: 12%;">Status</th>
-                                    <th style="width: 10%;" class="text-center">Aksi</th>
+                                    <th style="width: 10%;">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($kegiatans as $index => $kegiatan)
                                     <tr>
-                                        <td class="ps-4">{{ $kegiatans->firstItem() + $index }}</td>
+                                        <td class="text-center ps-3">{{ $kegiatans->firstItem() + $index }}</td>
                                         <td>
                                             <div class="d-flex align-items-center">
                                                 <div class="avatar-sm bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center me-2"
@@ -70,7 +70,7 @@
                                                 </div>
                                             </div>
                                         </td>
-                                        <td>
+                                        <td class="text-center">
                                             {{ \Carbon\Carbon::parse($kegiatan->tanggal)->format('d M Y') }}
                                         </td>
                                         <td>
@@ -79,8 +79,7 @@
                                                 {{ $kegiatan->nama_kegiatan }}
                                             </div>
                                         </td>
-
-                                        <td>
+                                        <td class="text-center">
                                             @php
                                                 $statusClass = match ($kegiatan->status_penyelesaian) {
                                                     'Selesai' => 'success',

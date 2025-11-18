@@ -1,7 +1,7 @@
 @extends('kerangka.master')
 
 @section('content')
-    <div class="container mt-5">
+    <div class="container py-2">
         <div class="row mb-4">
             <div class="col-12">
                 <div class="d-flex align-items-center mb-3">
@@ -9,7 +9,7 @@
                         <i class="bi bi-person-check-fill fs-1 text-primary"></i>
                     </div>
                     <div>
-                        <h3 class="mb-1 fw-bold">Assign Pembimbing</h3>
+                        <h3 class="mb-1 fw-bold text-primary">Assign Pembimbing</h3>
                         <p class="text-muted mb-0">Kelola pembimbing untuk pelajar magang</p>
                     </div>
                 </div>
@@ -97,7 +97,7 @@
                                                 action="{{ route('admin.assignpembimbing.assign', ['id' => $pelajar->id]) }}"
                                                 method="POST" class="d-flex gap-2">
                                                 @csrf
-                                                <select name="pembimbing_id" class="form-select form-select-sm flex-grow-1"
+                                                <select name="pembimbing_id" class="form-select form-select-sm flex-1"
                                                     required>
                                                     <option value="">-- Pilih Pembimbing --</option>
                                                     @foreach ($pembimbings as $pembimbing)

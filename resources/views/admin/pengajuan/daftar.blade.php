@@ -1,11 +1,11 @@
 @extends('kerangka.master')
 
 @section('content')
-    <div class="container-fluid py-4">
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <h4 class="fw-bold text-primary mb-0">
+    <div class="container py-2">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h3 class="fw-bold text-primary mb-0">
                 <i class="bi bi-briefcase-fill me-2"></i>Daftar Pengajuan Magang
-            </h4>
+            </h3>
         </div>
 
         @if (session('success'))
@@ -16,16 +16,16 @@
         @endif
 
         {{-- Summary Cards --}}
-        <div class="row g-3 mb-4">
+        <div class="row g-3 mb-2">
             <div class="col-md-4">
                 <div class="card border-0 shadow-sm bg-primary text-white">
                     <div class="card-body py-3">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <p class="mb-1 small">Diajukan</p>
+                                <p class="fw-bold mb-1 small text-uppercase">Diajukan</p>
                                 <h4 class="mb-0 fw-bold">{{ $pengajuans->where('status', 'diajukan')->count() }}</h4>
                             </div>
-                            <i class="bi bi-clock-history fs-1 opacity-50"></i>
+                            <i class="bi bi-clock-history fs-3 opacity-50"></i>
                         </div>
                     </div>
                 </div>
@@ -35,10 +35,10 @@
                     <div class="card-body py-3">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <p class="mb-1 small">Disetujui</p>
+                                <p class="fw-bold mb-1 small text-uppercase">Disetujui</p>
                                 <h4 class="mb-0 fw-bold">{{ $pengajuans->where('status', 'disetujui')->count() }}</h4>
                             </div>
-                            <i class="bi bi-check-circle fs-1 opacity-50"></i>
+                            <i class="bi bi-check-circle fs-3 opacity-50"></i>
                         </div>
                     </div>
                 </div>
@@ -48,10 +48,10 @@
                     <div class="card-body py-3">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <p class="mb-1 small">Ditolak</p>
+                                <p class="fw-bold mb-1 small text-uppercase">Ditolak</p>
                                 <h4 class="mb-0 fw-bold">{{ $pengajuans->where('status', 'ditolak')->count() }}</h4>
                             </div>
-                            <i class="bi bi-x-circle fs-1 opacity-50"></i>
+                            <i class="bi bi-x-circle fs-3 opacity-50"></i>
                         </div>
                     </div>
                 </div>
@@ -71,19 +71,19 @@
                     <div class="table-responsive">
                         <table class="table table-hover mb-0">
                             <thead class="table-light">
-                                <tr>
-                                    <th class="ps-4" style="width: 4%;">No</th>
+                                <tr class="text-center">
+                                    <th class="ps-3" style="width: 4%;">No</th>
                                     <th style="width: 20%;">Nama</th>
                                     <th style="width: 23%;">Asal Institusi</th>
-                                    <th style="width: 18%;" class="text-center">Tanggal Pengajuan</th>
-                                    <th style="width: 10%;" class="text-center">Status</th>
-                                    <th style="width: 13%;" class="text-center">Aksi</th>
+                                    <th style="width: 18%;">Tanggal Pengajuan</th>
+                                    <th style="width: 10%;">Status</th>
+                                    <th style="width: 13%;">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($pengajuans as $key => $p)
                                     <tr>
-                                        <td class="ps-4">{{ $key + 1 }}</td>
+                                        <td class="text-center ps-3">{{ $key + 1 }}</td>
                                         <td>
                                             <div class="d-flex align-items-center">
                                                 <div class="avatar-sm bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center me-2"
@@ -100,7 +100,7 @@
                                                 </div>
                                             </div>
                                         </td>
-                                        <td>
+                                        <td class="text-center">
                                             <div>{{ $p->asal_institusi }}</div>
                                             <small class="text-muted">{{ $p->jurusan }}</small>
                                         </td>

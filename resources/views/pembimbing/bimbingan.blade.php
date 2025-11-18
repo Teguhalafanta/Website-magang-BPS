@@ -1,18 +1,18 @@
 @extends('kerangka.master')
 
 @section('content')
-    <div class="container-fluid py-4">
+    <div class="container py-2">
         <!-- Header Section -->
-        <div class="row mb-4">
+        <div class="row mb-2">
             <div class="col-12">
                 <div class="d-flex align-items-center mb-3">
                     <div class="me-3">
-                        <div class="bg-primary rounded p-3">
-                            <i class="fas fa-users text-white fs-4"></i>
+                        <div class="bg-primary rounded p-2">
+                            <i class="bi bi-users text-white fs-4"></i>
                         </div>
                     </div>
                     <div>
-                        <h2 class="mb-1 fw-bold text-dark">Daftar Peserta Bimbingan</h2>
+                        <h3 class="mb-1 fw-bold text-dark">Daftar Peserta Bimbingan</h3>
                         <p class="text-muted mb-0">Kelola dan lihat detail peserta bimbingan</p>
                     </div>
                 </div>
@@ -23,7 +23,7 @@
         @if (session('success'))
             <div class="alert alert-success alert-dismissible fade show shadow-sm border-0 mb-4" role="alert">
                 <div class="d-flex align-items-center">
-                    <i class="fas fa-check-circle me-2"></i>
+                    <i class="bi bi-check-circle me-2"></i>
                     <span>{{ session('success') }}</span>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -33,7 +33,7 @@
         @if (session('error'))
             <div class="alert alert-danger alert-dismissible fade show shadow-sm border-0 mb-4" role="alert">
                 <div class="d-flex align-items-center">
-                    <i class="fas fa-exclamation-circle me-2"></i>
+                    <i class="bi bi-exclamation-circle me-2"></i>
                     <span>{{ session('error') }}</span>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -46,7 +46,7 @@
             <div class="card-header bg-primary text-white py-3 border-0">
                 <div class="d-flex justify-content-between align-items-center">
                     <h5 class="mb-0 fw-bold text-white">
-                        <i class="fas fa-list-check me-2"></i>Data Peserta Bimbingan
+                        <i class="bi bi-list-check me-2"></i>Data Peserta Bimbingan
                     </h5>
                 </div>
             </div>
@@ -57,10 +57,10 @@
                     <div class="col-md-6">
                         <div class="input-group">
                             <span class="input-group-text bg-white border-end-0">
-                                <i class="fas fa-search text-muted"></i>
+                                <i class="bi bi-search text-muted"></i>
                             </span>
                             <input type="text" id="searchInputBimbingan" class="form-control border-start-0" 
-                                   placeholder="Cari nama, institusi, atau jurusan...">
+                                    placeholder="Cari nama, institusi, atau jurusan...">
                         </div>
                     </div>
                     <div class="col-md-3">
@@ -81,9 +81,9 @@
                         <thead class="table-primary">
                             <tr>
                                 <th class="py-3 px-3 text-center" style="width: 80px;">No</th>
-                                <th class="py-3 px-3">Nama Peserta</th>
-                                <th class="py-3 px-3">Asal Institusi</th>
-                                <th class="py-3 px-3">Jurusan</th>
+                                <th class="py-3 px-3 text-center">Nama Peserta</th>
+                                <th class="py-3 px-3 text-center">Asal Institusi</th>
+                                <th class="py-3 px-3 text-center">Jurusan</th>
                                 <th class="py-3 px-3 text-center" style="width: 120px;">Aksi</th>
                             </tr>
                         </thead>
@@ -111,7 +111,7 @@
                                     <td class="text-center py-3">
                                         <button class="btn btn-primary btn-sm" data-bs-toggle="modal"
                                             data-bs-target="#detailModal{{ $p->id }}">
-                                            <i class="fas fa-eye me-1"></i> Detail
+                                            <i class="bi bi-eye me-1"></i> Detail
                                         </button>
                                     </td>
                                 </tr>
@@ -136,7 +136,7 @@
                                                 <!-- Personal Information -->
                                                 <div class="mb-4">
                                                     <h6 class="text-primary fw-bold mb-3 pb-2 border-bottom">
-                                                        <i class="fas fa-user me-2"></i>Informasi Pribadi
+                                                        <i class="bi bi-user me-2"></i>Informasi Pribadi
                                                     </h6>
                                                     <div class="row g-3">
                                                         <div class="col-md-6">
@@ -177,7 +177,7 @@
                                                 <!-- Contact Information -->
                                                 <div class="mb-4">
                                                     <h6 class="text-primary fw-bold mb-3 pb-2 border-bottom">
-                                                        <i class="fas fa-phone me-2"></i>Informasi Kontak
+                                                        <i class="bi bi-phone me-2"></i>Informasi Kontak
                                                     </h6>
                                                     <div class="row g-3">
                                                         <div class="col-md-6">
@@ -198,7 +198,7 @@
                                                 <!-- Academic Information -->
                                                 <div class="mb-4">
                                                     <h6 class="text-primary fw-bold mb-3 pb-2 border-bottom">
-                                                        <i class="fas fa-graduation-cap me-2"></i>Informasi Akademik
+                                                        <i class="bi bi-graduation-cap me-2"></i>Informasi Akademik
                                                     </h6>
                                                     <div class="row g-3">
                                                         <div class="col-md-6">
@@ -231,7 +231,7 @@
                                                 <!-- Schedule Information -->
                                                 <div class="mb-4">
                                                     <h6 class="text-primary fw-bold mb-3 pb-2 border-bottom">
-                                                        <i class="fas fa-calendar-alt me-2"></i>Jadwal Bimbingan
+                                                        <i class="bi bi-calendar-alt me-2"></i>Jadwal Bimbingan
                                                     </h6>
                                                     <div class="row g-3">
                                                         <div class="col-md-6">
@@ -252,7 +252,7 @@
                                                 <!-- Documents -->
                                                 <div>
                                                     <h6 class="text-primary fw-bold mb-3 pb-2 border-bottom">
-                                                        <i class="fas fa-file-alt me-2"></i>Dokumen
+                                                        <i class="bi bi-file-alt me-2"></i>Dokumen
                                                     </h6>
                                                     <div class="row g-3">
                                                         <div class="col-md-6">
@@ -260,7 +260,7 @@
                                                                 <div class="card-body p-3">
                                                                     <div class="d-flex align-items-center">
                                                                         <div class="bg-primary bg-opacity-10 rounded p-2 me-3">
-                                                                            <i class="fas fa-file-pdf text-primary fs-5"></i>
+                                                                            <i class="bi bi-file-pdf text-primary fs-5"></i>
                                                                         </div>
                                                                         <div class="flex-1">
                                                                             <small class="text-muted d-block">Proposal</small>
@@ -268,7 +268,7 @@
                                                                                 <a href="{{ asset('storage/' . $p->proposal) }}"
                                                                                     target="_blank"
                                                                                     class="btn btn-sm btn-outline-primary mt-1">
-                                                                                    <i class="fas fa-download me-1"></i>
+                                                                                    <i class="bi bi-download me-1"></i>
                                                                                     Unduh
                                                                                 </a>
                                                                             @else
@@ -284,7 +284,7 @@
                                                                 <div class="card-body p-3">
                                                                     <div class="d-flex align-items-center">
                                                                         <div class="bg-primary bg-opacity-10 rounded p-2 me-3">
-                                                                            <i class="fas fa-file-pdf text-primary fs-5"></i>
+                                                                            <i class="bi bi-file-pdf text-primary fs-5"></i>
                                                                         </div>
                                                                         <div class="flex-1">
                                                                             <small class="text-muted d-block">Surat Pengajuan</small>
@@ -292,7 +292,7 @@
                                                                                 <a href="{{ asset('storage/' . $p->surat_pengajuan) }}"
                                                                                     target="_blank"
                                                                                     class="btn btn-sm btn-outline-primary mt-1">
-                                                                                    <i class="fas fa-download me-1"></i>
+                                                                                    <i class="bi bi-download me-1"></i>
                                                                                     Unduh
                                                                                 </a>
                                                                             @else
@@ -309,7 +309,7 @@
 
                                             <div class="modal-footer bg-light py-3">
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                                    <i class="fas fa-times me-1"></i> Tutup
+                                                    <i class="bi bi-times me-1"></i> Tutup
                                                 </button>
                                             </div>
                                         </div>
@@ -319,7 +319,7 @@
                                 <tr>
                                     <td colspan="5" class="text-center py-5">
                                         <div class="text-muted">
-                                            <i class="fas fa-inbox fa-3x mb-3 opacity-50"></i>
+                                            <i class="bi bi-inbox fa-3x mb-3 opacity-50"></i>
                                             <p class="mb-0">Belum ada peserta bimbingan</p>
                                         </div>
                                     </td>

@@ -3,7 +3,7 @@
 @section('title', 'Daftar Kegiatan Saya')
 
 @section('content')
-    <div class="container my-4">
+    <div class="container py-2">
         
         <div class="card shadow-sm">
             <div class="card-header bg-secondary text-white fw-bold">

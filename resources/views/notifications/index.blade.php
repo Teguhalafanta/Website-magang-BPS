@@ -1,7 +1,7 @@
 @extends('kerangka.master')
 
 @section('content')
-    <div class="container py-4">
+    <div class="container py-2">
         <h2 class="fw-bold mb-3">
             <i class="bi bi-bell-fill text-danger"></i> Daftar Notifikasi
         </h2>
@@ -28,12 +28,12 @@
             <div class="table-responsive">
                 <table class="table table-bordered table-hover mb-0 align-middle">
                     <thead class="table-secondary">
-                        <tr>
-                            <th class="py-2 px-3 text-center" style="width: 5%;">No</th>
-                            <th class="py-2 px-3 text-center" style="width: 50%;">Pesan</th>
-                            <th class="py-2 px-3 text-center" style="width: 15%;">Status</th>
-                            <th class="py-2 px-3 text-center" style="width: 20%;">Tanggal</th>
-                            <th class="py-2 px-3 text-center" style="width: 10%;">Aksi</th>
+                        <tr class="text-center">
+                            <th class="py-2 px-3" style="width: 5%;">No</th>
+                            <th class="py-2 px-3" style="width: 50%;">Pesan</th>
+                            <th class="py-2 px-3" style="width: 15%;">Status</th>
+                            <th class="py-2 px-3" style="width: 20%;">Tanggal</th>
+                            <th class="py-2 px-3" style="width: 10%;">Aksi</th>
                         </tr>
                     </thead>
                     <tbody>

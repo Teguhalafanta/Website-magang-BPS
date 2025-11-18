@@ -1,18 +1,18 @@
 @extends('kerangka.master')
 
 @section('content')
-    <div class="container-fluid py-4">
+    <div class="container py-4">
         {{-- Welcome Card --}}
         <div class="card border-0 shadow-sm mb-4 bg-primary bg-opacity-10">
             <div class="card-body py-4">
                 <div class="row align-items-center">
                     <div class="col-auto">
                         <div class="bg-primary rounded-circle p-3">
-                            <i class="fas fa-user-tie text-white fs-4"></i>
+                            <i class="bi bi-user-tie text-white fs-4"></i>
                         </div>
                     </div>
                     <div class="col">
-                        <h4 class="fw-bold mb-1 text-dark">Dashboard Pembimbing</h4>
+                        <h3 class="fw-bold mb-1 text-dark">Dashboard Pembimbing</h3>
                         <p class="text-muted mb-0">
                             Selamat datang kembali,
                             <strong
@@ -37,14 +37,14 @@
                                     <p class="mb-0 small opacity-75">Peserta Bimbingan</p>
                                 </div>
                                 <div class="bg-white bg-opacity-20 rounded-circle p-3">
-                                    <i class="fas fa-users text-white fs-3"></i>
+                                    <i class="bi bi-users text-white fs-3"></i>
                                 </div>
                             </div>
                         </div>
                         <div class="card-footer border-0 bg-white bg-opacity-10 py-3">
                             <span class="text-white text-decoration-none small fw-semibold d-flex align-items-center">
                                 <span>Lihat Detail</span>
-                                <i class="fas fa-arrow-right ms-auto"></i>
+                                <i class="bi bi-arrow-right ms-auto"></i>
                             </span>
                         </div>
                     </div>
@@ -63,14 +63,14 @@
                                     <p class="mb-0 small opacity-75">Aktivitas Bimbingan</p>
                                 </div>
                                 <div class="bg-white bg-opacity-20 rounded-circle p-3">
-                                    <i class="fas fa-tasks text-white fs-3"></i>
+                                    <i class="bi bi-tasks text-white fs-3"></i>
                                 </div>
                             </div>
                         </div>
                         <div class="card-footer border-0 bg-white bg-opacity-10 py-3">
                             <span class="text-white text-decoration-none small fw-semibold d-flex align-items-center">
                                 <span>Lihat Detail</span>
-                                <i class="fas fa-arrow-right ms-auto"></i>
+                                <i class="bi bi-arrow-right ms-auto"></i>
                             </span>
                         </div>
                     </div>
@@ -89,14 +89,14 @@
                                     <p class="mb-0 small opacity-75">Kehadiran Pelajar</p>
                                 </div>
                                 <div class="bg-white bg-opacity-20 rounded-circle p-3">
-                                    <i class="fas fa-clipboard-check text-white fs-3"></i>
+                                    <i class="bi bi-clipboard-check text-white fs-3"></i>
                                 </div>
                             </div>
                         </div>
                         <div class="card-footer border-0 bg-white bg-opacity-10 py-3">
                             <span class="text-white text-decoration-none small fw-semibold d-flex align-items-center">
                                 <span>Lihat Detail</span>
-                                <i class="fas fa-arrow-right ms-auto"></i>
+                                <i class="bi bi-arrow-right ms-auto"></i>
                             </span>
                         </div>
                     </div>
@@ -115,14 +115,14 @@
                                     <p class="mb-0 small opacity-75">Perlu Verifikasi</p>
                                 </div>
                                 <div class="bg-white bg-opacity-20 rounded-circle p-3">
-                                    <i class="fas fa-file-alt text-white fs-3"></i>
+                                    <i class="bi bi-file-alt text-white fs-3"></i>
                                 </div>
                             </div>
                         </div>
                         <div class="card-footer border-0 bg-white bg-opacity-10 py-3">
                             <span class="text-white text-decoration-none small fw-semibold d-flex align-items-center">
                                 <span>Lihat Detail</span>
-                                <i class="fas fa-arrow-right ms-auto"></i>
+                                <i class="bi bi-arrow-right ms-auto"></i>
                             </span>
                         </div>
                     </div>
@@ -131,18 +131,18 @@
         </div>
 
         {{-- Content --}}
-        <div class="row g-4">
+        <div class="row g-3">
             {{-- Laporan Kegiatan Terbaru --}}
             <div class="col-lg-8">
                 <div class="card border-0 shadow-sm h-100">
                     <div class="card-header bg-primary text-white border-0 py-3">
                         <div class="d-flex justify-content-between align-items-center">
                             <h5 class="fw-bold mb-0 text-white">
-                                <i class="fas fa-clipboard-list me-2"></i>
+                                <i class="bi bi-clipboard-list me-2"></i>
                                 Laporan Kegiatan Terbaru
                             </h5>
                             <a href="{{ route('pembimbing.kegiatan') }}" class="btn btn-light btn-sm">
-                                <i class="fas fa-eye me-1"></i>Lihat Semua
+                                <i class="bi bi-eye me-1"></i>Lihat Semua
                             </a>
                         </div>
                     </div>
@@ -181,7 +181,7 @@
                                                 <td class="py-3 px-3 text-center">
                                                     <a href="{{ route('pembimbing.kegiatan') }}"
                                                         class="btn btn-sm btn-outline-primary" title="Lihat Detail">
-                                                        <i class="fas fa-eye"></i>
+                                                        <i class="bi bi-eye"></i>
                                                     </a>
                                                 </td>
                                             </tr>
@@ -191,7 +191,7 @@
                             </div>
                         @else
                             <div class="text-center text-muted py-5">
-                                <i class="fas fa-inbox fa-3x d-block mb-3 opacity-50"></i>
+                                <i class="bi bi-inbox fa-3x d-block mb-3 opacity-50"></i>
                                 <p class="mb-0 fw-semibold">Belum ada laporan kegiatan</p>
                             </div>
                         @endif
@@ -205,7 +205,7 @@
                 <div class="card border-0 shadow-sm mb-4">
                     <div class="card-header bg-primary text-white border-0 py-3">
                         <h5 class="fw-bold mb-0 text-white">
-                            <i class="fas fa-bolt me-2"></i>
+                            <i class="bi bi-bolt me-2"></i>
                             Akses Cepat
                         </h5>
                     </div>
@@ -215,7 +215,7 @@
                                 class="btn btn-outline-primary text-start py-3">
                                 <div class="d-flex align-items-center">
                                     <div class="bg-primary bg-opacity-10 rounded p-2 me-3">
-                                        <i class="fas fa-users text-primary"></i>
+                                        <i class="bi bi-users text-primary"></i>
                                     </div>
 
                                     <div>
@@ -228,7 +228,7 @@
                             <a href="{{ route('pembimbing.kegiatan') }}" class="btn btn-outline-success text-start py-3">
                                 <div class="d-flex align-items-center">
                                     <div class="bg-success bg-opacity-10 rounded p-2 me-3">
-                                        <i class="fas fa-tasks text-success"></i>
+                                        <i class="bi bi-tasks text-success"></i>
                                     </div>
                                     <div>
                                         <div class="fw-bold">Kelola Kegiatan</div>
@@ -240,7 +240,7 @@
                             <a href="{{ route('pembimbing.presensi') }}" class="btn btn-outline-warning text-start py-3">
                                 <div class="d-flex align-items-center">
                                     <div class="bg-warning bg-opacity-10 rounded p-2 me-3">
-                                        <i class="fas fa-clipboard-check text-warning"></i>
+                                        <i class="bi bi-clipboard-check text-warning"></i>
                                     </div>
                                     <div>
                                         <div class="fw-bold">Kelola Presensi</div>
@@ -252,7 +252,7 @@
                             <a href="{{ route('pembimbing.laporan') }}" class="btn btn-outline-info text-start py-3">
                                 <div class="d-flex align-items-center">
                                     <div class="bg-info bg-opacity-10 rounded p-2 me-3">
-                                        <i class="fas fa-file-alt text-info"></i>
+                                        <i class="bi bi-file-alt text-info"></i>
                                     </div>
                                     <div>
                                         <div class="fw-bold">Verifikasi Laporan</div>
@@ -268,14 +268,14 @@
                 <div class="card border-0 shadow-sm">
                     <div class="card-header bg-primary border-bottom py-3">
                         <h5 class="fw-bold mb-0 text-light">
-                            <i class="fas fa-info-circle me-2 text-primary"></i>
+                            <i class="bi bi-info-circle me-2 text-primary"></i>
                             Informasi
                         </h5>
                     </div>
                     <div class="card-body p-4">
                         <div class="alert alert-info border-0 mb-3" role="alert">
                             <div class="d-flex">
-                                <i class="fas fa-lightbulb text-info me-3 fs-5"></i>
+                                <i class="bi bi-lightbulb text-info me-3 fs-5"></i>
                                 <div>
                                     <strong class="d-block mb-1">Tips Bimbingan</strong>
                                     <small>Periksa laporan kegiatan pelajar secara berkala untuk memastikan progres
@@ -286,7 +286,7 @@
 
                         <div class="alert alert-warning border-0 mb-0" role="alert">
                             <div class="d-flex">
-                                <i class="fas fa-clock text-warning me-3 fs-5"></i>
+                                <i class="bi bi-clock text-warning me-3 fs-5"></i>
                                 <div>
                                     <strong class="d-block mb-1">Pengingat</strong>
                                     <small>Verifikasi laporan akhir tepat waktu untuk kelancaran administrasi.</small>

@@ -78,12 +78,15 @@
                     </div>
                     <div class="d-flex justify-content-center gap-3 mb-3">
                         <button type="button" id="btnTapPulang"
-                            class="btn-bps btn-bps-warning d-flex flex-column align-items-center justify-content-center p-3"
+                            class="btn-bps btn-bps-warning d-flex flex-row align-items-center justify-content-center p-2"
                             onclick="tapPulang()">
-                            <i class="bi bi-box-arrow-right fs-2 mb-2"></i>
+                            <div class="col-auto">
+                                <i class="bi bi-box-arrow-in-right fs-2 mb-2"></i>
+                            </div>
                             <span>Absen Pulang</span>
                         </button>
                     </div>
+
                     <p class="text-muted small mt-2">Silakan tekan tombol di atas untuk melakukan presensi pulang</p>
 
                     <form id="formPulang" action="{{ route('pelajar.presensi.update', $presensiHariIni->id) }}"
@@ -584,7 +587,7 @@
                 sedangAbsenMasuk = true;
                 btnTap.classList.add('disabled');
                 btnTap.innerHTML =
-                    '<div class="d-flex flex-column align-items-center"><i class="bi bi-hourglass-split fs-2 mb-2"></i><span>Memproses...</span></div>';
+                    '<div class="d-flex flex-column align-items-center"><i class="bi bi-hourglass-split fs-5 mb-3"></i><span>Memproses...</span></div>';
 
                 document.getElementById('jamMasukInput').value = currentTime;
                 document.getElementById('formMasuk').submit();
@@ -601,7 +604,7 @@
             if (confirm(confirmMessage)) {
                 const originalContent = btnTap.innerHTML;
                 btnTap.innerHTML =
-                    '<div class="d-flex flex-column align-items-center"><i class="bi bi-hourglass-split fs-2 mb-2"></i><span>Memproses...</span></div>';
+                    '<div class="d-flex flex-column align-items-center"><i class="bi bi-hourglass-split fs-5 mb-3"></i><span>Memproses...</span></div>';
 
                 document.getElementById('jamPulangInput').value = currentTime;
                 document.getElementById('formPulang').submit();

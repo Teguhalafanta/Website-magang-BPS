@@ -41,11 +41,10 @@ class GoogleController extends Controller
                         'email' => $googleUser->getEmail(),
                         'google_id' => $googleUser->getId(),
                         'google_token' => $googleUser->token,
-                        'password' => bcrypt(Str::random(16)), // password dummy
+                        'password' => bcrypt(Str::random(16)),
                         'role' => 'pelajar',
                     ]);
                 } else {
-                    // Jika email sudah ada, tambahkan google_id-nya
                     $user->update([
                         'google_id' => $googleUser->getId(),
                         'google_token' => $googleUser->token,

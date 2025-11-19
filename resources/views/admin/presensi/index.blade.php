@@ -148,7 +148,7 @@
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td>
+                                                <td class="text-center">
                                                     <div>
                                                         {{ \Carbon\Carbon::parse($presensi->tanggal)->format('d M Y') }}
                                                     </div>
@@ -156,13 +156,13 @@
                                                         {{ \Carbon\Carbon::parse($presensi->tanggal)->locale('id')->isoFormat('dddd') }}
                                                     </small>
                                                 </td>
-                                                <td>
+                                                <td class="text-center">
                                                     <span class="badge bg-light text-dark border">
                                                         <i class="bi bi-clock me-1"></i>
                                                         {{ \Carbon\Carbon::parse($presensi->waktu_datang)->format('H:i') }}
                                                     </span>
                                                 </td>
-                                                <td>
+                                                <td class="text-center">
                                                     @if ($presensi->waktu_pulang)
                                                         <span class="badge bg-light text-dark border">
                                                             <i class="bi bi-clock me-1"></i>
@@ -172,7 +172,7 @@
                                                         <span class="text-muted">-</span>
                                                     @endif
                                                 </td>
-                                                <td>
+                                                <td class="text-center">
                                                     @php
                                                         $statusClass = match ($presensi->status) {
                                                             'Tepat Waktu' => 'success',

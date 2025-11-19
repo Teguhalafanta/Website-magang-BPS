@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="container py-2">
-        <div class="row mb-4">
+        <div class="row mb-3">
             <div class="col">
                 <h3 class="fw-bold text-primary">
                     <i class="bi bi-gear-fill me-2"></i>Kelola Produk Magang Pelajar
@@ -12,7 +12,7 @@
         </div>
 
         {{-- Summary Statistics --}}
-        <div class="row g-3 mb-4">
+        <div class="row g-3 mb-2">
             <div class="col-md-3">
                 <div class="card border-0 shadow-sm bg-primary text-white">
                     <div class="card-body">
@@ -93,13 +93,13 @@
                         <thead class="table-light">
                             <tr>
                                 <th class="text-center" style="width: 50px;">No</th>
-                                <th style="width: 18%;">
+                                <th class="text-center" style="width: 18%;">
                                     <i class="bi bi-person me-1"></i>Nama Pelajar
                                 </th>
-                                <th style="width: 20%;">
+                                <th class="text-center" style="width: 20%;">
                                     <i class="bi bi-box me-1"></i>Nama Produk
                                 </th>
-                                <th style="width: 25%;">
+                                <th class="text-center" style="width: 25%;">
                                     <i class="bi bi-file-text me-1"></i>Deskripsi
                                 </th>
                                 <th class="text-center" style="width: 100px;">

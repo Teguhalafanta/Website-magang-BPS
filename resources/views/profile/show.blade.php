@@ -3,7 +3,7 @@
 @section('title', 'Profile')
 
 @section('content')
-    <div class="container-fluid py-4">
+    <div class="container py-2">
         {{-- Alert Messages --}}
         @if (session('success'))
             <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm" role="alert">

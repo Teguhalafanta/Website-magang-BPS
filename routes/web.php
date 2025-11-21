@@ -20,6 +20,7 @@ use App\Http\Controllers\Admin\AssignPembimbingController;
 use App\Http\Controllers\Admin\LaporanController as AdminLaporanController;
 use App\Http\Controllers\Admin\PelajarController as AdminPelajarController;
 use App\Http\Controllers\GoogleController;
+use App\Http\Controllers\AdminUserController;
 
 // ================== GUEST ==================
 Route::middleware('guest')->group(function () {
@@ -96,6 +97,17 @@ Route::middleware(['auth'])->group(function () {
         // Route AJAX untuk grafik timeline
         Route::get('/dashboard/grafik-timeline', [DashboardController::class, 'getGrafikTimeline'])
             ->name('dashboard.grafik-timeline');
+
+        // Manajemen User
+        Route::resource('admin/users', AdminUserController::class);
+        Route::resource('admin/users', AdminUserController::class)
+            ->names('admin.users');
+        Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
+        Route::get('/users/create', [AdminUserController::class, 'create'])->name('users.create');
+        Route::post('/users', [AdminUserController::class, 'store'])->name('users.store');
+        Route::get('/users/{id}/edit', [AdminUserController::class, 'edit'])->name('users.edit');
+        Route::put('/users/{id}', [AdminUserController::class, 'update'])->name('users.update');
+        Route::delete('/users/{id}', [AdminUserController::class, 'destroy'])->name('users.destroy');
     });
 
     // -------- PEMBIMBING --------

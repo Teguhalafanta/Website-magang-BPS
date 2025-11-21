@@ -75,6 +75,7 @@
                                     <strong>Catatan Penting:</strong>
                                     <ul class="mb-0 mt-1">
                                         <li>Pastikan file yang diupload adalah hasil karya sendiri</li>
+                                        <li>Jika produk berupa aplikasi atau sistem, maka yang di upload berupa buku pedoman</li>
                                         <li>Periksa kembali file sebelum mengupload</li>
                                         <li>Gunakan nama file yang deskriptif</li>
                                     </ul>

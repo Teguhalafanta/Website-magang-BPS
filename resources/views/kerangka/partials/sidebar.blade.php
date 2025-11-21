@@ -129,6 +129,13 @@
                             </a>
                         </li>
 
+                        <li class="sidebar-item {{ request()->routeIs('admin.users.*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.users.index') }}" class="sidebar-link">
+                                <i class="bi bi-people-fill"></i>
+                                <span>Management User</span>
+                            </a>
+                        </li>
+
                         {{-- Role: Pelajar --}}
                     @elseif(auth()->user()->role == 'pelajar')
                         {{-- Determine pelajar status explicitly so we can handle 'disetujui', 'selesai', etc. --}}
@@ -194,7 +201,6 @@
                                     <span class="badge bg-success ms-auto" style="font-size: 10px;">Disetujui</span>
                                 </a>
                             </li>
-
                         @elseif ($status === 'selesai')
                             {{-- PELAJAR SUDAH SELESAI MAGANG: Tampilkan menu tetapi non-aktifkan sebagian link.
                                  Hanya izinkan akses ke: Presensi, Kegiatan, Upload Laporan (jika masih diperlukan), Sertifikat/riwayat. --}}
@@ -259,7 +265,6 @@
                                     <span class="badge bg-secondary ms-auto" style="font-size: 10px;">Selesai</span>
                                 </a>
                             </li>
-
                         @else
                             {{-- MENU UNTUK PELAJAR YANG BELUM DISETUJUI --}}
                             <li class="sidebar-item {{ request()->routeIs('pelajar.pengajuan.*') ? 'active' : '' }}">

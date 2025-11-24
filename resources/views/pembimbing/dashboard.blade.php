@@ -269,8 +269,8 @@
                     <div class="card-header bg-primary border-bottom py-3">
                         <h5 class="fw-bold mb-0 text-light">
                             <i class="bi bi-info-circle me-2 text-primary"></i>
-                            Informasi
-                        </h5>Detail
+                            Informasi Detail
+                        </h5>
                     </div>
                     <div class="card-body p-4">
                         <div class="alert alert-info border-0 mb-3" role="alert">

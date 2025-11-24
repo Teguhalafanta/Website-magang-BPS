@@ -31,16 +31,25 @@
                         <td>{{ $kegiatan->nama_kegiatan ?? '-' }}</td>
                         <td>{{ $kegiatan->deskripsi }}</td>
                         <td class="text-center">
-                            <a href="{{ route('pelajar.kegiatan.edit', $kegiatan->id) }}"
-                                class="btn btn-sm btn-warning">Edit</a>
+
+                            <!-- Tombol Edit -->
+                            <a href="{{ route('pelajar.kegiatan.edit', $kegiatan->id) }}" class="btn btn-sm btn-warning"
+                                title="Edit">
+                                <i class="bi bi-pencil-square"></i>
+                            </a>
+
+                            <!-- Tombol Hapus -->
                             <form action="{{ route('pelajar.kegiatan.destroy', $kegiatan->id) }}" method="POST"
-                                style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus kegiatan ini?');">
+                                class="d-inline" onsubmit="return confirm('Yakin ingin menghapus kegiatan ini?');">
                                 @csrf
                                 @method('DELETE')
-                                <button class="btn btn-sm btn-danger"
-                                    onclick="return confirm('Yakin hapus?')">Hapus</button>
+                                <button class="btn btn-sm btn-danger" title="Hapus">
+                                    <i class="bi bi-trash"></i>
+                                </button>
                             </form>
+
                         </td>
+
                     </tr>
                 @empty
                     <tr>

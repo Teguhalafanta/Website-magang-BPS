@@ -111,7 +111,7 @@
                                     <td class="text-center py-3">
                                         <button class="btn btn-primary btn-sm" data-bs-toggle="modal"
                                             data-bs-target="#detailModal{{ $p->id }}">
-                                            <i class="bi bi-eye me-1"></i> Detail
+                                            <i class="bi bi-eye me-1"></i>
                                         </button>
                                     </td>
                                 </tr>

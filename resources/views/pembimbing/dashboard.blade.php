@@ -180,7 +180,7 @@
                                                 </td>
                                                 <td class="py-3 px-3 text-center">
                                                     <a href="{{ route('pembimbing.kegiatan') }}"
-                                                        class="btn btn-sm btn-outline-primary" title="Lihat Detail">
+                                                        class="btn btn-sm btn-outline-primary" title="Lihat ">
                                                         <i class="bi bi-eye"></i>
                                                     </a>
                                                 </td>
@@ -270,7 +270,7 @@
                         <h5 class="fw-bold mb-0 text-light">
                             <i class="bi bi-info-circle me-2 text-primary"></i>
                             Informasi
-                        </h5>
+                        </h5>Detail
                     </div>
                     <div class="card-body p-4">
                         <div class="alert alert-info border-0 mb-3" role="alert">

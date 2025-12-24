@@ -67,8 +67,8 @@ class KegiatanController extends Controller
         $kegiatans = Kegiatan::with('pelajar')
             ->when($request->search, function ($query) use ($request) {
                 $query->where('nama_kegiatan', 'like', "%{$request->search}%")
-                    ->orWhereHas('user', function ($q) use ($request) {
-                        $q->where('name', 'like', "%{$request->search}%");
+                    ->orWhereHas('pelajar', function ($q) use ($request) {
+                        $q->where('nama', 'like', "%{$request->search}%");
                     });
             })
             ->latest()

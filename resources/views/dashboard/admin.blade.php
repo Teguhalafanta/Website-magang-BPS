@@ -120,7 +120,7 @@
                             <div>
                                 <h5 class="fw-bold mb-1" style="color: #1a202c; font-size: 1.1rem;">
                                     <i class="bi bi-pie-chart-fill text-success me-2"></i>
-                                    Distribusi Presensi Harian
+                                    Presensi Harian
                                 </h5>
                             </div>
                         </div>

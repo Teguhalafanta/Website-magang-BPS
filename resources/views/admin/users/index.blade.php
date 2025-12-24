@@ -51,7 +51,7 @@
                     <div class="card-body py-3">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
-                                <p class="fw-bold mb-1 small text-uppercase">Pelajar</p>
+                                <p class="fw-bold mb-1 small text-uppercase">Peserta</p>
                                 <h4 class="mb-0 fw-bold">{{ $users->where('role', 'pelajar')->count() }}</h4>
                             </div>
                             <i class="bi bi-mortarboard fs-3 opacity-50"></i>
@@ -103,7 +103,7 @@
                                             @elseif($user->role == 'pembimbing')
                                                 <span class="badge bg-success">Pembimbing</span>
                                             @else
-                                                <span class="badge bg-primary">Pelajar</span>
+                                                <span class="badge bg-primary">Peserta</span>
                                             @endif
                                         </td>
                                         <td class="text-center">
@@ -172,7 +172,6 @@
                 padding: 1rem;
             }
 
-            /* Style untuk input search dan select */
             #usersTable_wrapper .dataTables_filter input {
                 border: 1px solid #dee2e6;
                 border-radius: 0.375rem;
@@ -203,7 +202,6 @@
                 box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
             }
 
-            /* Style untuk pagination */
             #usersTable_wrapper .dataTables_paginate .pagination {
                 margin-bottom: 0;
             }

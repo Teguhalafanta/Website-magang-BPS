@@ -42,13 +42,13 @@
                             <select name="role" class="form-select" required>
                                 <option value="" disabled>-- Pilih Role --</option>
                                 <option value="admin" {{ old('role', $user->role) == 'admin' ? 'selected' : '' }}>
-                                    🛡️ Admin
+                                    Admin
                                 </option>
                                 <option value="pembimbing" {{ old('role', $user->role) == 'pembimbing' ? 'selected' : '' }}>
-                                    👨‍🏫 Pembimbing
+                                    Pembimbing
                                 </option>
                                 <option value="pelajar" {{ old('role', $user->role) == 'pelajar' ? 'selected' : '' }}>
-                                    👨‍🎓 Pelajar
+                                    Peserta
                                 </option>
                             </select>
                             @error('role')

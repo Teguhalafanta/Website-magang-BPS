@@ -4,7 +4,7 @@
     <div class="container py-2">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h3 class="fw-bold text-primary mb-0">
-                <i class="bi bi-journal-text me-2"></i>Daftar Kegiatan Pelajar
+                <i class="bi bi-journal-text me-2"></i>Daftar Kegiatan Peserta
             </h3>
         </div>
 
@@ -22,7 +22,7 @@
                             class="d-flex justify-content-end">
                             <div class="input-group" style="max-width: 350px;">
                                 <input type="text" name="search" class="form-control"
-                                    placeholder="Cari kegiatan atau pelajar..." value="{{ request('search') }}">
+                                    placeholder="Cari kegiatan atau peserta..." value="{{ request('search') }}">
                                 <button class="btn btn-primary" type="submit">
                                     <i class="bi bi-search"></i> Cari
                                 </button>
@@ -44,7 +44,7 @@
                             <thead class="table-light">
                                 <tr class="text-center">
                                     <th class="ps-3" style="width: 5%;">No</th>
-                                    <th style="width: 15%;">Pelajar</th>
+                                    <th style="width: 15%;">Peserta</th>
                                     <th style="width: 10%;">Tanggal</th>
                                     <th style="width: 20%;">Nama Kegiatan</th>
                                     <th style="width: 12%;">Status</th>
@@ -114,7 +114,7 @@
                                                 <div class="modal-body">
                                                     <div class="row g-3 mb-3">
                                                         <div class="col-md-6">
-                                                            <label class="text-muted small mb-1">Pelajar</label>
+                                                            <label class="text-muted small mb-1">Peserta</label>
                                                             <p class="fw-semibold mb-0">
                                                                 {{ $kegiatan->pelajar->nama ?? 'N/A' }}</p>
                                                         </div>

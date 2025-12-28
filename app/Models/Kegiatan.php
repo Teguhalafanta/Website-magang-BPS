@@ -30,7 +30,7 @@ class Kegiatan extends Model
     ];
 
     /**
-     * Relasi ke model Pelajar
+     * Relasi ke model Peserta
      */
     public function pelajar()
     {
@@ -90,7 +90,7 @@ class Kegiatan extends Model
     }
 
     /**
-     * Scope untuk kegiatan berdasarkan pelajar
+     * Scope untuk kegiatan berdasarkan peserta
      */
     public function scopeByPelajar($query, $pelajarId)
     {

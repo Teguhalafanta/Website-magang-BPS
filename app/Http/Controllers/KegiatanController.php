@@ -33,10 +33,10 @@ class KegiatanController extends Controller
                 return view('pembimbing.kegiatan', ['kegiatans' => collect()]);
             }
 
-            // Ambil semua pelajar yang dibimbing oleh pembimbing ini
+            // Ambil semua peserta yang dibimbing oleh pembimbing ini
             $pelajarIds = Pelajar::where('pembimbing_id', $pembimbing->id)->pluck('user_id');
 
-            // Ambil kegiatan yang dimiliki oleh pelajar-pelajar tersebut
+            // Ambil kegiatan yang dimiliki oleh peserta-peserta tersebut
             $kegiatans = Kegiatan::whereIn('user_id', $pelajarIds)
                 ->when($request->search, function ($query) use ($request) {
                     $query->where('nama_kegiatan', 'like', "%{$request->search}%")
@@ -52,7 +52,7 @@ class KegiatanController extends Controller
         }
 
 
-        // Jika bukan pelajar/pembimbing
+        // Jika bukan peserta/pembimbing
         abort(403, 'Akses tidak diizinkan');
     }
 

@@ -13,7 +13,7 @@
 
 <table border="1" cellpadding="10" cellspacing="0" width="100%">
     <tr>
-        <th>Nama Pelajar</th>
+        <th>Nama Peserta</th>
         <th>Laporan Magang</th>
         <th>Status</th>
         <th>Aksi</th>
@@ -31,7 +31,7 @@
             @elseif($laporan->status == 'disetujui')
                 <span style="color: green;">Disetujui Pembimbing</span>
             @elseif($laporan->status == 'ditolak')
-                <span style="color: red;">Ditolak - Pelajar Upload Ulang</span>
+                <span style="color: red;">Ditolak - Peserta Upload Ulang</span>
             @elseif($laporan->status == 'selesai')
                 <span style="color: blue;">Selesai</span>
             @endif

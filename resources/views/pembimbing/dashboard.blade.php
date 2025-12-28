@@ -7,8 +7,8 @@
             <div class="card-body py-4">
                 <div class="row align-items-center">
                     <div class="col-auto">
-                        <div class="bg-primary rounded-circle p-3">
-                            <i class="bi bi-user-tie text-white fs-4"></i>
+                        <div class="bg-primary rounded-circle p-2">
+                            <i class="bi bi-person-rolodex text-white fs-5"></i>
                         </div>
                     </div>
                     <div class="col">
@@ -25,19 +25,19 @@
 
         {{-- Stats Row --}}
         <div class="row g-3 mb-4">
-            {{-- Card 1: Total Pelajar --}}
+            {{-- Card 1: Total Peserta --}}
             <div class="col-sm-6 col-lg-3">
                 <a href="{{ route('pembimbing.bimbingan') }}" class="text-decoration-none">
                     <div class="card text-white bg-primary shadow-sm border-0 h-100 clickable-card">
                         <div class="card-body p-4">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div>
-                                    <p class="text-uppercase fw-semibold mb-2 opacity-75 small">Total Pelajar</p>
+                                    <p class="text-uppercase fw-semibold mb-2 opacity-75 small">Total Peserta</p>
                                     <h2 class="fw-bold mb-0 display-6">{{ $totalPelajar ?? 0 }}</h2>
                                     <p class="mb-0 small opacity-75">Peserta Bimbingan</p>
                                 </div>
-                                <div class="bg-white bg-opacity-20 rounded-circle p-3">
-                                    <i class="bi bi-users text-white fs-3"></i>
+                                <div class="bg-white bg-opacity-25 rounded-3 p-2">
+                                    <i class="bi bi-people fs-4"></i>
                                 </div>
                             </div>
                         </div>
@@ -62,8 +62,8 @@
                                     <h2 class="fw-bold mb-0 display-6">{{ $jumlahKegiatan ?? 0 }}</h2>
                                     <p class="mb-0 small opacity-75">Aktivitas Bimbingan</p>
                                 </div>
-                                <div class="bg-white bg-opacity-20 rounded-circle p-3">
-                                    <i class="bi bi-tasks text-white fs-3"></i>
+                                <div class="bg-white bg-opacity-20 rounded-circle p-1">
+                                    <i class="bi bi-list-task text-primary fs-5"></i>
                                 </div>
                             </div>
                         </div>
@@ -86,10 +86,10 @@
                                 <div>
                                     <p class="text-uppercase fw-semibold mb-2 opacity-75 small">Presensi Hari Ini</p>
                                     <h2 class="fw-bold mb-0 display-6">{{ $presensiHariIni ?? 0 }}</h2>
-                                    <p class="mb-0 small opacity-75">Kehadiran Pelajar</p>
+                                    <p class="mb-0 small opacity-75">Kehadiran Peserta</p>
                                 </div>
-                                <div class="bg-white bg-opacity-20 rounded-circle p-3">
-                                    <i class="bi bi-clipboard-check text-white fs-3"></i>
+                                <div class="bg-white bg-opacity-20 rounded-circle p-1">
+                                    <i class="bi bi-calendar-check text-primary fs-5"></i>
                                 </div>
                             </div>
                         </div>
@@ -114,8 +114,8 @@
                                     <h2 class="fw-bold mb-0 display-6">{{ $laporanMenunggu ?? 0 }}</h2>
                                     <p class="mb-0 small opacity-75">Perlu Verifikasi</p>
                                 </div>
-                                <div class="bg-white bg-opacity-20 rounded-circle p-3">
-                                    <i class="bi bi-file-alt text-white fs-3"></i>
+                                <div class="bg-white bg-opacity-20 rounded-circle p-1">
+                                    <i class="bi bi-file-earmark-check text-primary fs-5"></i>
                                 </div>
                             </div>
                         </div>
@@ -138,7 +138,7 @@
                     <div class="card-header bg-primary text-white border-0 py-3">
                         <div class="d-flex justify-content-between align-items-center">
                             <h5 class="fw-bold mb-0 text-white">
-                                <i class="bi bi-clipboard-list me-2"></i>
+                                <i class="bi bi-journal-text me-2"></i>
                                 Laporan Kegiatan Terbaru
                             </h5>
                             <a href="{{ route('pembimbing.kegiatan') }}" class="btn btn-light btn-sm">
@@ -152,7 +152,7 @@
                                 <table class="table table-hover align-middle mb-0">
                                     <thead class="table-info">
                                         <tr class="text-center">
-                                            <th class="py-3 px-3 text-dark fw-semibold">Pelajar</th>
+                                            <th class="py-3 px-3 text-dark fw-semibold">Peserta</th>
                                             <th class="py-3 px-3 text-dark fw-semibold">Tanggal</th>
                                             <th class="py-3 px-3 text-dark fw-semibold">Judul</th>
                                             <th class="py-3 px-3 text-dark fw-semibold">Status</th>
@@ -205,7 +205,7 @@
                 <div class="card border-0 shadow-sm mb-4">
                     <div class="card-header bg-primary text-white border-0 py-3">
                         <h5 class="fw-bold mb-0 text-white">
-                            <i class="bi bi-bolt me-2"></i>
+                            <i class="bi bi-lightning me-1"></i>
                             Akses Cepat
                         </h5>
                     </div>
@@ -215,11 +215,11 @@
                                 class="btn btn-outline-primary text-start py-3">
                                 <div class="d-flex align-items-center">
                                     <div class="bg-primary bg-opacity-10 rounded p-2 me-3">
-                                        <i class="bi bi-users text-primary"></i>
+                                        <i class="bi bi-people text-primary"></i>
                                     </div>
 
                                     <div>
-                                        <div class="fw-bold">Kelola Pelajar</div>
+                                        <div class="fw-bold">Kelola Peserta</div>
                                         <small class="text-muted">Lihat daftar peserta bimbingan</small>
                                     </div>
                                 </div>
@@ -228,7 +228,7 @@
                             <a href="{{ route('pembimbing.kegiatan') }}" class="btn btn-outline-success text-start py-3">
                                 <div class="d-flex align-items-center">
                                     <div class="bg-success bg-opacity-10 rounded p-2 me-3">
-                                        <i class="bi bi-tasks text-success"></i>
+                                        <i class="bi bi-list-task text-success"></i>
                                     </div>
                                     <div>
                                         <div class="fw-bold">Kelola Kegiatan</div>
@@ -244,7 +244,7 @@
                                     </div>
                                     <div>
                                         <div class="fw-bold">Kelola Presensi</div>
-                                        <small class="text-muted">Monitor kehadiran pelajar</small>
+                                        <small class="text-muted">Monitor kehadiran peserta</small>
                                     </div>
                                 </div>
                             </a>
@@ -252,7 +252,7 @@
                             <a href="{{ route('pembimbing.laporan') }}" class="btn btn-outline-info text-start py-3">
                                 <div class="d-flex align-items-center">
                                     <div class="bg-info bg-opacity-10 rounded p-2 me-3">
-                                        <i class="bi bi-file-alt text-info"></i>
+                                        <i class="bi bi-file-earmark-check text-info"></i>
                                     </div>
                                     <div>
                                         <div class="fw-bold">Verifikasi Laporan</div>
@@ -268,7 +268,7 @@
                 <div class="card border-0 shadow-sm">
                     <div class="card-header bg-primary border-bottom py-3">
                         <h5 class="fw-bold mb-0 text-light">
-                            <i class="bi bi-info-circle me-2 text-primary"></i>
+                            <i class="bi bi-info-circle me-2 text-white"></i>
                             Informasi Detail
                         </h5>
                     </div>
@@ -278,7 +278,7 @@
                                 <i class="bi bi-lightbulb text-info me-3 fs-5"></i>
                                 <div>
                                     <strong class="d-block mb-1">Tips Bimbingan</strong>
-                                    <small>Periksa laporan kegiatan pelajar secara berkala untuk memastikan progres
+                                    <small>Periksa laporan kegiatan peserta secara berkala untuk memastikan progres
                                         bimbingan berjalan lancar.</small>
                                 </div>
                             </div>
@@ -286,7 +286,7 @@
 
                         <div class="alert alert-warning border-0 mb-0" role="alert">
                             <div class="d-flex">
-                                <i class="bi bi-clock text-warning me-3 fs-5"></i>
+                                <i class="bi bi-alarm text-warning me-3 fs-5"></i>
                                 <div>
                                     <strong class="d-block mb-1">Pengingat</strong>
                                     <small>Verifikasi laporan akhir tepat waktu untuk kelancaran administrasi.</small>

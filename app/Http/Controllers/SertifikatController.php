@@ -32,7 +32,7 @@ class SertifikatController extends Controller
             'status' => 'selesai' // ← supaya sertifikat muncul di siswa
         ]);
 
-        // === KIRIM NOTIFIKASI KE PELAJAR ===
+        // === KIRIM NOTIFIKASI KE PESERTA ===
         $pelajarUser = \App\Models\User::find($laporan->user_id);
 
         if ($pelajarUser) {

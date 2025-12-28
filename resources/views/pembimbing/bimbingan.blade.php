@@ -8,7 +8,7 @@
                 <div class="d-flex align-items-center mb-3">
                     <div class="me-3">
                         <div class="bg-primary rounded p-2">
-                            <i class="bi bi-users text-white fs-4"></i>
+                            <i class="bi bi-person text-white fs-4"></i>
                         </div>
                     </div>
                     <div>
@@ -136,7 +136,7 @@
                                                 <!-- Personal Information -->
                                                 <div class="mb-4">
                                                     <h6 class="text-primary fw-bold mb-3 pb-2 border-bottom">
-                                                        <i class="bi bi-user me-2"></i>Informasi Pribadi
+                                                        <i class="bi bi-person me-2"></i>Informasi Pribadi
                                                     </h6>
                                                     <div class="row g-3">
                                                         <div class="col-md-6">
@@ -198,7 +198,7 @@
                                                 <!-- Academic Information -->
                                                 <div class="mb-4">
                                                     <h6 class="text-primary fw-bold mb-3 pb-2 border-bottom">
-                                                        <i class="bi bi-graduation-cap me-2"></i>Informasi Akademik
+                                                        <i class="bi bi-mortarboard me-2"></i>Informasi Akademik
                                                     </h6>
                                                     <div class="row g-3">
                                                         <div class="col-md-6">
@@ -231,7 +231,7 @@
                                                 <!-- Schedule Information -->
                                                 <div class="mb-4">
                                                     <h6 class="text-primary fw-bold mb-3 pb-2 border-bottom">
-                                                        <i class="bi bi-calendar-alt me-2"></i>Jadwal Bimbingan
+                                                        <i class="bi bi-calendar-week me-2"></i>Jadwal Bimbingan
                                                     </h6>
                                                     <div class="row g-3">
                                                         <div class="col-md-6">
@@ -252,7 +252,7 @@
                                                 <!-- Documents -->
                                                 <div>
                                                     <h6 class="text-primary fw-bold mb-3 pb-2 border-bottom">
-                                                        <i class="bi bi-file-alt me-2"></i>Dokumen
+                                                        <i class="bi bi-file-earmark-check me-2"></i>Dokumen
                                                     </h6>
                                                     <div class="row g-3">
                                                         <div class="col-md-6">
@@ -309,7 +309,7 @@
 
                                             <div class="modal-footer bg-light py-3">
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                                    <i class="bi bi-times me-1"></i> Tutup
+                                                    <i class="bi bi-x-circle me-1"></i> Tutup
                                                 </button>
                                             </div>
                                         </div>

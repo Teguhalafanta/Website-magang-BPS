@@ -226,7 +226,7 @@ class DashboardController extends Controller
         $user = Auth::user();
         $pelajar = $user->pelajar;
 
-        // Cek apakah pelajar sudah terdaftar
+        // Cek apakah peserta sudah terdaftar
         if (!$pelajar) {
             return view('dashboard.pelajar')->with('warning', 'Silakan lengkapi data profil terlebih dahulu');
         }
@@ -335,7 +335,7 @@ class DashboardController extends Controller
     {
         $user = Auth::user();
 
-        // Ambil semua user_id dari pelajar yang dibimbing pembimbing ini
+        // Ambil semua user_id dari peserta yang dibimbing pembimbing ini
         $userIds = Pelajar::where('pembimbing_id', $user->pembimbing->id ?? null)
             ->pluck('user_id')
             ->filter()

@@ -43,7 +43,7 @@ class PengajuanController extends Controller
 
         $pengajuan->save();
 
-        // 🔔 Kirim notifikasi ke pelajar
+        // 🔔 Kirim notifikasi ke peserta
         if ($pengajuan->user) {
             if ($request->status === 'disetujui') {
                 $pesan = "Pengajuan magang kamu telah disetujui.";
@@ -54,7 +54,7 @@ class PengajuanController extends Controller
 
             $pengajuan->user->notify(new \App\Notifications\NotifikasiBaru(
                 $pesan,
-                route('pelajar.pengajuan.index') // arahkan ke halaman daftar pengajuan pelajar
+                route('pelajar.pengajuan.index') // arahkan ke halaman daftar pengajuan peserta
             ));
         }
 

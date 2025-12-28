@@ -37,7 +37,7 @@
                                         class="text-danger">*</span></label>
                                 <input type="text" name="nama" class="form-control" value="{{ old('nama') }}"
                                     placeholder="Contoh: Teguh Alafanta" required>
-                                <small class="text-muted">Sesuai KTP/Kartu Pelajar</small>
+                                <small class="text-muted">Sesuai KTP/Kartu Peserta</small>
                             </div>
 
                             {{-- Jenis Kelamin --}}
@@ -67,7 +67,7 @@
                                         class="text-danger">*</span></label>
                                 <input type="date" name="tanggal_lahir" class="form-control"
                                     value="{{ old('tanggal_lahir') }}" required>
-                                <small class="text-muted">Sesuai KTP/Kartu Pelajar</small>
+                                <small class="text-muted">Sesuai KTP/Kartu Peserta</small>
                             </div>
 
                             {{-- Alamat --}}

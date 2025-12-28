@@ -72,7 +72,7 @@ class ProdukMagangController extends Controller
 
         $pembimbingUser->notify(
             new \App\Notifications\NotifikasiBaru(
-                "Pelajar {$user->pelajar->nama} telah mengunggah produk magang.",
+                "Peserta {$user->pelajar->nama} telah mengunggah produk magang.",
                 route('pembimbing.produk.index')
             )
         );
@@ -85,7 +85,7 @@ class ProdukMagangController extends Controller
         $user = Auth::user();
         $produk = ProdukMagang::findOrFail($id);
 
-        // Hanya pelajar pemilik file atau admin yang boleh edit
+        // Hanya peserta pemilik file atau admin yang boleh edit
         if ($user->role === 'pelajar' && $produk->pelajar_id !== $user->pelajar->id) {
             abort(403, 'Tidak diizinkan!');
         }
@@ -134,7 +134,7 @@ class ProdukMagangController extends Controller
         $user = Auth::user();
         $produk = ProdukMagang::findOrFail($id);
 
-        // Hanya pelajar pemilik file atau admin
+        // Hanya peserta pemilik file atau admin
         if ($user->role === 'pelajar' && $produk->pelajar_id !== $user->pelajar->id) {
             abort(403, 'Tidak diizinkan!');
         }

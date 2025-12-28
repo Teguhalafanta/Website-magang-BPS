@@ -316,10 +316,10 @@
                 </div>
             </div>
 
-            {{-- Tab 2: Per Pelajar --}}
+            {{-- Tab 2: Per Peserta --}}
             <div class="tab-pane fade" id="perpelajar" role="tabpanel">
                 @php
-                    // Group presensi by pelajar
+                    // Group presensi by peserta
                     $presensiPerPelajar = $presensis->groupBy('pelajar_id')->map(function ($items) {
                         $pelajar = $items->first()->pelajar;
                         return [
@@ -458,7 +458,7 @@
                         @else
                             <div class="text-center py-5">
                                 <i class="bi bi-people text-muted" style="font-size: 3rem;"></i>
-                                <p class="text-muted mt-3 mb-0">Belum ada data presensi pelajar</p>
+                                <p class="text-muted mt-3 mb-0">Belum ada data presensi peserta</p>
                             </div>
                         @endif
                     </div>

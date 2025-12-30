@@ -21,6 +21,7 @@ use App\Http\Controllers\Admin\LaporanController as AdminLaporanController;
 use App\Http\Controllers\Admin\PelajarController as AdminPelajarController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\AdminUserController;
+use App\Http\Controllers\PembimbingProfileController;
 
 // ================== GUEST ==================
 Route::middleware('guest')->group(function () {
@@ -144,6 +145,13 @@ Route::middleware(['auth'])->group(function () {
 
         // ====================== PRODUK MAGANG ======================
         Route::get('/produk', [ProdukMagangController::class, 'index'])->name('produk.index');
+
+        // ====================== PROFILE PEMBIMBING ======================
+        Route::get('/profile/create', [PembimbingProfileController::class, 'create'])
+            ->name('profile.create');
+
+        Route::post('/profile/store', [PembimbingProfileController::class, 'store'])
+            ->name('profile.store');
     });
 
 

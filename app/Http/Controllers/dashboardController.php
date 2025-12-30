@@ -334,9 +334,15 @@ class DashboardController extends Controller
     public function pembimbing()
     {
         $user = Auth::user();
+        $pembimbing = $user->pembimbing;
+
+        if (!$pembimbing) {
+            return view('pembimbing.dashboard')
+                ->with('warning', 'Silakan lengkapi data profil pembimbing terlebih dahulu');
+        }
 
         // Ambil semua user_id dari pelajar yang dibimbing pembimbing ini
-        $userIds = Pelajar::where('pembimbing_id', $user->pembimbing->id ?? null)
+        $userIds = Pelajar::where('pembimbing_id', $user->pembimbing->id)
             ->pluck('user_id')
             ->filter()
             ->toArray();
@@ -346,7 +352,7 @@ class DashboardController extends Controller
         }
 
         // Statistik utama
-        $totalMahasiswa = Pelajar::where('pembimbing_id', $user->pembimbing->id ?? null)->count();
+        $totalMahasiswa = Pelajar::where('pembimbing_id', $user->pembimbing->id)->count();
 
         $pendingBimbingan = Kegiatan::whereIn('user_id', $userIds)
             ->whereIn('status_penyelesaian', ['Belum Dimulai', 'Dalam Proses'])
@@ -409,7 +415,7 @@ class DashboardController extends Controller
             });
 
         // Progress mahasiswa bimbingan
-        $mahasiswaBimbingan = Pelajar::where('pembimbing_id', $user->pembimbing->id ?? null)
+        $mahasiswaBimbingan = Pelajar::where('pembimbing_id', $user->pembimbing->id)
             ->with('user')
             ->get()
             ->map(function ($pelajar) {

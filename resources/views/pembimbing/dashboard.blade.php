@@ -1,7 +1,30 @@
 @extends('kerangka.master')
 
 @section('content')
-    <div class="container py-4">
+<div class="container py-4">
+
+    {{-- JIKA PROFIL PEMBIMBING BELUM ADA --}}
+    @if (!Auth::user()->pembimbing)
+
+        <div class="alert alert-warning border-0 shadow-sm mb-4">
+            <div class="d-flex align-items-center">
+                <i class="bi bi-exclamation-triangle-fill fs-4 me-3"></i>
+                <div class="flex-grow:1">
+                    <h5 class="fw-bold mb-1">Profil Pembimbing Belum Lengkap</h5>
+                    <p class="mb-0">
+                        Anda wajib melengkapi data profil pembimbing sebelum dapat
+                        mengakses dashboard dan fitur bimbingan.
+                    </p>
+                </div>
+            </div>
+            <div class="mt-3">
+                <a href="{{ route('pembimbing.profile.create') }}" class="btn btn-primary">
+                    <i class="bi bi-plus-circle me-2"></i>Lengkapi Profil Sekarang
+                </a>
+            </div>
+        </div>
+
+    @else
         {{-- Welcome Card --}}
         <div class="card border-0 shadow-sm mb-4 bg-primary bg-opacity-10">
             <div class="card-body py-4">
@@ -15,8 +38,7 @@
                         <h3 class="fw-bold mb-1 text-dark">Dashboard Pembimbing</h3>
                         <p class="text-muted mb-0">
                             Selamat datang kembali,
-                            <strong
-                                class="text-primary">{{ Auth::user()->pembimbing->nama ?? Auth::user()->username }}</strong>
+                            <strong class="text-primary">{{ optional(Auth::user()->pembimbing)->nama ?? Auth::user()->username }}</strong>
                         </p>
                     </div>
                 </div>
@@ -162,11 +184,13 @@
                                     <tbody>
                                         @foreach ($laporanTerbaru as $laporan)
                                             <tr class="text-center">
-                                                <td class="py-3 px-3 fw-medium text-start">{{ $laporan->pelajar->nama ?? '-' }}</td>
+                                                <td class="py-3 px-3 fw-medium text-start">
+                                                    {{ $laporan->pelajar->nama ?? '-' }}</td>
                                                 <td class="py-3 px-3 text-muted">
                                                     {{ $laporan->waktu ?? \Carbon\Carbon::parse($laporan->tanggal)->format('d/m/Y') }}
                                                 </td>
-                                                <td class="py-3 px-3 text-start">{{ Str::limit($laporan->topik ?? '-', 35) }}</td>
+                                                <td class="py-3 px-3 text-start">
+                                                    {{ Str::limit($laporan->topik ?? '-', 35) }}</td>
                                                 <td class="py-3 px-3">
                                                     @if ($laporan->status == 'Belum Dimulai')
                                                         <span class="badge bg-warning text-dark">Belum Dimulai</span>
@@ -180,7 +204,7 @@
                                                 </td>
                                                 <td class="py-3 px-3 text-center">
                                                     <a href="{{ route('pembimbing.kegiatan') }}"
-                                                        class="btn btn-sm btn-outline-primary" title="Lihat ">
+                                                        class="btn btn-sm btn-outline-primary" title="Lihat">
                                                         <i class="bi bi-eye"></i>
                                                     </a>
                                                 </td>
@@ -217,7 +241,6 @@
                                     <div class="bg-primary bg-opacity-10 rounded p-2 me-3">
                                         <i class="bi bi-users text-primary"></i>
                                     </div>
-
                                     <div>
                                         <div class="fw-bold">Kelola Pelajar</div>
                                         <small class="text-muted">Lihat daftar peserta bimbingan</small>
@@ -297,78 +320,76 @@
                 </div>
             </div>
         </div>
-    </div>
+    @endif
+</div>
+@endsection
 
-    {{-- Custom CSS untuk Hover Effect --}}
-    <style>
-        .clickable-card {
-            transition: all 0.3s ease;
-            cursor: pointer;
-            border: none;
-        }
+{{-- Custom CSS untuk Hover Effect --}}
+@section('styles')
+<style>
+    .clickable-card {
+        transition: all 0.3s ease;
+        cursor: pointer;
+        border: none;
+    }
 
-        .clickable-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.15) !important;
-        }
+    .clickable-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.15) !important;
+    }
 
-        .clickable-card:active {
-            transform: translateY(-2px);
-        }
+    .clickable-card:active {
+        transform: translateY(-2px);
+    }
 
-        /* Smooth transition for all cards */
-        .clickable-card .card-body,
-        .clickable-card .card-footer {
-            transition: all 0.3s ease;
-        }
+    .clickable-card .card-body,
+    .clickable-card .card-footer {
+        transition: all 0.3s ease;
+    }
 
-        /* Card header styling */
-        .card-header {
-            border-radius: 0.5rem 0.5rem 0 0 !important;
-        }
+    .card-header {
+        border-radius: 0.5rem 0.5rem 0 0 !important;
+    }
 
-        /* Table styling */
-        .table th {
-            font-weight: 600;
-            border: none;
-        }
+    .table th {
+        font-weight: 600;
+        border: none;
+    }
 
-        .table td {
-            border-color: #f8f9fa;
-        }
+    .table td {
+        border-color: #f8f9fa;
+    }
 
-        /* Button styling */
-        .btn-outline-primary,
-        .btn-outline-success,
-        .btn-outline-warning,
-        .btn-outline-info {
-            border: 1px solid;
-            transition: all 0.3s ease;
-        }
+    .btn-outline-primary,
+    .btn-outline-success,
+    .btn-outline-warning,
+    .btn-outline-info {
+        border: 1px solid;
+        transition: all 0.3s ease;
+    }
 
-        .btn-outline-primary:hover {
-            background-color: #0d6efd;
-            color: white;
-        }
+    .btn-outline-primary:hover {
+        background-color: #0d6efd;
+        color: white;
+    }
 
-        .btn-outline-success:hover {
-            background-color: #198754;
-            color: white;
-        }
+    .btn-outline-success:hover {
+        background-color: #198754;
+        color: white;
+    }
 
-        .btn-outline-warning:hover {
-            background-color: #ffc107;
-            color: black;
-        }
+    .btn-outline-warning:hover {
+        background-color: #ffc107;
+        color: black;
+    }
 
-        .btn-outline-info:hover {
-            background-color: #0dcaf0;
-            color: white;
-        }
+    .btn-outline-info:hover {
+        background-color: #0dcaf0;
+        color: white;
+    }
 
-        /* Alert styling */
-        .alert {
-            border-radius: 0.5rem;
-        }
-    </style>
+    .alert {
+        border-radius: 0.5rem;
+    }
+</style>
 @endsection

@@ -128,7 +128,7 @@
                                                 @csrf
                                                 <select name="pembimbing_id" class="form-select form-select-sm flex-1"
                                                     required>
-                                                    <option value="">-- Pilih Pembimbing --</option>
+                                                    <option value="" disabled selected>-- Pilih Pembimbing --</option>
                                                     @foreach ($pembimbings as $pembimbing)
                                                         <option value="{{ $pembimbing->id }}"
                                                             {{ $pelajar->pembimbing_id == $pembimbing->id ? 'selected' : '' }}>

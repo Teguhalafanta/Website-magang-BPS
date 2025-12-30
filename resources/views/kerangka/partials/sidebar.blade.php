@@ -315,48 +315,106 @@
 
                         {{-- Role: Pembimbing --}}
                     @elseif(auth()->user()->role == 'pembimbing')
-                        <li class="sidebar-item {{ request()->routeIs('pembimbing.dashboard') ? 'active' : '' }}">
-                            <a href="{{ route('pembimbing.dashboard') }}" class="sidebar-link">
-                                <i class="bi bi-speedometer2"></i>
-                                <span>Dashboard</span>
-                            </a>
+                        @php
+                            $sudahIsiProfil = auth()->user()->pembimbing !== null;
+                        @endphp
+
+                        <li
+                            class="sidebar-item {{ $sudahIsiProfil && request()->routeIs('pembimbing.dashboard') ? 'active' : '' }}">
+                            @if ($sudahIsiProfil)
+                                <a href="{{ route('pembimbing.dashboard') }}" class="sidebar-link">
+                                    <i class="bi bi-speedometer2"></i>
+                                    <span>Dashboard</span>
+                                </a>
+                            @else
+                                <a class="sidebar-link disabled" href="javascript:void(0)">
+                                    <i class="bi bi-speedometer2"></i>
+                                    <span>Dashboard</span>
+                                    <i class="bi bi-lock-fill ms-auto"></i>
+                                </a>
+                            @endif
                         </li>
 
-                        <li class="sidebar-item {{ request()->routeIs('pembimbing.bimbingan') ? 'active' : '' }}">
-                            <a href="{{ route('pembimbing.bimbingan') }}" class="sidebar-link">
-                                <i class="bi bi-people"></i>
-                                <span>Bimbingan</span>
-                            </a>
+                        <li
+                            class="sidebar-item {{ $sudahIsiProfil && request()->routeIs('pembimbing.bimbingan') ? 'active' : '' }}">
+                            @if ($sudahIsiProfil)
+                                <a href="{{ route('pembimbing.bimbingan') }}" class="sidebar-link">
+                                    <i class="bi bi-people"></i>
+                                    <span>Bimbingan</span>
+                                </a>
+                            @else
+                                <a class="sidebar-link disabled" href="javascript:void(0)">
+                                    <i class="bi bi-people"></i>
+                                    <span>Bimbingan</span>
+                                    <i class="bi bi-lock-fill ms-auto"></i>
+                                </a>
+                            @endif
                         </li>
 
-                        <li class="sidebar-item {{ request()->routeIs('pembimbing.kegiatan') ? 'active' : '' }}">
-                            <a href="{{ route('pembimbing.kegiatan') }}" class="sidebar-link">
-                                <i class="bi bi-journal-text"></i>
-                                <span>Laporan Kegiatan</span>
-                            </a>
+                        <li
+                            class="sidebar-item {{ $sudahIsiProfil && request()->routeIs('pembimbing.kegiatan') ? 'active' : '' }}">
+                            @if ($sudahIsiProfil)
+                                <a href="{{ route('pembimbing.kegiatan') }}" class="sidebar-link">
+                                    <i class="bi bi-journal-text"></i>
+                                    <span>Laporan Kegiatan</span>
+                                </a>
+                            @else
+                                <a class="sidebar-link disabled" href="javascript:void(0)">
+                                    <i class="bi bi-journal-text"></i>
+                                    <span>Laporan Kegiatan</span>
+                                    <i class="bi bi-lock-fill ms-auto"></i>
+                                </a>
+                            @endif
                         </li>
 
-                        <li class="sidebar-item {{ request()->routeIs('pembimbing.presensi') ? 'active' : '' }}">
-                            <a href="{{ route('pembimbing.presensi') }}" class="sidebar-link">
-                                <i class="bi bi-clipboard-check"></i>
-                                <span>Presensi</span>
-                            </a>
+                        <li
+                            class="sidebar-item {{ $sudahIsiProfil && request()->routeIs('pembimbing.presensi') ? 'active' : '' }}">
+                            @if ($sudahIsiProfil)
+                                <a href="{{ route('pembimbing.presensi') }}" class="sidebar-link">
+                                    <i class="bi bi-clipboard-check"></i>
+                                    <span>Presensi</span>
+                                </a>
+                            @else
+                                <a class="sidebar-link disabled" href="javascript:void(0)">
+                                    <i class="bi bi-clipboard-check"></i>
+                                    <span>Presensi</span>
+                                    <i class="bi bi-lock-fill ms-auto"></i>
+                                </a>
+                            @endif
                         </li>
 
-                        <li class="sidebar-item {{ request()->routeIs('pembimbing.laporan') ? 'active' : '' }}">
-                            <a href="{{ route('pembimbing.laporan') }}" class="sidebar-link">
-                                <i class="bi bi-file-earmark-check"></i>
-                                <span>Verifikasi Laporan Akhir</span>
-                            </a>
+                        <li
+                            class="sidebar-item {{ $sudahIsiProfil && request()->routeIs('pembimbing.laporan') ? 'active' : '' }}">
+                            @if ($sudahIsiProfil)
+                                <a href="{{ route('pembimbing.laporan') }}" class="sidebar-link">
+                                    <i class="bi bi-file-earmark-check"></i>
+                                    <span>Verifikasi Laporan Akhir</span>
+                                </a>
+                            @else
+                                <a class="sidebar-link disabled" href="javascript:void(0)">
+                                    <i class="bi bi-file-earmark-check"></i>
+                                    <span>Verifikasi Laporan Akhir</span>
+                                    <i class="bi bi-lock-fill ms-auto"></i>
+                                </a>
+                            @endif
                         </li>
 
-
-                        <li class="sidebar-item {{ request()->routeIs('pembimbing.produk.*') ? 'active' : '' }}">
-                            <a href="{{ route('pembimbing.produk.index') }}" class="sidebar-link">
-                                <i class="bi bi-archive"></i>
-                                <span>Produk Magang</span>
-                            </a>
+                        <li
+                            class="sidebar-item {{ $sudahIsiProfil && request()->routeIs('pembimbing.produk.*') ? 'active' : '' }}">
+                            @if ($sudahIsiProfil)
+                                <a href="{{ route('pembimbing.produk.index') }}" class="sidebar-link">
+                                    <i class="bi bi-archive"></i>
+                                    <span>Produk Magang</span>
+                                </a>
+                            @else
+                                <a class="sidebar-link disabled" href="javascript:void(0)">
+                                    <i class="bi bi-archive"></i>
+                                    <span>Produk Magang</span>
+                                    <i class="bi bi-lock-fill ms-auto"></i>
+                                </a>
+                            @endif
                         </li>
+
 
 
                         {{-- Role Lain --}}

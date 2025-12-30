@@ -16,7 +16,7 @@ class Pembimbing extends Model
         'nip',
         'nama',
         'jabatan',
-        'instansi',
+        'tim',
         'no_telp',
         'email',
         'foto',
@@ -26,7 +26,7 @@ class Pembimbing extends Model
     {
         return $this->belongsTo(User::class);
     }
-    
+
     public function pelajars()
     {
         return $this->hasMany(Pelajar::class, 'pembimbing_id');

@@ -199,7 +199,7 @@
                             <i class="bi bi-info-circle me-2"></i>Panduan Upload Laporan
                         </h5>
                     </div>
-                    <div class="card-body">
+                    <div class="card-body p-4">
                         <div class="row g-4">
                             <div class="col-md-6">
                                 <div class="bps-guide-item">
@@ -208,7 +208,7 @@
                                     </div>
                                     <div class="guide-content">
                                         <h6>Format File</h6>
-                                        <p class="mb-0">Gunakan format PDF dengan ukuran maksimal 2MB</p>
+                                        <p class="mb-0">Gunakan format PDF dengan ukuran maksimal 10MB</p>
                                     </div>
                                 </div>
                             </div>

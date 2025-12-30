@@ -251,7 +251,7 @@
                                     <label for="tim_kerja" class="form-label bps-label">Tim Kerja</label>
                                     <select class="form-select bps-input" id="tim_kerja" name="tim_kerja">
                                         <option value="">-- Pilih Tim --</option>
-                                        <option value="TIM UMUM">TIM UMUM</option>
+                                        <option value="Tim Umum">Tim Umum</option>
                                         <option value="Tim Statistik Sosial">Tim Statistik Sosial</option>
                                         <option value="Tim Statistik Produksi">Tim Statistik Produksi</option>
                                         <option value="Tim Statistik Harga, Distribusi dan Jasa">Tim Statistik Harga,

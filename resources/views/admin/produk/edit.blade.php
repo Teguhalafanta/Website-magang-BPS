@@ -4,17 +4,9 @@
     <div class="container py-2">
         <div class="row mb-4">
             <div class="col">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ route('admin.produk.index') }}"
-                                class="text-decoration-none">Kelola Produk</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Edit Produk</li>
-                    </ol>
-                </nav>
                 <h3 class="fw-bold text-primary">
                     <i class="bi bi-pencil-square me-2"></i>Edit Produk Magang
                 </h3>
-                <p class="text-muted">Ubah informasi produk magang pelajar sebagai administrator</p>
             </div>
         </div>
 
@@ -25,7 +17,7 @@
                     <div class="card-body bg-light">
                         <div class="row g-3">
                             <div class="col-md-6">
-                                <small class="text-muted d-block">Pelajar:</small>
+                                <small class="text-muted d-block">Peserta:</small>
                                 <div class="d-flex align-items-center mt-1">
                                     <div class="avatar-circle bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-2"
                                         style="width: 30px; height: 30px;">
@@ -111,7 +103,7 @@
                                     <i class="bi bi-exclamation-triangle me-2 mt-1"></i>
                                     <small>
                                         <strong>Catatan:</strong> File produk tidak dapat diubah melalui form ini.
-                                        Pelajar harus mengupload ulang jika ingin mengganti file.
+                                        Peserta harus mengupload ulang jika ingin mengganti file.
                                     </small>
                                 </div>
                             </div>
@@ -138,7 +130,7 @@
                         </h6>
                         <ul class="mb-0 small text-muted">
                             <li>Dapat mengubah nama dan deskripsi produk</li>
-                            <li>Tidak dapat mengubah file produk (hanya pelajar yang bisa)</li>
+                            <li>Tidak dapat mengubah file produk (hanya peserta yang bisa)</li>
                             <li>Perubahan akan tercatat dalam sistem</li>
                             <li>Pastikan perubahan sesuai dengan kebijakan institusi</li>
                         </ul>

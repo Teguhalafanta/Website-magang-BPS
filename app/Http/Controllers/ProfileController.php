@@ -14,12 +14,12 @@ class ProfileController extends Controller
      */
     public function show()
     {
-        // ambil user dari database lengkap dengan relasi pelajar
+        // ambil user dari database lengkap dengan relasi peserta
         $user = \App\Models\User::with('pelajar')->findOrFail(Auth::id());
 
         $data = null;
 
-        // jika role pelajar
+        // jika role peserta
         if ($user->role === 'pelajar') {
             $data = $user->pelajar;
         }
@@ -49,7 +49,7 @@ class ProfileController extends Controller
             'telepon' => 'nullable|string|max:20',
         ]);
 
-        // Jika user adalah pelajar → update tabel pelajar
+        // Jika user adalah peserta → update tabel peserta
         if ($user->role === 'pelajar' && $user->pelajar) {
             $user->pelajar->update([
                 'nama' => $request->nama,
@@ -102,7 +102,7 @@ class ProfileController extends Controller
 
         $user = User::with('pelajar')->findOrFail(Auth::id());
 
-        // hanya pelajar yang punya data magang
+        // hanya peserta yang punya data magang
         if ($user->role == 'pelajar' && $user->pelajar) {
             $user->pelajar->update([
                 'rencana_mulai'   => $request->rencana_mulai,

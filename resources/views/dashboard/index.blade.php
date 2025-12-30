@@ -5,13 +5,13 @@
         <h3 class="fw-bold mb-3">Dashboard BPS</h3>
 
         <div class="row">
-            {{-- Total Pelajar --}}
+            {{-- Total Peserta --}}
             <div class="col-md-3 mb-3">
                 <a href="{{ route('pengajuan.index') }}" class="text-decoration-none">
                     <div class="card text-white bg-primary shadow">
                         <div class="card-body d-flex justify-content-between align-items-center">
                             <div>
-                                <h5>Total Pelajar</h5>
+                                <h5>Total Peserta</h5>
                                 <h3>{{ $jumlahPelajar }}</h3>
                             </div>
                             <i class="bi bi-people-fill fs-2"></i>

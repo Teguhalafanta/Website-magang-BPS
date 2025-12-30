@@ -58,7 +58,7 @@ class PelajarController extends Controller
             $suratPath = $request->file('surat_pengajuan')->store('surat_pengajuan', 'public');
         }
 
-        // Simpan data pelajar
+        // Simpan data peserta
         Pelajar::create([
             'user_id'         => Auth::id(),
             'nama'            => $request->nama,
@@ -92,7 +92,7 @@ class PelajarController extends Controller
             ->with('success', 'Pengajuan magang berhasil dikirim.');
     }
 
-    // Pelajar lihat daftar pengajuan miliknya
+    // Peserta lihat daftar pengajuan miliknya
     public function index()
     {
         $pengajuans = Pelajar::where('user_id', Auth::id())
@@ -113,7 +113,7 @@ class PelajarController extends Controller
         return view('pelajar.daftar_pengajuan', compact('pengajuans'));
     }
 
-    // pelajar edit data pengajuan
+    // Peserta edit data pengajuan
     public function update(Request $request, $id)
     {
         $request->validate([
@@ -151,7 +151,7 @@ class PelajarController extends Controller
         return redirect()->route('pelajar.pengajuan.index')->with('success', 'Pengajuan berhasil diperbarui.');
     }
 
-    // pelajar hapus data pengajuan
+    // Peserta hapus data pengajuan
     public function destroy($id)
     {
         $pengajuan = Pelajar::findOrFail($id);

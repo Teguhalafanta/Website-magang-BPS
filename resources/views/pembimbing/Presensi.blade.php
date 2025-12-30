@@ -10,12 +10,12 @@
                 <div class="d-flex align-items-center mb-3">
                     <div class="me-3">
                         <div class="bg-primary rounded p-2">
-                            <i class="bi bi-clipboard-list text-white fs-4"></i>
+                            <i class="bi bi-clipboard-check text-white fs-4"></i>
                         </div>
                     </div>
                     <div>
                         <h3 class="mb-1 fw-bold text-dark">Daftar Presensi Peserta Bimbingan</h3>
-                        <p class="text-muted mb-0">Monitoring kehadiran dan aktivitas bimbingan pelajar</p>
+                        <p class="text-muted mb-0">Monitoring kehadiran dan aktivitas bimbingan peserta</p>
                     </div>
                 </div>
             </div>
@@ -66,7 +66,7 @@
                         <div class="text-center py-5">
                             <i class="bi bi-calendar-times fa-4x text-muted mb-3"></i>
                             <h5 class="text-muted">Belum Ada Presensi Hari Ini</h5>
-                            <p class="text-muted small">Belum ada pelajar yang melakukan presensi pada hari ini</p>
+                            <p class="text-muted small">Belum ada peserta yang melakukan presensi pada hari ini</p>
                         </div>
                     @else
                         <div class="row g-3">
@@ -204,10 +204,10 @@
                     <div class="col-md-4">
                         <form method="GET" action="{{ route('pembimbing.presensi') }}" id="filterForm">
                             <label for="pelajar_id" class="form-label fw-semibold mb-2">
-                                <i class="bi bi-user me-1"></i>Filter Berdasarkan Pelajar
+                                <i class="bi bi-user me-1"></i>Filter Berdasarkan Peserta
                             </label>
                             <select name="pelajar_id" id="pelajar_id" class="form-select border-2" onchange="this.form.submit()">
-                                <option value="">Semua Pelajar</option>
+                                <option value="">Semua Peserta</option>
                                 @foreach ($pelajars as $pelajar)
                                     <option value="{{ $pelajar->id }}"
                                         {{ isset($selectedPelajarId) && $selectedPelajarId == $pelajar->id ? 'selected' : '' }}>
@@ -459,8 +459,8 @@
                 @else
                     <div class="p-5 text-center">
                         <i class="bi bi-user fa-4x mb-3 opacity-50 text-muted"></i>
-                        <h5 class="text-muted mb-2">Pilih Pelajar</h5>
-                        <p class="text-muted small mb-0">Silakan pilih pelajar dari dropdown di atas untuk melihat data
+                        <h5 class="text-muted mb-2">Pilih Peserta</h5>
+                        <p class="text-muted small mb-0">Silakan pilih peserta dari dropdown di atas untuk melihat data
                             presensi lengkap</p>
                     </div>
                 @endif
@@ -488,11 +488,11 @@
                         <input type="hidden" id="pelajar_id" name="pelajar_id">
                         <input type="hidden" id="tanggal" name="tanggal">
 
-                        <!-- Info Pelajar -->
+                        <!-- Info Peserta -->
                         <div class="alert alert-info">
                             <div class="d-flex align-items-center mb-2">
                                 <i class="bi bi-user me-2"></i>
-                                <strong>Informasi Pelajar</strong>
+                                <strong>Informasi Peserta</strong>
                             </div>
                             <p class="mb-1 fw-bold" id="modal_pelajar_nama"></p>
                             <small class="text-muted">

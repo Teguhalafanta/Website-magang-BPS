@@ -64,7 +64,7 @@ class User extends Authenticatable
 
     public function isApproved()
     {
-        // Cek apakah user punya data pelajar dan statusnya disetujui
+        // Cek apakah user punya data peserta dan statusnya disetujui
         if ($this->pelajar) {
             return $this->pelajar->status === 'disetujui';
         }

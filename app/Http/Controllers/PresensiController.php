@@ -19,10 +19,10 @@ class PresensiController extends Controller
         $user = Auth::user();
 
         if ($user->role === 'pelajar') {
-            // Guard: pastikan relasi pelajar ada
+            // Guard: pastikan relasi peserta ada
             if (!$user->pelajar) {
                 Log::warning('PresensiController@index: authenticated user has no pelajar relation', ['user_id' => $user->id]);
-                abort(403, 'Akun Anda belum memiliki data pelajar. Hubungi administrator.');
+                abort(403, 'Akun Anda belum memiliki data peserta. Hubungi administrator.');
             }
 
             // Cek apakah magang sudah selesai
@@ -58,11 +58,11 @@ class PresensiController extends Controller
             $endDate = null;
 
             if ($pelajars->isNotEmpty()) {
-                // Ambil tanggal mulai dan selesai dari pelajar (sesuaikan dengan struktur database Anda)
+                // Ambil tanggal mulai dan selesai dari peserta (sesuaikan dengan struktur database Anda)
                 $startDate = $pelajars->first()->tanggal_mulai ?? now()->subMonths(3)->format('Y-m-d');
                 $endDate = $pelajars->first()->tanggal_selesai ?? now()->format('Y-m-d');
 
-                // Jika ada pelajar yang dipilih, gunakan tanggal dari pelajar tersebut
+                // Jika ada peserta yang dipilih, gunakan tanggal dari peserta tersebut
                 if ($selectedPelajarId) {
                     $selectedPelajar = \App\Models\Pelajar::find($selectedPelajarId);
                     if ($selectedPelajar) {
@@ -124,14 +124,14 @@ class PresensiController extends Controller
                 $query->whereDate('tanggal', $today);
             }
 
-            // Filter by pelajar jika ada
+            // Filter by peserta jika ada
             if (request()->has('pelajar_id')) {
                 $query->where('pelajar_id', request('pelajar_id'));
             }
 
             $presensis = $query->get();
 
-            // Untuk admin, tampilkan semua pelajar
+            // Untuk admin, tampilkan semua peserta
             $allPelajars = \App\Models\Pelajar::all();
 
             // Generate all dates untuk admin view (opsional)
@@ -196,10 +196,10 @@ class PresensiController extends Controller
     {
         $user = Auth::user();
 
-        // Guard: pastikan user memiliki relasi pelajar
+        // Guard: pastikan user memiliki relasi peserta
         if (!$user->pelajar) {
             Log::warning('PresensiController@store: attempt to store presensi but user has no pelajar relation', ['user_id' => $user->id, 'request' => $request->all()]);
-            return redirect()->route('pelajar.dashboard')->with('error', 'Akun Anda belum terdaftar sebagai pelajar.');
+            return redirect()->route('pelajar.dashboard')->with('error', 'Akun Anda belum terdaftar sebagai peserta.');
         }
 
         // PEMBATASAN: Cek apakah magang sudah selesai
@@ -269,12 +269,12 @@ class PresensiController extends Controller
                 ->with('error', 'Magang Anda sudah selesai. Tidak dapat melakukan presensi pulang.');
         }
 
-        // Untuk aksi pulang oleh pelajar, cari berdasarkan pelajar_id dan tanggal
+        // Untuk aksi pulang oleh peserta, cari berdasarkan peserta_id dan tanggal
         // (jangan mengikat ke user_id karena presensi bisa dibuat oleh pembimbing)
         if ($user->role === 'pelajar') {
             if (!$user->pelajar) {
                 Log::warning('PresensiController@update: user has no pelajar relation', ['user_id' => $user->id]);
-                return redirect()->route('pelajar.dashboard')->with('error', 'Akun Anda belum terdaftar sebagai pelajar.');
+                return redirect()->route('pelajar.dashboard')->with('error', 'Akun Anda belum terdaftar sebagai peserta.');
             }
 
             $today = Carbon::today()->toDateString();
@@ -284,7 +284,7 @@ class PresensiController extends Controller
                 ->where('tanggal', $today)
                 ->firstOrFail();
         } else {
-            // Untuk non-pelajar (should not reach here normally) fall back to previous strict check
+            // Untuk non-peserta (should not reach here normally) fall back to previous strict check
             $presensi = Presensi::where('id', $id)
                 ->where('user_id', $user->id)
                 ->whereDate('created_at', today())
@@ -410,7 +410,7 @@ class PresensiController extends Controller
             if ($pelajar->pembimbing_id !== $pembimbing->id) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Anda tidak memiliki akses untuk menambah presensi untuk pelajar ini'
+                    'message' => 'Anda tidak memiliki akses untuk menambah presensi untuk peserta ini'
                 ], 403);
             }
 
@@ -436,7 +436,7 @@ class PresensiController extends Controller
             ];
             $dbStatus = $dbStatusMap[$normalized] ?? ucfirst($normalized);
 
-            // Prevent duplicate presensi for same pelajar+tanggal
+            // Prevent duplicate presensi for same peserta+tanggal
             $exists = Presensi::where('pelajar_id', $pelajar->id)
                 ->where('tanggal', Carbon::parse($request->tanggal)->toDateString())
                 ->exists();

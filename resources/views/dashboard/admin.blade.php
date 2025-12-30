@@ -10,7 +10,7 @@
         </div>
 
         <div class="row g-3">
-            {{-- Total Pelajar --}}
+            {{-- Total Peserta --}}
             <div class="col-md-4 mb-2">
                 <a href="{{ route('admin.pengajuan.index') }}" class="text-decoration-none">
                     <div class="card text-white bg-primary shadow border-0 h-100">
@@ -120,7 +120,7 @@
                             <div>
                                 <h5 class="fw-bold mb-1" style="color: #1a202c; font-size: 1.1rem;">
                                     <i class="bi bi-pie-chart-fill text-success me-2"></i>
-                                    Distribusi Presensi Harian
+                                    Presensi Harian
                                 </h5>
                             </div>
                         </div>

@@ -28,7 +28,7 @@ class Presensi extends Model
         return $this->belongsTo(User::class);
     }
 
-    // Relasi ke Pelajar
+    // Relasi ke Peserta
     public function pelajar()
     {
         return $this->belongsTo(Pelajar::class, 'user_id', 'user_id');

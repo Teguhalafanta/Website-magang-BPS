@@ -8,7 +8,7 @@
                 auth()->user()->pelajar->status === 'ditolak' ||
                 auth()->user()->pelajar->status === null)
             <h3 class="fw-bold bps-title mb-3">
-                <i class="bi me-2"></i>Dashboard Pelajar
+                <i class="bi me-2"></i>Dashboard Peserta
             </h3>
 
             <div class="row">
@@ -84,7 +84,7 @@
             {{-- Jika pengajuan sedang menunggu persetujuan --}}
         @elseif(auth()->user()->pelajar->status === 'menunggu')
             <h3 class="fw-bold bps-title mb-3">
-                <i class="bi me-2"></i>Dashboard Pelajar
+                <i class="bi me-2"></i>Dashboard Peserta
             </h3>
 
             <div class="row">
@@ -133,12 +133,12 @@
             {{-- Jika pengajuan sudah disetujui, tampilkan dashboard normal --}}
         @else
             @php
-                // Cek apakah pelajar sudah selesai magang
+                // Cek apakah peserta sudah selesai magang
                 $isMagangSelesai = auth()->user()->pelajar->status_magang === 'selesai';
             @endphp
 
             <h3 class="fw-bold bps-title mb-3">
-                <i class="bi me-2"></i>DASHBOARD PELAJAR
+                <i class="bi me-2"></i>DASHBOARD PESERTA
             </h3>
 
             {{-- Alert jika magang sudah selesai --}}

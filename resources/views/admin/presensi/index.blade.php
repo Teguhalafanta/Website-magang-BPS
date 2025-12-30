@@ -4,7 +4,7 @@
     <div class="container py-2">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h3 class="fw-bold text-primary mb-0">
-                <i class="bi bi-calendar-check me-2"></i>Daftar Presensi Pelajar
+                <i class="bi bi-calendar-check me-2"></i>Daftar Presensi Peserta
             </h3>
         </div>
 
@@ -75,7 +75,7 @@
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="perpelajar-tab" data-bs-toggle="tab" data-bs-target="#perpelajar"
                     type="button">
-                    <i class="bi bi-people me-1"></i>Per Pelajar
+                    <i class="bi bi-people me-1"></i>Per Peserta
                 </button>
             </li>
         </ul>
@@ -119,7 +119,7 @@
                                     <thead class="table-light">
                                         <tr class="text-center">
                                             <th class="ps-3" style="width: 5%;">No</th>
-                                            <th style="width: 20%;">Pelajar</th>
+                                            <th style="width: 20%;">Peserta</th>
                                             <th style="width: 12%;">Tanggal</th>
                                             <th style="width: 12%;">Waktu Datang</th>
                                             <th style="width: 12%;">Waktu Pulang</th>
@@ -210,7 +210,7 @@
                                                         </div>
                                                         <div class="modal-body">
                                                             <div class="mb-3">
-                                                                <label class="text-muted small mb-1">Nama Pelajar</label>
+                                                                <label class="text-muted small mb-1">Nama Peserta</label>
                                                                 <p class="fw-semibold mb-0">
                                                                     {{ $presensi->pelajar->nama ?? 'N/A' }}</p>
                                                             </div>
@@ -316,10 +316,10 @@
                 </div>
             </div>
 
-            {{-- Tab 2: Per Pelajar --}}
+            {{-- Tab 2: Per Peserta --}}
             <div class="tab-pane fade" id="perpelajar" role="tabpanel">
                 @php
-                    // Group presensi by pelajar
+                    // Group presensi by peserta
                     $presensiPerPelajar = $presensis->groupBy('pelajar_id')->map(function ($items) {
                         $pelajar = $items->first()->pelajar;
                         return [
@@ -338,7 +338,7 @@
                 <div class="card shadow-sm border-0">
                     <div class="card-header bg-white border-0 py-3">
                         <h6 class="mb-0 text-muted">
-                            Total: <span class="badge bg-primary">{{ $presensiPerPelajar->count() }}</span> pelajar
+                            Total: <span class="badge bg-primary">{{ $presensiPerPelajar->count() }}</span> Peserta
                         </h6>
                     </div>
                     <div class="card-body p-0">
@@ -348,7 +348,7 @@
                                     <thead class="table-light">
                                         <tr>
                                             <th class="ps-4" style="width: 5%;">No</th>
-                                            <th style="width: 25%;">Nama Pelajar</th>
+                                            <th style="width: 25%;" class="text-center">Peserta</th>
                                             <th style="width: 10%;" class="text-center">Total</th>
                                             <th style="width: 10%;" class="text-center">Tepat Waktu</th>
                                             <th style="width: 10%;" class="text-center">Terlambat</th>
@@ -458,7 +458,7 @@
                         @else
                             <div class="text-center py-5">
                                 <i class="bi bi-people text-muted" style="font-size: 3rem;"></i>
-                                <p class="text-muted mt-3 mb-0">Belum ada data presensi pelajar</p>
+                                <p class="text-muted mt-3 mb-0">Belum ada data presensi peserta</p>
                             </div>
                         @endif
                     </div>

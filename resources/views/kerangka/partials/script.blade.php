@@ -41,7 +41,7 @@
         handleResize();
         window.addEventListener("resize", handleResize);
 
-        // Tambahan: Toggle submenu kegiatan & pelajar
+        // Tambahan: Toggle submenu kegiatan & peserta
         const menuKegiatan = document.getElementById("menu-kegiatan");
         const submenuKegiatan = document.getElementById("submenu-kegiatan");
 

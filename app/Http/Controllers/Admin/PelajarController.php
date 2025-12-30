@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 
 class PelajarController extends Controller
 {
-    // Menampilkan daftar pelajar dan form assign pembimbing
+    // Menampilkan daftar peserta dan form assign pembimbing
     public function assignView()
     {
         $pelajars = Pelajar::with('pembimbing', 'user')->get();
@@ -18,7 +18,7 @@ class PelajarController extends Controller
         return view('admin.pelajar.assignpembimbing', compact('pelajars', 'pembimbings'));
     }
 
-    // Menetapkan pembimbing ke pelajar tertentu
+    // Menetapkan pembimbing ke peserta tertentu
     public function assignPembimbing(Request $request, $id)
     {
         $request->validate([
@@ -29,6 +29,6 @@ class PelajarController extends Controller
         $pelajar->pembimbing_id = $request->pembimbing_id;
         $pelajar->save();
 
-        return redirect()->back()->with('success', 'Pembimbing berhasil ditetapkan untuk pelajar.');
+        return redirect()->back()->with('success', 'Pembimbing berhasil ditetapkan untuk peserta.');
     }
 }

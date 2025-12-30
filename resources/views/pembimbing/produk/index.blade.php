@@ -8,12 +8,12 @@
                 <div class="d-flex align-items-center mb-3">
                     <div class="me-3">
                         <div class="bg-primary rounded p-2">
-                            <i class="bi bi-box-open text-white fs-4"></i>
+                            <i class="bi bi-box-seam  text-white fs-4"></i>
                         </div>
                     </div>
                     <div>
                         <h3 class="mb-1 fw-bold text-dark">Produk Magang Peserta Bimbingan</h3>
-                        <p class="text-muted mb-0">Pantau dan kelola produk dari pelajar yang Anda bimbing</p>
+                        <p class="text-muted mb-0">Pantau dan kelola produk dari peserta yang Anda bimbing</p>
                     </div>
                 </div>
             </div>
@@ -26,7 +26,7 @@
                     <div class="text-center">
                         <i class="bi bi-inbox fa-4x text-primary opacity-50 mb-4"></i>
                         <h4 class="text-primary fw-bold mb-3">Belum Ada Produk</h4>
-                        <p class="text-muted mb-0">Belum ada produk yang diupload oleh pelajar bimbingan Anda.</p>
+                        <p class="text-muted mb-0">Belum ada produk yang diupload oleh peserta bimbingan Anda.</p>
                     </div>
                 </div>
             </div>
@@ -54,10 +54,10 @@
                         <div class="card-body p-4">
                             <div class="d-flex align-items-center">
                                 <div class="bg-white bg-opacity-10 rounded-circle p-1 me-3">
-                                    <i class="bi bi-users fa-2x text-white"></i>
+                                    <i class="bi bi-person fa-2x text-white"></i>
                                 </div>
                                 <div>
-                                    <h6 class="mb-1 text-uppercase small opacity-75">Total Pelajar</h6>
+                                    <h6 class="mb-1 text-uppercase small opacity-75">Total Peserta</h6>
                                     <h3 class="mb-0 fw-bold">{{ $produk->unique('pelajar_id')->count() }}</h3>
                                     <small class="opacity-75">Peserta aktif</small>
                                 </div>
@@ -106,7 +106,7 @@
                                     <i class="bi bi-search text-muted"></i>
                                 </span>
                                 <input type="text" class="form-control border-start-0" 
-                                        placeholder="Cari nama produk, pelajar, atau deskripsi...">
+                                        placeholder="Cari nama produk, peserta, atau deskripsi...">
                             </div>
                         </div>
                     </div>
@@ -119,7 +119,7 @@
                             <thead class="table-primary">
                                 <tr>
                                     <th class="py-3 px-3 text-center" style="width: 80px;">No</th>
-                                    <th class="py-3 px-3 text-center">Nama Pelajar</th>
+                                    <th class="py-3 px-3 text-center">Nama Peserta</th>
                                     <th class="py-3 px-3 text-center">Nama Produk</th>
                                     <th class="py-3 px-3 text-center">Deskripsi</th>
                                     <th class="py-3 px-3 text-center" style="width: 120px;">File</th>

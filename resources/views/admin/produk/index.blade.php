@@ -5,9 +5,8 @@
         <div class="row mb-3">
             <div class="col">
                 <h3 class="fw-bold text-primary">
-                    <i class="bi bi-gear-fill me-2"></i>Kelola Produk Magang Pelajar
+                    <i class="bi bi-gear-fill me-2"></i>Kelola Produk Magang Peserta
                 </h3>
-                <p class="text-muted">Manajemen dan monitoring produk magang dari seluruh pelajar</p>
             </div>
         </div>
 
@@ -36,7 +35,7 @@
                                 <i class="bi bi-people-fill fs-1 opacity-75"></i>
                             </div>
                             <div class="flex-1 ms-3">
-                                <h6 class="mb-0 text-uppercase small opacity-75">Total Pelajar</h6>
+                                <h6 class="mb-0 text-uppercase small opacity-75">Total Peserta</h6>
                                 <h3 class="mb-0 fw-bold">{{ $produk->unique('pelajar_id')->count() }}</h3>
                             </div>
                         </div>
@@ -93,24 +92,12 @@
                         <thead class="table-light">
                             <tr>
                                 <th class="text-center" style="width: 50px;">No</th>
-                                <th class="text-center" style="width: 18%;">
-                                    <i class="bi bi-person me-1"></i>Nama Pelajar
-                                </th>
-                                <th class="text-center" style="width: 20%;">
-                                    <i class="bi bi-box me-1"></i>Nama Produk
-                                </th>
-                                <th class="text-center" style="width: 25%;">
-                                    <i class="bi bi-file-text me-1"></i>Deskripsi
-                                </th>
-                                <th class="text-center" style="width: 100px;">
-                                    <i class="bi bi-download me-1"></i>File
-                                </th>
-                                <th class="text-center" style="width: 120px;">
-                                    <i class="bi bi-calendar me-1"></i>Tanggal
-                                </th>
-                                <th class="text-center" style="width: 120px;">
-                                    <i class="bi bi-gear me-1"></i>Aksi
-                                </th>
+                                <th class="text-center" style="width: 18%;">Nama Peserta</th>
+                                <th class="text-center" style="width: 20%;">Nama Produk</th>
+                                <th class="text-center" style="width: 25%;">Deskripsi</th>
+                                <th class="text-center" style="width: 100px;">File</th>
+                                <th class="text-center" style="width: 120px;">Tanggal</th>
+                                <th class="text-center" style="width: 120px;">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -232,12 +219,11 @@
                 "pageLength": 10,
                 "order": [
                     [5, "desc"]
-                ], // Sort by date (newest first)
+                ],
                 "columnDefs": [{
-                        "orderable": false,
-                        "targets": [4, 6]
-                    } // Disable sorting on file and action columns
-                ]
+                    "orderable": false,
+                    "targets": [4, 6]
+                }]
             });
         });
     </script>

@@ -33,7 +33,7 @@ class KegiatanController extends Controller
                 return view('pembimbing.kegiatan', ['kegiatans' => collect()]);
             }
 
-            // Ambil semua pelajar yang dibimbing oleh pembimbing ini
+            // Ambil semua peserta yang dibimbing oleh pembimbing ini
             $pelajarIds = Pelajar::where('pembimbing_id', $pembimbing->id)->pluck('user_id');
 
             // Kecualikan pelajar yang sudah selesai magang
@@ -41,7 +41,7 @@ class KegiatanController extends Controller
                 ->where('status_magang', 'selesai')
                 ->pluck('user_id');
 
-            // Ambil kegiatan yang dimiliki oleh pelajar-pelajar tersebut, kecuali yang sudah selesai lengkap
+            // Ambil kegiatan yang dimiliki oleh peserta-peserta tersebut, kecuali yang sudah selesai lengkap
             $kegiatans = Kegiatan::whereIn('user_id', $pelajarIds)
                 ->whereNotIn('user_id', $completedUserIds)
                 ->when($request->search, function ($query) use ($request) {
@@ -58,7 +58,7 @@ class KegiatanController extends Controller
         }
 
 
-        // Jika bukan pelajar/pembimbing
+        // Jika bukan peserta/pembimbing
         abort(403, 'Akses tidak diizinkan');
     }
 
@@ -73,8 +73,8 @@ class KegiatanController extends Controller
         $kegiatans = Kegiatan::with('pelajar')
             ->when($request->search, function ($query) use ($request) {
                 $query->where('nama_kegiatan', 'like', "%{$request->search}%")
-                    ->orWhereHas('user', function ($q) use ($request) {
-                        $q->where('name', 'like', "%{$request->search}%");
+                    ->orWhereHas('pelajar', function ($q) use ($request) {
+                        $q->where('nama', 'like', "%{$request->search}%");
                     });
             })
             ->latest()

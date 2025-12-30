@@ -89,7 +89,7 @@
                                     <p class="mb-0 small opacity-75">Kehadiran Pelajar</p>
                                 </div>
                                 <div class="bg-white bg-opacity-20 rounded-circle p-3">
-                                    <i class="bi bi-clipboard-check text-white fs-3"></i>
+                                    <i class="bi bi-tasks text-white fs-3"></i>
                                 </div>
                             </div>
                         </div>
@@ -162,11 +162,13 @@
                                     <tbody>
                                         @foreach ($laporanTerbaru as $laporan)
                                             <tr class="text-center">
-                                                <td class="py-3 px-3 fw-medium text-start">{{ $laporan->pelajar->nama ?? '-' }}</td>
+                                                <td class="py-3 px-3 fw-medium text-start">
+                                                    {{ $laporan->pelajar->nama ?? '-' }}</td>
                                                 <td class="py-3 px-3 text-muted">
                                                     {{ $laporan->waktu ?? \Carbon\Carbon::parse($laporan->tanggal)->format('d/m/Y') }}
                                                 </td>
-                                                <td class="py-3 px-3 text-start">{{ Str::limit($laporan->topik ?? '-', 35) }}</td>
+                                                <td class="py-3 px-3 text-start">
+                                                    {{ Str::limit($laporan->topik ?? '-', 35) }}</td>
                                                 <td class="py-3 px-3">
                                                     @if ($laporan->status == 'Belum Dimulai')
                                                         <span class="badge bg-warning text-dark">Belum Dimulai</span>
@@ -240,7 +242,7 @@
                             <a href="{{ route('pembimbing.presensi') }}" class="btn btn-outline-warning text-start py-3">
                                 <div class="d-flex align-items-center">
                                     <div class="bg-warning bg-opacity-10 rounded p-2 me-3">
-                                        <i class="bi bi-clipboard-check text-warning"></i>
+                                        <i class="bi text-warning"></i>
                                     </div>
                                     <div>
                                         <div class="fw-bold">Kelola Presensi</div>

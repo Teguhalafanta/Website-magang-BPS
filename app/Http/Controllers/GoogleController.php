@@ -55,7 +55,7 @@ class GoogleController extends Controller
             // Login user ke sistem
             Auth::login($user);
 
-            // Redirect ke dashboard pelajar
+            // Redirect ke dashboard peserta
             return redirect()->intended('pelajar/dashboard');
         } catch (\Exception $e) {
             // Jika terjadi error, kembali ke halaman login

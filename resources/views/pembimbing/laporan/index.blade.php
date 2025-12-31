@@ -72,7 +72,7 @@
                         <thead class="table-primary">
                             <tr>
                                 <th class="py-3 px-3 text-center">No</th>
-                                <th class="py-3 px-3 text-center">Nama Pelajar</th>
+                                <th class="py-3 px-3 text-center">Nama Peserta</th>
                                 <th class="py-3 px-3 text-center">Status</th>
                                 <th class="py-3 px-3 text-center">Lihat</th>
                                 <th class="py-3 px-3 text-center">Aksi</th>

@@ -72,7 +72,7 @@
                         </h5>
                         <p class="text-muted mb-3">{{ $user->email }}</p>
 
-                        {{-- Status Badge untuk Pelajar --}}
+                        {{-- Status Badge untuk Peserta --}}
                         @if ($user->role === 'pelajar')
                             @php
                                 $pelajar = $user->pelajar;
@@ -152,7 +152,7 @@
                     </div>
                 </div>
 
-                {{-- Informasi Magang Card (Hanya untuk Pelajar) --}}
+                {{-- Informasi Magang Card (Hanya untuk Peserta) --}}
                 @if ($user->role === 'pelajar')
                     <div class="card shadow-sm border-0">
                         <div class="card-header bg-white border-0 py-3">
@@ -230,7 +230,7 @@
                                 </div>
                             </div>
 
-                            {{-- Field khusus Pelajar --}}
+                            {{-- Field khusus Peserta --}}
                             @if ($user->role === 'pelajar')
                                 <div class="col-md-6">
                                     <label class="form-label fw-semibold">NIM / NISN</label>

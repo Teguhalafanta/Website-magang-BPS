@@ -1,6 +1,6 @@
 @extends('kerangka.master')
 
-@section('title', 'Daftar Kegiatan Pelajar Saya')
+@section('title', 'Daftar Kegiatan Peserta Saya')
 
 @section('content')
     <div class="container py-2">
@@ -10,12 +10,12 @@
                 <div class="d-flex align-items-center mb-3">
                     <div class="me-3">
                         <div class="bg-primary rounded p-2">
-                            <i class="bi bi-tasks text-white fs-4"></i>
+                            <i class="bi bi-list-task text-white fs-4"></i>
                         </div>
                     </div>
                     <div>
                         <h3 class="mb-1 fw-bold text-dark">Daftar Kegiatan Peserta Bimbingan</h3>
-                        <p class="text-muted mb-0">Laporan aktivitas dan progress pelajar bimbingan Anda</p>
+                        <p class="text-muted mb-0">Laporan aktivitas dan progress peserta bimbingan Anda</p>
                     </div>
                 </div>
             </div>
@@ -52,7 +52,7 @@
                                 <i class="bi bi-search text-muted"></i>
                             </span>
                             <input type="text" id="searchInput" class="form-control border-start-0" 
-                                    placeholder="Cari nama kegiatan, pelajar, atau deskripsi...">
+                                    placeholder="Cari nama kegiatan, peserta, atau deskripsi...">
                         </div>
                     </div>
                     <div class="col-md-3">
@@ -73,7 +73,7 @@
                         <thead class="table-primary">
                             <tr>
                                 <th class="py-3 px-3 text-center" style="width: 80px;">No</th>
-                                <th class="py-3 px-3 text-center">Pelajar</th>
+                                <th class="py-3 px-3 text-center">Peserta</th>
                                 <th class="py-3 px-3 text-center">Nama Kegiatan</th>
                                 <th class="py-3 px-3 text-center" style="width: 120px;">Tanggal</th>
                                 <th class="py-3 px-3 text-center" style="width: 140px;">Status</th>
@@ -91,7 +91,7 @@
                                     <td class="py-3">
                                         <div class="d-flex align-items-center">
                                             <div class="avatar-circle bg-primary bg-opacity-10 text-primary me-3">
-                                                <i class="bi bi-user fw-bold"></i>
+                                                <i class="bi bi-person fw-bold"></i>
                                             </div>
                                             <div>
                                                 <div class="fw-semibold">{{ $kegiatan->pelajar->nama ?? '-' }}</div>
@@ -157,10 +157,10 @@
                                                     <!-- Informasi Utama -->
                                                     <div class="col-md-6">
                                                         <div class="info-item">
-                                                            <label class="text-muted small mb-2">Nama Pelajar</label>
+                                                            <label class="text-muted small mb-2">Nama Peserta</label>
                                                             <div class="d-flex align-items-center p-3 bg-light rounded">
                                                                 <div class="avatar-circle bg-primary bg-opacity-10 text-primary me-3">
-                                                                    <i class="bi bi-user"></i>
+                                                                    <i class="bi bi-person"></i>
                                                                 </div>
                                                                 <span class="fw-semibold">{{ $kegiatan->pelajar->nama ?? '-' }}</span>
                                                             </div>
@@ -234,7 +234,7 @@
                                             </div>
                                             <div class="modal-footer bg-light py-3">
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                                    <i class="bi bi-times me-1"></i>Tutup
+                                                    <i class="bi bi-x-circle me-1"></i>Tutup
                                                 </button>
                                             </div>
                                         </div>
@@ -246,7 +246,7 @@
                                         <div class="text-muted">
                                             <i class="bi bi-inbox fa-3x mb-3 opacity-50"></i>
                                             <p class="fw-semibold mb-1">Belum Ada Kegiatan</p>
-                                            <p class="small mb-0">Data kegiatan pelajar akan muncul di sini</p>
+                                            <p class="small mb-0">Data kegiatan peserta akan muncul di sini</p>
                                         </div>
                                     </td>
                                 </tr>

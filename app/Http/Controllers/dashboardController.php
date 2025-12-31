@@ -226,7 +226,7 @@ class DashboardController extends Controller
         $user = Auth::user();
         $pelajar = $user->pelajar;
 
-        // Cek apakah pelajar sudah terdaftar
+        // Cek apakah peserta sudah terdaftar
         if (!$pelajar) {
             return view('dashboard.pelajar')->with('warning', 'Silakan lengkapi data profil terlebih dahulu');
         }

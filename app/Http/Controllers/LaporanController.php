@@ -15,7 +15,7 @@ class LaporanController extends Controller
         $user = Auth::user();
 
         if ($user->role === 'pelajar') {
-            // Pelajar hanya melihat laporannya sendiri
+            // Peserta hanya melihat laporannya sendiri
             $laporan = Laporan::where('user_id', $user->id)->first();
             return view('pelajar.laporan.index', compact('laporan'));
         }
@@ -47,7 +47,7 @@ class LaporanController extends Controller
     public function upload(Request $request)
     {
         $request->validate([
-            'file_laporan' => 'required|mimes:pdf|max:2048'
+            'file_laporan' => 'required|mimes:pdf|max:10240'
         ]);
 
         $path = $request->file('file_laporan')->store('laporan', 'public');
@@ -89,8 +89,8 @@ class LaporanController extends Controller
             'status' => 'disetujui'
         ]);
 
-        // === Kirim Notifikasi ke Pelajar ===
-        $pelajarUser = $laporan->user; // user pelajar
+        // === Kirim Notifikasi ke Peserta ===
+        $pelajarUser = $laporan->user; // user peserta
         $pelajarUser->notify(new \App\Notifications\NotifikasiBaru(
             'Laporan akhir kamu telah disetujui oleh pembimbing.',
             route('pelajar.laporan.index')
@@ -112,14 +112,14 @@ class LaporanController extends Controller
             'status' => 'ditolak'
         ]);
 
-        // === Kirim Notifikasi ke Pelajar ===
+        // === Kirim Notifikasi ke Peserta ===
         $pelajarUser = $laporan->user;
         $pelajarUser->notify(new \App\Notifications\NotifikasiBaru(
             'Laporan akhir kamu ditolak oleh pembimbing, silakan perbaiki kembali.',
             route('pelajar.laporan.index')
         ));
 
-        return back()->with('error', 'Laporan ditolak. Pelajar harus upload ulang.');
+        return back()->with('error', 'Laporan ditolak. Peserta harus upload ulang.');
     }
 
     public function halamanPembimbing()
@@ -173,10 +173,10 @@ class LaporanController extends Controller
             'status' => 'selesai'
         ]);
 
-        return redirect()->back()->with('success', 'Sertifikat berhasil diupload dan dikirim ke pelajar.');
+        return redirect()->back()->with('success', 'Sertifikat berhasil diupload dan dikirim ke peserta.');
     }
 
-    // Pelajar download sertifikat
+    // Peserta download sertifikat
     public function downloadSertifikat($id)
     {
         $laporan = Laporan::findOrFail($id);
@@ -215,7 +215,7 @@ class LaporanController extends Controller
         return response()->download($filePath);
     }
 
-    // Download laporan (admin & pembimbing bisa semua, pelajar hanya miliknya)
+    // Download laporan (admin & pembimbing bisa semua, peserta hanya miliknya)
     public function download($id)
     {
         $laporan = Laporan::findOrFail($id);

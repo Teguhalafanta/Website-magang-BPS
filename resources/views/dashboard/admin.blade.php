@@ -10,7 +10,7 @@
         </div>
 
         <div class="row g-3">
-            {{-- Total Pelajar --}}
+            {{-- Total Peserta --}}
             <div class="col-md-4 mb-2">
                 <a href="{{ route('admin.pengajuan.index') }}" class="text-decoration-none">
                     <div class="card text-white bg-primary shadow border-0 h-100">

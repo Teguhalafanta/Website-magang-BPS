@@ -136,16 +136,16 @@
                             </a>
                         </li>
 
-                        {{-- Role: Pelajar --}}
+                        {{-- Role: Peserta --}}
                     @elseif(auth()->user()->role == 'pelajar')
-                        {{-- Determine pelajar status explicitly so we can handle 'disetujui', 'selesai', etc. --}}
+                        {{-- Determine peserta status explicitly so we can handle 'disetujui', 'selesai', etc. --}}
                         @php
                             $pelajar = auth()->user()->pelajar;
                             $status = $pelajar ? $pelajar->status : null;
                         @endphp
 
                         @if ($status === 'disetujui')
-                            {{-- MENU UNTUK PELAJAR YANG SUDAH DISETUJUI --}}
+                            {{-- MENU UNTUK PESERTA YANG SUDAH DISETUJUI --}}
                             <li class="sidebar-item {{ request()->routeIs('pelajar.dashboard') ? 'active' : '' }}">
                                 <a href="{{ route('pelajar.dashboard') }}" class="sidebar-link">
                                     <i class="bi bi-speedometer2"></i>
@@ -202,8 +202,8 @@
                                 </a>
                             </li>
                         @elseif ($status === 'selesai')
-                            {{-- PELAJAR SUDAH SELESAI MAGANG: Tampilkan menu tetapi non-aktifkan sebagian link.
-                                 Hanya izinkan akses ke: Presensi, Kegiatan, Upload Laporan (jika masih diperlukan), Sertifikat/riwayat. --}}
+                            {{-- PESERTA SUDAH SELESAI MAGANG: Tampilkan menu tetapi non-aktifkan sebagian link.
+                                Hanya izinkan akses ke: Presensi, Kegiatan, Upload Laporan (jika masih diperlukan), Sertifikat/riwayat. --}}
 
                             {{-- Dashboard (boleh diakses untuk melihat riwayat meskipun sudah selesai) --}}
                             <li class="sidebar-item {{ request()->routeIs('pelajar.dashboard') ? 'active' : '' }}">
@@ -266,7 +266,7 @@
                                 </a>
                             </li>
                         @else
-                            {{-- MENU UNTUK PELAJAR YANG BELUM DISETUJUI --}}
+                            {{-- MENU UNTUK PESERTA YANG BELUM DISETUJUI --}}
                             <li class="sidebar-item {{ request()->routeIs('pelajar.pengajuan.*') ? 'active' : '' }}">
                                 <a href="{{ route('pelajar.pengajuan.index') }}" class="sidebar-link">
                                     <i class="bi bi-file-earmark-text"></i>

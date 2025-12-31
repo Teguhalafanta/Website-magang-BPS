@@ -50,15 +50,19 @@
                     <div class="card-body text-center py-4">
                         {{-- Foto Profil --}}
                         <div class="position-relative d-inline-block">
-                            @if ($user->foto && Storage::disk('public')->exists($user->foto))
-                                <img src="{{ Storage::url($user->foto) }}" alt="Foto Profil"
+                            @if ($user->role === 'pembimbing' && $user->pembimbing && $user->pembimbing->foto)
+                                <img src="{{ Storage::url($user->pembimbing->foto) }}"
                                     class="rounded-circle border shadow-sm mb-3"
                                     style="width: 180px; height: 180px; object-fit: cover;">
+                            @elseif ($user->foto)
+                                <img src="{{ Storage::url($user->foto) }}" class="rounded-circle border shadow-sm mb-3"
+                                    style="width: 180px; height: 180px; object-fit: cover;">
                             @else
-                                <img src="{{ asset('images/default-avatar.png') }}" alt="Default Foto"
+                                <img src="{{ asset('images/default-avatar.png') }}"
                                     class="rounded-circle border shadow-sm mb-3"
                                     style="width: 180px; height: 180px; object-fit: cover;">
                             @endif
+
                             <div class="position-absolute bottom-0 end-0">
                                 <button class="btn btn-primary btn-sm rounded-circle shadow" data-bs-toggle="modal"
                                     data-bs-target="#ubahFotoModal" style="width: 40px; height: 40px;">

@@ -124,17 +124,34 @@ class ProfileController extends Controller
             'foto' => 'required|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
-        $user = User::findOrFail(Auth::id()); // langsung Eloquent model
+        $user = User::with('pembimbing')->findOrFail(Auth::id());
 
-        // hapus foto lama kalau ada
-        if ($user->foto && Storage::disk('public')->exists($user->foto)) {
-            Storage::disk('public')->delete($user->foto);
-        }
-
-        // simpan foto baru
+        // simpan foto
         $path = $request->file('foto')->store('avatars', 'public');
 
-        $user->update(['foto' => $path]);
+        // === JIKA ROLE PEMBIMBING ===
+        if ($user->role === 'pembimbing' && $user->pembimbing) {
+
+            // hapus foto lama di tabel pembimbing
+            if ($user->pembimbing->foto && Storage::disk('public')->exists($user->pembimbing->foto)) {
+                Storage::disk('public')->delete($user->pembimbing->foto);
+            }
+
+            // simpan ke tabel pembimbing
+            $user->pembimbing->update([
+                'foto' => $path
+            ]);
+        } else {
+
+            // === ROLE LAIN (pelajar / admin) ===
+            if ($user->foto && Storage::disk('public')->exists($user->foto)) {
+                Storage::disk('public')->delete($user->foto);
+            }
+
+            $user->update([
+                'foto' => $path
+            ]);
+        }
 
         return redirect()->route('profile.show')
             ->with('success', 'Foto profil berhasil diperbarui!');

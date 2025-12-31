@@ -457,7 +457,6 @@ class DashboardController extends Controller
 
         return view('pembimbing.dashboard', compact(
             'totalMahasiswa',
-            'totalPelajar',
             'pendingBimbingan',
             'selesaiBimbingan',
             'jadwalHariIni',

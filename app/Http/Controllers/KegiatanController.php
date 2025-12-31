@@ -36,8 +36,14 @@ class KegiatanController extends Controller
             // Ambil semua peserta yang dibimbing oleh pembimbing ini
             $pelajarIds = Pelajar::where('pembimbing_id', $pembimbing->id)->pluck('user_id');
 
-            // Ambil kegiatan yang dimiliki oleh peserta-peserta tersebut
+            // Kecualikan pelajar yang sudah selesai magang
+            $completedUserIds = Pelajar::where('pembimbing_id', $pembimbing->id)
+                ->where('status_magang', 'selesai')
+                ->pluck('user_id');
+
+            // Ambil kegiatan yang dimiliki oleh peserta-peserta tersebut, kecuali yang sudah selesai lengkap
             $kegiatans = Kegiatan::whereIn('user_id', $pelajarIds)
+                ->whereNotIn('user_id', $completedUserIds)
                 ->when($request->search, function ($query) use ($request) {
                     $query->where('nama_kegiatan', 'like', "%{$request->search}%")
                         ->orWhereHas('user', function ($q) use ($request) {
@@ -45,7 +51,7 @@ class KegiatanController extends Controller
                         });
                 })
                 ->with('pelajar')
-                ->latest()
+                ->orderBy('tanggal', 'desc')
                 ->paginate(10);
 
             return view('pembimbing.kegiatan', compact('kegiatans'));
@@ -121,6 +127,7 @@ class KegiatanController extends Controller
         $kegiatans = Kegiatan::where('user_id', Auth::id())
             ->whereYear('tanggal', $tahun)
             ->whereMonth('tanggal', $bulanNum)
+            ->orderBy('tanggal', 'desc')
             ->get();
 
         return view('kegiatan.bulanan', compact('kegiatans', 'bulan', 'isMagangSelesai'));

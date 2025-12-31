@@ -19,6 +19,7 @@
             <thead class="table-primary">
                 <tr>
                     <th class="text-center">No</th>
+                    <th class="text-center">Tanggal</th>
                     <th class="text-center">Uraian Kegiatan</th>
                     <th class="text-center">Deskripsi</th>
                     <th class="text-center">Aksi</th>
@@ -28,6 +29,7 @@
                 @forelse ($kegiatans as $i => $kegiatan)
                     <tr>
                         <td class="text-center">{{ $i + 1 }}</td>
+                        <td class="text-center">{{ $kegiatan->tanggal ? \Carbon\Carbon::parse($kegiatan->tanggal)->format('d/m/Y') : '-' }}</td>
                         <td>{{ $kegiatan->nama_kegiatan ?? '-' }}</td>
                         <td>{{ $kegiatan->deskripsi }}</td>
                         <td class="text-center">
@@ -53,7 +55,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="8" class="text-center">Tidak ada kegiatan di bulan ini.</td>
+                        <td colspan="5" class="text-center">Tidak ada kegiatan di bulan ini.</td>
                     </tr>
                 @endforelse
             </tbody>

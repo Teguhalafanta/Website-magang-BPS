@@ -75,4 +75,9 @@ class User extends Authenticatable
     {
         return $this->hasOne(Laporan::class, 'user_id');
     }
+
+    public function laporans()
+    {
+        return $this->hasMany(Laporan::class);
+    }
 }

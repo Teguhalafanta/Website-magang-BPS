@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Pelajar;
 use App\Models\Kegiatan;
 use App\Models\Presensi;
+use App\Models\Laporan;
 use Carbon\Carbon;
 
 class DashboardController extends Controller
@@ -266,6 +267,11 @@ class DashboardController extends Controller
 
         $totalPresensi = Presensi::where('user_id', $user->id)->count();
 
+        // Hari aktif magang: jumlah hari presensi hadir
+        $hariAktifMagang = Presensi::where('user_id', $user->id)
+            ->where('status', 'hadir')
+            ->count();
+
         // Statistik Kegiatan
         $jumlahKegiatan = Kegiatan::where('user_id', $user->id)->count();
 
@@ -314,6 +320,7 @@ class DashboardController extends Controller
             'jumlahPresensiHariIni',
             'jumlahKegiatan',
             'totalPresensi',
+            'hariAktifMagang',
             'kegiatanSelesai',
             'kegiatanProses',
             'persentaseKegiatan',
@@ -442,8 +449,13 @@ class DashboardController extends Controller
             ->whereDate('created_at', today())
             ->count();
 
+        // Jumlah laporan menunggu
+        $laporanMenunggu = Laporan::whereIn('user_id', $userIds)
+            ->where('status', 'menunggu')
+            ->count();
+
         return view('pembimbing.dashboard', compact(
-            'totalMahasiswa',
+            'totalPelajar',
             'pendingBimbingan',
             'selesaiBimbingan',
             'jadwalHariIni',
@@ -452,7 +464,8 @@ class DashboardController extends Controller
             'mahasiswaBimbingan',
             'laporanTerbaru',
             'jumlahKegiatan',
-            'presensiHariIni'
+            'presensiHariIni',
+            'laporanMenunggu'
         ));
     }
 }

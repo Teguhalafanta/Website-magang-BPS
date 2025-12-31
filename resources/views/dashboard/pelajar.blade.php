@@ -220,7 +220,7 @@
                                                 <div class="p-3 bps-stat-card rounded bps-hover-card">
                                                     <i class="bi bi-clock-history bps-text-accent fs-1 mb-2"></i>
                                                     <h4 class="mb-0 fw-bold bps-text-primary">
-                                                        {{ auth()->user()->pelajar->hari_aktif_magang }}</h4>
+                                                        {{ $hariAktifMagang ?? 0 }}</h4>
                                                     <small class="text-muted">Hari Aktif Magang</small>
                                                 </div>
                                             </a>

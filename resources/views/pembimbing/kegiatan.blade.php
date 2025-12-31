@@ -295,7 +295,16 @@
                 dom: 't',
                 scrollX: false,
                 autoWidth: false,
-                order: [[3, 'desc']]
+                order: [[3, 'desc']],
+                columnDefs: [
+                    { 
+                        targets: 0, 
+                        orderable: false, 
+                        render: function (data, type, row, meta) { 
+                            return meta.row + 1; 
+                        } 
+                    }
+                ]
             });
 
             // Custom search input

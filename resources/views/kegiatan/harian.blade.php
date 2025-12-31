@@ -7,6 +7,13 @@
         </h3>
         <p class="bps-subtitle">Tanggal: {{ \Carbon\Carbon::now()->format('d-m-Y') }}</p>
 
+        @php
+            $pelajar = auth()->user()->pelajar;
+            $tanggalMulai = \Carbon\Carbon::parse($pelajar->rencana_mulai ?? now());
+            $tanggalSelesai = \Carbon\Carbon::parse($pelajar->rencana_selesai ?? now());
+            $magangBelumDimulai = now()->lt($tanggalMulai);
+        @endphp
+
         {{-- ALERT SUCCESS/ERROR --}}
         @if (session('success'))
             <div class="alert bps-alert-success alert-dismissible fade show">
@@ -22,7 +29,15 @@
             </div>
         @endif
 
-        @if (!$isMagangSelesai)
+        @if ($magangBelumDimulai)
+            <div class="alert bps-alert-light border mb-3">
+                <i class="bi bi-calendar-event me-2"></i>
+                Magang belum dimulai. Anda dapat menambah kegiatan mulai
+                <strong>{{ $tanggalMulai->format('d F Y') }}</strong>.
+            </div>
+        @endif
+
+        @if (!$isMagangSelesai && !$magangBelumDimulai)
             <div class="mb-3 text-start">
                 <button type="button" class="btn bps-btn-primary" data-bs-toggle="modal"
                     data-bs-target="#tambahKegiatanModal">
@@ -206,7 +221,7 @@
     </div>
 
     {{-- Modal Tambah Kegiatan - HANYA RENDER JIKA MAGANG BELUM SELESAI --}}
-    @if (!$isMagangSelesai)
+    @if (!$isMagangSelesai && !$magangBelumDimulai)
         <div class="modal fade" id="tambahKegiatanModal" tabindex="-1" aria-labelledby="tambahKegiatanModalLabel"
             aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">

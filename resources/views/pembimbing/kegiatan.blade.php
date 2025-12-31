@@ -81,7 +81,18 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse ($kegiatans as $index => $kegiatan)
+                            @if(empty($kegiatans))
+                                <tr>
+                                    <td colspan="6" class="text-center py-5">
+                                        <div class="text-muted">
+                                            <i class="bi bi-inbox fa-3x mb-3 opacity-50"></i>
+                                            <p class="fw-semibold mb-1">Belum Ada Kegiatan</p>
+                                            <p class="small mb-0">Data kegiatan peserta akan muncul di sini</p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @else
+                                @foreach ($kegiatans as $index => $kegiatan)
                                 <tr>
                                     <td class="text-center py-3">
                                         <span class="badge bg-light text-dark rounded-circle p-2 fw-medium">
@@ -137,123 +148,121 @@
                                     </td>
                                 </tr>
 
-                                <!-- Modal Detail -->
-                                <div class="modal fade" id="detailModal{{ $kegiatan->id }}" tabindex="-1"
-                                    aria-labelledby="detailModalLabel{{ $kegiatan->id }}" aria-hidden="true">
-                                    <div class="modal-dialog modal-lg modal-dialog-centered">
-                                        <div class="modal-content border-0 shadow-lg">
-                                            <div class="modal-header bg-primary text-white py-3">
-                                                <div>
-                                                    <h5 class="modal-title fw-bold mb-1" id="detailModalLabel{{ $kegiatan->id }}">
-                                                        <i class="bi bi-info-circle me-2"></i>Detail Kegiatan
-                                                    </h5>
-                                                    <small class="opacity-75">{{ $kegiatan->nama_kegiatan }}</small>
-                                                </div>
-                                                <button type="button" class="btn-close btn-close-white"
-                                                    data-bs-dismiss="modal" aria-label="Close"></button>
-                                            </div>
-                                            <div class="modal-body p-4">
-                                                <div class="row g-4">
-                                                    <!-- Informasi Utama -->
-                                                    <div class="col-md-6">
-                                                        <div class="info-item">
-                                                            <label class="text-muted small mb-2">Nama Peserta</label>
-                                                            <div class="d-flex align-items-center p-3 bg-light rounded">
-                                                                <div class="avatar-circle bg-primary bg-opacity-10 text-primary me-3">
-                                                                    <i class="bi bi-person"></i>
-                                                                </div>
-                                                                <span class="fw-semibold">{{ $kegiatan->pelajar->nama ?? '-' }}</span>
-                                                            </div>
-                                                        </div>
+
+                                @endforeach
+                            @endif
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Modals -->
+                @forelse ($kegiatans as $index => $kegiatan)
+                    @php
+                        $statusColors = [
+                            'Belum Dimulai' => 'secondary',
+                            'Dalam Proses' => 'warning',
+                            'Selesai' => 'success',
+                        ];
+                        $colorClass = $statusColors[$kegiatan->status_penyelesaian] ?? 'primary';
+                        $statusIcons = [
+                            'Belum Dimulai' => 'fa-clock',
+                            'Dalam Proses' => 'fa-spinner',
+                            'Selesai' => 'fa-check-circle',
+                        ];
+                        $statusIcon = $statusIcons[$kegiatan->status_penyelesaian] ?? 'fa-circle';
+                    @endphp
+                    <!-- Modal Detail -->
+                    <div class="modal fade" id="detailModal{{ $kegiatan->id }}" tabindex="-1"
+                        aria-labelledby="detailModalLabel{{ $kegiatan->id }}" aria-hidden="true">
+                        <div class="modal-dialog modal-lg modal-dialog-centered">
+                            <div class="modal-content border-0 shadow-lg">
+                                <div class="modal-header bg-primary text-white py-3">
+                                    <div>
+                                        <h5 class="modal-title fw-bold mb-1" id="detailModalLabel{{ $kegiatan->id }}">
+                                            <i class="bi bi-info-circle me-2"></i>Detail Kegiatan
+                                        </h5>
+                                        <small class="opacity-75">{{ $kegiatan->nama_kegiatan }}</small>
+                                    </div>
+                                    <button type="button" class="btn-close btn-close-white"
+                                        data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body p-4">
+                                    <div class="row g-4">
+                                        <!-- Informasi Utama -->
+                                        <div class="col-md-6">
+                                            <div class="info-item">
+                                                <label class="text-muted small mb-2">Nama Peserta</label>
+                                                <div class="d-flex align-items-center p-3 bg-light rounded">
+                                                    <div class="avatar-circle bg-primary bg-opacity-10 text-primary me-3">
+                                                        <i class="bi bi-person"></i>
                                                     </div>
-                                                    <div class="col-md-6">
-                                                        <div class="info-item">
-                                                            <label class="text-muted small mb-2">Tanggal Kegiatan</label>
-                                                            <div class="d-flex align-items-center p-3 bg-light rounded">
-                                                                <i class="bi bi-calendar text-info me-3"></i>
-                                                                <span class="fw-semibold">
-                                                                    {{ \Carbon\Carbon::parse($kegiatan->tanggal)->format('d F Y') }}
-                                                                </span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    
-                                                    <!-- Nama Kegiatan -->
-                                                    <div class="col-12">
-                                                        <div class="info-item">
-                                                            <label class="text-muted small mb-2">Nama Kegiatan</label>
-                                                            <div class="p-3 bg-light rounded">
-                                                                <p class="mb-0 fw-semibold text-dark fs-6">
-                                                                    {{ $kegiatan->nama_kegiatan }}
-                                                                </p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    
-                                                    <!-- Deskripsi -->
-                                                    <div class="col-12">
-                                                        <div class="info-item">
-                                                            <label class="text-muted small mb-2">Deskripsi Kegiatan</label>
-                                                            <div class="p-3 bg-light rounded">
-                                                                <p class="mb-0 text-dark" style="line-height: 1.6;">
-                                                                    {{ $kegiatan->deskripsi }}
-                                                                </p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    
-                                                    <!-- Status dan Bukti -->
-                                                    <div class="col-md-6">
-                                                        <div class="info-item">
-                                                            <label class="text-muted small mb-2">Status Penyelesaian</label>
-                                                            <div class="p-3 bg-light rounded text-center">
-                                                                <span class="badge bg-{{ $colorClass }} px-3 py-2 fs-6">
-                                                                    <i class="bi {{ $statusIcon }} me-1"></i>
-                                                                    {{ $kegiatan->status_penyelesaian }}
-                                                                </span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-md-6">
-                                                        <div class="info-item">
-                                                            <label class="text-muted small mb-2">Bukti Dukung</label>
-                                                            <div class="p-3 bg-light rounded text-center">
-                                                                @if ($kegiatan->bukti_dukung)
-                                                                    <a href="{{ asset('storage/' . $kegiatan->bukti_dukung) }}"
-                                                                        target="_blank" class="btn btn-primary">
-                                                                        <i class="bi bi-download me-1"></i>
-                                                                        Lihat Bukti
-                                                                    </a>
-                                                                @else
-                                                                    <span class="text-muted">Tidak ada bukti</span>
-                                                                @endif
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                                    <span class="fw-semibold">{{ $kegiatan->pelajar->nama ?? '-' }}</span>
                                                 </div>
                                             </div>
-                                            <div class="modal-footer bg-light py-3">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                                    <i class="bi bi-x-circle me-1"></i>Tutup
-                                                </button>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="info-item">
+                                                <label class="text-muted small mb-2">Tanggal Kegiatan</label>
+                                                <div class="d-flex align-items-center p-3 bg-light rounded">
+                                                    <i class="bi bi-calendar text-info me-3"></i>
+                                                    <span class="fw-semibold">
+                                                        {{ \Carbon\Carbon::parse($kegiatan->tanggal)->format('d F Y') }}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Deskripsi -->
+                                        <div class="col-12">
+                                            <div class="info-item">
+                                                <label class="text-muted small mb-2">Deskripsi Kegiatan</label>
+                                                <div class="p-3 bg-light rounded">
+                                                    <p class="mb-0">{{ $kegiatan->deskripsi ?? 'Tidak ada deskripsi' }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Status dan Bukti -->
+                                        <div class="col-md-6">
+                                            <div class="info-item">
+                                                <label class="text-muted small mb-2">Status Penyelesaian</label>
+                                                <div class="p-3 bg-light rounded text-center">
+                                                    <span class="badge bg-{{ $colorClass }} px-3 py-2 fs-6">
+                                                        <i class="bi {{ $statusIcon }} me-1"></i>
+                                                        {{ $kegiatan->status_penyelesaian }}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="info-item">
+                                                <label class="text-muted small mb-2">Bukti Dukung</label>
+                                                <div class="p-3 bg-light rounded text-center">
+                                                    @if ($kegiatan->bukti_dukung)
+                                                        <a href="{{ asset('storage/' . $kegiatan->bukti_dukung) }}"
+                                                            target="_blank" class="btn btn-primary">
+                                                            <i class="bi bi-download me-1"></i>
+                                                            Lihat Bukti
+                                                        </a>
+                                                    @else
+                                                        <span class="text-muted">Tidak ada bukti</span>
+                                                    @endif
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            @empty
-                                <tr>
-                                    <td colspan="6" class="text-center py-5">
-                                        <div class="text-muted">
-                                            <i class="bi bi-inbox fa-3x mb-3 opacity-50"></i>
-                                            <p class="fw-semibold mb-1">Belum Ada Kegiatan</p>
-                                            <p class="small mb-0">Data kegiatan peserta akan muncul di sini</p>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
+                                <div class="modal-footer bg-light py-3">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                        <i class="bi bi-x-circle me-1"></i>Tutup
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @empty
+                    <!-- Tidak ada modal jika tidak ada kegiatan -->
+                @endforelse
 
                 <!-- Pagination Info -->
                 <div class="d-flex justify-content-between align-items-center p-3 bg-light border-top">
@@ -295,16 +304,7 @@
                 dom: 't',
                 scrollX: false,
                 autoWidth: false,
-                order: [[3, 'desc']],
-                columnDefs: [
-                    { 
-                        targets: 0, 
-                        orderable: false, 
-                        render: function (data, type, row, meta) { 
-                            return meta.row + 1; 
-                        } 
-                    }
-                ]
+                order: [[3, 'desc']]
             });
 
             // Custom search input

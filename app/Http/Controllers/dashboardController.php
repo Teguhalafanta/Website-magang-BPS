@@ -360,6 +360,7 @@ class DashboardController extends Controller
 
         // Statistik utama
         $totalMahasiswa = Pelajar::where('pembimbing_id', $user->pembimbing->id)->count();
+        $totalPelajar = $totalMahasiswa; // alias for view
 
         $pendingBimbingan = Kegiatan::whereIn('user_id', $userIds)
             ->whereIn('status_penyelesaian', ['Belum Dimulai', 'Dalam Proses'])
@@ -455,6 +456,7 @@ class DashboardController extends Controller
             ->count();
 
         return view('pembimbing.dashboard', compact(
+            'totalMahasiswa',
             'totalPelajar',
             'pendingBimbingan',
             'selesaiBimbingan',

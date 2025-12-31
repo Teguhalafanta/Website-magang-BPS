@@ -26,7 +26,9 @@
             $pelajarPresensi = $pelajar->presensis ?? collect([]);
             $hariIni = now()->toDateString();
             $presensiHariIni = $pelajarPresensi->where('tanggal', $hariIni)->first();
+            $tanggalMulai = \Carbon\Carbon::parse($pelajar->rencana_mulai ?? now());
             $tanggalSelesai = \Carbon\Carbon::parse($pelajar->rencana_selesai ?? now());
+            $magangBelumDimulai = now()->lt($tanggalMulai);
             $magangSelesai = now()->gt($tanggalSelesai);
         @endphp
 
@@ -49,6 +51,14 @@
                         <i class="bi bi-award-fill fs-3 mb-2 text-bps-primary"></i>
                         <h5 class="fw-bold mb-2">Magang Telah Selesai</h5>
                         <p class="mb-0">Terima kasih atas kontribusi Anda. Anda tidak dapat melakukan presensi lagi.</p>
+                    </div>
+
+                    {{-- MAGANG BELUM DIMULAI --}}
+                @elseif ($magangBelumDimulai)
+                    <div class="alert alert-info text-center p-4">
+                        <i class="bi bi-calendar-event fs-3 mb-2 text-bps-primary"></i>
+                        <h5 class="fw-bold mb-2">Magang Belum Dimulai</h5>
+                        <p class="mb-0">Anda dapat melakukan presensi mulai tanggal <strong>{{ $tanggalMulai->format('d F Y') }}</strong></p>
                     </div>
 
                     {{-- BELUM ABSEN --}}

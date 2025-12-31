@@ -455,7 +455,7 @@ class DashboardController extends Controller
             ->count();
 
         return view('pembimbing.dashboard', compact(
-            'totalPelajar',
+            'totalMahasiswa',
             'pendingBimbingan',
             'selesaiBimbingan',
             'jadwalHariIni',

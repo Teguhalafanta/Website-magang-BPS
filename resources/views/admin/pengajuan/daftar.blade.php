@@ -17,7 +17,7 @@
 
         {{-- Summary Cards --}}
         <div class="row g-3 mb-2">
-            <div class="col-md-4">
+            <div class="col-md-6 col-lg-3">
                 <div class="card border-0 shadow-sm bg-primary text-white">
                     <div class="card-body py-3">
                         <div class="d-flex justify-content-between align-items-center">
@@ -30,7 +30,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-6 col-lg-3">
                 <div class="card border-0 shadow-sm bg-success text-white">
                     <div class="card-body py-3">
                         <div class="d-flex justify-content-between align-items-center">
@@ -43,7 +43,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-6 col-lg-3">
                 <div class="card border-0 shadow-sm bg-danger text-white">
                     <div class="card-body py-3">
                         <div class="d-flex justify-content-between align-items-center">
@@ -52,6 +52,19 @@
                                 <h4 class="mb-0 fw-bold">{{ $pengajuans->where('status', 'ditolak')->count() }}</h4>
                             </div>
                             <i class="bi bi-x-circle fs-3 opacity-50"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="card border-0 shadow-sm bg-secondary text-white">
+                    <div class="card-body py-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <p class="fw-bold mb-1 small text-uppercase">Selesai Magang</p>
+                                <h4 class="mb-0 fw-bold">{{ $pengajuans->where('status', 'selesai')->count() }}</h4>
+                            </div>
+                            <i class="bi bi-flag fs-3 opacity-50"></i>
                         </div>
                     </div>
                 </div>
@@ -113,6 +126,8 @@
                                                 <span class="badge bg-primary">Diajukan</span>
                                             @elseif($p->status == 'disetujui')
                                                 <span class="badge bg-success">Disetujui</span>
+                                            @elseif($p->status == 'selesai')
+                                                <span class="badge bg-secondary">Selesai Magang</span>
                                             @elseif($p->status == 'ditolak')
                                                 <span class="badge bg-danger">Ditolak</span>
                                             @endif
@@ -246,6 +261,8 @@
                                                                     <span class="badge bg-primary">Diajukan</span>
                                                                 @elseif($p->status == 'disetujui')
                                                                     <span class="badge bg-success">Disetujui</span>
+                                                                @elseif($p->status == 'selesai')
+                                                                    <span class="badge bg-secondary">Selesai Magang</span>
                                                                 @elseif($p->status == 'ditolak')
                                                                     <span class="badge bg-danger">Ditolak</span>
                                                                     @if ($p->alasan)
@@ -275,6 +292,9 @@
                                                                 <option value="disetujui"
                                                                     {{ $p->status == 'disetujui' ? 'selected' : '' }}>✅
                                                                     Disetujui</option>
+                                                                <option value="selesai"
+                                                                    {{ $p->status == 'selesai' ? 'selected' : '' }}>🏁
+                                                                    Selesai Magang</option>
                                                                 <option value="ditolak"
                                                                     {{ $p->status == 'ditolak' ? 'selected' : '' }}>❌
                                                                     Ditolak</option>

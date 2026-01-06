@@ -15,8 +15,8 @@ class BimbinganController extends Controller
 
         // Update status_magang jika tanggal selesai sudah lewat
         foreach ($pelajars as $pelajar) {
-            if ($pelajar->rencana_selesai && \Carbon\Carbon::parse($pelajar->rencana_selesai)->isPast() && $pelajar->status_magang !== 'selesai') {
-                $pelajar->update(['status_magang' => 'selesai']);
+            if ($pelajar->rencana_selesai && \Carbon\Carbon::parse($pelajar->rencana_selesai)->isPast() && $pelajar->status !== 'selesai') {
+                $pelajar->update(['status' => 'selesai']);
             }
         }
 

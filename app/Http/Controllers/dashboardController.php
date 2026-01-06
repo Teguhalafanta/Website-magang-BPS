@@ -233,7 +233,7 @@ class DashboardController extends Controller
         }
 
         // **PENTING: Cek status magang**
-        $isMagangSelesai = $pelajar->status_magang === 'selesai';
+        $isMagangSelesai = $pelajar->status === 'selesai';
         $statusMagang = $pelajar->status;
 
         // Hitung durasi dan sisa hari magang

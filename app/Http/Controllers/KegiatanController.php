@@ -97,9 +97,9 @@ class KegiatanController extends Controller
 
             // Jika hari ini >= tanggal selesai, ubah otomatis statusnya
             if (now()->greaterThanOrEqualTo($tanggalSelesai)) {
-                $pelajar->update(['status_magang' => 'selesai']);
+                $pelajar->update(['status' => 'selesai']);
                 $isMagangSelesai = true;
-            } elseif ($pelajar->status_magang === 'selesai') {
+            } elseif ($pelajar->status === 'selesai') {
                 $isMagangSelesai = true;
             }
         }
@@ -119,7 +119,7 @@ class KegiatanController extends Controller
         $user = Auth::user();
 
         // PEMBATASAN: Cek apakah magang sudah selesai
-        $isMagangSelesai = $user->pelajar && $user->pelajar->status_magang === 'selesai';
+        $isMagangSelesai = $user->pelajar && $user->pelajar->status === 'selesai';
 
         $bulan = $request->input('bulan', Carbon::now()->format('Y-m'));
         [$tahun, $bulanNum] = explode('-', $bulan);
@@ -140,7 +140,7 @@ class KegiatanController extends Controller
         if ($pelajar) {
             $tanggalSelesai = Carbon::parse($pelajar->rencana_selesai);
             if (now()->greaterThanOrEqualTo($tanggalSelesai)) {
-                $pelajar->update(['status_magang' => 'selesai']);
+                $pelajar->update(['status' => 'selesai']);
                 return redirect()->route('pelajar.kegiatan.harian')
                     ->with('error', 'Magang Anda sudah selesai. Tidak dapat menambahkan kegiatan baru.');
             }
@@ -189,7 +189,7 @@ class KegiatanController extends Controller
         $user = Auth::user();
 
         // PEMBATASAN: Cek apakah magang sudah selesai
-        if ($user->pelajar && $user->pelajar->status_magang === 'selesai') {
+        if ($user->pelajar && $user->pelajar->status === 'selesai') {
             return redirect()->route('pelajar.kegiatan.harian')
                 ->with('error', 'Magang Anda sudah selesai. Tidak dapat mengedit kegiatan.');
         }
@@ -208,7 +208,7 @@ class KegiatanController extends Controller
         $user = Auth::user();
 
         // PEMBATASAN: Cek apakah magang sudah selesai
-        if ($user->pelajar && $user->pelajar->status_magang === 'selesai') {
+        if ($user->pelajar && $user->pelajar->status === 'selesai') {
             return redirect()->route('pelajar.kegiatan.harian')
                 ->with('error', 'Magang Anda sudah selesai. Tidak dapat mengedit kegiatan.');
         }
@@ -254,7 +254,7 @@ class KegiatanController extends Controller
         $user = Auth::user();
 
         // PEMBATASAN: Cek apakah magang sudah selesai
-        if ($user->pelajar && $user->pelajar->status_magang === 'selesai') {
+        if ($user->pelajar && $user->pelajar->status === 'selesai') {
             return redirect()->route('pelajar.kegiatan.harian')
                 ->with('error', 'Magang Anda sudah selesai. Tidak dapat menghapus kegiatan.');
         }

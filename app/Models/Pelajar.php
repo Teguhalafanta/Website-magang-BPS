@@ -81,7 +81,7 @@ class Pelajar extends Model
         }
 
         $mulai = Carbon::parse($this->rencana_mulai);
-        $akhir = $this->status_magang === 'selesai' 
+        $akhir = $this->status === 'selesai'
             ? Carbon::parse($this->rencana_selesai)
             : Carbon::today();
 

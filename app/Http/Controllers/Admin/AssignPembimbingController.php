@@ -34,9 +34,9 @@ class AssignPembimbingController extends Controller
 
         // === Simpan pembimbing_id ke table users (ini yang penting!) ===
         $userPelajar = $pelajar->user;
-        $userPelajar->update([
-            'pembimbing_id' => $pembimbing->user->id, // Sesuaikan jika kolomnya berbeda
-        ]);
+        // $userPelajar->update([
+        //     'pembimbing_id' => $pembimbing->user->id, // Sesuaikan jika kolomnya berbeda
+        // ]);
 
         // === Kirim notifikasi ke peserta ===
         $userPelajar->notify(new NotifikasiBaru(

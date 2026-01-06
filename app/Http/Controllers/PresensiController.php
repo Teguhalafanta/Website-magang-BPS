@@ -26,7 +26,7 @@ class PresensiController extends Controller
             }
 
             // Cek apakah magang sudah selesai
-            $isMagangSelesai = $user->pelajar->status_magang === 'selesai';
+            $isMagangSelesai = $user->pelajar->status === 'selesai';
 
             $presensis = Presensi::where('pelajar_id', $user->pelajar->id)
                 ->orderBy('tanggal', 'desc')
@@ -173,7 +173,7 @@ class PresensiController extends Controller
         $user = Auth::user();
 
         // PEMBATASAN: Cek apakah magang sudah selesai
-        if ($user->pelajar && $user->pelajar->status_magang === 'selesai') {
+        if ($user->pelajar && $user->pelajar->status === 'selesai') {
             return redirect()->route('pelajar.presensi.index')
                 ->with('error', 'Magang Anda sudah selesai. Tidak dapat menambahkan presensi baru.');
         }
@@ -203,7 +203,7 @@ class PresensiController extends Controller
         }
 
         // PEMBATASAN: Cek apakah magang sudah selesai
-        if ($user->pelajar && $user->pelajar->status_magang === 'selesai') {
+        if ($user->pelajar && $user->pelajar->status === 'selesai') {
             return redirect()->route('pelajar.presensi.index')
                 ->with('error', 'Magang Anda sudah selesai. Tidak dapat menambahkan presensi baru.');
         }
@@ -264,7 +264,7 @@ class PresensiController extends Controller
         $user = Auth::user();
 
         // PEMBATASAN: Cek apakah magang sudah selesai (untuk presensi pulang)
-        if ($user->role === 'pelajar' && $user->pelajar && $user->pelajar->status_magang === 'selesai') {
+        if ($user->role === 'pelajar' && $user->pelajar && $user->pelajar->status === 'selesai') {
             return redirect()->route('pelajar.presensi.index')
                 ->with('error', 'Magang Anda sudah selesai. Tidak dapat melakukan presensi pulang.');
         }

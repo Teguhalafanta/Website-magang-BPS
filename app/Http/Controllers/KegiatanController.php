@@ -17,7 +17,7 @@ class KegiatanController extends Controller
 
         if ($user->role == 'pelajar') {
             // PEMBATASAN: Cek apakah magang sudah selesai
-            $isMagangSelesai = $user->pelajar && $user->pelajar->status_magang === 'selesai';
+            $isMagangSelesai = $user->pelajar && $user->pelajar->status === 'selesai';
 
             $kegiatans = Kegiatan::where('user_id', $user->id)
                 ->latest()
@@ -38,7 +38,7 @@ class KegiatanController extends Controller
 
             // Kecualikan pelajar yang sudah selesai magang
             $completedUserIds = Pelajar::where('pembimbing_id', $pembimbing->id)
-                ->where('status_magang', 'selesai')
+                ->where('status', 'selesai')
                 ->pluck('user_id');
 
             // Ambil kegiatan yang dimiliki oleh peserta-peserta tersebut, kecuali yang sudah selesai lengkap

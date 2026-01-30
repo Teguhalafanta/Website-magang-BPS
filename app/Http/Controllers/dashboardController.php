@@ -354,6 +354,7 @@ class DashboardController extends Controller
             ->filter()
             ->toArray();
 
+
         if (empty($userIds)) {
             $userIds = [0]; // supaya query tidak error ketika kosong
         }

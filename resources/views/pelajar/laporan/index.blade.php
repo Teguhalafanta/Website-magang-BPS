@@ -10,244 +10,244 @@
 
     {{-- Alert Notifikasi --}}
     @if (session('success'))
-        <div class="alert alert-success bps-alert alert-dismissible fade show" role="alert">
-            <i class="bi bi-check-circle-fill me-2"></i>
-            {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
+    <div class="alert alert-success bps-alert alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle-fill me-2"></i>
+        {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
     @endif
 
     @if (session('error'))
-        <div class="alert alert-danger bps-alert alert-dismissible fade show" role="alert">
-            <i class="bi bi-exclamation-triangle-fill me-2"></i>
-            {{ session('error') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
+    <div class="alert alert-danger bps-alert alert-dismissible fade show" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        {{ session('error') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
     @endif
 
     <div class="row g-4">
         <!-- Sidebar Kiri - Status & Aksi -->
         <div class="col-lg-4">
             @if ($laporan)
-                {{-- Card Status Laporan --}}
-                <div class="card bps-glass-card h-100">
-                    <div class="card-header bps-card-header">
-                        <h5 class="mb-0">
-                            <i class="bi bi-info-circle me-2"></i>Status Laporan
-                        </h5>
-                    </div>
-                    <div class="card-body p-4">
-                        {{-- Status Badge --}}
-                        <div class="text-center mb-4">
-                            @if ($laporan->status == 'menunggu')
-                                <div class="bps-status-waiting">
-                                    <i class="bi bi-clock-fill fs-1 mb-3"></i>
-                                    <h5 class="fw-bold">Menunggu Persetujuan</h5>
-                                    <p class="text-muted mb-0">Laporan sedang ditinjau pembimbing</p>
-                                </div>
-                            @elseif($laporan->status == 'disetujui')
-                                <div class="bps-status-approved">
-                                    <i class="bi bi-check-circle-fill fs-1 mb-3 text-success"></i>
-                                    <h5 class="fw-bold text-success">Disetujui</h5>
-                                    <p class="text-muted mb-0">Menunggu sertifikat</p>
-                                </div>
-                            @elseif($laporan->status == 'ditolak')
-                                <div class="bps-status-rejected">
-                                    <i class="bi bi-x-circle-fill fs-1 mb-3 text-danger"></i>
-                                    <h5 class="fw-bold text-danger">Ditolak</h5>
-                                    <p class="text-muted mb-0">Perlu upload ulang</p>
-                                </div>
-                            @elseif($laporan->status == 'selesai')
-                                <div class="bps-status-completed">
-                                    <i class="bi bi-award-fill fs-1 mb-3 text-bps-primary"></i>
-                                    <h5 class="fw-bold text-bps-primary">Selesai</h5>
-                                    <p class="text-muted mb-0">Magang telah diselesaikan</p>
-                                </div>
-                            @endif
+            {{-- Card Status Laporan --}}
+            <div class="card bps-glass-card h-100">
+                <div class="card-header bps-card-header">
+                    <h5 class="mb-0">
+                        <i class="bi bi-info-circle me-2"></i>Status Laporan
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    {{-- Status Badge --}}
+                    <div class="text-center mb-4">
+                        @if ($laporan->status == 'menunggu')
+                        <div class="bps-status-waiting">
+                            <i class="bi bi-clock-fill fs-1 mb-3"></i>
+                            <h5 class="fw-bold">Menunggu Persetujuan</h5>
+                            <p class="text-muted mb-0">Laporan sedang ditinjau pembimbing</p>
                         </div>
-
-                        {{-- Tombol Aksi --}}
-                        <div class="d-grid gap-2">
-                            <a href="{{ route('pelajar.laporan.download', $laporan->id) }}" class="btn bps-btn-outline">
-                                <i class="bi bi-download me-2"></i>Download Laporan
-                            </a>
-                            
-                            @if ($laporan->status == 'ditolak')
-                                <button type="button" class="btn bps-btn-danger" data-bs-toggle="modal" data-bs-target="#uploadUlangModal">
-                                    <i class="bi bi-upload me-2"></i>Upload Ulang
-                                </button>
-                            @endif
-
-                            @if ($laporan->status == 'selesai' && $laporan->file_sertifikat)
-                                <a href="{{ route('pelajar.laporan.downloadSertifikat', $laporan->id) }}" class="btn bps-btn-success">
-                                    <i class="bi bi-file-earmark-arrow-down me-2"></i>Download Sertifikat
-                                </a>
-                            @endif
+                        @elseif($laporan->status == 'disetujui')
+                        <div class="bps-status-approved">
+                            <i class="bi bi-check-circle-fill fs-1 mb-3 text-success"></i>
+                            <h5 class="fw-bold text-success">Disetujui</h5>
+                            <p class="text-muted mb-0">Menunggu sertifikat</p>
                         </div>
-
-                        {{-- Info Tambahan --}}
-                        @if ($laporan->status == 'ditolak')
-                            <div class="alert alert-warning bps-alert mt-3">
-                                <div class="d-flex align-items-start">
-                                    <i class="bi bi-exclamation-triangle me-2 mt-1"></i>
-                                    <div>
-                                        <strong>Perhatian!</strong><br>
-                                        Laporan Anda ditolak. Silakan perbaiki sesuai masukan pembimbing.
-                                    </div>
-                                </div>
-                            </div>
+                        @elseif($laporan->status == 'ditolak')
+                        <div class="bps-status-rejected">
+                            <i class="bi bi-x-circle-fill fs-1 mb-3 text-danger"></i>
+                            <h5 class="fw-bold text-danger">Ditolak</h5>
+                            <p class="text-muted mb-0">Perlu upload ulang</p>
+                        </div>
+                        @elseif($laporan->status == 'selesai')
+                        <div class="bps-status-completed">
+                            <i class="bi bi-award-fill fs-1 mb-3 text-bps-primary"></i>
+                            <h5 class="fw-bold text-bps-primary">Selesai</h5>
+                            <p class="text-muted mb-0">Magang telah diselesaikan</p>
+                        </div>
                         @endif
                     </div>
-                </div>
-            @else
-                {{-- Empty State --}}
-                <div class="card bps-glass-card h-100">
-                    <div class="card-body text-center d-flex flex-column justify-content-center">
-                        <div class="mb-4">
-                            <i class="bi bi-file-earmark-plus text-bps-primary fs-1 mb-3"></i>
-                            <h4 class="fw-bold text-bps-primary mb-2">Belum Ada Laporan</h4>
-                            <p class="text-muted">Upload laporan akhir magang untuk melanjutkan proses</p>
-                        </div>
-                        <a href="{{ route('pelajar.laporan.create') }}" class="btn bps-btn-primary btn-lg">
-                            <i class="bi bi-upload me-2"></i>Upload Laporan
+
+                    {{-- Tombol Aksi --}}
+                    <div class="d-grid gap-2">
+                        <a href="{{ route('pelajar.laporan.download', $laporan->id) }}" class="btn bps-btn-outline">
+                            <i class="bi bi-download me-2"></i>Download Laporan
                         </a>
+
+                        @if ($laporan->status == 'ditolak')
+                        <button type="button" class="btn bps-btn-danger" data-bs-toggle="modal" data-bs-target="#uploadUlangModal">
+                            <i class="bi bi-upload me-2"></i>Upload Ulang
+                        </button>
+                        @endif
+
+                        @if ($laporan->status == 'selesai' && $laporan->file_sertifikat)
+                        <a href="{{ route('pelajar.laporan.downloadSertifikat', $laporan->id) }}" class="btn bps-btn-success">
+                            <i class="bi bi-file-earmark-arrow-down me-2"></i>Download Sertifikat
+                        </a>
+                        @endif
                     </div>
+
+                    {{-- Info Tambahan --}}
+                    @if ($laporan->status == 'ditolak')
+                    <div class="alert alert-warning bps-alert mt-3">
+                        <div class="d-flex align-items-start">
+                            <i class="bi bi-exclamation-triangle me-2 mt-1"></i>
+                            <div>
+                                <strong>Perhatian!</strong><br>
+                                Laporan Anda ditolak. Silakan perbaiki sesuai masukan pembimbing.
+                            </div>
+                        </div>
+                    </div>
+                    @endif
                 </div>
+            </div>
+            @else
+            {{-- Empty State --}}
+            <div class="card bps-glass-card h-100">
+                <div class="card-body text-center d-flex flex-column justify-content-center">
+                    <div class="mb-4">
+                        <i class="bi bi-file-earmark-plus text-bps-primary fs-1 mb-3"></i>
+                        <h4 class="fw-bold text-bps-primary mb-2">Belum Ada Laporan</h4>
+                        <p class="text-muted">Upload laporan akhir magang untuk melanjutkan proses</p>
+                    </div>
+                    <a href="{{ route('pelajar.laporan.create') }}" class="btn bps-btn-primary btn-lg">
+                        <i class="bi bi-upload me-2"></i>Upload Laporan
+                    </a>
+                </div>
+            </div>
             @endif
         </div>
 
         <!-- Konten Utama - Detail Laporan -->
         <div class="col-lg-8">
             @if ($laporan)
-                {{-- Detail Laporan --}}
-                <div class="card bps-glass-card">
-                    <div class="card-header bps-card-header">
-                        <h5 class="mb-0">
-                            <i class="bi bi-file-earmark-text me-2"></i>Detail Laporan
-                        </h5>
+            {{-- Detail Laporan --}}
+            <div class="card bps-glass-card">
+                <div class="card-header bps-card-header">
+                    <h5 class="mb-0">
+                        <i class="bi bi-file-earmark-text me-2"></i>Detail Laporan
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    {{-- Informasi File --}}
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="bps-info-item">
+                                <div class="info-label">Tanggal Upload</div>
+                                <div class="info-value">{{ \Carbon\Carbon::parse($laporan->created_at)->setTimezone('Asia/Jakarta')->translatedFormat('d F Y H:i') }}</div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="card-body p-4">
-                        {{-- Informasi File --}}
-                        <div class="row mb-4">
-                            <div class="col-md-6">
-                                <div class="bps-info-item">
-                                    <div class="info-label">Tanggal Upload</div>
-                                    <div class="info-value">{{ \Carbon\Carbon::parse($laporan->created_at)->translatedFormat('d F Y H:i') }}</div>
-                                </div>
+
+                    {{-- Progress Status --}}
+                    <div class="mb-4">
+                        <h6 class="fw-semibold text-bps-primary mb-3">Progress Laporan</h6>
+                        <div class="bps-progress-tracker">
+                            <div class="progress-step {{ $laporan->status == 'menunggu' || $laporan->status == 'disetujui' || $laporan->status == 'selesai' ? 'completed' : '' }} {{ $laporan->status == 'menunggu' ? 'current' : '' }}">
+                                <div class="step-icon">1</div>
+                                <div class="step-label">Upload</div>
+                            </div>
+                            <div class="progress-step {{ $laporan->status == 'disetujui' || $laporan->status == 'selesai' ? 'completed' : '' }} {{ $laporan->status == 'disetujui' ? 'current' : '' }}">
+                                <div class="step-icon">2</div>
+                                <div class="step-label">Review</div>
+                            </div>
+                            <div class="progress-step {{ $laporan->status == 'selesai' ? 'completed' : '' }} {{ $laporan->status == 'selesai' ? 'current' : '' }}">
+                                <div class="step-icon">3</div>
+                                <div class="step-label">Selesai</div>
                             </div>
                         </div>
+                    </div>
 
-                        {{-- Progress Status --}}
-                        <div class="mb-4">
-                            <h6 class="fw-semibold text-bps-primary mb-3">Progress Laporan</h6>
-                            <div class="bps-progress-tracker">
-                                <div class="progress-step {{ $laporan->status == 'menunggu' || $laporan->status == 'disetujui' || $laporan->status == 'selesai' ? 'completed' : '' }} {{ $laporan->status == 'menunggu' ? 'current' : '' }}">
-                                    <div class="step-icon">1</div>
-                                    <div class="step-label">Upload</div>
-                                </div>
-                                <div class="progress-step {{ $laporan->status == 'disetujui' || $laporan->status == 'selesai' ? 'completed' : '' }} {{ $laporan->status == 'disetujui' ? 'current' : '' }}">
-                                    <div class="step-icon">2</div>
-                                    <div class="step-label">Review</div>
-                                </div>
-                                <div class="progress-step {{ $laporan->status == 'selesai' ? 'completed' : '' }} {{ $laporan->status == 'selesai' ? 'current' : '' }}">
-                                    <div class="step-icon">3</div>
-                                    <div class="step-label">Selesai</div>
+                    {{-- Riwayat Status --}}
+                    <div>
+                        <h6 class="fw-semibold text-bps-primary mb-3">Riwayat Status</h6>
+                        <div class="bps-timeline">
+                            <div class="timeline-item">
+                                <div class="timeline-marker"></div>
+                                <div class="timeline-content">
+                                    <div class="timeline-title">Laporan Diupload</div>
+                                    <div class="timeline-time">{{ \Carbon\Carbon::parse($laporan->created_at)->translatedFormat('d F Y H:i') }}</div>
                                 </div>
                             </div>
-                        </div>
 
-                        {{-- Riwayat Status --}}
-                        <div>
-                            <h6 class="fw-semibold text-bps-primary mb-3">Riwayat Status</h6>
-                            <div class="bps-timeline">
-                                <div class="timeline-item">
-                                    <div class="timeline-marker"></div>
-                                    <div class="timeline-content">
-                                        <div class="timeline-title">Laporan Diupload</div>
-                                        <div class="timeline-time">{{ \Carbon\Carbon::parse($laporan->created_at)->translatedFormat('d F Y H:i') }}</div>
-                                    </div>
+                            @if ($laporan->status == 'disetujui' || $laporan->status == 'selesai')
+                            <div class="timeline-item">
+                                <div class="timeline-marker success"></div>
+                                <div class="timeline-content">
+                                    <div class="timeline-title">Laporan Disetujui</div>
+                                    <div class="timeline-time">{{ \Carbon\Carbon::parse($laporan->updated_at)->translatedFormat('d F Y H:i') }}</div>
                                 </div>
-                                
-                                @if ($laporan->status == 'disetujui' || $laporan->status == 'selesai')
-                                <div class="timeline-item">
-                                    <div class="timeline-marker success"></div>
-                                    <div class="timeline-content">
-                                        <div class="timeline-title">Laporan Disetujui</div>
-                                        <div class="timeline-time">{{ \Carbon\Carbon::parse($laporan->updated_at)->translatedFormat('d F Y H:i') }}</div>
-                                    </div>
-                                </div>
-                                @endif
-
-                                @if ($laporan->status == 'selesai' && $laporan->file_sertifikat)
-                                <div class="timeline-item">
-                                    <div class="timeline-marker primary"></div>
-                                    <div class="timeline-content">
-                                        <div class="timeline-title">Sertifikat Tersedia</div>
-                                        <div class="timeline-time">Sertifikat dapat diunduh</div>
-                                    </div>
-                                </div>
-                                @endif
                             </div>
+                            @endif
+
+                            @if ($laporan->status == 'selesai' && $laporan->file_sertifikat)
+                            <div class="timeline-item">
+                                <div class="timeline-marker primary"></div>
+                                <div class="timeline-content">
+                                    <div class="timeline-title">Sertifikat Tersedia</div>
+                                    <div class="timeline-time">Sertifikat dapat diunduh</div>
+                                </div>
+                            </div>
+                            @endif
                         </div>
                     </div>
                 </div>
+            </div>
             @else
-                {{-- Panduan Upload --}}
-                <div class="card bps-glass-card">
-                    <div class="card-header bps-card-header">
-                        <h5 class="mb-0">
-                            <i class="bi bi-info-circle me-2"></i>Panduan Upload Laporan
-                        </h5>
-                    </div>
-                    <div class="card-body p-4">
-                        <div class="row g-4">
-                            <div class="col-md-6">
-                                <div class="bps-guide-item">
-                                    <div class="guide-icon">
-                                        <i class="bi bi-file-pdf"></i>
-                                    </div>
-                                    <div class="guide-content">
-                                        <h6>Format File</h6>
-                                        <p class="mb-0">Gunakan format PDF dengan ukuran maksimal 10MB</p>
-                                    </div>
+            {{-- Panduan Upload --}}
+            <div class="card bps-glass-card">
+                <div class="card-header bps-card-header">
+                    <h5 class="mb-0">
+                        <i class="bi bi-info-circle me-2"></i>Panduan Upload Laporan
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="bps-guide-item">
+                                <div class="guide-icon">
+                                    <i class="bi bi-file-pdf"></i>
+                                </div>
+                                <div class="guide-content">
+                                    <h6>Format File</h6>
+                                    <p class="mb-0">Gunakan format PDF dengan ukuran maksimal 10MB</p>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="bps-guide-item">
-                                    <div class="guide-icon">
-                                        <i class="bi bi-check-circle"></i>
-                                    </div>
-                                    <div class="guide-content">
-                                        <h6>Struktur Laporan</h6>
-                                        <p class="mb-0">Ikuti struktur laporan yang telah ditentukan</p>
-                                    </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="bps-guide-item">
+                                <div class="guide-icon">
+                                    <i class="bi bi-check-circle"></i>
+                                </div>
+                                <div class="guide-content">
+                                    <h6>Struktur Laporan</h6>
+                                    <p class="mb-0">Ikuti struktur laporan yang telah ditentukan</p>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="bps-guide-item">
-                                    <div class="guide-icon">
-                                        <i class="bi bi-clock"></i>
-                                    </div>
-                                    <div class="guide-content">
-                                        <h6>Proses Review</h6>
-                                        <p class="mb-0">Laporan akan direview oleh pembimbing dalam 3-5 hari</p>
-                                    </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="bps-guide-item">
+                                <div class="guide-icon">
+                                    <i class="bi bi-clock"></i>
+                                </div>
+                                <div class="guide-content">
+                                    <h6>Proses Review</h6>
+                                    <p class="mb-0">Laporan akan direview oleh pembimbing dalam 3-5 hari</p>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="bps-guide-item">
-                                    <div class="guide-icon">
-                                        <i class="bi bi-award"></i>
-                                    </div>
-                                    <div class="guide-content">
-                                        <h6>Sertifikat</h6>
-                                        <p class="mb-0">Sertifikat tersedia setelah laporan disetujui</p>
-                                    </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="bps-guide-item">
+                                <div class="guide-icon">
+                                    <i class="bi bi-award"></i>
+                                </div>
+                                <div class="guide-content">
+                                    <h6>Sertifikat</h6>
+                                    <p class="mb-0">Sertifikat tersedia setelah laporan disetujui</p>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
             @endif
         </div>
     </div>
@@ -255,57 +255,57 @@
 
 <!-- Modal Upload Ulang -->
 @if ($laporan && $laporan->status == 'ditolak')
-    <div class="modal fade" id="uploadUlangModal" tabindex="-1" aria-labelledby="uploadUlangModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content bps-modal-content">
-                <div class="modal-header bps-modal-header">
-                    <h5 class="modal-title" id="uploadUlangModalLabel">
-                        <i class="bi bi-upload me-2"></i> Upload Laporan Ulang
-                    </h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+<div class="modal fade" id="uploadUlangModal" tabindex="-1" aria-labelledby="uploadUlangModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content bps-modal-content">
+            <div class="modal-header bps-modal-header">
+                <h5 class="modal-title" id="uploadUlangModalLabel">
+                    <i class="bi bi-upload me-2"></i> Upload Laporan Ulang
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <form action="{{ route('pelajar.laporan.store') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-body p-4">
+                    <div class="mb-4">
+                        <label for="file_laporan" class="form-label fw-semibold text-bps-primary mb-3">
+                            <i class="bi bi-file-pdf me-2"></i> File Laporan (PDF)
+                        </label>
+                        <input type="file" class="form-control bps-form-control @error('file_laporan') is-invalid @enderror"
+                            id="file_laporan" name="file_laporan" accept=".pdf" required>
+                        @error('file_laporan')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                        <div class="form-text text-muted mt-2">
+                            <i class="bi bi-info-circle me-1"></i>
+                            Maksimal ukuran file: 2MB. Format yang diterima: PDF.
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info bps-alert">
+                        <div class="d-flex align-items-start">
+                            <i class="bi bi-lightbulb me-2 mt-1"></i>
+                            <div>
+                                <strong class="d-block mb-1">Tips Upload Ulang</strong>
+                                Pastikan laporan sudah diperbaiki sesuai dengan masukan dari pembimbing sebelum mengupload ulang.
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <form action="{{ route('pelajar.laporan.store') }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    <div class="modal-body p-4">
-                        <div class="mb-4">
-                            <label for="file_laporan" class="form-label fw-semibold text-bps-primary mb-3">
-                                <i class="bi bi-file-pdf me-2"></i> File Laporan (PDF)
-                            </label>
-                            <input type="file" class="form-control bps-form-control @error('file_laporan') is-invalid @enderror" 
-                                    id="file_laporan" name="file_laporan" accept=".pdf" required>
-                            @error('file_laporan')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                            <div class="form-text text-muted mt-2">
-                                <i class="bi bi-info-circle me-1"></i>
-                                Maksimal ukuran file: 2MB. Format yang diterima: PDF.
-                            </div>
-                        </div>
-
-                        <div class="alert alert-info bps-alert">
-                            <div class="d-flex align-items-start">
-                                <i class="bi bi-lightbulb me-2 mt-1"></i>
-                                <div>
-                                    <strong class="d-block mb-1">Tips Upload Ulang</strong>
-                                    Pastikan laporan sudah diperbaiki sesuai dengan masukan dari pembimbing sebelum mengupload ulang.
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="modal-footer border-top-0 bg-light">
-                        <button type="button" class="btn bps-btn-outline" data-bs-dismiss="modal">
-                            <i class="bi bi-x me-2"></i> Batal
-                        </button>
-                        <button type="submit" class="btn bps-btn-primary">
-                            <i class="bi bi-upload me-2"></i> Upload Laporan Ulang
-                        </button>
-                    </div>
-                </form>
-            </div>
+                <div class="modal-footer border-top-0 bg-light">
+                    <button type="button" class="btn bps-btn-outline" data-bs-dismiss="modal">
+                        <i class="bi bi-x me-2"></i> Batal
+                    </button>
+                    <button type="submit" class="btn bps-btn-primary">
+                        <i class="bi bi-upload me-2"></i> Upload Laporan Ulang
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
+</div>
 @endif
 
 <style>
